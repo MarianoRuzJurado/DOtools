@@ -1537,6 +1537,7 @@ theme_box <- function(){
 #' @param myFacetGrou Your facet group name to be added with annotation when object is a faceted object. Default(NULL).
 #' @param aes_x = NULL You should supply the plot X mapping name when annotate a facetd plot. Default(NULL).
 #' @param aes_y = NULL You should supply the plot Y mapping name when annotate a facetd plot. Default(NULL).
+#' @keywords internal
 .annoSegment <- function (object = NULL,
                          relSideDist = 0.1,
                          aesGroup = FALSE,
