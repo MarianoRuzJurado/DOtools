@@ -16,4 +16,5 @@ Seurat object with specified layers removed.
 }
 \description{
 This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
+It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 }

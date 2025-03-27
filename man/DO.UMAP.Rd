@@ -33,7 +33,10 @@ DO.UMAP(
 Plot with Refined colors and axes
 }
 \description{
-Creates a polished UMAP from Dimplot or FeaturePlot function
+Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
+It allows customization of colors, labels, and other plot elements for better visualization.
+The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 }
 \author{
 Mariano Ruz Jurado

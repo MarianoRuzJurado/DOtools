@@ -1,7 +1,10 @@
 
 #' @author Mariano Ruz Jurado
 #' @title DO Celltypist
-#' @description Runs celltypist on a seurat object and stores the calls as metadata
+#' @description Runs the CellTypist model on a Seurat object to predict cell type labels, storing the results as metadata.
+#' If the number of cells is less than the specified threshold, it returns NAs for the labels.
+#' Optionally updates the CellTypist models and returns the probability matrix.
+#' Useful for annotating cell types in single-cell RNA sequencing datasets.
 #' @param Seu_object The seurat object
 #' @param minCellsToRun If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.
 #' @param runCelltypistUpdate If true, --update-models will be run for celltypist prior to scoring cells.
@@ -99,7 +102,10 @@ DO.CellTypist <- function(Seu_object,
 # Recluster function using FindSubCluster function from Seurat iterative over each cluster -> perfect for fine tuning annotation
 #' @author Mariano Ruz Jurado
 #' @title DO.FullRecluster
-#' @description Creates a refined clustering for each major cluster found initially by FindClusters
+#' @description Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
+#' It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
+#' The new clustering results are stored in a metadata column called `seurat_Recluster`.
+#' Suitable for improving cluster precision and granularity after initial clustering.
 #' @param SeuratObject The seurat object
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
@@ -135,7 +141,10 @@ DO.FullRecluster <- function(SeuratObject,
 # Polished UMAP function using Dimplot or FeaturePlot function from Seurat
 #' @author Mariano Ruz Jurado
 #' @title DO.UMAP
-#' @description Creates a polished UMAP from Dimplot or FeaturePlot function
+#' @description Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
+#' It allows customization of colors, labels, and other plot elements for better visualization.
+#' The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+#' Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 #' @param SeuratObject The seurat object
 #' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
 #' @param features features for Featureplot
@@ -224,7 +233,11 @@ DO.UMAP <- function(SeuratObject,
 # Seurat Subset function that actually works
 #' @author Mariano Ruz Jurado
 #' @title DO.Subset
-#' @description Creates a subset from your previous Seurat object with the ident and name you want to subset
+#' @description Creates a subset of a Seurat object based on either categorical or numeric thresholds in metadata.
+#' Allows for subsetting by specifying the ident column, group name, or threshold criteria.
+#' Ideal for extracting specific cell populations or clusters based on custom conditions.
+#' Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
+#' Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
 #' @param SeuratObject The seurat object
 #' @param assay assay to subset by
 #' @param ident meta data column to subset for
@@ -315,6 +328,7 @@ DO.Subset <- function(SeuratObject,
 
 #' @title Remove Layers from Seurat Object by Pattern
 #' @description This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
+#' It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 #' @param obj Seurat object.
 #' @param pattern regular expression pattern to match layer names. Default "^scale\\.data\\."
 #' @return Seurat object with specified layers removed.

@@ -27,7 +27,11 @@ DO.Subset(
 subsetted Seurat object
 }
 \description{
-Creates a subset from your previous Seurat object with the ident and name you want to subset
+Creates a subset of a Seurat object based on either categorical or numeric thresholds in metadata.
+Allows for subsetting by specifying the ident column, group name, or threshold criteria.
+Ideal for extracting specific cell populations or clusters based on custom conditions.
+Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
+Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
 }
 \author{
 Mariano Ruz Jurado

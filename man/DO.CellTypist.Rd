@@ -29,7 +29,10 @@ DO.CellTypist(
 \item{returnProb}{will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix}
 }
 \description{
-Runs celltypist on a seurat object and stores the calls as metadata
+Runs the CellTypist model on a Seurat object to predict cell type labels, storing the results as metadata.
+If the number of cells is less than the specified threshold, it returns NAs for the labels.
+Optionally updates the CellTypist models and returns the probability matrix.
+Useful for annotating cell types in single-cell RNA sequencing datasets.
 }
 \author{
 Mariano Ruz Jurado

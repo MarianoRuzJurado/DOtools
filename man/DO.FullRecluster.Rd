@@ -22,7 +22,10 @@ DO.FullRecluster(
 Seurat Object with new clustering named eurat_Recluster
 }
 \description{
-Creates a refined clustering for each major cluster found initially by FindClusters
+Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
+It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
+The new clustering results are stored in a metadata column called \code{seurat_Recluster}.
+Suitable for improving cluster precision and granularity after initial clustering.
 }
 \author{
 Mariano Ruz Jurado
