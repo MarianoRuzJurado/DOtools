@@ -1,0 +1,338 @@
+
+#' @author Mariano Ruz Jurado
+#' @title DO Celltypist
+#' @description Runs celltypist on a seurat object and stores the calls as metadata
+#' @param Seu_object The seurat object
+#' @param minCellsToRun If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.
+#' @param runCelltypistUpdate If true, --update-models will be run for celltypist prior to scoring cells.
+#' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
+#' @param assay_normalized Assay with log1p normalized expressions
+#' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
+#' @export
+DO.CellTypist <- function(Seu_object,
+                          modelName = "Healthy_Adult_Heart.pkl",
+                          minCellsToRun = 200,
+                          runCelltypistUpdate = TRUE,
+                          over_clustering = "seurat_clusters",
+                          assay_normalized = "RNA",
+                          returnProb=FALSE,
+                          SeuV5=T) {
+
+  # Make sure R Zellkonverter package is installed
+  zk <- system.file(package = "zellkonverter")
+  ifelse(nzchar(zk), "", stop("Install zellkonverter R package for Seurat tranformation!"))
+
+  # Make sure R reticulate package is installed
+  rt <- system.file(package = "reticulate")
+  ifelse(nzchar(rt), "", stop("Install reticulate R package for Python usage in R!"))
+
+  if (!reticulate::py_available(initialize = TRUE)) {
+    stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
+  }
+
+  if (!reticulate::py_module_available('celltypist')) {
+    stop('The celltypist python package has not been installed in this python environment!')
+  }
+
+  if (ncol(Seu_object) < minCellsToRun) {
+    warning('Too few cells, will not run celltypist. NAs will be added instead')
+    expectedCols <- c('predicted_labels_celltypist')
+    Seu_object[[expectedCols]] <- NA
+    return(Seu_object)
+  }
+
+  message(paste0('Running celltypist using model: ', modelName))
+
+  #Create temporary folder
+  outDir <- tempfile(fileext = '')
+  if (endsWith(outDir, "/")){
+    outDir <- gsub(outDir, pattern = "/$", replacement = "")
+  }
+  dir.create(outDir)
+  message(paste0("Saving celltypist results to temporary folder: ", outDir))
+
+  #Uppercasing gene names
+  #zellkonverter h5ad
+  DefaultAssay(Seu_object) <- assay_normalized
+  if (SeuV5 == TRUE) {
+    tmp.assay <- Seu_object
+    tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
+    tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay, assay = assay_normalized)
+    rownames(tmp.sce) <- toupper(rownames(tmp.sce))
+
+  } else{
+    tmp.sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
+    rownames(tmp.sce) <- toupper(rownames(tmp.sce))
+  }
+  zellkonverter::writeH5AD(tmp.sce, file = paste0(outDir,"/ad.h5ad"), X_name = "logcounts")
+
+  # Ensure models present:
+  if (runCelltypistUpdate) {
+    system2(reticulate::py_exe(), c("-m", "celltypist.command_line", "--update-models", "--quiet"))
+  }
+
+  # Run celltypist:
+  args <- c("-m", "celltypist.command_line", "--indata",  paste0(outDir,"/ad.h5ad"), "--model", modelName, "--outdir", outDir,"--majority-voting", "--over-clustering", over_clustering)
+  system2(reticulate::py_exe(), args)
+
+  labelFile <- paste0(outDir, "/predicted_labels.csv")
+  probFile <- paste0(outDir, "/probability_matrix.csv")
+  labels <- utils::read.csv(labelFile, header = T, row.names = 1, stringsAsFactors = FALSE)
+
+  #ad <- import(module = "anndata")
+  #ad_obj <- ad$AnnData(X = labels)
+
+  #ct <- import(module = "celltypist")
+  #ct$dotplot(ad_obj, use_as_reference = "cell_type", use_as_prediction = "majority_voting")
+
+  probMatrix <- utils::read.csv(probFile, header = T, row.names = 1, stringsAsFactors = FALSE)
+  Seu_object@meta.data$predicted_labels_celltypist <- labels$majority_voting
+  if (returnProb==TRUE) {
+    returnProb <- list(Seu_object, probMatrix)
+    names(returnProb) <- c("SeuratObject", "probMatrix")
+    return(returnProb)
+  } else {
+    return(Seu_object)}
+}
+
+
+# Recluster function using FindSubCluster function from Seurat iterative over each cluster -> perfect for fine tuning annotation
+#' @author Mariano Ruz Jurado
+#' @title DO.FullRecluster
+#' @description Creates a refined clustering for each major cluster found initially by FindClusters
+#' @param SeuratObject The seurat object
+#' @param res Resolution for the new clusters, default 0.5
+#' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
+#' @return Seurat Object with new clustering named eurat_Recluster
+#' @export
+DO.FullRecluster <- function(SeuratObject,
+                             res = 0.5,
+                             algorithm=4,
+                             graph.name="RNA_snn"){
+
+  if (is.null(SeuratObject$seurat_clusters)) {
+    stop("No seurat clusters defined, please run FindClusters before Reclustering, or fill the slot with a clustering")
+  }
+  Idents(SeuratObject) <- "seurat_clusters"
+
+  SeuratObject$seurat_Recluster <- as.vector(SeuratObject$seurat_clusters)
+  pb <- progres::progress_bar$new(total = length(unique(SeuratObject$seurat_clusters)))
+  for (cluster in unique(SeuratObject$seurat_clusters)) {
+    pb$tick()
+    SeuratObject <- FindSubCluster(SeuratObject,
+                                   cluster = as.character(cluster),
+                                   graph.name = graph.name,
+                                   algorithm = algorithm,
+                                   resolution = res)
+
+    cluster_cells <- rownames(SeuratObject@meta.data)[SeuratObject$seurat_clusters == cluster]
+    SeuratObject$seurat_Recluster[cluster_cells] <- SeuratObject$sub.cluster[cluster_cells]
+  }
+  SeuratObject$sub.cluster <- NULL
+  return(SeuratObject)
+}
+
+# Polished UMAP function using Dimplot or FeaturePlot function from Seurat
+#' @author Mariano Ruz Jurado
+#' @title DO.UMAP
+#' @description Creates a polished UMAP from Dimplot or FeaturePlot function
+#' @param SeuratObject The seurat object
+#' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
+#' @param features features for Featureplot
+#' @param group.by grouping of plot in DImplot and defines in featureplot the labels
+#' @param ... Further arguments passed to DimPlot or FeaturePlot function from Seurat
+#' @return Plot with Refined colors and axes
+#' @export
+DO.UMAP <- function(SeuratObject,
+                    FeaturePlot=F,
+                    features=NULL,
+                    group.by="seurat_clusters",
+                    umap_colors=NULL,
+                    text_size=14,
+                    label=T,
+                    order=T,
+                    plot.title=T,
+                    legend.position="none",
+                    ...){
+
+  #Dimplot
+  if (FeaturePlot==F) {
+    if (is.null(umap_colors)) {
+      umap_colors <- rep(c(
+        "#1f77b4", "#ff7f0e", "#2ca02c", "tomato2", "#9467bd", "chocolate3","#e377c2", "#ffbb78", "#bcbd22",
+        "#17becf","darkgoldenrod2", "#aec7e8", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94","#f7b6d2", "#c7c7c7", "#dbdb8d",
+        "#9edae5","sandybrown","moccasin","lightsteelblue","darkorchid","salmon2","forestgreen","bisque"
+      ),5)
+    }
+
+    p <- DimPlot(SeuratObject, group.by = group.by, cols = umap_colors, ...) +
+      labs(x="UMAP1",y = "UMAP2")+
+      theme(plot.title = element_blank(),
+            # text = element_text(face = "bold",size = 20),
+            axis.title.x = element_text(size = text_size, family="Helvetica"),
+            axis.title.y = element_text(size = text_size, family="Helvetica"),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            legend.position = legend.position,
+            legend.text = element_text(face = "bold"))
+
+    if (label==T) {
+      p <-LabelClusters(p, id  = group.by, fontface="bold", box = F)
+    }
+    return(p)
+  }
+
+  #FeaturePlot
+  if (FeaturePlot==T) {
+
+    if (is.null(features)) {
+      stop("Please provide any gene names if using FeaturePlot=T.")
+    }
+
+    if (is.null(umap_colors)) {
+      umap_colors <- c("lightgrey","red2")
+    }
+
+    Idents(SeuratObject) <- group.by
+    p <- FeaturePlot(SeuratObject,
+                     features = features,
+                     cols = umap_colors,
+                     label = label,
+                     order = order,
+                     ...)&
+      labs(x="UMAP1",y = "UMAP2")&
+      theme(axis.title.x = element_text(size = 14, family="Helvetica"),
+            axis.title.y = element_text(size = 14, family="Helvetica"),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            legend.position = legend.position,
+            legend.text = element_text(face = "bold"))
+
+    if (plot.title == F) {
+      p <- p & theme(plot.title = element_blank())
+    }
+
+    return(p)
+  }
+}
+
+
+# Seurat Subset function that actually works
+#' @author Mariano Ruz Jurado
+#' @title DO.Subset
+#' @description Creates a subset from your previous Seurat object with the ident and name you want to subset
+#' @param SeuratObject The seurat object
+#' @param assay assay to subset by
+#' @param ident meta data column to subset for
+#' @param ident_name name of group of barcodes in ident of subset for
+#' @param ident_thresh numeric thresholds as character, e.g ">5" or c(">5", "<200"), to subset barcodes in ident for
+#' @return subsetted Seurat object
+#' @export
+DO.Subset <- function(SeuratObject,
+                      assay="RNA",
+                      ident,
+                      ident_name=NULL,
+                      ident_thresh=NULL){
+
+  reduction_names <- names(SeuratObject@reductions)
+  SCE_Object <- as.SingleCellExperiment(SeuratObject)
+
+  if (!is.null(ident_name) && !is.null(ident_thresh))  {
+    stop("Please provide ident_name for subsetting by a name in the column or ident_thresh if it by a threshold")
+  }
+
+  #By a name in the provided column
+  if (!is.null(ident_name) && is.null(ident_thresh))  {
+    cat("Specified 'ident_name': expecting a categorical variable.")
+    SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] %in% ident_name]
+  }
+
+  #By a threshold in the provided column
+  if (is.null(ident_name) && !is.null(ident_thresh))  {
+    cat(paste0("Specified 'ident_thresh': expecting numeric thresholds specified as character, ident_thresh = ", paste0(ident_thresh, collapse = " ")))
+
+    #Extract the numeric value and operator
+    operator <- gsub("[0-9.]", "", ident_thresh)
+    threshold <- as.numeric(gsub("[^0-9.]", "", ident_thresh))
+
+    #operator is valid?
+    if ("TRUE" %in% !(operator %in% c("<", ">", "<=", ">="))) {
+      stop("Invalid threshold operator provided. Use one of '<', '>', '<=', '>='")
+    }
+
+    #solo case
+    if (length(operator) ==1) {
+      if (operator == "<") {
+        # filtered_cells <- ident_values[ident_values < threshold]
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] < threshold]
+      } else if (operator == ">") {
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] > threshold]
+      } else if (operator == "<=") {
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] <= threshold]
+      } else if (operator == ">=") {
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] >= threshold]
+      }
+    }
+
+    #second case
+    if (length(operator) == 2) {
+      if (paste(operator,collapse = "") ==  "><") {
+        # filtered_cells <- ident_values[ident_values > threshold[1] & ident_values < threshold[2]]
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] > threshold[1] &
+                                       SingleCellExperiment::colData(SCE_Object)[, ident] < threshold[2]]
+      } else if (paste(operator,collapse = "") ==  "<>") {
+        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] < threshold[1] &
+                                       SingleCellExperiment::colData(SCE_Object)[, ident] > threshold[2]]
+      }
+    }
+
+  }
+
+  SeuratObject_sub <- as.Seurat(SCE_Object_sub)
+  SeuratObject_sub[[assay]] <- as(object = SeuratObject_sub[[assay]], Class = "Assay5")
+
+  #Identify reductions that are not in uppercase -> These are the old ones, not subsetted REMOVE
+  # non_uppercase_reductions <- reduction_names[!grepl("^[A-Z0-9_]+$", reduction_names)]
+  # SeuratObject_sub@reductions <- SeuratObject_sub@reductions[!names(SeuratObject_sub@reductions) %in% non_uppercase_reductions]
+  names(SeuratObject_sub@reductions) <- reduction_names
+  SeuratObject_sub$ident <- NULL
+
+  #some checks
+  ncells_interest_prior <- nrow(SeuratObject@meta.data[SeuratObject@meta.data[[ident]] %in% ident_name, ])
+  ncells_interest_after <- nrow(SeuratObject_sub@meta.data[SeuratObject_sub@meta.data[[ident]] %in% ident_name, ])
+  if (ncells_interest_prior != ncells_interest_after) {
+    stop(paste0("Number of subsetted cell types is not equal in both objects! Before: ",ncells_interest_prior,"; After: ", ncells_interest_after))
+  }
+
+  return(SeuratObject_sub)
+}
+
+
+
+#' @title Remove Layers from Seurat Object by Pattern
+#' @description This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
+#' @param obj Seurat object.
+#' @param pattern regular expression pattern to match layer names. Default "^scale\\.data\\."
+#' @return Seurat object with specified layers removed.
+#' @export
+DO.DietSeurat <- function(obj, pattern = "^scale\\.data\\.") {
+  message(paste("pattern: ", pattern))
+  stopifnot("obj must be a Seurat object" = inherits(obj, "Seurat"))
+
+  layers_to_remove <- grep("^scale\\.data\\.", Layers(obj), value = TRUE)
+  obj@assays$RNA@layers[layers_to_remove] <- NULL
+
+  layerNames <- Layers(obj)
+  message(paste(layers_to_remove, "is removed."))
+  return(obj)
+}
+
+umap_colors <- c(
+  "#1f77b4", "#ff7f0e", "#2ca02c", "tomato2", "#9467bd", "chocolate3","#e377c2", "#ffbb78", "#bcbd22",
+  "#17becf","darkgoldenrod2", "#aec7e8", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94","#f7b6d2", "#c7c7c7", "#dbdb8d",
+  "#9edae5","sandybrown","moccasin","lightsteelblue","darkorchid","salmon2","forestgreen","bisque"
+)
