@@ -1501,8 +1501,8 @@ theme_box <- function(){
     )
 }
 
-# AnnoSegment function converation: the original author is no longer maintaining it on CRAN it would be a shame to lose it
-#' @author Jun Zhang
+# AnnoSegment function consveration: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
+#' @author Mariano Ruz Jurado (originally: Jun Zhang)
 #' @title Annotation modifier for plots
 #' @description Used for segment the plot for further annotations
 #' @param object ggplot list. Default(NULL).
@@ -1537,7 +1537,7 @@ theme_box <- function(){
 #' @param myFacetGrou Your facet group name to be added with annotation when object is a faceted object. Default(NULL).
 #' @param aes_x = NULL You should supply the plot X mapping name when annotate a facetd plot. Default(NULL).
 #' @param aes_y = NULL You should supply the plot Y mapping name when annotate a facetd plot. Default(NULL).
-annoSegment <- function (object = NULL,
+.annoSegment <- function (object = NULL,
                          relSideDist = 0.1,
                          aesGroup = FALSE,
                          aesGroName = NULL,
