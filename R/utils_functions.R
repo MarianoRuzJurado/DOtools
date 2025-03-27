@@ -337,7 +337,7 @@ DO.DietSeurat <- function(obj, pattern = "^scale\\.data\\.") {
   message(paste("pattern: ", pattern))
   stopifnot("obj must be a Seurat object" = inherits(obj, "Seurat"))
 
-  layers_to_remove <- grep("^scale\\.data\\.", Layers(obj), value = TRUE)
+  layers_to_remove <- grep(pattern, Layers(obj), value = TRUE)
   obj@assays$RNA@layers[layers_to_remove] <- NULL
 
   layerNames <- Layers(obj)
