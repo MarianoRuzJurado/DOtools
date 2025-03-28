@@ -28,11 +28,28 @@ DO.CellTypist(
 
 \item{returnProb}{will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix}
 }
+\value{
+a seurat
+}
 \description{
 Runs the CellTypist model on a Seurat object to predict cell type labels, storing the results as metadata.
 If the number of cells is less than the specified threshold, it returns NAs for the labels.
 Optionally updates the CellTypist models and returns the probability matrix.
 Useful for annotating cell types in single-cell RNA sequencing datasets.
+}
+\examples{
+\dontrun{
+
+
+DO.CellTypist(
+  Seu_object = Seurat,
+  modelName = "Healthy_Adult_Heart.pkl",
+  runCelltypistUpdate = TRUE,
+  over_clustering = "seurat_clusters",
+  SeuV5=T
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

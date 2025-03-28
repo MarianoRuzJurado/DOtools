@@ -27,11 +27,31 @@ DO.Mean.SEM.Graphs.cluster.t(
 
 \item{group.by}{select the seurat object slot where your conditions can be found, default conditon}
 }
+\value{
+a ggplot or a dataframe
+}
 \description{
 Perform SEM-based graphs with t-test on cluster level for Seurat objects.
 Calculates mean expression values and SEM for selected features, and visualizes them.
 Performs pairwise t-tests comparing conditions, with optional custom control condition and clustering.
 Optionally returns a summary data frame.
+}
+\examples{
+\dontrun{
+
+(optional)
+ListTest <- list()
+ListTest[[1]] <- c("CTRL", "CONDITION")
+
+DO.Mean.SEM.Graphs.cluster.t(
+  Seu_object = Seurat,
+  Features = "CDH5",
+  ListTest = ListTest,
+  ctrl.condition = "CTRL",
+  group.by="condition"
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

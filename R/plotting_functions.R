@@ -11,6 +11,28 @@
 #' @param returnValues return df.melt.sum data frame containing means and SEM for the set group
 #' @param ctrl.condition set your ctrl condition, relevant if running with empty comparison List
 #' @param group.by select the seurat object slot where your conditions can be found, default conditon
+#'
+#' @import ggplot2
+#' @import tidyverse
+#'
+#' @return a ggplot or a dataframe
+#'
+#' @examples
+#' \dontrun{
+#'
+#' (optional)
+#' ListTest <- list()
+#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#'
+#' DO.Mean.SEM.Graphs.cluster.t(
+#'   Seu_object = Seurat,
+#'   Features = "CDH5",
+#'   ListTest = ListTest,
+#'   ctrl.condition = "CTRL",
+#'   group.by="condition"
+#' )
+#' }
+#'
 #' @export
 DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
                                          Features,
@@ -32,7 +54,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
   }
 
   #melt results
-  df.melt <- melt(df)
+  df.melt <- dplyr::melt(df)
   #group results and summarize, also add/use SEM
   df.melt.sum <- df.melt %>%
     dplyr::group_by(condition, variable) %>%
@@ -128,6 +150,28 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #' @param bar_colours colour vector
 #' @param plotPvalue plot the non adjusted p-value without correcting for multiple tests
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
+#'
+#' @import ggplot2
+#' @import tidyverse
+#'
+#' @return a ggplot or a list with plot and data frame
+#'
+#' @examples
+#' \dontrun{
+#'
+#' (optional)
+#' ListTest <- list()
+#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#'
+#' DO.Mean.SEM.Graphs.wilcox(
+#'   Seu_object = Seurat,
+#'   Feature = "CDH5",
+#'   ListTest = ListTest,
+#'   ctrl.condition = "CTRL",
+#'   group.by="condition"
+#' )
+#' }
+#'
 #' @export
 DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
                                       Feature,
@@ -347,6 +391,29 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #' @param wilcox_test Bolean if TRUE a bonferoni wilcoxon test will be carried out between ctrl.condition and the rest
 #' @param stat_pos_mod value for modifiyng statistics height
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
+#'
+#' @import ggplot2
+#' @import tidyverse
+#'
+#' @return a ggplot or a list used data frames
+#'
+#' @examples
+#' \dontrun{
+#'
+#' (optional)
+#' ListTest <- list()
+#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#'
+#' DO.Vln.Plot.wilcox(
+#'   Seu_object = Seurat,
+#'   SeuV5=T,
+#'   Feature = "CDH5",
+#'   ListTest = ListTest,
+#'   ctrl.condition = "CTRL",
+#'   group.by="condition"
+#' )
+#' }
+#'
 #' @export
 DO.Vln.Plot.wilcox <- function(Seu_object,
                                SeuV5=T,
@@ -749,6 +816,30 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #' @param vjust.wilcox value for vertical of text
 #' @param size.wilcox value for size of text of statistical test
 #' @param step_mod value for defining the space between one test and the next one
+#'
+#' @import ggplot2
+#' @import tidyverse
+#' @import Seurat
+#'
+#' @return a ggplot
+#'
+#' @examples
+#' \dontrun{
+#'
+#' (optional)
+#' ListTest <- list()
+#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#'
+#' DO.Box.Plot.wilcox(
+#'   Seu_object = Seurat,
+#'   Feature = "CDH5",
+#'   sample.column="orig.ident",
+#'   ListTest = ListTest,
+#'   group.by="condition",
+#'   ctrl.condition = "CTRL",
+#' )
+#' }
+#'
 #' @export
 DO.Box.Plot.wilcox <- function(Seu_object,
                                Feature,
@@ -773,7 +864,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 
   #aggregate expression, pseudobulk to visualize the boxplot
   if (is.null(group.by.2)) {
-    pseudo_Seu <- AggregateExpression(Seu_object,
+    pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
                                       assays = "RNA",
                                       return.seurat = T,
                                       group.by = c(group.by, sample.column),
@@ -782,7 +873,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
     pseudo_Seu$celltype.con <- pseudo_Seu[[group.by]]
 
   } else{
-    pseudo_Seu <- AggregateExpression(Seu_object,
+    pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
                                       assays = "RNA",
                                       return.seurat = T,
                                       group.by = c(group.by, group.by.2, sample.column),
@@ -841,13 +932,13 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 
   #group results and summarize
   if (is.null(group.by.2)) {
-    df_melt <- melt(df_Feature) # melt in conditon since the second group might need to get added before the melt
+    df_melt <- reshape2::melt(df_Feature) # melt in conditon since the second group might need to get added before the melt
     df_melt_sum <- df_melt %>%
       dplyr::group_by(group, variable) %>%
       dplyr::summarise(Mean = mean(value))
   } else{
     df_Feature[,{group.by.2}] <- setNames(Seu_object[[group.by.2]][,group.by.2], rownames(Seu_object[[group.by.2]]))
-    df_melt <- melt(df_Feature)
+    df_melt <- reshape2::melt(df_Feature)
     df_melt_sum <- df_melt %>%
       dplyr::group_by(group, !!sym(group.by.2), variable) %>% #!!sym(), gets the actual variable name useable for dplyr functions
       dplyr::summarise(Mean = mean(value))
@@ -907,42 +998,42 @@ DO.Box.Plot.wilcox <- function(Seu_object,
   if (is.null(group.by.2)) {
     group_of_zero <- df_melt %>%
       dplyr::group_by(group) %>%
-      summarise(all_zeros = all(value == 0), .groups = "drop") %>%
-      filter(all_zeros)
+      dplyr::summarise(all_zeros = all(value == 0), .groups = "drop") %>%
+      dplyr::filter(all_zeros)
 
     if (nrow(group_of_zero) > 0) {
       warning("Some comparisons have no expression in both groups, setting expression to minimum value to ensure test does not fail!")
       df_melt <- df_melt %>%
         dplyr::group_by(group) %>%
-        dplyr::mutate(value = if_else(row_number() == 1 & all(value == 0),.Machine$double.xmin,value)) %>%
+        dplyr::mutate(value = dplyr::if_else(dplyr::row_number() == 1 & all(value == 0),.Machine$double.xmin,value)) %>%
         ungroup()
     }
   } else{
 
     group_of_zero <- df_melt %>%
       dplyr::group_by(group, !!sym(group.by.2)) %>%
-      summarise(all_zeros = all(value == 0), .groups = "drop") %>%
-      filter(all_zeros)
+      dplyr::summarise(all_zeros = all(value == 0), .groups = "drop") %>%
+      dplyr::filter(all_zeros)
 
     #check now the result for multiple entries in group.by.2
     groupby2_check <- group_of_zero %>%
       dplyr::group_by(!!sym(group.by.2)) %>%
-      summarise(group_count = n_distinct(group), .groups = "drop") %>%
-      filter(group_count > 1)
+      dplyr::summarise(group_count = dplyr::n_distinct(group), .groups = "drop") %>%
+      dplyr::filter(group_count > 1)
 
     if (nrow(groupby2_check) > 0) {
       warning("Some comparisons have no expression in both groups, setting expression to minimum value to ensure test does not fail!")
       df_melt <- df_melt %>%
         dplyr::group_by(group, !!sym(group.by.2)) %>%
-        dplyr::mutate(value = if_else(row_number() == 1 & all(value == 0),.Machine$double.xmin,value)) %>%
-        ungroup()
+        dplyr::mutate(value = dplyr::if_else(row_number() == 1 & all(value == 0),.Machine$double.xmin,value)) %>%
+        dplyr::ungroup()
     }
   }
 
   #do statistix with rstatix + stats package
   if (wilcox_test == TRUE & is.null(group.by.2)) {
     stat.test <- df_melt %>%
-      ungroup() %>%
+      dplyr::ungroup() %>%
       rstatix::wilcox_test(value ~ group, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
     stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
@@ -1126,7 +1217,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
   }
 
   print(p)
-
+  return(p)
 }
 
 
@@ -1152,6 +1243,24 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @param annotation_x Adds annotation on top of x axis instead on y axis
 #' @param point_stroke Defines the thickness of the black stroke on the dots
 #' @param ... Further arguments passed to annoSegment function if annotation_x == T
+#'
+#' @import ggplot2
+#' @import tidyverse
+#'
+#' @return a ggplot
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.Dotplot(
+#'   Seu_object = Seurat,
+#'   Feature = c("CDH5","TTN","MALAT1"),
+#'   group.by.x="condition"
+#' )
+#' }
+#'
+#'
 #' @export
 DO.Dotplot <- function(Seu_object,
                        Feature,

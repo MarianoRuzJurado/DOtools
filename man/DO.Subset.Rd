@@ -5,7 +5,7 @@
 \title{DO.Subset}
 \usage{
 DO.Subset(
-  SeuratObject,
+  Seu_object,
   assay = "RNA",
   ident,
   ident_name = NULL,
@@ -13,7 +13,7 @@ DO.Subset(
 )
 }
 \arguments{
-\item{SeuratObject}{The seurat object}
+\item{Seu_object}{The seurat object}
 
 \item{assay}{assay to subset by}
 
@@ -24,7 +24,7 @@ DO.Subset(
 \item{ident_thresh}{numeric thresholds as character, e.g ">5" or c(">5", "<200"), to subset barcodes in ident for}
 }
 \value{
-subsetted Seurat object
+a subsetted Seurat object
 }
 \description{
 Creates a subset of a Seurat object based on either categorical or numeric thresholds in metadata.
@@ -32,6 +32,25 @@ Allows for subsetting by specifying the ident column, group name, or threshold c
 Ideal for extracting specific cell populations or clusters based on custom conditions.
 Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
 Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
+}
+\examples{
+\dontrun{
+
+
+DO.Subset(
+  Seu_object = Seurat,
+  ident="condition",
+  ident_name="CTRL"
+)
+
+DO.Subset(
+  Seu_object = Seurat,
+  ident="nFeature_RNA",
+  ident_thresh=c(">5", "<200")
+)
+}
+
+
 }
 \author{
 Mariano Ruz Jurado

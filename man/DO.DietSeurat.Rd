@@ -4,10 +4,10 @@
 \alias{DO.DietSeurat}
 \title{Remove Layers from Seurat Object by Pattern}
 \usage{
-DO.DietSeurat(obj, pattern = "^scale\\\\.data\\\\.")
+DO.DietSeurat(Seu_object, pattern = "^scale\\\\.data\\\\.")
 }
 \arguments{
-\item{obj}{Seurat object.}
+\item{Seu_object}{Seurat object.}
 
 \item{pattern}{regular expression pattern to match layer names. Default "^scale\\.data\\."}
 }
@@ -17,4 +17,22 @@ Seurat object with specified layers removed.
 \description{
 This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
 It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
+}
+\examples{
+\dontrun{
+
+
+DO.Subset(
+  Seu_object = Seurat,
+  ident="condition",
+  ident_name="CTRL"
+)
+
+DO.Subset(
+  Seu_object = Seurat,
+  ident="nFeature_RNA",
+  ident_thresh=c(">5", "<200")
+)
+}
+
 }

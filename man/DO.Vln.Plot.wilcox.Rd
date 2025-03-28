@@ -53,11 +53,32 @@ DO.Vln.Plot.wilcox(
 
 \item{vector_colours}{specify a minimum number of colours as you have entries in your condition, default 2}
 }
+\value{
+a ggplot or a list used data frames
+}
 \description{
 Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
 It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
 The plot can be customized with options for data transformation, jitter display, and significance annotations.
 The function also supports multiple conditions and allows for visualization of statistical results from wilcoxon test.
+}
+\examples{
+\dontrun{
+
+(optional)
+ListTest <- list()
+ListTest[[1]] <- c("CTRL", "CONDITION")
+
+DO.Vln.Plot.wilcox(
+  Seu_object = Seurat,
+  SeuV5=T,
+  Feature = "CDH5",
+  ListTest = ListTest,
+  ctrl.condition = "CTRL",
+  group.by="condition"
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

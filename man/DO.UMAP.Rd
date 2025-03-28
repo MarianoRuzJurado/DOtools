@@ -5,7 +5,7 @@
 \title{DO.UMAP}
 \usage{
 DO.UMAP(
-  SeuratObject,
+  Seu_object,
   FeaturePlot = F,
   features = NULL,
   group.by = "seurat_clusters",
@@ -19,7 +19,7 @@ DO.UMAP(
 )
 }
 \arguments{
-\item{SeuratObject}{The seurat object}
+\item{Seu_object}{The seurat object}
 
 \item{FeaturePlot}{Is it going to be a Dimplot or a FeaturePlot?}
 
@@ -37,6 +37,23 @@ Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
 It allows customization of colors, labels, and other plot elements for better visualization.
 The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
+}
+\examples{
+\dontrun{
+
+
+DO.UMAP(
+  Seu_object = Seurat,
+  group.by="seurat_clusters"
+)
+
+DO.UMAP(
+  Seu_object = Seurat,
+  FeaturePlot=T,
+  features=c("CDH5","TTN")
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

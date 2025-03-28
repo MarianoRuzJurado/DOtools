@@ -52,11 +52,32 @@ DO.Box.Plot.wilcox(
 
 \item{size.wilcox}{value for size of text of statistical test}
 }
+\value{
+a ggplot
+}
 \description{
 Creates a box plot using a pseudo-bulk approach and performs a Wilcoxon test on single-cell level.
 Allows customization of outlier removal, statistical labels, and color schemes.
 Supports comparison of conditions with optional second grouping.
 Useful for visualizing gene expression and statistical differences.
+}
+\examples{
+\dontrun{
+
+(optional)
+ListTest <- list()
+ListTest[[1]] <- c("CTRL", "CONDITION")
+
+DO.Box.Plot.wilcox(
+  Seu_object = Seurat,
+  Feature = "CDH5",
+  sample.column="orig.ident",
+  ListTest = ListTest,
+  group.by="condition",
+  ctrl.condition = "CTRL",
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

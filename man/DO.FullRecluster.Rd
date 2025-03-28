@@ -4,28 +4,33 @@
 \alias{DO.FullRecluster}
 \title{DO.FullRecluster}
 \usage{
-DO.FullRecluster(
-  SeuratObject,
-  res = 0.5,
-  algorithm = 4,
-  graph.name = "RNA_snn"
-)
+DO.FullRecluster(Seu_object, res = 0.5, algorithm = 4, graph.name = "RNA_snn")
 }
 \arguments{
-\item{SeuratObject}{The seurat object}
+\item{Seu_object}{The seurat object}
 
 \item{res}{Resolution for the new clusters, default 0.5}
 
 \item{algorithm}{Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden}
 }
 \value{
-Seurat Object with new clustering named eurat_Recluster
+a Seurat Object with new clustering named seurat_Recluster
 }
 \description{
 Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
 It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
 The new clustering results are stored in a metadata column called \code{seurat_Recluster}.
 Suitable for improving cluster precision and granularity after initial clustering.
+}
+\examples{
+\dontrun{
+
+
+DO.FullRecluster(
+  Seu_object = Seurat
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado

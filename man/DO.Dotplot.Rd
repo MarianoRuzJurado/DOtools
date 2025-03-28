@@ -58,11 +58,27 @@ DO.Dotplot(
 
 \item{...}{Further arguments passed to annoSegment function if annotation_x == T}
 }
+\value{
+a ggplot
+}
 \description{
 This function generates a dot plot for multiple genes, comparing expression levels across one or two specified groups.
 It supports both individual and pseudobulk expression calculations.
 Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
 The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.
+}
+\examples{
+\dontrun{
+
+
+DO.Dotplot(
+  Seu_object = Seurat,
+  Feature = c("CDH5","TTN","MALAT1"),
+  group.by.x="condition"
+)
+}
+
+
 }
 \author{
 Mariano Ruz Jurado

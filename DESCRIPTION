@@ -25,7 +25,8 @@ Imports:
         zellkonverter (>= 1.16.0),
         progress (>= 1.2.3),
         ggiraphExtra (>= 0.3.0),
-        grid (>= 4.4.3)
+        grid (>= 4.4.3),
+        SCpubr (>= 2.0.2)
 Suggests:
         knitr,
         rmarkdown,

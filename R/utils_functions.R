@@ -11,6 +11,22 @@
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param assay_normalized Assay with log1p normalized expressions
 #' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
+#'
+#' @return a seurat
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.CellTypist(
+#'   Seu_object = Seurat,
+#'   modelName = "Healthy_Adult_Heart.pkl",
+#'   runCelltypistUpdate = TRUE,
+#'   over_clustering = "seurat_clusters",
+#'   SeuV5=T
+#' )
+#' }
+#'
 #' @export
 DO.CellTypist <- function(Seu_object,
                           modelName = "Healthy_Adult_Heart.pkl",
@@ -106,36 +122,48 @@ DO.CellTypist <- function(Seu_object,
 #' It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
 #' The new clustering results are stored in a metadata column called `seurat_Recluster`.
 #' Suitable for improving cluster precision and granularity after initial clustering.
-#' @param SeuratObject The seurat object
+#' @param Seu_object The seurat object
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
-#' @return Seurat Object with new clustering named eurat_Recluster
+#' @return a Seurat Object with new clustering named seurat_Recluster
+#'
+#' @import Seurat
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.FullRecluster(
+#'   Seu_object = Seurat
+#' )
+#' }
+#'
 #' @export
-DO.FullRecluster <- function(SeuratObject,
+DO.FullRecluster <- function(Seu_object,
                              res = 0.5,
                              algorithm=4,
                              graph.name="RNA_snn"){
 
-  if (is.null(SeuratObject$seurat_clusters)) {
+  if (is.null(Seu_object$seurat_clusters)) {
     stop("No seurat clusters defined, please run FindClusters before Reclustering, or fill the slot with a clustering")
   }
-  Idents(SeuratObject) <- "seurat_clusters"
+  Idents(Seu_object) <- "seurat_clusters"
 
-  SeuratObject$seurat_Recluster <- as.vector(SeuratObject$seurat_clusters)
-  pb <- progres::progress_bar$new(total = length(unique(SeuratObject$seurat_clusters)))
-  for (cluster in unique(SeuratObject$seurat_clusters)) {
+  Seu_object$seurat_Recluster <- as.vector(Seu_object$seurat_clusters)
+  pb <- progres::progress_bar$new(total = length(unique(Seu_object$seurat_clusters)))
+  for (cluster in unique(Seu_object$seurat_clusters)) {
     pb$tick()
-    SeuratObject <- FindSubCluster(SeuratObject,
+    Seu_object <- FindSubCluster(Seu_object,
                                    cluster = as.character(cluster),
                                    graph.name = graph.name,
                                    algorithm = algorithm,
                                    resolution = res)
 
-    cluster_cells <- rownames(SeuratObject@meta.data)[SeuratObject$seurat_clusters == cluster]
-    SeuratObject$seurat_Recluster[cluster_cells] <- SeuratObject$sub.cluster[cluster_cells]
+    cluster_cells <- rownames(Seu_object@meta.data)[Seu_object$seurat_clusters == cluster]
+    Seu_object$seurat_Recluster[cluster_cells] <- Seu_object$sub.cluster[cluster_cells]
   }
-  SeuratObject$sub.cluster <- NULL
-  return(SeuratObject)
+  Seu_object$sub.cluster <- NULL
+  return(Seu_object)
 }
 
 # Polished UMAP function using Dimplot or FeaturePlot function from Seurat
@@ -145,14 +173,33 @@ DO.FullRecluster <- function(SeuratObject,
 #' It allows customization of colors, labels, and other plot elements for better visualization.
 #' The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
 #' Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
-#' @param SeuratObject The seurat object
+#' @param Seu_object The seurat object
 #' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
 #' @param features features for Featureplot
 #' @param group.by grouping of plot in DImplot and defines in featureplot the labels
 #' @param ... Further arguments passed to DimPlot or FeaturePlot function from Seurat
 #' @return Plot with Refined colors and axes
+#'
+#' @import Seurat
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.UMAP(
+#'   Seu_object = Seurat,
+#'   group.by="seurat_clusters"
+#' )
+#'
+#' DO.UMAP(
+#'   Seu_object = Seurat,
+#'   FeaturePlot=T,
+#'   features=c("CDH5","TTN")
+#' )
+#' }
+#'
 #' @export
-DO.UMAP <- function(SeuratObject,
+DO.UMAP <- function(Seu_object,
                     FeaturePlot=F,
                     features=NULL,
                     group.by="seurat_clusters",
@@ -174,7 +221,7 @@ DO.UMAP <- function(SeuratObject,
       ),5)
     }
 
-    p <- DimPlot(SeuratObject, group.by = group.by, cols = umap_colors, ...) +
+    p <- DimPlot(Seu_object, group.by = group.by, cols = umap_colors, ...) +
       labs(x="UMAP1",y = "UMAP2")+
       theme(plot.title = element_blank(),
             # text = element_text(face = "bold",size = 20),
@@ -204,8 +251,8 @@ DO.UMAP <- function(SeuratObject,
       umap_colors <- c("lightgrey","red2")
     }
 
-    Idents(SeuratObject) <- group.by
-    p <- FeaturePlot(SeuratObject,
+    Idents(Seu_object) <- group.by
+    p <- FeaturePlot(Seu_object,
                      features = features,
                      cols = umap_colors,
                      label = label,
@@ -238,21 +285,43 @@ DO.UMAP <- function(SeuratObject,
 #' Ideal for extracting specific cell populations or clusters based on custom conditions.
 #' Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
 #' Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
-#' @param SeuratObject The seurat object
+#' @param Seu_object The seurat object
 #' @param assay assay to subset by
 #' @param ident meta data column to subset for
 #' @param ident_name name of group of barcodes in ident of subset for
 #' @param ident_thresh numeric thresholds as character, e.g ">5" or c(">5", "<200"), to subset barcodes in ident for
-#' @return subsetted Seurat object
+#' @return a subsetted Seurat object
+#'
+#' @import Seurat
+#' @import SeuratObject
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.Subset(
+#'   Seu_object = Seurat,
+#'   ident="condition",
+#'   ident_name="CTRL"
+#' )
+#'
+#' DO.Subset(
+#'   Seu_object = Seurat,
+#'   ident="nFeature_RNA",
+#'   ident_thresh=c(">5", "<200")
+#' )
+#' }
+#'
+#'
 #' @export
-DO.Subset <- function(SeuratObject,
+DO.Subset <- function(Seu_object,
                       assay="RNA",
                       ident,
                       ident_name=NULL,
                       ident_thresh=NULL){
 
-  reduction_names <- names(SeuratObject@reductions)
-  SCE_Object <- as.SingleCellExperiment(SeuratObject)
+  reduction_names <- names(Seu_object@reductions)
+  SCE_Object <- as.SingleCellExperiment(Seu_object)
 
   if (!is.null(ident_name) && !is.null(ident_thresh))  {
     stop("Please provide ident_name for subsetting by a name in the column or ident_thresh if it by a threshold")
@@ -305,23 +374,23 @@ DO.Subset <- function(SeuratObject,
 
   }
 
-  SeuratObject_sub <- as.Seurat(SCE_Object_sub)
-  SeuratObject_sub[[assay]] <- as(object = SeuratObject_sub[[assay]], Class = "Assay5")
+  Seu_object_sub <- as.Seurat(SCE_Object_sub)
+  Seu_object_sub[[assay]] <- as(object = Seu_object_sub[[assay]], Class = "Assay5")
 
   #Identify reductions that are not in uppercase -> These are the old ones, not subsetted REMOVE
   # non_uppercase_reductions <- reduction_names[!grepl("^[A-Z0-9_]+$", reduction_names)]
-  # SeuratObject_sub@reductions <- SeuratObject_sub@reductions[!names(SeuratObject_sub@reductions) %in% non_uppercase_reductions]
-  names(SeuratObject_sub@reductions) <- reduction_names
-  SeuratObject_sub$ident <- NULL
+  # Seu_object_sub@reductions <- Seu_object_sub@reductions[!names(Seu_object_sub@reductions) %in% non_uppercase_reductions]
+  names(Seu_object_sub@reductions) <- reduction_names
+  Seu_object_sub$ident <- NULL
 
   #some checks
-  ncells_interest_prior <- nrow(SeuratObject@meta.data[SeuratObject@meta.data[[ident]] %in% ident_name, ])
-  ncells_interest_after <- nrow(SeuratObject_sub@meta.data[SeuratObject_sub@meta.data[[ident]] %in% ident_name, ])
+  ncells_interest_prior <- nrow(Seu_object@meta.data[Seu_object@meta.data[[ident]] %in% ident_name, ])
+  ncells_interest_after <- nrow(Seu_object_sub@meta.data[Seu_object_sub@meta.data[[ident]] %in% ident_name, ])
   if (ncells_interest_prior != ncells_interest_after) {
     stop(paste0("Number of subsetted cell types is not equal in both objects! Before: ",ncells_interest_prior,"; After: ", ncells_interest_after))
   }
 
-  return(SeuratObject_sub)
+  return(Seu_object_sub)
 }
 
 
@@ -329,21 +398,42 @@ DO.Subset <- function(SeuratObject,
 #' @title Remove Layers from Seurat Object by Pattern
 #' @description This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
 #' It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
-#' @param obj Seurat object.
+#' @param Seu_object Seurat object.
 #' @param pattern regular expression pattern to match layer names. Default "^scale\\.data\\."
 #' @return Seurat object with specified layers removed.
+#'
+#' @import SeuratObject
+#'
+#' @examples
+#' \dontrun{
+#'
+#'
+#' DO.Subset(
+#'   Seu_object = Seurat,
+#'   ident="condition",
+#'   ident_name="CTRL"
+#' )
+#'
+#' DO.Subset(
+#'   Seu_object = Seurat,
+#'   ident="nFeature_RNA",
+#'   ident_thresh=c(">5", "<200")
+#' )
+#' }
+#'
 #' @export
-DO.DietSeurat <- function(obj, pattern = "^scale\\.data\\.") {
+DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
   message(paste("pattern: ", pattern))
-  stopifnot("obj must be a Seurat object" = inherits(obj, "Seurat"))
+  stopifnot("object must be a Seurat object" = inherits(Seu_object, "Seurat"))
 
-  layers_to_remove <- grep(pattern, Layers(obj), value = TRUE)
+  layers_to_remove <- grep(pattern, Layers(Seu_object), value = TRUE)
   obj@assays$RNA@layers[layers_to_remove] <- NULL
 
-  layerNames <- Layers(obj)
+  layerNames <- Layers(Seu_object)
   message(paste(layers_to_remove, "is removed."))
-  return(obj)
+  return(Seu_object)
 }
+
 
 umap_colors <- c(
   "#1f77b4", "#ff7f0e", "#2ca02c", "tomato2", "#9467bd", "chocolate3","#e377c2", "#ffbb78", "#bcbd22",

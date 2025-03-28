@@ -39,11 +39,31 @@ DO.Mean.SEM.Graphs.wilcox(
 
 \item{SeuV5}{Seuratv5 object? (TRUE or FALSE)}
 }
+\value{
+a ggplot or a list with plot and data frame
+}
 \description{
 Perform SEM-based graphs with Wilcox test on single-cell level for Seurat objects.
 Calculates mean expression values and SEM for the selected feature, and visualizes them.
 Performs pairwise Wilcox tests comparing conditions, with optional custom control condition and clustering.
 Optionally returns a summary data frame, statistical test results, and the generated plot.
+}
+\examples{
+\dontrun{
+
+(optional)
+ListTest <- list()
+ListTest[[1]] <- c("CTRL", "CONDITION")
+
+DO.Mean.SEM.Graphs.wilcox(
+  Seu_object = Seurat,
+  Feature = "CDH5",
+  ListTest = ListTest,
+  ctrl.condition = "CTRL",
+  group.by="condition"
+)
+}
+
 }
 \author{
 Mariano Ruz Jurado
