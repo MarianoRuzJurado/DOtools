@@ -14,6 +14,7 @@
 #'
 #' @import ggplot2
 #' @import tidyverse
+#' @import magrittr
 #'
 #' @return a ggplot or a dataframe
 #'
@@ -153,6 +154,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #'
 #' @import ggplot2
 #' @import tidyverse
+#' @import magrittr
 #'
 #' @return a ggplot or a list with plot and data frame
 #'
@@ -394,6 +396,7 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #'
 #' @import ggplot2
 #' @import tidyverse
+#' @import magrittr
 #'
 #' @return a ggplot or a list used data frames
 #'
@@ -819,6 +822,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #'
 #' @import ggplot2
 #' @import tidyverse
+#' @import magrittr
 #' @import Seurat
 #'
 #' @return a ggplot
@@ -1246,6 +1250,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #'
 #' @import ggplot2
 #' @import tidyverse
+#' @import magrittr
 #'
 #' @return a ggplot
 #'

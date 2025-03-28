@@ -181,6 +181,7 @@ DO.FullRecluster <- function(Seu_object,
 #' @return Plot with Refined colors and axes
 #'
 #' @import Seurat
+#' @import ggplot2
 #'
 #' @examples
 #' \dontrun{
