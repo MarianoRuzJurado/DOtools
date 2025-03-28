@@ -1433,7 +1433,7 @@ DO.Dotplot <- function(Seu_object,
       plot_max_y <- ggplot_build(pmain)
       plot_max_y <- plot_max_y$layout$panel_params[[1]]$y.range[2] + annotation_x_position
 
-      pmain <- jjAnno::annoSegment(
+      pmain <- .annoSegment(
         object = pmain,
         annoPos = "top",
         aesGroup = T,
