@@ -13,6 +13,7 @@
 #' @param group.by select the seurat object slot where your conditions can be found, default conditon
 #'
 #' @import ggplot2
+#' @import ggpubr
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
@@ -154,6 +155,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
 #'
 #' @import ggplot2
+#' @import ggpubr
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
@@ -397,6 +399,7 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
 #'
 #' @import ggplot2
+#' @import ggpubr
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
@@ -824,6 +827,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #' @param step_mod value for defining the space between one test and the next one
 #'
 #' @import ggplot2
+#' @import ggpubr
 #' @import tidyverse
 #' @import dplyr
 #' @import magrittr
