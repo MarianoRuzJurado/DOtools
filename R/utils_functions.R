@@ -128,6 +128,7 @@ DO.CellTypist <- function(Seu_object,
 #' @return a Seurat Object with new clustering named seurat_Recluster
 #'
 #' @import Seurat
+#' @import progress
 #'
 #' @examples
 #' \dontrun{
@@ -330,13 +331,13 @@ DO.Subset <- function(Seu_object,
 
   #By a name in the provided column
   if (!is.null(ident_name) && is.null(ident_thresh))  {
-    cat("Specified 'ident_name': expecting a categorical variable.")
+    cat("Specified 'ident_name': expecting a categorical variable.\n")
     SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] %in% ident_name]
   }
 
   #By a threshold in the provided column
   if (is.null(ident_name) && !is.null(ident_thresh))  {
-    cat(paste0("Specified 'ident_thresh': expecting numeric thresholds specified as character, ident_thresh = ", paste0(ident_thresh, collapse = " ")))
+    cat(paste0("Specified 'ident_thresh': expecting numeric thresholds specified as character, ident_thresh = ", paste0(ident_thresh, collapse = " "),"\n"))
 
     #Extract the numeric value and operator
     operator <- gsub("[0-9.]", "", ident_thresh)
@@ -372,7 +373,10 @@ DO.Subset <- function(Seu_object,
                                        SingleCellExperiment::colData(SCE_Object)[, ident] > threshold[2]]
       }
     }
+  }
 
+  if (ncol(SCE_Object_sub) == 0) {
+    stop("No cells left after subsetting!\n")
   }
 
   Seu_object_sub <- as.Seurat(SCE_Object_sub)
@@ -428,7 +432,7 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
   stopifnot("object must be a Seurat object" = inherits(Seu_object, "Seurat"))
 
   layers_to_remove <- grep(pattern, Layers(Seu_object), value = TRUE)
-  obj@assays$RNA@layers[layers_to_remove] <- NULL
+  Seu_object@assays$RNA@layers[layers_to_remove] <- NULL
 
   layerNames <- Layers(Seu_object)
   message(paste(layers_to_remove, "is removed."))

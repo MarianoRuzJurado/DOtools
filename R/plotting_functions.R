@@ -1264,6 +1264,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @import magrittr
 #' @import dplyr
 #' @import reshape2
+#' @import ggtext
 #'
 #' @return a ggplot
 #'
@@ -1300,8 +1301,6 @@ DO.Dotplot <- function(Seu_object,
                        limits_colorscale=NULL,
                        coord_flip=F,
                        ... ){
-  require(ggtext)
-  require(Seurat)
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
