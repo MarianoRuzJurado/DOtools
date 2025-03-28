@@ -17,6 +17,7 @@
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
+#' @import reshape2
 #'
 #' @return a ggplot or a dataframe
 #'
@@ -159,6 +160,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
+#' @import reshape2
 #'
 #' @return a ggplot or a list with plot and data frame
 #'
@@ -403,6 +405,7 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
+#' @import reshape2
 #'
 #' @return a ggplot or a list used data frames
 #'
@@ -1260,6 +1263,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @import tidyverse
 #' @import magrittr
 #' @import dplyr
+#' @import reshape2
 #'
 #' @return a ggplot
 #'
