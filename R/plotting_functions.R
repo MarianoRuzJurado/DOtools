@@ -446,7 +446,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
                                step_mod=0,
                                hjust.wilcox.2=0.5,
                                vjust.wilcox.2=0,
-                               width_errorbar=0.4){
+                               sign_bar=0.8){
 
   if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
@@ -772,7 +772,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
                                  hjust= hjust.wilcox.2,
                                  vjust = vjust.wilcox.2,
                                  tip.length = 0.02,
-                                 bracket.size = 0.8)
+                                 bracket.size = sign_bar)
 
       p2 = p2 + stat_pvalue_manual(stat.test_plot,
                                    label = p_label,
@@ -788,7 +788,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
                                    hjust= hjust.wilcox.2,
                                    vjust = vjust.wilcox.2,
                                    tip.length = 0.02,
-                                   bracket.size = 0.8,
+                                   bracket.size = sign_bar,
                                    color = "transparent")
 
     }
@@ -874,7 +874,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                size.wilcox=3.33,
                                hjust.wilcox.2=0.5,
                                vjust.wilcox.2=0,
-                               width_errorbar=0.4){
+                               sign_bar=0.4){
 
 
   #aggregate expression, pseudobulk to visualize the boxplot
@@ -1228,7 +1228,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                hjust= hjust.wilcox.2,
                                vjust = vjust.wilcox.2,
                                tip.length = 0.02,
-                               bracket.size = 0.8)
+                               bracket.size = sign_bar)
   }
 
   print(p)

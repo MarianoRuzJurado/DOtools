@@ -25,7 +25,7 @@ DO.Vln.Plot.wilcox(
   step_mod = 0,
   hjust.wilcox.2 = 0.5,
   vjust.wilcox.2 = 0,
-  width_errorbar = 0.4
+  sign_bar = 0.8
 )
 }
 \arguments{
