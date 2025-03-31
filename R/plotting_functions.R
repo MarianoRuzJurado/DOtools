@@ -874,7 +874,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                size.wilcox=3.33,
                                hjust.wilcox.2=0.5,
                                vjust.wilcox.2=0,
-                               sign_bar=0.4){
+                               sign_bar=0.8){
 
 
   #aggregate expression, pseudobulk to visualize the boxplot
