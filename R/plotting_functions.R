@@ -1301,6 +1301,11 @@ DO.Dotplot <- function(Seu_object,
                        limits_colorscale=NULL,
                        coord_flip=F,
                        ... ){
+  #TODO implement colZ
+  if (colZ==T) {
+    colZ=F
+    warning("colZ was set to TRUE but this is not supported right now. Continue without colZ.")
+  }
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
