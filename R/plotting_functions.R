@@ -1304,7 +1304,7 @@ DO.Dotplot <- function(Seu_object,
   #TODO implement colZ
   if (colZ==T) {
     colZ=F
-    warning("colZ was set to TRUE but this is not supported right now. Continue without colZ.")
+    warning("colZ was set to TRUE but this is not supported right now. Continue without colZ.\n")
   }
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
