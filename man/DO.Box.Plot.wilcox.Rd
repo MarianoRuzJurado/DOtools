@@ -24,7 +24,8 @@ DO.Box.Plot.wilcox(
   size.wilcox = 3.33,
   hjust.wilcox.2 = 0.5,
   vjust.wilcox.2 = 0,
-  sign_bar = 0.8
+  sign_bar = 0.8,
+  orderAxis = NULL
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ DO.Box.Plot.wilcox(
 \item{vjust.wilcox}{value for vertical of text}
 
 \item{size.wilcox}{value for size of text of statistical test}
+
+\item{orderAxis}{vector for xaxis sorting, alphabetically by default}
 }
 \value{
 a ggplot

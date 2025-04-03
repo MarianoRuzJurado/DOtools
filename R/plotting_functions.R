@@ -828,6 +828,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #' @param vjust.wilcox value for vertical of text
 #' @param size.wilcox value for size of text of statistical test
 #' @param step_mod value for defining the space between one test and the next one
+#' @param orderAxis vector for xaxis sorting, alphabetically by default
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -874,7 +875,9 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                size.wilcox=3.33,
                                hjust.wilcox.2=0.5,
                                vjust.wilcox.2=0,
-                               sign_bar=0.8){
+                               sign_bar=0.8,
+                               orderAxis=NULL
+                               ){
 
 
   #aggregate expression, pseudobulk to visualize the boxplot
@@ -1134,6 +1137,11 @@ DO.Box.Plot.wilcox <- function(Seu_object,
     }
   }
 
+  if (!is.null(orderAxis)) {
+    pseudo_Seu[[group.by]][,1] <- factor(pseudo_Seu[[group.by]][,1], levels = orderAxis)
+  }
+
+
   if (is.null(group.by.2)) {
     p <- SCpubr::do_BoxPlot(sample = pseudo_Seu,
                             feature = Feature,
@@ -1181,10 +1189,16 @@ DO.Box.Plot.wilcox <- function(Seu_object,
       p_label="p = {p}"
     }
 
-    stat.test_plot <- stat.test %>%
-      mutate(y.position = seq(from= max(pseudo_Seu@assays$RNA$data[Feature,][!is.na(pseudo_Seu@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))
-    # mutate(x.axis = unique(pseudo_Seu$celltype.con)) %>%
-    # dplyr::select(x.axis, y.position, p.adj)
+
+    if (Feature %in% rownames(Seu_object)) {
+      stat.test_plot <- stat.test %>%
+        mutate(y.position = seq(from= max(pseudo_Seu@assays$RNA$data[Feature,][!is.na(pseudo_Seu@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))
+    } else{
+      stat.test_plot <- stat.test %>%
+        mutate(y.position = seq(from= max(pseudo_Seu@meta.data[,Feature][!is.na(pseudo_Seu@meta.data[,Feature])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))
+
+    }
+
 
     p = p + stat_pvalue_manual(stat.test_plot,
                                label = "p = {p.adj}",
