@@ -1256,8 +1256,6 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                tip.length = 0.02,
                                bracket.size = sign_bar)
   }
-
-  print(p)
   return(p)
 }
 
