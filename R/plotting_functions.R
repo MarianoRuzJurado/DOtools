@@ -908,36 +908,48 @@ DO.Box.Plot.wilcox <- function(Seu_object,
   if (Feature %in% rownames(Seu_object)) {
     df_Feature = data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
                             Feature = Seu_object[["RNA"]]$data[Feature,],
-                            cluster = Seu_object[[sample.column]])
+                            cluster = Seu_object[[sample.column]][,1])
     df_Feature[,Feature] <- expm1(Seu_object@assays$RNA$data[Feature,])
 
   }else{
     df_Feature = data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
                             Feature = FetchData(Seu_object, vars = Feature)[,1],
-                            cluster = Seu_object[[sample.column]])
+                            cluster = Seu_object[[sample.column]][,1])
 
-    #Compute mean Sen_Score1 for each orig.ident
-    aggregated_meta <- Seu_object@meta.data %>%
-      group_by(!!sym(group.by), !!sym(sample.column), !!sym(group.by.2)) %>%
-      summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
+    if (is.null(group.by.2)) {
+      aggregated_meta <- Seu_object@meta.data %>%
+        group_by(!!sym(group.by), !!sym(sample.column)) %>%
+        summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
 
-    aggregated_meta$comb <- paste(aggregated_meta$condition,
-                                  aggregated_meta$orig.ident,
-                                  aggregated_meta$annotation_refined,
-                                  sep = "_")
+      aggregated_meta$comb <- paste(aggregated_meta[[group.by]],
+                                    aggregated_meta[[sample.column]],
+                                    sep = "_")
+      pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(pseudo_Seu[[sample.column]][,1], aggregated_meta$comb)]
 
-    #cover the case of subsetted to only have one cell type
-    if (!length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
-      pseudo_Seu$orig.ident <- gsub("_", "-", pseudo_Seu$orig.ident)
     } else{
-      pseudo_Seu$orig.ident <- paste0(gsub("_", "-", pseudo_Seu$orig.ident), "-", unique(Seu_object@meta.data[[group.by.2]]))
-      pseudo_Seu$orig.ident <- gsub("_", "-", pseudo_Seu$orig.ident)
-      rownames(pseudo_Seu@meta.data) <- pseudo_Seu$orig.ident
+      #Compute mean for each orig.ident
+      aggregated_meta <- Seu_object@meta.data %>%
+        group_by(!!sym(group.by), !!sym(sample.column), !!sym(group.by.2)) %>%
+        summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
+
+      aggregated_meta$comb <- paste(aggregated_meta[[group.by]],
+                                    aggregated_meta[[group.by.2]],
+                                    aggregated_meta[[sample.column]],
+                                    sep = "_")
+
+      #cover the case of subsetted to only have one cell type
+      if (!length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
+        pseudo_Seu[[sample.column]][,1] <- gsub("_", "-", pseudo_Seu[[sample.column]][,1])
+      } else{
+        pseudo_Seu[[sample.column]][,1] <- paste0(gsub("_", "-", pseudo_Seu[[sample.column]][,1]), "-", unique(Seu_object@meta.data[[group.by.2]]))
+        pseudo_Seu[[sample.column]][,1] <- gsub("_", "-", pseudo_Seu[[sample.column]][,1])
+        rownames(pseudo_Seu@meta.data) <- pseudo_Seu[[sample.column]][,1]
+      }
+      aggregated_meta$comb <- gsub("_", "-", aggregated_meta$comb)
+      pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(pseudo_Seu[[sample.column]][,1], aggregated_meta$comb)]
+
     }
-    aggregated_meta$comb <- gsub("_", "-", aggregated_meta$comb)
 
-
-    pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(pseudo_Seu$orig.ident, aggregated_meta$comb)]
 
   }
 
