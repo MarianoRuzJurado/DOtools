@@ -4,10 +4,18 @@
 \alias{DO.FullRecluster}
 \title{DO.FullRecluster}
 \usage{
-DO.FullRecluster(Seu_object, res = 0.5, algorithm = 4, graph.name = "RNA_snn")
+DO.FullRecluster(
+  Seu_object,
+  over_clustering = "seurat_clusters",
+  res = 0.5,
+  algorithm = 4,
+  graph.name = "RNA_snn"
+)
 }
 \arguments{
 \item{Seu_object}{The seurat object}
+
+\item{over_clustering}{Column in metadata in object with clustering assignments for cells, default seurat_clusters}
 
 \item{res}{Resolution for the new clusters, default 0.5}
 

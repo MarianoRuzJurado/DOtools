@@ -123,6 +123,7 @@ DO.CellTypist <- function(Seu_object,
 #' The new clustering results are stored in a metadata column called `seurat_Recluster`.
 #' Suitable for improving cluster precision and granularity after initial clustering.
 #' @param Seu_object The seurat object
+#' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
 #' @return a Seurat Object with new clustering named seurat_Recluster
@@ -141,26 +142,27 @@ DO.CellTypist <- function(Seu_object,
 #'
 #' @export
 DO.FullRecluster <- function(Seu_object,
+                             over_clustering = "seurat_clusters",
                              res = 0.5,
                              algorithm=4,
                              graph.name="RNA_snn"){
 
-  if (is.null(Seu_object$seurat_clusters)) {
+  if (is.null(Seu_object@meta.data[[over_clustering]])) {
     stop("No seurat clusters defined, please run FindClusters before Reclustering, or fill the slot with a clustering")
   }
-  Idents(Seu_object) <- "seurat_clusters"
+  Idents(Seu_object) <- over_clustering
 
-  Seu_object$seurat_Recluster <- as.vector(Seu_object$seurat_clusters)
-  pb <- progres::progress_bar$new(total = length(unique(Seu_object$seurat_clusters)))
-  for (cluster in unique(Seu_object$seurat_clusters)) {
+  Seu_object$seurat_Recluster <- as.vector(Seu_object@meta.data[[over_clustering]])
+  pb <- progress::progress_bar$new(total = length(unique(Seu_object@meta.data[[over_clustering]])))
+  for (cluster in unique(Seu_object@meta.data[[over_clustering]])) {
     pb$tick()
     Seu_object <- FindSubCluster(Seu_object,
-                                   cluster = as.character(cluster),
-                                   graph.name = graph.name,
-                                   algorithm = algorithm,
-                                   resolution = res)
+                                 cluster = as.character(cluster),
+                                 graph.name = graph.name,
+                                 algorithm = algorithm,
+                                 resolution = res)
 
-    cluster_cells <- rownames(Seu_object@meta.data)[Seu_object$seurat_clusters == cluster]
+    cluster_cells <- rownames(Seu_object@meta.data)[Seu_object@meta.data[[over_clustering]] == cluster]
     Seu_object$seurat_Recluster[cluster_cells] <- Seu_object$sub.cluster[cluster_cells]
   }
   Seu_object$sub.cluster <- NULL
