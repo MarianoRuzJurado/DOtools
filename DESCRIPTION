@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Functions to make your life easier when working with Seurat.
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: 
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"))
 Description: This package provides functions for creating various visualizations, convenient wrappers, and quality-of-life utilities for Seurat objects. It offers a streamlined approach to re-clustering and integrates CellTypist for automated cell type annotation.
@@ -15,6 +15,7 @@ Imports:
         ggplot2 (>= 3.5.0),
         ggpubr (>= 0.6.0),
         ggtext (>= 0.1.2),
+        ggalluvial (>= 0.12.5),
         tidyverse (>= 2.0.0),
         reshape2 (>= 1.4.4),
         dplyr (>= 1.1.4),
