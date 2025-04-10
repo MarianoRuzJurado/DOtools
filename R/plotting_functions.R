@@ -1837,7 +1837,12 @@ DO.CellComposition <- function(Seu_object,
     ungroup()
 
   #assign p-values
-  prop_df$p_val <- rep(results_df$adjusted_p_values, length(unique(prop_df$timepoint)))
+  if (!is.null(results_df$adjusted_p_values)) {
+    prop_df$p_val <- rep(results_df$adjusted_p_values, length(unique(prop_df[[condition_column]])))
+  } else{
+    prop_df$p_val <- rep(results_df$p_values, length(unique(prop_df[[condition_column]])))
+  }
+
   prop_df$p_val <- ifelse(as.numeric(prop_df$p_val) > 0.05, ">0.05", "<0.05")
 
   prop_df$variable<- as.vector(prop_df$variable)
