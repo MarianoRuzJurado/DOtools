@@ -11,6 +11,7 @@ DO.Dotplot(
   group.by.y = NULL,
   group.by.y2 = NULL,
   across.group.by.x = F,
+  across.group.by.y = F,
   dot.size = c(1, 6),
   plot.margin = c(1, 1, 1, 1),
   midpoint = 0.5,
@@ -39,6 +40,8 @@ DO.Dotplot(
 \item{group.by.y2}{second group name to look for in meta data}
 
 \item{across.group.by.x}{calculate a pseudobulk expression approach for the x-axis categories}
+
+\item{across.group.by.y}{calculate a pseudobulk expression approach for the y-axis categories, if group.by.y2 is specified Pseudobulk will be splitted by it}
 
 \item{dot.size}{Vector of dot size}
 

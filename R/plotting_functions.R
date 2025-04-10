@@ -1272,6 +1272,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @param group.by.y group name to look for in meta data
 #' @param group.by.y2 second group name to look for in meta data
 #' @param across.group.by.x calculate a pseudobulk expression approach for the x-axis categories
+#' @param across.group.by.y calculate a pseudobulk expression approach for the y-axis categories, if group.by.y2 is specified Pseudobulk will be splitted by it
 #' @param dot.size Vector of dot size
 #' @param plot.margin = plot margins
 #' @param midpoint midpoint in color gradient
@@ -1311,6 +1312,7 @@ DO.Dotplot <- function(Seu_object,
                        group.by.y = NULL,
                        group.by.y2 = NULL,
                        across.group.by.x=F,
+                       across.group.by.y=F,
                        dot.size = c(1,6),
                        plot.margin = c(1, 1, 1, 1),
                        midpoint = 0.5,
@@ -1333,6 +1335,10 @@ DO.Dotplot <- function(Seu_object,
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
+  }
+
+  if(across.group.by.x==T && across.group.by.y==T){
+    stop("Both Pseudobulk options are set to true, please define just one!")
   }
 
   #type of Feature
@@ -1431,6 +1437,24 @@ DO.Dotplot <- function(Seu_object,
     bulk_tmp$xaxis <- "Pseudobulk"
     data.plot.res <- dplyr::bind_rows(data.plot.res, bulk_tmp)
     data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = c("Pseudobulk", setdiff(sort(unique(data.plot.res$xaxis)), "Pseudobulk")))
+  }
+
+  #create bulk expression for group.by.y, will divide by group.by.y2 if provided
+  if (across.group.by.y == T) {
+    if (is.null(group.by.y2)) {
+      bulk_tmp <- data.plot.res %>% dplyr::group_by(xaxis, gene) %>%
+        summarise(avg.exp = mean(avg.exp), pct.exp = mean(pct.exp))
+      bulk_tmp$id <- "Pseudobulk"
+      data.plot.res <- dplyr::bind_rows(data.plot.res, bulk_tmp)
+      data.plot.res$id <- factor(data.plot.res$id, levels = c("Pseudobulk", setdiff(sort(unique(data.plot.res$id)), "Pseudobulk")))
+    } else{
+      bulk_tmp <- data.plot.res %>% dplyr::group_by(xaxis, gene, group) %>%
+        summarise(avg.exp = mean(avg.exp), pct.exp = mean(pct.exp))
+      bulk_tmp$id <- paste0("Pseudobulk (", bulk_tmp$group, ")")
+      data.plot.res <- dplyr::bind_rows(data.plot.res, bulk_tmp)
+      pseudo_levels <- unique(bulk_tmp$id)
+      data.plot.res$id <- factor(data.plot.res$id, levels = c(pseudo_levels, setdiff(sort(unique(data.plot.res$id)), pseudo_levels)))
+    }
   }
 
   # get the scale pvalue for plotting
@@ -1561,6 +1585,20 @@ DO.Dotplot <- function(Seu_object,
             axis.text.x=ggtext::element_markdown(color = "black",angle = 90,hjust = 1,vjust = 0.5, size = 14, family = "Helvetica"))+
       scale_x_discrete(labels = function(labels){
         labels <- ifelse(labels== "Pseudobulk", paste0("<b>", labels, "</b>"),labels)
+        return(labels)
+      })
+
+  } else if(across.group.by.y == T){
+
+    pmain <- pmain + ggplot2::geom_point(ggplot2::aes(fill = fill.values, size = pct.exp), shape = 21, stroke = point_stroke)+
+      guides.layer + facet_grid(cols = vars(gene), scales = "fixed") +
+      ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
+      ggplot2::scale_size_continuous(breaks = pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n = 10)[seq(1, 10, by = 2)],
+                                     limits = c(min(data.plot.res$pct.exp) * 1.05, max(data.plot.res$pct.exp) * 1.05))+
+      theme(panel.spacing = unit(0, "lines"),
+            axis.text.y = ggtext::element_markdown(color = "black", angle = 0, hjust = 1, vjust = 0.5, size = 14, family = "Helvetica"))+
+      scale_y_discrete(labels = function(labels) {
+        labels <- ifelse(labels %in% pseudo_levels, paste0("<b>", labels, "</b>"), labels)
         return(labels)
       })
 
@@ -1836,7 +1874,7 @@ DO.CellComposition <- function(Seu_object,
     mutate(proportion = freq / sum(freq)) %>%
     ungroup()
 
-  #assign p-values
+  #assign p-values # keep an eye out if this causes bugs
   if (!is.null(results_df$adjusted_p_values)) {
     prop_df$p_val <- rep(results_df$adjusted_p_values, length(unique(prop_df[[condition_column]])))
   } else{
