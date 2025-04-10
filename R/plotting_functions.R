@@ -1445,8 +1445,9 @@ DO.Dotplot <- function(Seu_object,
       bulk_tmp <- data.plot.res %>% dplyr::group_by(xaxis, gene) %>%
         summarise(avg.exp = mean(avg.exp), pct.exp = mean(pct.exp))
       bulk_tmp$id <- "Pseudobulk"
+      pseudo_levels <- unique(bulk_tmp$id)
       data.plot.res <- dplyr::bind_rows(data.plot.res, bulk_tmp)
-      data.plot.res$id <- factor(data.plot.res$id, levels = c("Pseudobulk", setdiff(sort(unique(data.plot.res$id)), "Pseudobulk")))
+      data.plot.res$id <- factor(data.plot.res$id, levels = c(pseudo_levels, setdiff(sort(unique(data.plot.res$id)), pseudo_levels)))
     } else{
       bulk_tmp <- data.plot.res %>% dplyr::group_by(xaxis, gene, group) %>%
         summarise(avg.exp = mean(avg.exp), pct.exp = mean(pct.exp))
