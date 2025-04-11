@@ -15,7 +15,7 @@ DO.Dotplot(
   dot.size = c(1, 6),
   plot.margin = c(1, 1, 1, 1),
   midpoint = 0.5,
-  colZ = F,
+  scale_gene = F,
   returnValue = F,
   log1p_nUMI = T,
   hide_zero = T,
@@ -49,7 +49,7 @@ DO.Dotplot(
 
 \item{midpoint}{midpoint in color gradient}
 
-\item{colZ}{IF True calculates the Z-score of the average expression per column}
+\item{scale_gene}{IF True calculates the Z-score of the average expression per gene}
 
 \item{hide_zero}{Removes dots for genes with 0 expression}
 

@@ -1278,7 +1278,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @param midpoint midpoint in color gradient
 #' @param Feature Genes or DF of interest, Data frame should have columns with gene and annotation information, e.g. output of FindAllMarkers
 #' @param limits_colorscale Set manually colorscale limits
-#' @param colZ IF True calculates the Z-score of the average expression per column
+#' @param scale_gene IF True calculates the Z-score of the average expression per gene
 #' @param hide_zero Removes dots for genes with 0 expression
 #' @param annotation_x Adds annotation on top of x axis instead on y axis
 #' @param point_stroke Defines the thickness of the black stroke on the dots
@@ -1316,7 +1316,7 @@ DO.Dotplot <- function(Seu_object,
                        dot.size = c(1,6),
                        plot.margin = c(1, 1, 1, 1),
                        midpoint = 0.5,
-                       colZ=F,
+                       scale_gene=F,
                        returnValue = F,
                        log1p_nUMI=T,
                        hide_zero=T,
@@ -1327,13 +1327,8 @@ DO.Dotplot <- function(Seu_object,
                        limits_colorscale=NULL,
                        coord_flip=F,
                        ... ){
-  #TODO implement colZ
-  if (colZ==T) {
-    colZ=F
-    warning("colZ was set to TRUE but this is not supported right now. Continue without colZ.\n")
-  }
 
-  if(!is.vector(Feature) && !is.data.frame(Feature)){
+    if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
   }
 
@@ -1465,9 +1460,10 @@ DO.Dotplot <- function(Seu_object,
     data.plot.res$avg.exp.plot <- data.plot.res$avg.exp
   }
 
-  ### TODO Z Scoring per xaxis
-  if (colZ==T) {
-    data.plot.res %<>% dplyr::group_by(xaxis) %>%
+  #define how expression values are transformed
+  if (scale_gene==T) {
+    data.plot.res <- data.plot.res %>%
+      dplyr::group_by(gene) %>%
       dplyr::mutate(z_avg_exp = (avg.exp - mean(avg.exp, na.rm=TRUE)) / sd(avg.exp, na.rm=TRUE)) %>%
       ungroup()
     exp.title = "Scaled expression \n in group"
