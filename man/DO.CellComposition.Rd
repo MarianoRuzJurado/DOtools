@@ -20,6 +20,8 @@ DO.CellComposition(
   n_reps = NULL,
   legend.pos.x = 0.43,
   legend.pos.y = 0,
+  cowplot_width = 0.9,
+  cowlegend_width = 0.9,
   ...
 )
 }
@@ -53,6 +55,10 @@ DO.CellComposition(
 \item{legend.pos.x}{adjusts the position of the legend in horizontal}
 
 \item{legend.pos.y}{adjusts the position of the legend in vertical}
+
+\item{cowplot_width}{Changes the width on the plotting device for plot}
+
+\item{cowlegend_width}{Changes the width on the plotting device for legend, useful for adjusting the legend position i ncombinatio nwith legend.pos.x and y}
 
 \item{...}{Further arguments passed to scanpro plotting functions}
 }
