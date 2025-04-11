@@ -586,9 +586,9 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
   # Remove vectors with both elements having a mean of 0
   ListTest <- remove_zeros(ListTest, df.melt.sum)
 
-  if (!is.null(group.by.2) && length(ListTest) > 1) {
-    stop("The provided Seurat has more than two groups in group.by and you specified group.by.2, currently not supported (to crowded)!")
-  }
+  # if (!is.null(group.by.2) && length(ListTest) > 1) {
+  #   stop("The provided Seurat has more than two groups in group.by and you specified group.by.2, currently not supported (to crowded)!")
+  # }
 
 
   # artificially set a group to 0 in all their expression values to create the error in the test
@@ -1466,7 +1466,7 @@ DO.Dotplot <- function(Seu_object,
       dplyr::group_by(gene) %>%
       dplyr::mutate(z_avg_exp = (avg.exp - mean(avg.exp, na.rm=TRUE)) / sd(avg.exp, na.rm=TRUE)) %>%
       ungroup()
-    exp.title = "Scaled expression \n in group"
+    exp.title = "Scaled expression \n per gene"
     fill.values = data.plot.res$z_avg_exp
     ###
   } else if(log1p_nUMI ==T){
