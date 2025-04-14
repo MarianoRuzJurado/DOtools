@@ -11,14 +11,16 @@ DO.CellComposition(
   sample_column = "orig.ident",
   condition_column = "condition",
   transform_method = "logit",
-  sort_vector = NULL,
+  sort_x = NULL,
+  sub_ident = NULL,
+  sort_fill = NULL,
   scanpro_plots = F,
   scanpro_group = NULL,
   outputFolder = NULL,
   return_df = FALSE,
   bar_colors = NULL,
   n_reps = NULL,
-  legend.pos.x = 0.43,
+  legend.pos.x = 0.48,
   legend.pos.y = 0,
   cowplot_width = 0.9,
   cowlegend_width = 0.9,
@@ -38,7 +40,11 @@ DO.CellComposition(
 
 \item{transform_method}{Method of transformation of proporties, default: "logit"}
 
-\item{sort_vector}{Vector sorting the xaxis}
+\item{sort_x}{Vector sorting the xaxis}
+
+\item{sub_ident}{vector to subset the whole plot by}
+
+\item{sort_fill}{Vector sorting the bar segments}
 
 \item{scanpro_plots}{Boolean, will create plots provided in scanpro package, default: FALSE}
 
@@ -58,7 +64,7 @@ DO.CellComposition(
 
 \item{cowplot_width}{Changes the width on the plotting device for plot}
 
-\item{cowlegend_width}{Changes the width on the plotting device for legend, useful for adjusting the legend position i ncombinatio nwith legend.pos.x and y}
+\item{cowlegend_width}{Changes the width on the plotting device for legend, useful for adjusting the legend position in combination with legend.pos.x and y}
 
 \item{...}{Further arguments passed to scanpro plotting functions}
 }

@@ -1703,7 +1703,9 @@ theme_box <- function(){
 #' @param sample_column Column in meta data containing individual sample names
 #' @param condition_column Column in meta data plotted on the xaxis
 #' @param transform_method Method of transformation of proporties, default: "logit"
-#' @param sort_vector Vector sorting the xaxis
+#' @param sort_x Vector sorting the xaxis
+#' @param sort_fill Vector sorting the bar segments
+#' @param sub_ident vector to subset the whole plot by
 #' @param scanpro_plots Boolean, will create plots provided in scanpro package, default: FALSE
 #' @param scanpro_group Defines the clusters showed in scanpro plots
 #' @param outputFolder Scanpro plots will be saved in this directory, defaults to current working directory
@@ -1713,7 +1715,7 @@ theme_box <- function(){
 #' @param legend.pos.x adjusts the position of the legend in horizontal
 #' @param legend.pos.y adjusts the position of the legend in vertical
 #' @param cowplot_width Changes the width on the plotting device for plot
-#' @param cowlegend_width Changes the width on the plotting device for legend, useful for adjusting the legend position i ncombinatio nwith legend.pos.x and y
+#' @param cowlegend_width Changes the width on the plotting device for legend, useful for adjusting the legend position in combination with legend.pos.x and y
 #' @param ... Further arguments passed to scanpro plotting functions
 #'
 #' @return ggplot object or list
@@ -1745,14 +1747,16 @@ DO.CellComposition <- function(Seu_object,
                                sample_column="orig.ident",
                                condition_column="condition",
                                transform_method="logit",
-                               sort_vector=NULL,
+                               sort_x=NULL,
+                               sub_ident=NULL,
+                               sort_fill=NULL,
                                scanpro_plots=F,
                                scanpro_group=NULL,
                                outputFolder=NULL,
                                return_df=FALSE,
                                bar_colors=NULL,
                                n_reps=NULL,
-                               legend.pos.x=0.43,
+                               legend.pos.x=0.48,
                                legend.pos.y=0,
                                cowplot_width=0.9,
                                cowlegend_width=0.9,
@@ -1905,8 +1909,18 @@ DO.CellComposition <- function(Seu_object,
 
   # length(prop_df$variable)
 
-  if (!is.null(sort_vector)) {
-    prop_df[[condition_column]] <- factor(prop_df[[condition_column]], levels = sort_vector)
+  if (!is.null(sort_x)) {
+    prop_df[[condition_column]] <- factor(prop_df[[condition_column]], levels = sort_x)
+  }
+
+  #sub by sub_ident if given
+  if(!is.null(sub_ident)){
+    prop_df <- subset(prop_df, subset = variable %in% sub_ident)
+  }
+
+  #sort fill
+  if (!is.null(sort_fill)) {
+    prop_df$variable <- factor(prop_df$variable, levels = sort_fill)
   }
 
   p1 <- ggplot(prop_df,aes(y = proportion, x = !!sym(condition_column))) +
@@ -1916,9 +1930,9 @@ DO.CellComposition <- function(Seu_object,
     xlab("")+
     theme_classic()+
     theme(plot.title = element_text(face = "bold", color = "black", hjus = 0.5, size = 14),
-          axis.title.y = element_text(face = "bold", color = "black", size = 14),
-          axis.text.x = element_text(face = "bold", color = "black", angle = 0, hjust = 0.5, size = 14),
-          axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14),
+          axis.title.y = element_text(face = "bold", color = "black", size = 14, family = "Helvetica"),
+          axis.text.x = element_text(face = "bold", color = "black", angle = 0, hjust = 0.5, size = 14, family = "Helvetica"),
+          axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14, family = "Helvetica"),
           legend.position = "none",
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
@@ -1976,6 +1990,8 @@ DO.CellComposition <- function(Seu_object,
           axis.text.x = element_text(face = "bold", color = "transparent", angle = 0, hjust = 0.5, size = 14),
           axis.text.y = element_text(face = "bold", color = "transparent", hjust = 1, size = 14),
           legend.position = "right",
+          legend.title = element_text(size = 10, color = "black",hjust = 0.5,face = "bold", family = "Helvetica"),
+          legend.background = element_rect(fill = "transparent", colour = NA),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           axis.line = element_blank(),
