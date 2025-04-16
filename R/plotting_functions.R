@@ -1272,6 +1272,7 @@ DO.Box.Plot.wilcox <- function(Seu_object,
 #' @param group.by.y group name to look for in meta data
 #' @param group.by.y2 second group name to look for in meta data
 #' @param across.group.by.x calculate a pseudobulk expression approach for the x-axis categories
+#' @param sort_x Vector sorting the xaxis
 #' @param across.group.by.y calculate a pseudobulk expression approach for the y-axis categories, if group.by.y2 is specified Pseudobulk will be splitted by it
 #' @param dot.size Vector of dot size
 #' @param plot.margin = plot margins
@@ -1313,6 +1314,7 @@ DO.Dotplot <- function(Seu_object,
                        group.by.y2 = NULL,
                        across.group.by.x=F,
                        across.group.by.y=F,
+                       sort_x=NULL,
                        dot.size = c(1,6),
                        plot.margin = c(1, 1, 1, 1),
                        midpoint = 0.5,
@@ -1409,8 +1411,12 @@ DO.Dotplot <- function(Seu_object,
     #   dplyr::arrange(celltype)
   }
 
-
-  data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = sort(unique(data.plot.res$xaxis)))
+  #sort x by provided x-axis
+  if (is.null(sort_x)) {
+    data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = sort(unique(data.plot.res$xaxis)))
+  } else{
+    data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = sort_x)
+  }
 
   #create grouping column for multiple grouping variables on the y-axis
   if (!is.null(group.by.y2)) {
@@ -1505,7 +1511,8 @@ DO.Dotplot <- function(Seu_object,
 
 
 
-  pmain <- ggplot2::ggplot(data.plot.res, ggplot2::aes(x = !!sym(aes_var[1]),y = !!sym(aes_var[2]))) + ggplot2::theme_bw(base_size = 14)+
+  pmain <- ggplot2::ggplot(data.plot.res, ggplot2::aes(x = !!sym(aes_var[1]),y = !!sym(aes_var[2])))+
+    ggplot2::theme_bw(base_size = 14)+
     ggplot2::xlab("") + ggplot2::ylab("")+ ggplot2::coord_fixed(clip = "off")+
     ggplot2::theme(plot.margin = ggplot2::margin(t = plot.margin[1],
                                                  r = plot.margin[2],
@@ -2031,7 +2038,7 @@ DO.CellComposition <- function(Seu_object,
 
 
 
-# AnnoSegment function consveration: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
+# AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
 #' @author Mariano Ruz Jurado (originally: Jun Zhang)
 #' @title Annotation modifier for plots
 #' @description Used for segment the plot for further annotations
