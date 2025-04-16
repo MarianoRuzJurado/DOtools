@@ -1501,6 +1501,13 @@ DO.Dotplot <- function(Seu_object,
     # data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
     # data.plot.res$gene <- factor(data.plot.res$gene, levels = sort(unique(data.plot.res$gene)))
 
+    #sort x by provided x-axis
+    if (is.null(sort_x)) {
+      data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
+    } else{
+      data.plot.res$id <- factor(data.plot.res$id, levels = sort_x)
+    }
+
     aes_var <- c("gene", "id")
 
   } else{ # all other cases where group.by.y is specified
