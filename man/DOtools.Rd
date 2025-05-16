@@ -17,6 +17,7 @@
         \item \code{\link{DO.Subset}}: A function for subsetting Seurat objects based on metadata.
         \item \code{\link{DO.UMAP}}: A function for creating polished UMAP plots using either DimPlot or FeaturePlot.
         \item \code{\link{DO.Vln.Plot.wilcox}}: A function for generating violin plots with Wilcoxon test results.
+        \item \code{\link{DO.CellComposition}}: A function for visualizing and statistically analyzing cell-type composition changes across conditions using the Scanpro Python package, with support for bootstrapping, proportion plots, and customizable output.
         \item \code{\link{dot-annoSegment}}: A function for adding annotation segments to dot plots.
     }
 }

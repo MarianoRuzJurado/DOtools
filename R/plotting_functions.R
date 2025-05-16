@@ -1330,7 +1330,7 @@ DO.Dotplot <- function(Seu_object,
                        coord_flip=F,
                        ... ){
 
-    if(!is.vector(Feature) && !is.data.frame(Feature)){
+  if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
   }
 
@@ -1412,10 +1412,17 @@ DO.Dotplot <- function(Seu_object,
   }
 
   #sort x by provided x-axis
-  if (is.null(sort_x)) {
+  if (is.null(sort_x) && !is.null(group.by.y)) {
     data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = sort(unique(data.plot.res$xaxis)))
-  } else{
+  } else if (!is.null(sort_x) && !is.null(group.by.y)){
     data.plot.res$xaxis <- factor(data.plot.res$xaxis, levels = sort_x)
+  }
+
+  #sort x by provided x-axis for just one group.by.x
+  if (is.null(sort_x) && is.null(group.by.y)) {
+    data.plot.res$gene <- factor(data.plot.res$gene, levels = sort(unique(data.plot.res$gene)))
+  } else if (!is.null(sort_x) && is.null(group.by.y)){
+    data.plot.res$gene <- factor(data.plot.res$gene, levels = sort_x)
   }
 
   #create grouping column for multiple grouping variables on the y-axis
@@ -1501,12 +1508,12 @@ DO.Dotplot <- function(Seu_object,
     # data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
     # data.plot.res$gene <- factor(data.plot.res$gene, levels = sort(unique(data.plot.res$gene)))
 
-    #sort x by provided x-axis
-    if (is.null(sort_x)) {
-      data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
-    } else{
-      data.plot.res$id <- factor(data.plot.res$id, levels = sort_x)
-    }
+    # #sort x by provided x-axis
+    # if (is.null(sort_x)) {
+    #   data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
+    # } else{
+    #   data.plot.res$id <- factor(data.plot.res$id, levels = sort_x)
+    # }
 
     aes_var <- c("gene", "id")
 
