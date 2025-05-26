@@ -142,7 +142,7 @@ for SAMPLENAME in ${SAMPLENAMES[*]}; do
 
 	cellbender_cmd="cellbender remove-background \
 	--input=${cellRanger_out}/${SAMPLENAME}/outs/raw_feature_bc_matrix.h5 \
-	--output=${outPath}${SAMPLENAME}_out.h5
+	--output=${outPath}${SAMPLENAME}_out.h5 \
 	--cpu-threads=${cpu_threads} \
 	--epochs=${epochs} \
 	--learning-rate=${lr_arg} \
