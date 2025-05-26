@@ -1810,6 +1810,8 @@ DO.CellComposition <- function(Seu_object,
   Seu_object_sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
   AnnData_counts <- zellkonverter::SCE2AnnData(Seu_object_sce)
 
+
+
   # Import scanpro
   sc <- import("scanpro.scanpro")
   merge_design_props_fct <- py_get_attr(sc$ScanproResult, "_merge_design_props")

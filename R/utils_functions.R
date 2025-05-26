@@ -442,8 +442,150 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 }
 
 
+#' Run CellBender for one or more samples
+#'
+#' This function wraps a system call to a bash script for running CellBender on CellRanger outputs.
+#' It ensures required inputs are available and optionally installs CellBender in a conda env.
+#'
+#' @param cellranger_path Path to folder with CellRanger outputs.
+#' @param output_path Output directory for CellBender results.
+#' @param samplenames Optional vector of sample names. If NULL, will autodetect folders in `cellranger_path`.
+#' @param cuda Logical, whether to use GPU (CUDA).
+#' @param cpu_threads Number of CPU threads to use.
+#' @param epochs Number of training epochs.
+#' @param lr Learning rate.
+#' @param estimator_multiple_cpu Use estimator with multiple CPU threads (experimental).
+#' @param log Whether to enable logging.
+#' @param conda_path Optional path to the conda environment.
+#' @param bash_script Path to the bash script that runs CellBender.
+#'
+#' @export
+DO.Cellbender <- function(cellranger_path,
+                           output_path,
+                           samplenames = NULL,
+                           cuda = TRUE,
+                           cpu_threads = 15,
+                           epochs = 150,
+                           lr = 0.00001,
+                           estimator_multiple_cpu = FALSE,
+                           log = TRUE,
+                           conda_path = NULL,
+                           bash_script = "bash_scripts/run_CellBender.sh") {
+
+  # Check input paths
+  stopifnot(file.exists(cellranger_path))
+  stopifnot(file.exists(output_path))
+
+  # Warnings and logs
+  if (estimator_multiple_cpu)
+    message("Warning: estimator_multiple_cpu is TRUE. Not recommended for large datasets (>20–30k cells).")
+  if (epochs > 150)
+    message("Warning: Training for more than 150 epochs may lead to overfitting.")
+  if (!cuda)
+    message("Warning: Running without CUDA (GPU) may significantly increase run time.")
+
+  # Handle conda environment
+  if (is.null(conda_path)) {
+    conda_path <- file.path(path.expand("~"), ".venv/cellbender")
+  } else {
+    conda_path <- path.expand(conda_path)
+  }
+
+  if (!dir.exists(conda_path)) {
+    message("Creating conda environment for CellBender...")
+    conda_args1 <- c("conda","create","-y", "-p", "/home/mariano/.venv/cellbender", "python=3.7")
+    conda_args2 <- c("conda","run", "-p", "/home/mariano/.venv/cellbender", "pip", "install", "cellbender")
+    tryCatch({
+      system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
+      system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
+    }, error = function(e) {
+      stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
+    })
+  } else {
+    message(sprintf("Using existing conda environment at: %s", conda_path))
+  }
+
+  # Detect samples
+  if (is.null(samplenames)) {
+    samples <- list.dirs(cellranger_path, full.names = FALSE, recursive = FALSE)
+  } else {
+    samples <- samplenames
+  }
+
+  message(sprintf("Running CellBender for %d sample(s)", length(samples)))
+
+  # Loop through each sample
+  for (sample in samples) {
+    # Load HDF5 with reticulate or scanpy for expected_cells, total_droplets
+
+    # Run one by one but sequentially
+    # Estimate the number of cells to be used as upper and lower bound
+    h5_file <- file.path(cellranger_path, sample, "outs", "raw_feature_bc_matrix.h5")
+    tdata <- DropletUtils::read10xCounts(h5_file)
+
+    result_barcoderanks = DO.BarcodeRanks(tdata)
+
+    # Build command
+    cmd <- c("conda", "run", "-p", conda_path,
+             "bash", bash_script,
+             "-i", sample, "-o", output_path,
+             "--cellRanger-output", cellranger_path,
+             "--cpu-threads", cpu_threads,
+             "--epochs", epochs,
+             "--lr", lr,
+             "--expected-cells", result_barcoderanks[1],
+             "--total-droplets", result_barcoderanks[2])
+
+    if (cuda) cmd <- c(cmd, "--cuda")
+    if (log) cmd <- c(cmd, "--log")
+    if (estimator_multiple_cpu) cmd <- c(cmd, "--estimator_multiple_cpu")
+
+    # Run command
+    message(sprintf("Running CellBender for sample: %s", sample))
+    tryCatch({
+      system2(cmd[1], args = cmd[-1], stdout = T, stderr = T)
+    }, error = function(e) {
+      message(sprintf("Error running CellBender for sample %s: %s", sample, e$message))
+    })
+  }
+
+  message("Finished running CellBender.")
+  invisible(NULL)
+}
+
+#' Run DropletUtils::barcodeRanks to estimate cell bounds
+#'
+#' Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets
+#' using the knee and inflection points from barcodeRanks.
+#'
+#' @param matrix A sparse count matrix of class "dgCMatrix".
+#'
+#' @return A named numeric vector: `c(knee = ..., inflection = ...)`
+#' @export
+DO.BarcodeRanks <- function(SCE_obj) {
+  if (!inherits(SCE_obj, c("SingleCellExperiment"))) {
+    stop("Input must be a sparse matrix of class 'dgCMatrix' or 'DelayedMatrix'.")
+  }
+
+  result <- DropletUtils::barcodeRanks(SCE_obj)
+  metadata <- S4Vectors::metadata(result)
+
+  knee <- metadata$knee
+  inflection <- metadata$inflection
+
+  colsum <- colSums(SCE_obj@assays@data$counts)
+
+  xpc_cells <- length(colsum[colsum > knee])
+  total_cells <- length(colsum[colsum > inflection])
+
+  return(c(xpc_cells = xpc_cells, total_cells = total_cells))
+}
+
+
 umap_colors <- c(
   "#1f77b4", "#ff7f0e", "#2ca02c", "tomato2", "#9467bd", "chocolate3","#e377c2", "#ffbb78", "#bcbd22",
   "#17becf","darkgoldenrod2", "#aec7e8", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94","#f7b6d2", "#c7c7c7", "#dbdb8d",
   "#9edae5","sandybrown","moccasin","lightsteelblue","darkorchid","salmon2","forestgreen","bisque"
 )
+
+
