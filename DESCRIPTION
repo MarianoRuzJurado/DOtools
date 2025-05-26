@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Functions to make your life easier when working with Seurat.
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"))
 Description: This package provides functions for creating various visualizations, convenient wrappers, and quality-of-life utilities for Seurat objects. It offers a streamlined approach to re-clustering and integrates CellTypist for automated cell type annotation.
