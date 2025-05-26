@@ -27,7 +27,8 @@ Imports:
         progress (>= 1.2.3),
         ggiraphExtra (>= 0.3.0),
         grid (>= 4.4.3),
-        SCpubr (>= 2.0.2)
+        SCpubr (>= 2.0.2),
+        basilisk (>= 1.10.0)
 Suggests:
         knitr,
         rmarkdown,

@@ -146,7 +146,7 @@ DO.FullRecluster <- function(Seu_object,
                              res = 0.5,
                              algorithm=4,
                              graph.name="RNA_snn"){
-
+  #TODO add an argument for a new shared nearest neighbor call so you can use this function with other integration methods in the object otherwise it will use the latest calculated shared nearest neighbors and you need to do it outside of the function
   if (is.null(Seu_object@meta.data[[over_clustering]])) {
     stop("No seurat clusters defined, please run FindClusters before Reclustering, or fill the slot with a clustering")
   }
