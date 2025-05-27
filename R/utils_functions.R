@@ -494,7 +494,7 @@ DO.Cellbender <- function(cellranger_path,
   if (!dir.exists(conda_path)) {
     message("Creating conda environment for CellBender...")
     conda_args1 <- c("conda","create","-y", "-p", "/home/mariano/.venv/cellbender", "python=3.7")
-    conda_args2 <- c("conda","run", "-p", "/home/mariano/.venv/cellbender", "pip", "install", "cellbender")
+    conda_args2 <- c("conda","run", "-p", "/home/mariano/.venv/cellbender", "pip", "install", "cellbender", "lxml_html_clean")
     tryCatch({
       system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
       system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
