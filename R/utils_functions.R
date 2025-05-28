@@ -184,7 +184,7 @@ DO.Import <- function(pathways,
 
         Quantile.low.UMI <- Quality %>% group_by(label) %>%
           summarise(UMI = list(tibble::enframe(quantile(UMI,probs = low_quantile)))) %>%
-          unnest(cols = c(UMI))
+          tidyr::unnest(cols = c(UMI))
 
         #Subset
         Seu_obj <- subset(Seu_obj, subset = nCount_RNA > Quantile.low.UMI$value)
@@ -202,7 +202,7 @@ DO.Import <- function(pathways,
 
         Quantile.high.UMI <- Quality %>% group_by(label) %>%
           summarise(UMI = list(tibble::enframe(quantile(UMI,probs = high_quantile)))) %>%
-          unnest(cols = c(UMI))
+          tidyr::unnest(cols = c(UMI))
 
         #Subset
         Seu_obj <- subset(Seu_obj, subset = nCount_RNA < Quantile.high.UMI$value)
