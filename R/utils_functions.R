@@ -75,21 +75,21 @@ DO.Import <- function(pathways,
     pathway <- pathways[i]
     id <- ids[i]
 
-    print(id)
+    .logger(paste0("Sample: ",id))
 
     if(TenX==T){
-      print("Read Cellranger")
+      .logger("Read Cellranger")
       mtx <- Seurat::Read10X(pathway)
       outPath <- dirname(pathway)
     } else if(CellBender==T){
-      print("Read CellBender")
+      .logger("Read CellBender")
       file_path <- list.files(pathway,
                               pattern = "*filtered.h5",
                               full.names = TRUE)  #grab file
       mtx <- scCustomize::Read_CellBender_h5_Mat(file_path)
       outPath <- pathway
     } else{
-      print("Read Table")
+      .logger("Read Table")
       mtx <- read.table(pathway,
                         header = TRUE,
                         sep = ",",
@@ -106,7 +106,7 @@ DO.Import <- function(pathways,
                          nFeatures = nrow(mtx))
 
     #Create object + Filtering by minimum Genes per cell
-    print("Create Seurat")
+    .logger("Create Seurat")
     Seu_obj <- CreateSeuratObject(counts = mtx,
                                   project = id,
                                   min.cells=minCellGenes)
@@ -114,11 +114,11 @@ DO.Import <- function(pathways,
     df_met[2,] <- c("Rm_undetected_genes", ncol(Seu_obj), nrow(Seu_obj))
 
     Seu_obj$sample <- id #some naming
-    print(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
+    cat(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
     Seu_obj$condition <- sub("[-|_].*", "", id)
 
     #Set the filter on mito/ribo genes
-    ifelse(include_rbs==T,"Get Mitochondrial+Ribosomal content","Get Mitochondrial content")
+    ifelse(include_rbs==T,.logger("Get Mitochondrial+Ribosomal content"),.logger("Get Mitochondrial content"))
     if (include_rbs==T) {
       sel_ribofeatures <- grep("^(RPS|RPL)", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
       pt_ribo <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
@@ -131,14 +131,14 @@ DO.Import <- function(pathways,
     pt_mito <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[flt_mitofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
     Seu_obj$pt_mito <- pt_mito
 
-    print("Create QC images")
+    .logger("Create QC images")
 
     #write QC to file
     prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
     ggsave(plot = prefilter_plot, filename = paste0(outPath, "/QC_Plots_prefiltered.svg"), width = 10, height = 6)
 
     if (FilterCells==T) {
-      print("Start Filtering")
+      .logger("Start Filtering")
 
       #check if absolute values are set for counts and quantile is set too
       if(!is.null(min_counts) && !is.null(low_quantile)){
@@ -219,14 +219,14 @@ DO.Import <- function(pathways,
     ggsave(plot = postfilter_plot, filename = paste0(outPath, "/QC_Plots_postfiltered.svg"), width = 10, height = 6)
 
     #Preprocess steps Seurat
-    print("Running Normalisation")
+    .logger("Running Normalisation")
     Seu_obj <- NormalizeData(object = Seu_obj,verbose = FALSE)
 
-    print("Running Variable Gene Detection")
+    .logger("Running Variable Gene Detection")
     Seu_obj <- FindVariableFeatures(object = Seu_obj, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
 
     if(DeleteDoublets==TRUE){
-      print("Running scDblFinder")
+      .logger("Running scDblFinder")
       SCE_obj <- as.SingleCellExperiment(Seu_obj)
       SCE_obj <- scDblFinder::scDblFinder(SCE_obj)
       Seu_obj$scDblFinder_score <- SCE_obj$scDblFinder.score
@@ -238,11 +238,11 @@ DO.Import <- function(pathways,
   }
 
   #concatenate objects
-  print("Mergin objects")
+  .logger("Mergin objects")
   merged_obj <- Reduce(function(x, y) merge(x, y), object_list) # get rid of the error prone approach
-  print("Running ScaleData")
+  .logger("Running ScaleData")
   merged_obj <- ScaleData(object = merged_obj)
-  print("Run PCA")
+  .logger("Run PCA")
   merged_obj <- RunPCA(merged_obj, verbose = F, ...)
 
   return(merged_obj)
@@ -910,4 +910,11 @@ umap_colors <- c(
   )
 
   return(gg_plot)
+}
+
+
+#' @keywords internal
+.logger <- function(message) {
+  timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+  cat(paste0(timestamp, " - ", message, "\n"))
 }
