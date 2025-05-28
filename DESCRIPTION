@@ -32,7 +32,8 @@ Imports:
         basilisk (>= 1.10.0),
         DropletUtils (>= 1.28.0),
         scCustomize (>= 3.0.1),
-        openxlsx (>= 4.2.8)
+        openxlsx (>= 4.2.8),
+        tibble (>= 3.2.1)
 Suggests:
         knitr,
         rmarkdown,

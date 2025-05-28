@@ -74,6 +74,9 @@ DO.Import <- function(pathways,
 
     pathway <- pathways[i]
     id <- ids[i]
+
+    print(id)
+
     if(TenX==T){
       print("Read Cellranger")
       mtx <- Seurat::Read10X(pathway)
@@ -177,10 +180,10 @@ DO.Import <- function(pathways,
         Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
                               nGene=Seu_obj$nFeature_RNA,
                               label = factor(Seu_obj$sample),
-                              pt_mit_rib=Seu_obj[[pt_name]][,1])
+                              pt_mit_rib=Seu_obj$pt_mito)
 
         Quantile.low.UMI <- Quality %>% group_by(label) %>%
-          summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) %>%
+          summarise(UMI = list(tibble::enframe(quantile(UMI,probs = low_quantile)))) %>%
           unnest(cols = c(UMI))
 
         #Subset
@@ -195,10 +198,10 @@ DO.Import <- function(pathways,
         Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
                               nGene=Seu_obj$nFeature_RNA,
                               label = factor(Seu_obj$sample),
-                              pt_mit_rib=Seu_obj[[pt_name]][,1])
+                              pt_mit_rib=Seu_obj$pt_mito)
 
         Quantile.high.UMI <- Quality %>% group_by(label) %>%
-          summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) %>%
+          summarise(UMI = list(tibble::enframe(quantile(UMI,probs = high_quantile)))) %>%
           unnest(cols = c(UMI))
 
         #Subset
