@@ -135,7 +135,7 @@ DO.Import <- function(pathways,
 
     #write QC to file
     prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
-    ggsave(plot = prefilter_plot, filename = paste0(outPath, "QC_Plots_prefiltered.svg"), width = 10, height = 6)
+    ggsave(plot = prefilter_plot, filename = paste0(outPath, "/QC_Plots_prefiltered.svg"), width = 10, height = 6)
 
     if (FilterCells==T) {
       print("Start Filtering")
@@ -216,7 +216,7 @@ DO.Import <- function(pathways,
 
     #write QC after filtering to file
     postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
-    ggsave(plot = postfilter_plot, filename = paste0(outPath, "QC_Plots_postfiltered.svg"), width = 10, height = 6)
+    ggsave(plot = postfilter_plot, filename = paste0(outPath, "/QC_Plots_postfiltered.svg"), width = 10, height = 6)
 
     #Preprocess steps Seurat
     print("Running Normalisation")
