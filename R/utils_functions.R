@@ -243,7 +243,7 @@ DO.Import <- function(pathways,
   print("Running ScaleData")
   merged_obj <- ScaleData(object = merged_obj)
   print("Run PCA")
-  merged_obj <- RunPCA(merged_obj, ...)
+  merged_obj <- RunPCA(merged_obj, verbose = F, ...)
 
   return(merged_obj)
 }
@@ -903,7 +903,11 @@ umap_colors <- c(
     )
 
   gg_plot <- ggarrange(p1,p2,p3, nrow = 1)
-  gg_plot <- annotate_figure(gg_plot, top = text_grob(id,face="bold",color = "darkred",size=18,hjust = 0.3)) #TODO Add median to plots
+  gg_plot <- annotate_figure(gg_plot,top = grobTree(rectGrob(gp = gpar(fill = "white", col = NA)),
+                                                    textGrob(id, gp = gpar(fontface = "bold", col = "darkred", fontsize = 18),hjust = 0.3,x = unit(0.3, "npc")  # align horizontally at 30%
+      )
+    )
+  )
 
   return(gg_plot)
 }
