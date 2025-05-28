@@ -131,7 +131,7 @@ DO.Import <- function(pathways,
     print("Create QC images")
 
     #write QC to file
-    prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, layer = "counts")
+    prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
 
     if (FilterCells==T) {
       print("Start Filtering")
@@ -211,7 +211,7 @@ DO.Import <- function(pathways,
     write.xlsx(df_met, file = paste0(outPath, "/Summary_Metrics_sample_", id, ".xlsx"))
 
     #write QC after filtering to file
-    postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, layer = "counts")
+    postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
 
     #Preprocess steps Seurat
     print("Running Normalisation")
@@ -857,7 +857,7 @@ umap_colors <- c(
 #' @import ggplot2
 #'
 #' @keywords internal
-.QC_Vlnplot <- function(Seu_obj, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
+.QC_Vlnplot <- function(Seu_obj, id, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
   p1<- VlnPlot(Seu_obj,layer = "counts", features = features[1], ncol = 1, pt.size = 0, cols = "grey")+
     geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
     theme_light()+

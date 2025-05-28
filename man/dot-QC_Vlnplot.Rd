@@ -6,6 +6,7 @@
 \usage{
 .QC_Vlnplot(
   Seu_obj,
+  id,
   layer = "counts",
   features = c("nFeature_RNA", "nCount_RNA", "pt_mito")
 )
