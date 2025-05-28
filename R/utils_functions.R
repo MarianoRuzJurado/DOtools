@@ -77,12 +77,14 @@ DO.Import <- function(pathways,
     if(TenX==T){
       print("Read Cellranger")
       mtx <- Seurat::Read10X(pathway)
+      outPath <- dirname(pathway)
     } else if(CellBender==T){
       print("Read CellBender")
       file_path <- list.files(pathway,
                               pattern = "*filtered.h5",
                               full.names = TRUE)  #grab file
       mtx <- scCustomize::Read_CellBender_h5_Mat(file_path)
+      outPath <- pathway
     } else{
       print("Read Table")
       mtx <- read.table(pathway,
@@ -90,6 +92,7 @@ DO.Import <- function(pathways,
                         sep = ",",
                         dec = ".",
                         row.names = 1) # works for starsolo runs
+      outPath <- pathway
     }
 
     #Metrics file
@@ -203,14 +206,20 @@ DO.Import <- function(pathways,
       }
     }
 
+
+    #save metric files
+    write.xlsx(df_met, file = paste0(outPath, "/Summary_Metrics_sample_", id, ".xlsx"))
+
     #write QC after filtering to file
     postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, layer = "counts")
 
     #Preprocess steps Seurat
     print("Running Normalisation")
-    Seu_obj<-NormalizeData(object = Seu_obj,verbose = FALSE)
+    Seu_obj <- NormalizeData(object = Seu_obj,verbose = FALSE)
+
     print("Running Variable Gene Detection")
-    Seu_obj<-FindVariableFeatures(object = Seu_obj, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+    Seu_obj <- FindVariableFeatures(object = Seu_obj, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+
     if(DeleteDoublets==TRUE){
       print("Running scDblFinder")
       SCE_obj <- as.SingleCellExperiment(Seu_obj)
@@ -230,6 +239,8 @@ DO.Import <- function(pathways,
   merged_obj <- ScaleData(object = merged_obj)
   print("Run PCA")
   merged_obj <- RunPCA(merged_obj, ...)
+
+  return(merged_obj)
 }
 
 
