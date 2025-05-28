@@ -141,7 +141,7 @@ DO.Import <- function(pathways,
         stop("Both filtering minimum counts by absolute values and quantile is set to Value!")
       }
 
-      if(!is.null(max_counts) && !is.null(max_quantile)){
+      if(!is.null(max_counts) && !is.null(high_quantile)){
         stop("Both filtering maximum counts by absolute values and quantile is set to Value!")
       }
 
@@ -149,7 +149,7 @@ DO.Import <- function(pathways,
         stop("Both minimum count filtering methods are not set!")
       }
 
-      if(is.null(max_counts) && is.null(max_quantile)){
+      if(is.null(max_counts) && is.null(high_quantile)){
         stop("Both maximum count filtering methods are not set!")
       }
 
