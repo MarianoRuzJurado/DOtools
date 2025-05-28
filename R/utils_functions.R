@@ -226,7 +226,7 @@ DO.Import <- function(pathways,
     if(DeleteDoublets==TRUE){
       print("Running scDblFinder")
       SCE_obj <- as.SingleCellExperiment(Seu_obj)
-      SCE_obj <- scDblFinder(SCE_obj)
+      SCE_obj <- scDblFinder::scDblFinder(SCE_obj)
       Seu_obj$scDblFinder_score <- SCE_obj$scDblFinder.score
       Seu_obj$scDblFinder_class <- SCE_obj$scDblFinder.class
       Seu_obj <- subset(Seu_obj, scDblFinder_class == "singlet")
