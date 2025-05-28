@@ -20,14 +20,14 @@
         \item \code{\link{DO.CellComposition}}: A function for visualizing and statistically analyzing cell-type composition changes across conditions using the Scanpro Python package, with support for bootstrapping, proportion plots, and customizable output.
         \item \code{\link{DO.Import}}: A function for building a merged Seurat object from 10x software output, or directly from provided tables.
         \item \code{\link{DO.CellBender}}: A function for running CellBender in a virtual conda env with provided raw count h5 files.
-        \item \code{\link{dot-Do.BarcodeRanks}}: A function for .
+        \item \code{\link{dot-Do.BarcodeRanks}}: A function for estimating the number of expected cells and droplets.
         \item \code{\link{dot-QC.Vlnplot}}: A function for estimating the number of expected cells and droplets.
     }
 }
-\author{Mariano Ruz Jurado}
+\author{Mariano Ruz Jurado, David Rodriguez Morales}
 \seealso{
     \code{\link{DO.Box.Plot.wilcox}}, \code{\link{DO.CellTypist}}, \code{\link{DO.DietSeurat}}, \code{\link{DO.Dotplot}},
     \code{\link{DO.FullRecluster}}, \code{\link{DO.Mean.SEM.Graphs.cluster.t}}, \code{\link{DO.Mean.SEM.Graphs.wilcox}},
-    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.Vln.Plot.wilcox}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender},
-    \code{\link{dot-Do.BarcodeRanks}, \code{\link{dot-QC.Vlnplot}}}
+    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.Vln.Plot.wilcox}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender}},
+    \code{\link{dot-Do.BarcodeRanks}}, \code{\link{dot-QC.Vlnplot}}
 }
