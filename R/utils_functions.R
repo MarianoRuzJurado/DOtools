@@ -212,7 +212,7 @@ DO.Import <- function(pathways,
 
 
     #save metric files
-    write.xlsx(df_met, file = paste0(outPath, "/Summary_Metrics_sample_", id, ".xlsx"))
+    write.xlsx(df_met, file = paste0(outPath,"/", met_file))
 
     #write QC after filtering to file
     postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
@@ -903,10 +903,10 @@ umap_colors <- c(
     )
 
   gg_plot <- ggarrange(p1,p2,p3, nrow = 1)
-  gg_plot <- annotate_figure(gg_plot,top = grobTree(rectGrob(gp = gpar(fill = "white", col = NA)),
-                                                    textGrob(id, gp = gpar(fontface = "bold", col = "darkred", fontsize = 18),hjust = 0.3,x = unit(0.3, "npc")  # align horizontally at 30%
-      )
-    )
+  gg_plot <- annotate_figure(gg_plot,top = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = "white", col = NA), height = unit(1.5, "lines")),
+                                                          grid::textGrob(id, gp = grid::gpar(fontface = "bold", col = "darkred", fontsize = 18),hjust = 0.35, vjust=0.6  # align horizontally at 30%
+                                                          )
+  )
   )
 
   return(gg_plot)
