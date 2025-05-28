@@ -232,14 +232,14 @@ DO.Import <- function(pathways,
 
     if(DeleteDoublets==TRUE){
       .logger("Running scDblFinder")
-      SCE_obj <- as.SingleCellExperiment(Seu_obj)
+      SCE_obj <- suppressWarnings(as.SingleCellExperiment(Seu_obj)) # suppress this scale.data empty warning
       SCE_obj <- scDblFinder::scDblFinder(SCE_obj)
       Seu_obj$scDblFinder_score <- SCE_obj$scDblFinder.score
       Seu_obj$scDblFinder_class <- SCE_obj$scDblFinder.class
-      Seu_obj <- suppressWarnings(subset(Seu_obj, scDblFinder_class == "singlet")) # suppress this scale.data empty warning
+      Seu_obj <- subset(Seu_obj, scDblFinder_class == "singlet")
     }
 
-    object_list[i] <- Seu_obj # capture the final objects
+    object_list[[i]] <- Seu_obj # capture the final objects
   }
 
   #concatenate objects
