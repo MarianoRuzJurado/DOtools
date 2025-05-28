@@ -1,3 +1,238 @@
+#' @title DO.Import
+#' @author Mariano Ruz Jurado & David John
+#' @description
+#' Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
+#' performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
+#' Returns a merged and processed Seurat object ready for downstream analysis.
+#'
+#' @param pathways A character vector of paths to directories or files containing raw expression matrices.
+#' @param ids A character vector of sample identifiers, matching the order of `pathways`.
+#' @param TenX Logical. If `TRUE`, data is imported using `Read10X` (CellRanger-style). Default is `FALSE`.
+#' @param CellBender Logical. If `TRUE`, assumes CellBender-processed HDF5 format. Default is `TRUE`.
+#' @param minCellGenes Integer. Minimum number of cells a gene must be expressed in to be retained. Default is 5.
+#' @param FilterCells Logical. If `TRUE`, applies QC filtering on cells based on mitochondrial content, counts, and feature thresholds. Default is `TRUE`.
+#' @param cut_mt Numeric. Maximum allowed mitochondrial gene proportion per cell. Default is 0.05.
+#' @param min_counts Numeric. Minimum UMI count threshold (optional, used only if `low_quantile` is `NULL`).
+#' @param max_counts Numeric. Maximum UMI count threshold (optional, used only if `high_quantile` is `NULL`).
+#' @param min_genes Numeric. Minimum number of genes detected per cell to retain. Optional.
+#' @param max_genes Numeric. Maximum number of genes detected per cell to retain. Optional.
+#' @param low_quantile Numeric. Quantile threshold (0–1) to filter low UMI cells (used if `min_counts` is `NULL`).
+#' @param high_quantile Numeric. Quantile threshold (0–1) to filter high UMI cells (used if `max_counts` is `NULL`).
+#' @param DeleteDoublets Logical. If `TRUE`, doublets are detected and removed using `scDblFinder`. Default is `TRUE`.
+#' @param include_rbs Logical. If `TRUE`, calculates ribosomal gene content in addition to mitochondrial content. Default is `TRUE`.
+#' @param ... Additional arguments passed to `RunPCA()`.
+#'
+#' @return A merged Seurat object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
+#'
+#' @import Seurat
+#' @import SeuratObject
+#' @import ggplot2
+#' @import ggpubr
+#' @import openxlsx
+#' @import dplyr
+#' @import magrittr
+#'
+#'
+#' @examples
+#' \dontrun{
+#' merged_obj <- DO.Import(
+#'   pathways = c("path/to/sample1", "path/to/sample2"),
+#'   ids = c("sample1", "sample2"),
+#'   TenX = TRUE,
+#'   CellBender = FALSE,
+#'   minCellGenes = 5,
+#'   FilterCells = TRUE,
+#'   cut_mt = 0.05,
+#'   min_counts = 1000,
+#'   max_counts = 20000,
+#'   min_genes = 200,
+#'   max_genes = 6000,
+#'   DeleteDoublets = TRUE
+#' )
+#' }
+#'
+#' @export
+DO.Import <- function(pathways,
+                      ids,
+                      TenX=F,
+                      CellBender=T,
+                      minCellGenes=5,
+                      FilterCells=T,
+                      cut_mt=.05,
+                      min_counts=NULL,
+                      max_counts=NULL,
+                      min_genes=NULL,
+                      max_genes=NULL,
+                      low_quantile=NULL,
+                      high_quantile=NULL,
+                      DeleteDoublets=T,
+                      include_rbs=T,
+                      ...){
+
+  object_list <- list()
+  for (i in seq_along(pathways)) {
+
+    pathway <- pathways[i]
+    id <- ids[i]
+    if(TenX==T){
+      print("Read Cellranger")
+      mtx <- Seurat::Read10X(pathway)
+    } else if(CellBender==T){
+      print("Read CellBender")
+      file_path <- list.files(pathway,
+                              pattern = "*filtered.h5",
+                              full.names = TRUE)  #grab file
+      mtx <- scCustomize::Read_CellBender_h5_Mat(file_path)
+    } else{
+      print("Read Table")
+      mtx <- read.table(pathway,
+                        header = TRUE,
+                        sep = ",",
+                        dec = ".",
+                        row.names = 1) # works for starsolo runs
+    }
+
+    #Metrics file
+    tdy <- format(Sys.Date(), "%y%m%d")
+    met_file <- paste0(tdy, "_metrics_", id, ".xlsx")
+    df_met <- data.frame(QC_Step = "Input_Shape",
+                         nCells = ncol(mtx),
+                         nFeatures = nrow(mtx))
+
+    #Create object + Filtering by minimum Genes per cell
+    print("Create Seurat")
+    Seu_obj <- CreateSeuratObject(counts = mtx,
+                                  project = id,
+                                  min.cells=minCellGenes)
+
+    df_met[2,] <- c("Rm_undetected_genes", ncol(Seu_obj), nrow(Seu_obj))
+
+    Seu_obj$sample <- id #some naming
+    print(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
+    Seu_obj$condition <- sub("[-|_].*", "", id)
+
+    #Set the filter on mito/ribo genes
+    ifelse(include_rbs==T,"Get Mitochondrial+Ribosomal content","Get Mitochondrial content")
+    if (include_rbs==T) {
+      sel_ribofeatures <- grep("^(RPS|RPL)", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
+      pt_ribo <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
+      Seu_obj$pt_ribo <- pt_ribo
+    }
+    flt_mitofeatures <- grep("^MT-", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
+    if (length(flt_mitofeatures)<1) {
+      warning("Warning: Could not find MT genes")
+    }
+    pt_mito <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[flt_mitofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
+    Seu_obj$pt_mito <- pt_mito
+
+    print("Create QC images")
+
+    #write QC to file
+    prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, layer = "counts")
+
+    if (FilterCells==T) {
+      print("Start Filtering")
+
+      #check if absolute values are set for counts and quantile is set too
+      if(!is.null(min_counts) && !is.null(low_quantile)){
+        stop("Both filtering minimum counts by absolute values and quantile is set to Value!")
+      }
+
+      if(!is.null(max_counts) && !is.null(max_quantile)){
+        stop("Both filtering maximum counts by absolute values and quantile is set to Value!")
+      }
+
+      if(is.null(min_counts) && is.null(low_quantile)){
+        stop("Both minimum count filtering methods are not set!")
+      }
+
+      if(is.null(max_counts) && is.null(max_quantile)){
+        stop("Both maximum count filtering methods are not set!")
+      }
+
+      #Remove all cells with below gene threshold
+      if (!is.null(min_genes)) {
+        Seu_obj <- subset(Seu_obj, subset = nFeature_RNA > min_genes)
+      }
+
+      if (!is.null(max_genes)) {
+        Seu_obj <- subset(Seu_obj, subset = nFeature_RNA < max_genes)
+      }
+      if (!is.null(min_genes) || !is.null(max_genes)) {
+        df_met[3,] <- c("Rm_cells_based_on_genes", ncol(Seu_obj), nrow(Seu_obj))
+      }
+
+      #Remove all cells with high MT content
+      Seu_obj <- subset(Seu_obj, subset = pt_mito < cut_mt)
+      df_met[4,] <- c("Rm_cell_high_MT", ncol(Seu_obj), nrow(Seu_obj))
+
+      #Remove by absolute values or quantiles
+      if (!is.null(min_counts) && is.null(low_quantile)) {
+        Seu_obj <- subset(Seu_obj, subset = nCount_RNA > min_counts)
+      } else{
+        #Calculate the Quantile for the lower end
+        Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
+                              nGene=Seu_obj$nFeature_RNA,
+                              label = factor(Seu_obj$sample),
+                              pt_mit_rib=Seu_obj[[pt_name]][,1])
+
+        Quantile.low.UMI <- Quality %>% group_by(label) %>%
+          summarise(UMI = list(enframe(quantile(UMI,probs = lowQuantile)))) %>%
+          unnest(cols = c(UMI))
+
+        #Subset
+        Seu_obj <- subset(Seu_obj, subset = nCount_RNA > Quantile.low.UMI$value)
+      }
+
+      #Remove by absolute values
+      if (!is.null(max_counts) && is.null(high_quantile)) {
+        Seu_obj <- subset(Seu_obj, subset = nCount_RNA < max_counts)
+      } else{
+        #Calculate the Quantile for the lower end
+        Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
+                              nGene=Seu_obj$nFeature_RNA,
+                              label = factor(Seu_obj$sample),
+                              pt_mit_rib=Seu_obj[[pt_name]][,1])
+
+        Quantile.high.UMI <- Quality %>% group_by(label) %>%
+          summarise(UMI = list(enframe(quantile(UMI,probs = highQuantile)))) %>%
+          unnest(cols = c(UMI))
+
+        #Subset
+        Seu_obj <- subset(Seu_obj, subset = nCount_RNA < Quantile.high.UMI$value)
+      }
+    }
+
+    #write QC after filtering to file
+    postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, layer = "counts")
+
+    #Preprocess steps Seurat
+    print("Running Normalisation")
+    Seu_obj<-NormalizeData(object = Seu_obj,verbose = FALSE)
+    print("Running Variable Gene Detection")
+    Seu_obj<-FindVariableFeatures(object = Seu_obj, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+    if(DeleteDoublets==TRUE){
+      print("Running scDblFinder")
+      SCE_obj <- as.SingleCellExperiment(Seu_obj)
+      SCE_obj <- scDblFinder(SCE_obj)
+      Seu_obj$scDblFinder_score <- SCE_obj$scDblFinder.score
+      Seu_obj$scDblFinder_class <- SCE_obj$scDblFinder.class
+      Seu_obj <- subset(Seu_obj, scDblFinder_class == "singlet")
+    }
+
+    object_list[i] <- Seu_obj # capture the final objects
+  }
+
+  #concatenate objects
+  print("Mergin objects")
+  merged_obj <- Reduce(function(x, y) merge(x, y), object_list) # get rid of the error prone approach
+  print("Running ScaleData")
+  merged_obj <- ScaleData(object = merged_obj)
+  print("Run PCA")
+  merged_obj <- RunPCA(merged_obj, ...)
+}
+
+
 
 #' @author Mariano Ruz Jurado
 #' @title DO Celltypist
@@ -403,6 +638,7 @@ DO.Subset <- function(Seu_object,
 
 
 #' @title Remove Layers from Seurat Object by Pattern
+#' @author Mariano Ruz Jurado
 #' @description This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
 #' It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 #' @param Seu_object Seurat object.
@@ -442,8 +678,8 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 }
 
 
-#' Run CellBender for one or more samples
-#'
+#' @title DO.CellBender
+#' @description It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 #' This function wraps a system call to a bash script for running CellBender on CellRanger outputs.
 #' It ensures required inputs are available and optionally installs CellBender in a conda env.
 #'
@@ -459,8 +695,11 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 #' @param conda_path Optional path to the conda environment.
 #' @param bash_script Path to the bash script that runs CellBender.
 #'
+#'
+#' @import DropletUtils
+#'
 #' @export
-DO.Cellbender <- function(cellranger_path,
+DO.CellBender <- function(cellranger_path,
                            output_path,
                            samplenames = NULL,
                            cuda = TRUE,
@@ -553,16 +792,17 @@ DO.Cellbender <- function(cellranger_path,
   invisible(NULL)
 }
 
-#' Run DropletUtils::barcodeRanks to estimate cell bounds
-#'
-#' Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets
+
+#' @title DO.BarcodeRanks
+#' @author Mariano Ruz Jurado
+#' @description Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets
 #' using the knee and inflection points from barcodeRanks.
 #'
-#' @param matrix A sparse count matrix of class "dgCMatrix".
+#' @param SCE_object A Single cell experiment object.
 #'
-#' @return A named numeric vector: `c(knee = ..., inflection = ...)`
-#' @export
-DO.BarcodeRanks <- function(SCE_obj) {
+#' @return A named numeric vector: `c(xpc_cells = ..., total_cells = ...)`
+#' @keywords internal
+.DO.BarcodeRanks <- function(SCE_obj) {
   if (!inherits(SCE_obj, c("SingleCellExperiment"))) {
     stop("Input must be a sparse matrix of class 'dgCMatrix' or 'DelayedMatrix'.")
   }
@@ -589,3 +829,65 @@ umap_colors <- c(
 )
 
 
+#' @title .QC_Vlnplot
+#' @author Mariano Ruz Jurado
+#' @description
+#' Generates violin plots for common quality control (QC) metrics of single-cell RNA-seq data from a Seurat object.
+#' The function displays three violin plots for the number of detected genes per cell (`nFeature_RNA`), total UMI counts per cell (`nCount_RNA`),
+#' and mitochondrial gene content percentage (`pt_mito`). Useful for visual inspection of QC thresholds and outliers.
+#'
+#' @param Seu_obj A Seurat object containing single-cell RNA-seq data.
+#' @param layer A character string specifying the assay layer to use (default is "counts").
+#' @param features A character vector of length 3 indicating the feature names to plot. Default is c("nFeature_RNA", "nCount_RNA", "pt_mito").
+#'
+#' @return A `ggplot` object arranged in a single row showing violin plots for the specified features with overlaid boxplots.
+#'
+#' @import Seurat
+#' @import ggplot2
+#'
+#' @keywords internal
+.QC_Vlnplot <- function(Seu_obj, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
+  p1<- VlnPlot(Seu_obj,layer = "counts", features = features[1], ncol = 1, pt.size = 0, cols = "grey")+
+    geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
+    theme_light()+
+    xlab("") +
+    theme(
+      plot.title = element_text(face = "bold", color = "black", hjust = 0.5, size = 14),
+      axis.title.y = element_text(face = "bold", color = "black", size = 14),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14),
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  p2<- VlnPlot(Seu_obj,layer = "counts", features = features[2], ncol = 1, pt.size = 0, cols = "grey")+
+    geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
+    theme_light()+
+    xlab("") +
+    theme(
+      plot.title = element_text(face = "bold", color = "black", hjust = 0.5, size = 14),
+      axis.title.y = element_text(face = "bold", color = "black", size = 14),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14),
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  p3<-VlnPlot(Seu_obj,layer = "counts", features = features[3], ncol = 1, pt.size = 0, cols = "grey")+
+    geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
+    theme_light()+
+    xlab("") +
+    theme(
+      plot.title = element_text(face = "bold", color = "black", hjust = 0.5, size = 14),
+      axis.title.y = element_text(face = "bold", color = "black", size = 14),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14),
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  gg_plot <- ggarrange(p1,p2,p3, nrow = 1)
+  gg_plot <- annotate_figure(gg_plot, top = text_grob(id,face="bold",color = "darkred",size=18,hjust = 0.3)) #TODO Add median to plots
+
+  return(gg_plot)
+}

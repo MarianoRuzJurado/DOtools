@@ -877,25 +877,25 @@ DO.Box.Plot.wilcox <- function(Seu_object,
                                vjust.wilcox.2=0,
                                sign_bar=0.8,
                                orderAxis=NULL
-                               ){
+){
 
 
   #aggregate expression, pseudobulk to visualize the boxplot
   if (is.null(group.by.2)) {
     pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
-                                      assays = "RNA",
-                                      return.seurat = T,
-                                      group.by = c(group.by, sample.column),
-                                      verbose = F)
+                                              assays = "RNA",
+                                              return.seurat = T,
+                                              group.by = c(group.by, sample.column),
+                                              verbose = F)
 
     pseudo_Seu$celltype.con <- pseudo_Seu[[group.by]]
 
   } else{
     pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
-                                      assays = "RNA",
-                                      return.seurat = T,
-                                      group.by = c(group.by, group.by.2, sample.column),
-                                      verbose = F)
+                                              assays = "RNA",
+                                              return.seurat = T,
+                                              group.by = c(group.by, group.by.2, sample.column),
+                                              verbose = F)
 
     #cover the case of subsetted to only have one cell type
     if (length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
@@ -927,7 +927,15 @@ DO.Box.Plot.wilcox <- function(Seu_object,
       aggregated_meta$comb <- paste(aggregated_meta[[group.by]],
                                     aggregated_meta[[sample.column]],
                                     sep = "_")
-      pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(pseudo_Seu[[sample.column]][,1], aggregated_meta$comb)]
+
+      #check if the matching agrees with the dash names if there were mutliple dashes in the names
+      if(!any(is.na(aggregated_meta$Feature[match(pseudo_Seu[[sample.column]][,1], aggregated_meta$comb)]))){
+        pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(pseudo_Seu[[sample.column]][,1], aggregated_meta$comb)]
+      } else{
+        unified_sep_column <- gsub("-", "_", pseudo_Seu[[sample.column]][,1])
+        pseudo_Seu[[Feature]] <- aggregated_meta$Feature[match(unified_sep_column, aggregated_meta$comb)]
+      }
+
 
     } else{
       #Compute mean for each orig.ident
@@ -1595,7 +1603,7 @@ DO.Dotplot <- function(Seu_object,
       ggplot2::geom_point(ggplot2::aes(fill = fill.values,
                                        size = pct.exp),shape = 21,stroke=point_stroke)+
       guides.layer +
-      facet_grid(cols = vars(gene), scales = "fixed")+
+      facet_grid(cols = vars(gene %>% factor(levels = Feature)), scales = "fixed")+
       ggplot2::scale_size(range = c(dot.size[1],dot.size[2])) +
       ggplot2::scale_size_continuous(breaks = pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)],
                                      limits = c(min(data.plot.res$pct.exp)*1.05,max(data.plot.res$pct.exp)*1.05))+
@@ -1609,7 +1617,7 @@ DO.Dotplot <- function(Seu_object,
   } else if(across.group.by.y == T){
 
     pmain <- pmain + ggplot2::geom_point(ggplot2::aes(fill = fill.values, size = pct.exp), shape = 21, stroke = point_stroke)+
-      guides.layer + facet_grid(cols = vars(gene), scales = "fixed") +
+      guides.layer + facet_grid(cols = vars(gene %>% factor(levels = Feature)), scales = "fixed") +
       ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
       ggplot2::scale_size_continuous(breaks = pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n = 10)[seq(1, 10, by = 2)],
                                      limits = c(min(data.plot.res$pct.exp) * 1.05, max(data.plot.res$pct.exp) * 1.05))+
@@ -1683,7 +1691,7 @@ DO.Dotplot <- function(Seu_object,
       ggplot2::geom_point(ggplot2::aes(fill = fill.values,
                                        size = pct.exp),shape = 21,stroke=point_stroke)+
       guides.layer +
-      facet_grid(cols = vars(gene), scales = "fixed")+
+      facet_grid(cols = vars(gene %>% factor(levels = Feature)), scales = "fixed")+
       ggplot2::scale_size(range = c(dot.size[1],dot.size[2])) +
       ggplot2::scale_size_continuous(breaks = pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)],
                                      limits = c(min(pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)])*.95,max(data.plot.res$pct.exp)*1.05))+

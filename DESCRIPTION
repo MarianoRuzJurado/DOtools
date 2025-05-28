@@ -30,7 +30,9 @@ Imports:
         grid (>= 4.4.3),
         SCpubr (>= 2.0.2),
         basilisk (>= 1.10.0),
-        DropletUtils (>= 1.28.0)
+        DropletUtils (>= 1.28.0),
+        scCustomize (>= 3.0.1),
+        openxlsx (>= 4.2.8)
 Suggests:
         knitr,
         rmarkdown,
