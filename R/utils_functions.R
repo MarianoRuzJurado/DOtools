@@ -114,11 +114,16 @@ DO.Import <- function(pathways,
     df_met[2,] <- c("Rm_undetected_genes", ncol(Seu_obj), nrow(Seu_obj))
 
     Seu_obj$sample <- id #some naming
-    cat(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
+    .logger(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
     Seu_obj$condition <- sub("[-|_].*", "", id)
 
     #Set the filter on mito/ribo genes
-    ifelse(include_rbs==T,.logger("Get Mitochondrial+Ribosomal content"),.logger("Get Mitochondrial content"))
+    if (include_rbs == TRUE) {
+      .logger("Get Mitochondrial+Ribosomal content")
+    } else {
+      .logger("Get Mitochondrial content")
+    }
+
     if (include_rbs==T) {
       sel_ribofeatures <- grep("^(RPS|RPL)", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
       pt_ribo <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
