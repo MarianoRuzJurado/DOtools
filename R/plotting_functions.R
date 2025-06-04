@@ -28,7 +28,7 @@
 #' ListTest <- list()
 #' ListTest[[1]] <- c("CTRL", "CONDITION")
 #'
-#' DO.Mean.SEM.Graphs.cluster.t(
+#' DO.BarplotClustert(
 #'   Seu_object = Seurat,
 #'   Features = "CDH5",
 #'   ListTest = ListTest,
@@ -38,7 +38,7 @@
 #' }
 #'
 #' @export
-DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
+DO.BarplotClustert <- function(Seu_object,
                                          Features,
                                          ListTest=NULL,
                                          returnValues=FALSE,
@@ -46,6 +46,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
                                          group.by = "condition",
                                          returnPlot=FALSE){
   print("Please use 'DO.Mean.SEM.Graphs.wilcox' for Seurat wilcox Test and Seuratv5 Support.")
+  warning("Only limited support for DO.Barplot.cluster.t")
   #SEM function defintion
   SEM <- function(x) sqrt(var(x)/length(x))
   #create data frame with conditions from provided Seu_object, aswell as original identifier of samples
@@ -171,7 +172,7 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #' ListTest <- list()
 #' ListTest[[1]] <- c("CTRL", "CONDITION")
 #'
-#' DO.Mean.SEM.Graphs.wilcox(
+#' DO.BarplotWilcox(
 #'   Seu_object = Seurat,
 #'   Feature = "CDH5",
 #'   ListTest = ListTest,
@@ -181,19 +182,19 @@ DO.Mean.SEM.Graphs.cluster.t <- function(Seu_object,
 #' }
 #'
 #' @export
-DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
-                                      Feature,
-                                      ListTest=NULL,
-                                      returnValues=FALSE,
-                                      ctrl.condition=NULL,
-                                      group.by = "condition",
-                                      wilcox_test=TRUE,
-                                      bar_colours=NULL,
-                                      stat_pos_mod = 1.15,
-                                      x_label_rotation=45,
-                                      plotPvalue=FALSE,
-                                      y_limits = NULL,
-                                      log1p_nUMI=T){
+DO.BarplotWilcox <- function(Seu_object,
+                             Feature,
+                             ListTest=NULL,
+                             returnValues=FALSE,
+                             ctrl.condition=NULL,
+                             group.by = "condition",
+                             wilcox_test=TRUE,
+                             bar_colours=NULL,
+                             stat_pos_mod = 1.15,
+                             x_label_rotation=45,
+                             plotPvalue=FALSE,
+                             y_limits = NULL,
+                             log1p_nUMI=T){
 
   if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
@@ -416,7 +417,7 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #' ListTest <- list()
 #' ListTest[[1]] <- c("CTRL", "CONDITION")
 #'
-#' DO.Vln.Plot.wilcox(
+#' DO.VlnPlot(
 #'   Seu_object = Seurat,
 #'   SeuV5=T,
 #'   Feature = "CDH5",
@@ -427,7 +428,7 @@ DO.Mean.SEM.Graphs.wilcox <- function(Seu_object,
 #' }
 #'
 #' @export
-DO.Vln.Plot.wilcox <- function(Seu_object,
+DO.VlnPlot <- function(Seu_object,
                                SeuV5=T,
                                Feature,
                                ListTest=NULL,
@@ -846,7 +847,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #' ListTest <- list()
 #' ListTest[[1]] <- c("CTRL", "CONDITION")
 #'
-#' DO.Box.Plot.wilcox(
+#' DO.BoxPlot(
 #'   Seu_object = Seurat,
 #'   Feature = "CDH5",
 #'   sample.column="orig.ident",
@@ -857,7 +858,7 @@ DO.Vln.Plot.wilcox <- function(Seu_object,
 #' }
 #'
 #' @export
-DO.Box.Plot.wilcox <- function(Seu_object,
+DO.BoxPlot <- function(Seu_object,
                                Feature,
                                sample.column = "orig.ident",
                                ListTest=NULL,
@@ -2058,8 +2059,6 @@ DO.CellComposition <- function(Seu_object,
   }
 
 }
-
-
 
 
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it

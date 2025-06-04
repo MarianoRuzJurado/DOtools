@@ -7,16 +7,16 @@
 \details{
     This package includes the following functions:
     \itemize{
-        \item \code{\link{DO.Box.Plot.wilcox}}: A function for creating box plots with Wilcoxon test results.
+        \item \code{\link{DO.BoxPlot}}: A function for creating box plots with Wilcoxon test results.
         \item \code{\link{DO.CellTypist}}: A function for running CellTypist on Seurat objects to predict cell types.
         \item \code{\link{DO.DietSeurat}}: A function for diet-based analysis of Seurat objects.
         \item \code{\link{DO.Dotplot}}: A function for creating dot plots for visualizing gene expression.
         \item \code{\link{DO.FullRecluster}}: A function for fine-grained reclustering of Seurat objects.
-        \item \code{\link{DO.Mean.SEM.Graphs.cluster.t}}: A function for generating mean and SEM graphs for cluster-based analysis with t-tests.
-        \item \code{\link{DO.Mean.SEM.Graphs.wilcox}}: A function for generating mean and SEM graphs with Wilcoxon test results.
+        \item \code{\link{DO.BarplotClustert}}: A function for generating mean and SEM graphs for cluster-based analysis with t-tests.
+        \item \code{\link{DO.BarplotWilcox}}: A function for generating mean and SEM graphs with Wilcoxon test results.
         \item \code{\link{DO.Subset}}: A function for subsetting Seurat objects based on metadata.
         \item \code{\link{DO.UMAP}}: A function for creating polished UMAP plots using either DimPlot or FeaturePlot.
-        \item \code{\link{DO.Vln.Plot.wilcox}}: A function for generating violin plots with Wilcoxon test results.
+        \item \code{\link{DO.VlnPlot}}: A function for generating violin plots with Wilcoxon test results.
         \item \code{\link{DO.CellComposition}}: A function for visualizing and statistically analyzing cell-type composition changes across conditions using the Scanpro Python package, with support for bootstrapping, proportion plots, and customizable output.
         \item \code{\link{DO.Import}}: A function for building a merged Seurat object from 10x software output, or directly from provided tables.
         \item \code{\link{DO.CellBender}}: A function for running CellBender in a virtual conda env with provided raw count h5 files.
