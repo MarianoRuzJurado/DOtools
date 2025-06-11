@@ -46,3 +46,25 @@ It is supposed to make something similar than the no longer working DietSeurat f
 This function wraps a system call to a bash script for running CellBender on CellRanger outputs.
 It ensures required inputs are available and optionally installs CellBender in a conda env.
 }
+\examples{
+\dontrun{
+# Define paths
+cellranger_path <- "/mnt/data/cellranger_outputs"
+output_path <- "/mnt/data/cellbender_outputs"
+
+# Optional: specify sample names if automatic detection is not desired
+samplenames <- c("Sample_1", "Sample_2")
+
+# Run CellBender (uses GPU by default)
+DO.CellBender(cellranger_path = cellranger_path,
+              output_path = output_path,
+              samplenames = samplenames,
+              cuda = TRUE,
+              cpu_threads = 8,
+              epochs = 100,
+              lr = 0.00001,
+              estimator_multiple_cpu = FALSE,
+              log = TRUE)
+}
+
+}

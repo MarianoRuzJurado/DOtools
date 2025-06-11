@@ -719,6 +719,28 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 #'
 #' @import DropletUtils
 #'
+#'
+#' @examples
+#' \dontrun{
+#' # Define paths
+#' cellranger_path <- "/mnt/data/cellranger_outputs"
+#' output_path <- "/mnt/data/cellbender_outputs"
+#'
+#' # Optional: specify sample names if automatic detection is not desired
+#' samplenames <- c("Sample_1", "Sample_2")
+#'
+#' # Run CellBender (uses GPU by default)
+#' DO.CellBender(cellranger_path = cellranger_path,
+#'               output_path = output_path,
+#'               samplenames = samplenames,
+#'               cuda = TRUE,
+#'               cpu_threads = 8,
+#'               epochs = 100,
+#'               lr = 0.00001,
+#'               estimator_multiple_cpu = FALSE,
+#'               log = TRUE)
+#' }
+#'
 #' @export
 DO.CellBender <- function(cellranger_path,
                            output_path,
@@ -811,6 +833,98 @@ DO.CellBender <- function(cellranger_path,
 
   message("Finished running CellBender.")
   invisible(NULL)
+}
+
+
+
+#' @title DO.scVI
+#' @description This function will run the scVI Integration from the scVI python package. It includes all parameters from the actual python package
+#' and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
+#'
+#' @param Seu_object Seurat object with annotation in meta.data
+#' @param batch_key: meta data column with batch information.
+#' @param layer_counts: layer with counts. Raw counts are required.
+#' @param layer_logcounts: layer with log-counts. Log-counts required for calculation of HVG.
+#' @param categorical_covariates: meta data column names with categorical covariates for scVI inference.
+#' @param continuos_covariates: meta data  column names with continuous covariates for scVI inference.
+#' @param n_hidden: number of hidden layers.
+#' @param n_latent: dimensions of the latent space.
+#' @param n_layers: number of layers.
+#' @param dispersion: dispersion mode for scVI.
+#' @param gene_likelihood: gene likelihood.
+#' @param get_model: return the trained model.
+#' @param ... additional arguments for `scvi.model.SCVI`.
+#'
+#' @import Seurat
+#' @import reticulate
+#' @import zellkonverter
+#'
+#'
+#' @examples
+#' # Run scVI using the 'orig.ident' column as the batch key
+#' Seu_object <- DO.scVI(Seu_object, batch_key = "orig.ident")
+#'
+#'
+#' @return Seurat Object with dimensionality reduction from scVI
+#' @export
+DO.scVI <- function(Seu_object,
+                    batch_key,
+                    layer_counts="counts",
+                    layer_logcounts="logcounts",
+                    categorical_covariates=NULL,
+                    continuos_covariates=NULL,
+                    n_hidden=128,
+                    n_latent=30,
+                    n_layers=3,
+                    dispersion="gene-batch",
+                    gene_likelihood="zinb",
+                    get_model=FALSE,
+                    ...){
+
+  #check if Variable Features are defined in the object
+  HVG <- VariableFeatures(Seu_object)
+  if (is.null(HVG)) {
+    stop("No highly variable Features found in the object! Please run FindVariableFeatures()!")
+  }
+
+  #Subset the object to the HVG
+  Seu_object <- subset(Seu_object, features = HVG)
+
+  #Conversion of Seu_object to anndata through zellkonverter
+  SCE_object <- as.SingleCellExperiment(Seu_object)
+  anndata_object <- zellkonverter::SCE2AnnData(SCE_object)
+  anndata_object$layers[['counts']] <- anndata_object$X # set
+
+  #source PATH to python script in install folder
+  path_py <- system.file("python", "scVI.py", package = "DOtools")
+  source_python(path_py)
+
+  run_scvi(adata = anndata_object,
+           batch_key = batch_key,
+           layer_counts = layer_counts,
+           layer_logcounts = layer_logcounts,
+           categorical_covariates = categorical_covariates,
+           continuos_covariates = continuos_covariates,
+           n_hidden = as.integer(n_hidden),
+           n_latent = as.integer(n_latent),
+           n_layers = as.integer(n_layers),
+           dispersion = dispersion,
+           gene_likelihood = gene_likelihood,
+           get_model = get_model,
+           ...)
+
+  scvi_embedding <- anndata_object$obsm[["X_scVI"]]
+  rownames(scvi_embedding) <- colnames(Seu_object)
+
+  scVI_reduction <- Seurat::CreateDimReducObject(
+    embeddings = scvi_embedding,
+    key = "scVI_",
+    assay = DefaultAssay(Seu_object)
+  )
+
+  Seu_object@reductions[["scVI"]] <- scVI_reduction
+
+  return(Seu_object)
 }
 
 

@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Functions to make your life easier when working with Seurat.
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"))
     person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut", "cre"))
