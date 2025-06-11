@@ -117,7 +117,7 @@ def split_bar_gsea(df: pd.DataFrame,
         print(f'Positive side has {len(df_pos)} and Negative side has {len(df_neg)}')
         missing_rows = topN - len(df_pos) if len(df_pos) < len(df_neg) else topN - len(df_neg)
         missing_rows_data = [np.nan for val in range(len(df_pos.columns))]
-        missing_df = pd.DataFrame([missing_rows_data] * missing_rows, columns=list(df_pos.columns))
+        missing_df = pd.DataFrame([missing_rows_data] * int(missing_rows), columns=list(df_pos.columns))
         missing_df[term_col] = ''
         missing_df[col_split] = 0
         if len(df_pos) > len(df_neg):
