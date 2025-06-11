@@ -2196,7 +2196,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
     }
 
     #Save under provided PATH
-    plt$savefig(paste0(path, "_", celltype, "_", filename), dpi=300, bbox_inches="tight")
+    plt$savefig(paste0(path, celltype, "_", filename), dpi=300, bbox_inches="tight")
 
   }
 }
