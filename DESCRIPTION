@@ -1,5 +1,5 @@
 Package: DOtools
-Title: Functions to make your life easier when working with Seurat.
+Title: Convenient functions to streamline your Seurat workflow.
 Version: 0.4.0
 Authors@R: c(
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre")),
@@ -38,3 +38,4 @@ Suggests:
         knitr,
         rmarkdown,
         jjAnno
+URL: https://marianoruzjurado.github.io/DOtools/

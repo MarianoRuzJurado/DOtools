@@ -861,9 +861,10 @@ DO.CellBender <- function(cellranger_path,
 #'
 #'
 #' @examples
+#' \dontrun{
 #' # Run scVI using the 'orig.ident' column as the batch key
 #' Seu_object <- DO.scVI(Seu_object, batch_key = "orig.ident")
-#'
+#' }
 #'
 #' @return Seurat Object with dimensionality reduction from scVI
 #' @export
