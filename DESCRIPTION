@@ -36,6 +36,5 @@ Imports:
         tibble (>= 3.2.1)
 Suggests:
         knitr,
-        rmarkdown,
-        jjAnno
+        rmarkdown
 URL: https://marianoruzjurado.github.io/DOtools/
