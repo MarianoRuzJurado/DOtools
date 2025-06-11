@@ -14,7 +14,7 @@ DO.SplitBarGSEA(
   log10_transform = TRUE,
   figsize = c(12, 8),
   topN = 10,
-  color_pairs = c("sandybrown", "royalblue"),
+  colors_pairs = c("sandybrown", "royalblue"),
   alpha_colors = 0.3,
   path = NULL,
   spacing = 5,
