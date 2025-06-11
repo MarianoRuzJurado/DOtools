@@ -2146,7 +2146,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
                             celltype="all")
 {
 
-  if (!"celltype" %in% df_GSEA) {
+  if (!"celltype" %in% colnames(df_GSEA)) {
     stop("Provided data frame has no column named 'celltype'! Please add a column with cell type information.")
   }
 
