@@ -2155,7 +2155,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
   source_python(path_py)
 
   #Initialize matplot package
-  plt <- import("matplot_lib.pyplot")
+  plt <- import("matplotlib.pyplot")
 
   #Subset by given celltype names
   if (!celltype=="all") {
