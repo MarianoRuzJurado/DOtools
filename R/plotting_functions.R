@@ -1767,7 +1767,7 @@ theme_box <- function(){
 #'   n_reps=5)
 #'
 #'
-#' )
+#'
 #' }
 #'
 #' @export

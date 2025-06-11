@@ -1,12 +1,12 @@
 Package: DOtools
-Title: Functions to make your life easier when working with Seurat.
+Title: Convenient functions to streamline your Seurat workflow.
 Version: 0.4.0
-Authors@R: 
-    person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"))
-    person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut", "cre"))
+Authors@R: c(
+    person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre")),
+    person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut"))
+    )
 Description: This package provides functions for creating various visualizations, convenient wrappers, and quality-of-life utilities for Seurat objects. It offers a streamlined approach to re-clustering and integrates CellTypist for automated cell type annotation.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -38,3 +38,4 @@ Suggests:
         knitr,
         rmarkdown,
         jjAnno
+URL: https://marianoruzjurado.github.io/DOtools/
