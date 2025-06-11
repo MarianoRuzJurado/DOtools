@@ -2060,6 +2060,146 @@ DO.CellComposition <- function(Seu_object,
 
 }
 
+#' @author Mariano Ruz Jurado
+#' @title DO Bar plot for GSEA df result
+#' @description This function generates a split barplot. This is a plot where the top 10 Go terms
+#'are shown, sorted based on a column ('col_split'). Two conditions are shown at the same
+#'time. One condition is shown in the positive axis, while the other in the negative one.
+#'The condition to be shown as positive is set with 'pos_col'.
+#'
+#'The GO terms will be shown inside the bars, if the term is too long, using 'cutoff',
+#'you can control the maximum number of characters per line.
+#'
+#' Pre-filter of the dataframe to contain significant Terms is recommended
+#'
+#' @param df_GSEA dataframe with the results of a gene set enrichment analysis
+#' @param term_col column in the dataframe that contains the terms
+#' @param col_split: column in the dataframe that will be used to sort and split the plot
+#' @param cond_col: column in the dataframe that contains the condition information
+#' @param pos_cond: condition that will be shown in the positive side of the plot
+#' @param cutoff: maximum number of characters per line
+#' @param log10_transform: if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation
+#' @param figsize: figure size
+#' @param topN: how many terms are shown
+#' @param path: path to save the plot
+#' @param filename: filename for the plot
+#' @param spacing: space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 % of the maximum X axis value.
+#' @param txt_size: size of the go terms text
+#' @param alpha_colors: alpha value for the colors of the bars
+#' @param colors_pairs: colors for each condition (1st color --> negative axis; 2nd color --> positive axis)
+#' @param title: title of the plot
+#' @param show: if False, the axis is return
+#'
+#'
+#' @return: None or the axis
+#'
+#' @import reticulate
+#'
+#' @examples
+#' \dontrun{
+#' #df with GSEA results e.g. Metascape results
+#' df_GSEA <- read.csv("path/to/GSEA_results.csv")
+#'
+#' #Please add a 'celltype' and 'condition' column
+#' head(df_GSEA)
+#' #Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.
+#'
+#' #Run SplitBarGSEA visualization
+#' DO.SplitBarGSEA(df_GSEA = df_GSEA,
+#'                 term_col = "Term",
+#'                 col_split = "Combined.Score",
+#'                 cond_col = "condition",          # condition column (e.g., experimental group)
+#'                 pos_cond = "Treatment",
+#'                 cutoff = 40,                 # max term length before truncation
+#'                 log10_transform = TRUE,
+#'                 figsize = c(12, 8),
+#'                 topN = 10,                   # top N GO terms to show
+#'                 color_pairs = c("sandybrown", "royalblue"),
+#'                 alpha_colors = 0.3,
+#'                 path = "results/plots",
+#'                 spacing = 5,
+#'                 txt_size = 12,
+#'                 filename = "SplitBar.svg",
+#'                 title = "Top 10 GO Terms in each Condition: ",
+#'                 show = FALSE,
+#'                 celltype = "all")
+#' }
+#'
+#' @export
+DO.SplitBarGSEA <- function(df_GSEA,
+                            term_col,
+                            col_split,
+                            cond_col,
+                            pos_cond,
+                            cutoff=40,
+                            log10_transform=TRUE,
+                            figsize=c(12,8),
+                            topN=10,
+                            color_pairs=c("sandybrown","royalblue"),
+                            alpha_colors=0.3,
+                            path=NULL,
+                            spacing=5,
+                            txt_size=12,
+                            filename="SplitBar.svg",
+                            title="Top 10 GO Terms in each Condition: ",
+                            show=F,
+                            celltype="all")
+{
+
+  if (!"celltype" %in% df_GSEA) {
+    stop("Provided data frame has no column named 'celltype'! Please add a column with cell type information.")
+  }
+
+  #source PATH to python script in install folder
+  path_py <- system.file("python", "GSEA_split_bar.py", package = "DOtools")
+  source_python(path_py)
+
+  #Initialize matplot package
+  plt <- import("matplot_lib.pyplot")
+
+  #Subset by given celltype names
+  if (!celltype=="all") {
+    df_GSEA <- df_GSEA[df_GSEA$celltype %in% celltype,]
+  }
+
+  #Run for each celltype the split_bar_gsea function
+  for (celltype in unique(df_GSEA$celltype)) {
+    df_GSEA_sub <- df_GSEA[df_GSEA$celltype == celltype,]
+    df_GSEA_sub$Term <- sapply(strsplit(df_GSEA_sub$Term, " \\(GO"), function(x)x[1])
+
+    #Conversion of the data.frame
+    df_GSEA_sub_pd <- r_to_py(df_GSEA_sub)
+
+    #run python function with given arguments
+    plot <- split_bar_gsea(df = df_GSEA_sub_pd,
+                           term_col = term_col,
+                           col_split = col_split,
+                           cond_col = cond_col,
+                           pos_cond = pos_cond,
+                           title = paste0(title, celltype),
+                           cutoff = cutoff,
+                           log10_transform = log10_transform,
+                           figsize = figsize,
+                           topN = topN,
+                           color_pairs = color_pairs,
+                           alpha_colors = alpha_colors,
+                           path = path,
+                           spacing = spacing,
+                           txt_size = txt_size,
+                           filename = filename,
+                           show = show)
+    #x-title settings
+    plot$set_xlabel("Combined Score")
+
+    if (show == TRUE) {
+      plt$show()
+    }
+
+    #Save under provided PATH
+    plt$savefig(paste0(path, "_", celltype, "_", filename), dpi=300, bbox_inches="tight")
+
+  }
+}
 
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
 #' @author Mariano Ruz Jurado (originally: Jun Zhang)

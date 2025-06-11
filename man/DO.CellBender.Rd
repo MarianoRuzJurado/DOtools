@@ -15,7 +15,7 @@ DO.CellBender(
   estimator_multiple_cpu = FALSE,
   log = TRUE,
   conda_path = NULL,
-  bash_script = "bash_scripts/run_CellBender.sh"
+  bash_script = system.file("bash", "_run_CellBender.sh", package = "DOtools")
 )
 }
 \arguments{
