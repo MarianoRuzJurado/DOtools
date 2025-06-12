@@ -1,4 +1,54 @@
 url: https://marianoruzjurado.github.io/DOtools/
+destination: docs
+
 template:
   bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#A6A6A6"
+  params:
+    ganalytics: UA-119440867-11
+    highlightcss: false
 
+development:
+  mode: auto
+
+navbar:
+  structure:
+    left: [home, intro, reference, articles, tutorials, news]
+    right: [github]
+  components:
+     type: dark
+     bg: primary
+
+reference:
+  - title: Package overview
+    contents:
+     - DOtools
+  - title: Preprocessing
+    desc: >
+    contents:
+      - DO.CellBender
+      - DO.Import
+  - title: Downstream processing
+    desc: >
+    contents:
+      - DO.scVI
+      - DO.CellTypist
+      - DO.FullRecluster
+  - title: scRNA plotting
+    desc: >
+    contents:
+      - DO.BarplotClustert
+      - DO.BarplotWilcox
+      - DO.VlnPlot
+      - DO.BoxPlot
+      - DO.Dotplot
+      - DO.CellComposition
+      - DO.SplitBarGSEA
+  - title: Utils
+    desc: >
+    contents:
+      - DO.UMAP
+      - DO.Subset
+      - DO.DietSeurat
