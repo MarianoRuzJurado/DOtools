@@ -14,6 +14,7 @@ DO.BarplotWilcox(
   wilcox_test = TRUE,
   bar_colours = NULL,
   stat_pos_mod = 1.15,
+  step_mod = 0.2,
   x_label_rotation = 45,
   plotPvalue = FALSE,
   y_limits = NULL,
@@ -35,7 +36,17 @@ DO.BarplotWilcox(
 
 \item{bar_colours}{colour vector}
 
+\item{stat_pos_mod}{Defines the distance to the graphs of the statistic}
+
+\item{step_mod}{Defines the distance between each statistics bracket}
+
+\item{x_label_rotation}{Rotation of x-labels}
+
 \item{plotPvalue}{plot the non adjusted p-value without correcting for multiple tests}
+
+\item{y_limits}{set limits for y-axis}
+
+\item{log1p_nUMI}{If nUMIs should be log1p transformed}
 
 \item{SeuV5}{Seuratv5 object? (TRUE or FALSE)}
 }

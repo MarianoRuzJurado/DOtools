@@ -155,6 +155,11 @@ DO.BarplotClustert <- function(Seu_object,
 #' @param bar_colours colour vector
 #' @param plotPvalue plot the non adjusted p-value without correcting for multiple tests
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
+#' @param stat_pos_mod Defines the distance to the graphs of the statistic
+#' @param step_mod Defines the distance between each statistics bracket
+#' @param x_label_rotation Rotation of x-labels
+#' @param log1p_nUMI If nUMIs should be log1p transformed
+#' @param y_limits set limits for y-axis
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -191,6 +196,7 @@ DO.BarplotWilcox <- function(Seu_object,
                              wilcox_test=TRUE,
                              bar_colours=NULL,
                              stat_pos_mod = 1.15,
+                             step_mod=0.2,
                              x_label_rotation=45,
                              plotPvalue=FALSE,
                              y_limits = NULL,
@@ -362,10 +368,10 @@ DO.BarplotWilcox <- function(Seu_object,
       y_pos_test <- max(y_limits)* stat_pos_mod - 0.1 * diff(y_limits)
     }
     if (plotPvalue==TRUE) {
-      p = p + stat_pvalue_manual(stat.test, label = "p = {p}", y.position = y_pos_test, step.increase = 0.2)
+      p = p + stat_pvalue_manual(stat.test, label = "p = {p}", y.position = y_pos_test, step.increase = step_mod)
     }
     else{
-      p = p + stat_pvalue_manual(stat.test, label = "p = {p.adj}", y.position = y_pos_test, step.increase = 0.2)
+      p = p + stat_pvalue_manual(stat.test, label = "p = {p.adj}", y.position = y_pos_test, step.increase = step_mod)
     }
   }
 

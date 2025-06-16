@@ -83,12 +83,17 @@ To show how the quality control works, we are going to use a public dataset from
 ```{r read_example_data}
 DOtools:::.example_10x()
 
-paths = c("/tmp/dootools_datasets/healthy/outs/",
-         "/tmp/dootools_datasets/disease/outs/")
+paths = c("/tmp/dotools_datasets/healthy/outs/filtered_feature_bc_matrix",
+         "/tmp/dotools_datasets/disease/outs/filtered_feature_bc_matrix")
 
-DO.Import(pathways = paths,
-          ids = c("sample1", "sample2"),
-          TenX = T)
+Seu_obj <- DO.Import(pathways = paths,
+                     ids = c("healthy-1", "disease-1"),
+                     TenX = T,
+                     DeleteDoublets = T,
+                     cut_mt = 5,
+                     min_counts = 500,
+                     min_genes = 300,
+                     high_quantile = .95)
 
 ```
 

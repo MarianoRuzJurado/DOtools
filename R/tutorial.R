@@ -1,7 +1,7 @@
 #' @title Download example dataset 10x
 #' @import cli
 #' @import curl
-#'
+#' @import utils
 #' @keywords internal
 .example_10x <- function() {
   dir.create("/tmp/dotools_datasets/healthy/outs", recursive = TRUE, showWarnings = FALSE)
@@ -32,7 +32,11 @@
 
     message(sprintf("⬇️  Downloading %s to %s", name, dest_file))
     curl_download(url = link, destfile = dest_file, mode = "wb")
+
+    message(sprintf("📦 Extracting %s", dest_file))
+    utils::untar(dest_file, exdir = dest_dir)
   }
 
+  message("✅ Download and extraction complete.")
   invisible(NULL)
 }
