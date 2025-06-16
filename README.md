@@ -11,7 +11,7 @@ devtools::install_github("MarianoRuzJurado/DOtools")
 ```
 
 # <b> Python package </b>
-If you prefer pyton over R for data analysis, we also provide a python version of the DOtools package.
+If you prefer python over R for data analysis, we also provide a python version of the DOtools package.
 Please refer for the python version to:
 https://github.com/davidrm-bio/DOTools_py
 

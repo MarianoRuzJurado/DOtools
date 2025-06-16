@@ -7,8 +7,6 @@
 #'
 #' @param pathways A character vector of paths to directories or files containing raw expression matrices.
 #' @param ids A character vector of sample identifiers, matching the order of `pathways`.
-#' @param TenX Logical. If `TRUE`, data is imported using `Read10X` (CellRanger-style). Default is `FALSE`.
-#' @param CellBender Logical. If `TRUE`, assumes CellBender-processed HDF5 format. Default is `TRUE`.
 #' @param minCellGenes Integer. Minimum number of cells a gene must be expressed in to be retained. Default is 5.
 #' @param FilterCells Logical. If `TRUE`, applies QC filtering on cells based on mitochondrial content, counts, and feature thresholds. Default is `TRUE`.
 #' @param cut_mt Numeric. Maximum allowed mitochondrial gene proportion per cell. Default is 0.05.
@@ -54,8 +52,6 @@
 #' @export
 DO.Import <- function(pathways,
                       ids,
-                      TenX=F,
-                      CellBender=T,
                       minCellGenes=5,
                       FilterCells=T,
                       cut_mt=.05,
@@ -72,31 +68,40 @@ DO.Import <- function(pathways,
   object_list <- list()
   for (i in seq_along(pathways)) {
 
-    pathway <- pathways[i]
     id <- ids[i]
+    pathway <- pathways[i]
 
     .logger(paste0("Sample: ",id))
 
-    if(TenX==T){
-      .logger("Read Cellranger")
-      mtx <- Seurat::Read10X(pathway)
-      outPath <- dirname(pathway)
-    } else if(CellBender==T){
-      .logger("Read CellBender")
-      file_path <- list.files(pathway,
-                              pattern = "*filtered.h5",
-                              full.names = TRUE)  #grab file
-      mtx <- scCustomize::Read_CellBender_h5_Mat(file_path)
-      outPath <- pathway
-    } else{
-      .logger("Read Table")
-      mtx <- read.table(pathway,
-                        header = TRUE,
-                        sep = ",",
-                        dec = ".",
-                        row.names = 1) # works for starsolo runs
-      outPath <- pathway
-    }
+    #cover the case when the user provides just the path to the folder with the .h5
+    file_path <- ifelse(dir.exists(pathway),
+                        list.files(pathway, pattern = "*filtered.h5",full.names = TRUE),
+                        pathway)
+    outPath <- ifelse(dir.exists(pathway),
+                      pathway,
+                      dirname(pathway))
+
+    #Try different methods to read provided path
+    .logger("Read matrix")
+    tryCatch({
+      mtx <- Seurat::Read10X_h5(file_path)
+      #Capture the case of multiomics saved in the cellranger results
+      if (is.list(mtx)) {
+        mtx <- mtx[[grep("gene",names(mtx), value = T, ignore.case = T)]]
+      }
+    }, error = function(x) {
+      warning("Matrix is not produced by Cellranger. Trying CellBender read...")
+      tryCatch({
+        mtx <- scCustomize::Read_CellBender_h5_Mat(file_path)
+      }, error = function(x2) {
+        warning("Matrix is not produced by CellBender. Trying simple read...")
+        mtx <- read.table(file_path,
+                          header = TRUE,
+                          sep = ",",
+                          dec = ".",
+                          row.names = 1)
+      })
+    })
 
     #Metrics file
     tdy <- format(Sys.Date(), "%y%m%d")
@@ -107,7 +112,7 @@ DO.Import <- function(pathways,
 
     #Create object + Filtering by minimum Genes per cell
     .logger("Create Seurat")
-    Seu_obj <- CreateSeuratObject(counts = mtx,
+    Seu_obj <- SeuratObject::CreateSeuratObject(counts = mtx,
                                   project = id,
                                   min.cells=minCellGenes)
 
@@ -243,12 +248,15 @@ DO.Import <- function(pathways,
   }
 
   #concatenate objects
-  .logger("Mergin objects")
+  .logger("Merging objects")
   merged_obj <- Reduce(function(x, y) merge(x, y), object_list) # get rid of the error prone approach
   .logger("Running ScaleData")
   merged_obj <- ScaleData(object = merged_obj)
   .logger("Run PCA")
   merged_obj <- RunPCA(merged_obj, verbose = F, ...)
+  #No idea why this is needed, but without the next two lines it doesnt work...
+  merged_obj <- JoinLayers(merged_obj)
+  merged_obj[["RNA"]] <- split(merged_obj[["RNA"]], f = merged_obj$orig.ident)
 
   return(merged_obj)
 }
@@ -267,6 +275,9 @@ DO.Import <- function(pathways,
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param assay_normalized Assay with log1p normalized expressions
 #' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
+#'
+#' @import dplyr
+#' @import ggplot2
 #'
 #' @return a seurat
 #'
@@ -331,7 +342,7 @@ DO.CellTypist <- function(Seu_object,
   DefaultAssay(Seu_object) <- assay_normalized
   if (SeuV5 == TRUE) {
     tmp.assay <- Seu_object
-    tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
+    tmp.assay[["RNA"]] <- suppressWarnings(as(tmp.assay[["RNA"]], Class = "Assay"))
     tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay, assay = assay_normalized)
     rownames(tmp.sce) <- toupper(rownames(tmp.sce))
 
@@ -362,6 +373,74 @@ DO.CellTypist <- function(Seu_object,
 
   probMatrix <- utils::read.csv(probFile, header = T, row.names = 1, stringsAsFactors = FALSE)
   Seu_object@meta.data$predicted_labels_celltypist <- labels$majority_voting
+
+  #Create dotplot with prob
+  probMatrix$cluster <- as.character(labels$over_clustering)
+
+  #calculate means
+  probMatrix_mean <- probMatrix %>%
+    dplyr::group_by(cluster) %>%
+    summarise(across(where(is.numeric), mean))
+
+  top_cluster <- probMatrix_mean %>%
+    rowwise() %>%
+    dplyr::mutate(
+      prob=max(c_across(-cluster)),
+      label= names(.) [which.max(c_across(-cluster))]
+      ) %>%
+    select(cluster, label, prob)
+  top_cluster$pct.exp <- 100 #since majority voting is set TRUE #TODO make this general if majority voting will become a boolean argument in the future
+
+  top_cluster$label <- factor(top_cluster$label, levels = unique(sort(top_cluster$label, decreasing = T)))
+  top_cluster$cluster <- factor(top_cluster$cluster, levels = top_cluster$cluster[order(top_cluster$label, decreasing = T)])
+
+
+  pmain <- ggplot(top_cluster, aes(x = cluster, y = label)) +
+    geom_point(aes(size = pct.exp, color = prob)) +
+    scale_color_gradient2(low = "royalblue3", high = "firebrick", midpoint = 0.5, limits = c(0, 1)) +
+    scale_size(range = c(2,10), breaks = c(20,40,60,80,100), limits = c(0,100)) +
+    DOtools:::theme_box() +
+    theme(plot.margin = ggplot2::margin(t = 1,
+                                        r = 1,
+                                        b = 1,
+                                        l = 1,
+                                        unit = "cm"),
+          axis.text = ggplot2::element_text(color = "black"),
+          legend.direction = "horizontal",
+          axis.text.x = element_text(color = "black",angle = 90,hjust = 1,vjust = 0.5, size = 14, family = "Helvetica"),
+          axis.text.y = element_text(color = "black", size = 14, family = "Helvetica"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title = element_text(size = 14, color = "black", family = "Helvetica"),
+          plot.title = element_text(size = 14, hjust = 0.5,face="bold", family = "Helvetica"),
+          plot.subtitle = element_text(size = 14, hjust = 0, family = "Helvetica"),
+          axis.line = element_line(color = "black"),
+          strip.text.x = element_text(size = 14, color = "black", family = "Helvetica", face = "bold"),
+          legend.text = element_text(size = 10, color = "black", family = "Helvetica"),
+          legend.title = element_text(size = 10, color = "black", family = "Helvetica", hjust =0, face = "bold"),
+          legend.position = "right",
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+    )
+
+  guides.layer <- ggplot2::guides(color = ggplot2::guide_colorbar(title = "Mean propability",
+                                                                 title.position = "top",
+                                                                 title.hjust = 0.5,
+                                                                 barwidth = unit(3.8,"cm"), # changes the width of the color legend
+                                                                 barheight = unit(0.5,"cm"),
+                                                                 frame.colour = "black",
+                                                                 frame.linewidth = 0.3,
+                                                                 ticks.colour = "black",
+                                                                 order = 2),
+                                  size = ggplot2::guide_legend(title = "Fraction of cells \n in group (%)",
+                                                               title.position = "top", title.hjust = 0.5, label.position = "bottom",
+                                                               override.aes = list(color = "grey40", fill = "grey50"),
+                                                               keywidth = ggplot2::unit(0.5, "cm"), # changes the width of the precentage dots in legend
+                                                               order = 1))
+
+  pmain <- pmain + guides.layer
+  print(pmain)
+
   if (returnProb==TRUE) {
     returnProb <- list(Seu_object, probMatrix)
     names(returnProb) <- c("SeuratObject", "probMatrix")
@@ -889,12 +968,12 @@ DO.scVI <- function(Seu_object,
   }
 
   #Subset the object to the HVG
-  Seu_object <- subset(Seu_object, features = HVG)
+  Seu_object_sub <- subset(Seu_object, features = HVG)
 
   #Conversion of Seu_object to anndata through zellkonverter
-  SCE_object <- as.SingleCellExperiment(Seu_object)
+  SCE_object <- as.SingleCellExperiment(Seu_object_sub)
   anndata_object <- zellkonverter::SCE2AnnData(SCE_object)
-  anndata_object$layers[['counts']] <- anndata_object$X # set
+  anndata_object$layers['counts'] <- anndata_object$X # set
 
   #source PATH to python script in install folder
   path_py <- system.file("python", "scVI.py", package = "DOtools")
@@ -917,11 +996,11 @@ DO.scVI <- function(Seu_object,
   scvi_embedding <- anndata_object$obsm[["X_scVI"]]
   rownames(scvi_embedding) <- colnames(Seu_object)
 
-  scVI_reduction <- Seurat::CreateDimReducObject(
+  scVI_reduction <- suppressWarnings(Seurat::CreateDimReducObject(
     embeddings = scvi_embedding,
     key = "scVI_",
-    assay = DefaultAssay(Seu_object)
-  )
+    assay = DefaultAssay(Seu_object_sub)
+  ))
 
   Seu_object@reductions[["scVI"]] <- scVI_reduction
 

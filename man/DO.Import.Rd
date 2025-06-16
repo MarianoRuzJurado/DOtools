@@ -7,8 +7,6 @@
 DO.Import(
   pathways,
   ids,
-  TenX = F,
-  CellBender = T,
   minCellGenes = 5,
   FilterCells = T,
   cut_mt = 0.05,
@@ -27,10 +25,6 @@ DO.Import(
 \item{pathways}{A character vector of paths to directories or files containing raw expression matrices.}
 
 \item{ids}{A character vector of sample identifiers, matching the order of \code{pathways}.}
-
-\item{TenX}{Logical. If \code{TRUE}, data is imported using \code{Read10X} (CellRanger-style). Default is \code{FALSE}.}
-
-\item{CellBender}{Logical. If \code{TRUE}, assumes CellBender-processed HDF5 format. Default is \code{TRUE}.}
 
 \item{minCellGenes}{Integer. Minimum number of cells a gene must be expressed in to be retained. Default is 5.}
 
