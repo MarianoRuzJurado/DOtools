@@ -60,6 +60,7 @@ Optionally returns a summary data frame, statistical test results, and the gener
 <span>  wilcox_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bar_colours <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stat_pos_mod <span class="op">=</span> <span class="fl">1.15</span>,</span>
+<span>  step_mod <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  x_label_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>  plotPvalue <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -99,8 +100,28 @@ Optionally returns a summary data frame, statistical test results, and the gener
 <dd><p>colour vector</p></dd>
 
 
+<dt id="arg-stat-pos-mod">stat_pos_mod<a class="anchor" aria-label="anchor" href="#arg-stat-pos-mod"></a></dt>
+<dd><p>Defines the distance to the graphs of the statistic</p></dd>
+
+
+<dt id="arg-step-mod">step_mod<a class="anchor" aria-label="anchor" href="#arg-step-mod"></a></dt>
+<dd><p>Defines the distance between each statistics bracket</p></dd>
+
+
+<dt id="arg-x-label-rotation">x_label_rotation<a class="anchor" aria-label="anchor" href="#arg-x-label-rotation"></a></dt>
+<dd><p>Rotation of x-labels</p></dd>
+
+
 <dt id="arg-plotpvalue">plotPvalue<a class="anchor" aria-label="anchor" href="#arg-plotpvalue"></a></dt>
 <dd><p>plot the non adjusted p-value without correcting for multiple tests</p></dd>
+
+
+<dt id="arg-y-limits">y_limits<a class="anchor" aria-label="anchor" href="#arg-y-limits"></a></dt>
+<dd><p>set limits for y-axis</p></dd>
+
+
+<dt id="arg-log-p-numi">log1p_nUMI<a class="anchor" aria-label="anchor" href="#arg-log-p-numi"></a></dt>
+<dd><p>If nUMIs should be log1p transformed</p></dd>
 
 
 <dt id="arg-seuv-">SeuV5<a class="anchor" aria-label="anchor" href="#arg-seuv-"></a></dt>
