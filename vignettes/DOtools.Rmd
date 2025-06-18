@@ -25,6 +25,8 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
+
+
 ```
 
 ```{r vignette_setup, echo=FALSE, message=FALSE, warning = FALSE}
@@ -93,10 +95,12 @@ After filtering, samples are merged into one `r Biocpkg("Seurat")` `r Citep(bib[
 To show how the quality control works, we are going to use a public dataset from 10X from human blood of healthy and donors with a malignant tumor:
 
 ```{r read_example_data}
-DOtools:::.example_10x()
+base <- DOtools:::.example_10x()
 
-paths = c("/tmp/dotools_datasets/healthy/outs/filtered_feature_bc_matrix.h5",
-         "/tmp/dotools_datasets/disease/outs/filtered_feature_bc_matrix.h5")
+
+
+paths = c(file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
+         file.path(base, "disease/outs/filtered_feature_bc_matrix.h5"))
 
 Seu_obj <- DO.Import(pathways = paths,
                      ids = c("healthy-1", "disease-1"),

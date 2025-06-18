@@ -3,12 +3,13 @@
 #' @import curl
 #'
 #' @keywords internal
-.example_10x <- function() {
-  dir.create("/tmp/dotools_datasets/healthy/outs", recursive = TRUE, showWarnings = FALSE)
-  dir.create("/tmp/dotools_datasets/disease/outs", recursive = TRUE, showWarnings = FALSE)
+.example_10x <- function(base_dir = tempfile("dotools_datasets_")) {
 
-  healthy_path <- "/tmp/dotools_datasets/healthy/outs/"
-  disease_path <- "/tmp/dotools_datasets/disease/outs/"
+  healthy_path <- file.path(base_dir, "healthy", "outs")
+  disease_path <- file.path(base_dir, "disease", "outs")
+
+  dir.create(healthy_path, recursive = TRUE, showWarnings = FALSE)
+  dir.create(disease_path, recursive = TRUE, showWarnings = FALSE)
 
   healthy_link1 <- "https://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_protein_v3/pbmc_10k_protein_v3_filtered_feature_bc_matrix.h5"
   healthy_link2 <- "https://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_protein_v3/pbmc_10k_protein_v3_raw_feature_bc_matrix.h5"
@@ -22,7 +23,7 @@
     "disease raw" = disease_link2
   )
 
-  message("📥 Downloading data to /tmp/dotools_datasets/")
+  message("📥 Downloading data to ", base_dir)
 
   for (name in names(links)) {
     link <- links[[name]]
@@ -34,5 +35,5 @@
     curl_download(url = link, destfile = dest_file, mode = "wb")
   }
 
-  invisible(NULL)
+  return(base_dir)
 }

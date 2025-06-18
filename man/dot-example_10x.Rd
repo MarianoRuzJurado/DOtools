@@ -4,7 +4,7 @@
 \alias{.example_10x}
 \title{Download example dataset 10x}
 \usage{
-.example_10x()
+.example_10x(base_dir = tempfile("dotools_datasets_"))
 }
 \description{
 Download example dataset 10x

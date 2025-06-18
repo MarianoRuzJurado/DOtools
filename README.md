@@ -14,7 +14,7 @@ DOtools is a user-friendly R package designed to streamline common workflows in 
 It provides high-level wrappers and visualisation utilities to help efficiently preprocess, analyze, and interpret single-cell data.
 
 # <b> Installation </b>
-DOtools is currently available thorugh github. To install the package, start R and run:
+DOtools is currently available through github. To install the package, start R and run:
 
 ```ruby
 install.packages("devtools") # if not installed already
