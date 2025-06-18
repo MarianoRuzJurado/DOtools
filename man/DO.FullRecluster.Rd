@@ -22,12 +22,12 @@ DO.FullRecluster(
 \item{algorithm}{Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden}
 }
 \value{
-a Seurat Object with new clustering named seurat_Recluster
+a Seurat Object with new clustering named annotation_recluster
 }
 \description{
 Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
 It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
-The new clustering results are stored in a metadata column called \code{seurat_Recluster}.
+The new clustering results are stored in a metadata column called \code{annotation_recluster}.
 Suitable for improving cluster precision and granularity after initial clustering.
 }
 \examples{

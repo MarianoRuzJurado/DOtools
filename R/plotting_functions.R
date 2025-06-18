@@ -1494,7 +1494,7 @@ DO.Dotplot <- function(Seu_object,
       dplyr::group_by(gene) %>%
       dplyr::mutate(z_avg_exp = (avg.exp - mean(avg.exp, na.rm=TRUE)) / sd(avg.exp, na.rm=TRUE)) %>%
       ungroup()
-    exp.title = "Scaled expression \n per gene"
+    exp.title = "Z-score expression \n per gene"
     fill.values = data.plot.res$z_avg_exp
     ###
   } else if(log1p_nUMI ==T){
@@ -1649,8 +1649,8 @@ DO.Dotplot <- function(Seu_object,
 
     if (annotation_x==T) {
       #use the annotation function from jjAnno package
-      jjA <- system.file(package = "jjAnno") # Make sure package is installed
-      ifelse(nzchar(jjA), "", stop("Install jjAnno CRAN package for annotation on xaxis:!"))
+      # jjA <- system.file(package = "jjAnno") # Make sure package is installed
+      # ifelse(nzchar(jjA), "", stop("Install jjAnno CRAN package for annotation on xaxis:!"))
 
       # pmain <- pmain +
       #   ggplot2::theme(axis.text.y = element_blank(),
@@ -2094,7 +2094,7 @@ DO.CellComposition <- function(Seu_object,
 #' @param alpha_colors: alpha value for the colors of the bars
 #' @param colors_pairs: colors for each condition (1st color --> negative axis; 2nd color --> positive axis)
 #' @param title: title of the plot
-#' @param show: if False, the axis is return
+#' @param showP: if False, the axis is return
 #'
 #'
 #' @return: None or the axis
@@ -2127,7 +2127,7 @@ DO.CellComposition <- function(Seu_object,
 #'                 txt_size = 12,
 #'                 filename = "SplitBar.svg",
 #'                 title = "Top 10 GO Terms in each Condition: ",
-#'                 show = FALSE,
+#'                 showP = FALSE,
 #'                 celltype = "all")
 #' }
 #'
@@ -2148,7 +2148,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
                             txt_size=12,
                             filename="SplitBar.svg",
                             title="Top 10 GO Terms in each Condition: ",
-                            show=F,
+                            showP=F,
                             celltype="all")
 {
 
@@ -2193,16 +2193,18 @@ DO.SplitBarGSEA <- function(df_GSEA,
                            spacing = spacing,
                            txt_size = txt_size,
                            filename = filename,
-                           show = show)
-    #x-title settings
-    plot$set_xlabel("Combined Score")
+                           showP = showP)
 
-    if (show == TRUE) {
+    if (showP == TRUE) {
+      #x-title settings
+      # plot$set_xlabel("Combined Score")
       plt$show()
     }
 
+    if (!is.null(path)) {
     #Save under provided PATH
     plt$savefig(paste0(path, celltype, "_", filename), dpi=300, bbox_inches="tight")
+    }
 
   }
 }

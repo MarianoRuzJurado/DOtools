@@ -22,6 +22,8 @@
         \item \code{\link{DO.CellBender}}: A function for running CellBender in a virtual conda env with provided raw count h5 files.
         \item \code{\link{DO.SplitBarGSEA}}: A function for viusalizing GSEA result from a provided df from e.g. metascape
         \item \code{\link{DO.scVI}}: A function for running the scVI Integration implemented in scvi-tools.
+        \item \code{\link{DO.TransferLabel}}: A function for transfering annotation from a subseted object to the original seurat object.
+        \item \code{\link{DO.PyEnv}}: A function for creating a conda envrionment holding all python packages needed for some functions.
         \item \code{\link{dot-Do.BarcodeRanks}}: A function for estimating the number of expected cells and droplets.
         \item \code{\link{dot-QC.Vlnplot}}: A function for estimating the number of expected cells and droplets.
     }
@@ -31,5 +33,5 @@
     \code{\link{DO.Box.Plot.wilcox}}, \code{\link{DO.CellTypist}}, \code{\link{DO.DietSeurat}}, \code{\link{DO.Dotplot}},
     \code{\link{DO.FullRecluster}}, \code{\link{DO.Mean.SEM.Graphs.cluster.t}}, \code{\link{DO.Mean.SEM.Graphs.wilcox}},
     \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.Vln.Plot.wilcox}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender}},
-    \code{\link{DO.SplitBarGSEA}}, \code{\link{DO.scVI}}, \code{\link{dot-Do.BarcodeRanks}}, \code{\link{dot-QC.Vlnplot}}
+    \code{\link{DO.SplitBarGSEA}}, \code{\link{DO.scVI}}, \code{\link{DO.TransferLabel}}, \code{\link{DO.PyEnv}}, \code{\link{dot-Do.BarcodeRanks}}, \code{\link{dot-QC.Vlnplot}}
 }

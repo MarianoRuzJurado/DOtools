@@ -21,7 +21,7 @@ DO.SplitBarGSEA(
   txt_size = 12,
   filename = "SplitBar.svg",
   title = "Top 10 GO Terms in each Condition: ",
-  show = F,
+  showP = F,
   celltype = "all"
 )
 }
@@ -58,7 +58,7 @@ DO.SplitBarGSEA(
 
 \item{title:}{title of the plot}
 
-\item{show:}{if False, the axis is return}
+\item{showP:}{if False, the axis is return}
 }
 \value{
 : None or the axis
@@ -100,7 +100,7 @@ DO.SplitBarGSEA(df_GSEA = df_GSEA,
                 txt_size = 12,
                 filename = "SplitBar.svg",
                 title = "Top 10 GO Terms in each Condition: ",
-                show = FALSE,
+                showP = FALSE,
                 celltype = "all")
 }
 

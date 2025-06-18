@@ -45,7 +45,7 @@ def split_bar_gsea(df: pd.DataFrame,
                    txt_size: float = 12,
                    filename: str = 'SplitBar.svg',
                    title: str = 'Top 10 GO Terms in each Condition',
-                   show: bool = True) -> Union[None, plt.axis]:
+                   showP: bool = True) -> Union[None, plt.axis]:
     """ **Split BarPlot for GO terms**
 
     This function generates a split barplot. This is a plot where the top 10 Go terms
@@ -74,7 +74,7 @@ def split_bar_gsea(df: pd.DataFrame,
     :param alpha_colors: alpha value for the colors of the bars
     :param colors_pairs: colors for each condition (1st color --> negative axis; 2nd color --> positive axis)
     :param title: title of the plot
-    :param show: if False, the axis is return
+    :param showP: if False, the axis is return
     :return: None or the axis
     """
 
@@ -168,9 +168,9 @@ def split_bar_gsea(df: pd.DataFrame,
     if path is not None:
         plt.savefig(os.path.join(path, filename), bbox_inches='tight')
 
-    # If show is False, return axs
-    if not show:
+    # If showP is False, return axs
+    if not showP:
         return axs
     else:
-        return
+        return plt.show()
 

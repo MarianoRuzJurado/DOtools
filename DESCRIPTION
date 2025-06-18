@@ -34,8 +34,15 @@ Imports:
         DropletUtils (>= 1.28.0),
         scCustomize (>= 3.0.1),
         openxlsx (>= 4.2.8),
-        tibble (>= 3.2.1)
+        tibble (>= 3.2.1),
+        enrichR (>= 3.4)
 Suggests:
         knitr,
+        pkgdown,
+        RefManageR,
+        BiocStyle,
+        roxygen2,
         rmarkdown
+VignetteBuilder:
+    knitr
 URL: https://marianoruzjurado.github.io/DOtools/

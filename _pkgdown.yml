@@ -36,6 +36,8 @@ reference:
       - DO.scVI
       - DO.CellTypist
       - DO.FullRecluster
+      - DO.TransferLabel
+      - DO.enrichR
   - title: scRNA plotting
     desc: >
     contents:
@@ -52,3 +54,4 @@ reference:
       - DO.UMAP
       - DO.Subset
       - DO.DietSeurat
+      - DO.PyEnv

@@ -25,7 +25,8 @@ Returns a merged and processed Seurat object ready for downstream analysis."><!-
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/DOtools.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"></ul></div>
 
 
@@ -50,8 +51,6 @@ Returns a merged and processed Seurat object ready for downstream analysis.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DO.Import</span><span class="op">(</span></span>
 <span>  <span class="va">pathways</span>,</span>
 <span>  <span class="va">ids</span>,</span>
-<span>  TenX <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  CellBender <span class="op">=</span> <span class="cn">T</span>,</span>
 <span>  minCellGenes <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  FilterCells <span class="op">=</span> <span class="cn">T</span>,</span>
 <span>  cut_mt <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -77,14 +76,6 @@ Returns a merged and processed Seurat object ready for downstream analysis.</p>
 
 <dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
 <dd><p>A character vector of sample identifiers, matching the order of <code>pathways</code>.</p></dd>
-
-
-<dt id="arg-tenx">TenX<a class="anchor" aria-label="anchor" href="#arg-tenx"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, data is imported using <code>Read10X</code> (CellRanger-style). Default is <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-cellbender">CellBender<a class="anchor" aria-label="anchor" href="#arg-cellbender"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, assumes CellBender-processed HDF5 format. Default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-mincellgenes">minCellGenes<a class="anchor" aria-label="anchor" href="#arg-mincellgenes"></a></dt>

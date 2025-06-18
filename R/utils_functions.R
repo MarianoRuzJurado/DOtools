@@ -327,7 +327,7 @@ DO.CellTypist <- function(Seu_object,
     return(Seu_object)
   }
 
-  message(paste0('Running celltypist using model: ', modelName))
+  .logger(paste0('Running celltypist using model: ', modelName))
 
   #Create temporary folder
   outDir <- tempfile(fileext = '')
@@ -335,14 +335,14 @@ DO.CellTypist <- function(Seu_object,
     outDir <- gsub(outDir, pattern = "/$", replacement = "")
   }
   dir.create(outDir)
-  message(paste0("Saving celltypist results to temporary folder: ", outDir))
+  .logger(paste0("Saving celltypist results to temporary folder: ", outDir))
 
   #Uppercasing gene names
   #zellkonverter h5ad
   DefaultAssay(Seu_object) <- assay_normalized
   if (SeuV5 == TRUE) {
     tmp.assay <- Seu_object
-    tmp.assay[["RNA"]] <- suppressWarnings(as(tmp.assay[["RNA"]], Class = "Assay"))
+    tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
     tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay, assay = assay_normalized)
     rownames(tmp.sce) <- toupper(rownames(tmp.sce))
 
@@ -356,6 +356,8 @@ DO.CellTypist <- function(Seu_object,
   if (runCelltypistUpdate) {
     system2(reticulate::py_exe(), c("-m", "celltypist.command_line", "--update-models", "--quiet"))
   }
+
+  .logger("Running Celltypist")
 
   # Run celltypist:
   args <- c("-m", "celltypist.command_line", "--indata",  paste0(outDir,"/ad.h5ad"), "--model", modelName, "--outdir", outDir,"--majority-voting", "--over-clustering", over_clustering)
@@ -372,7 +374,7 @@ DO.CellTypist <- function(Seu_object,
   #ct$dotplot(ad_obj, use_as_reference = "cell_type", use_as_prediction = "majority_voting")
 
   probMatrix <- utils::read.csv(probFile, header = T, row.names = 1, stringsAsFactors = FALSE)
-  Seu_object@meta.data$predicted_labels_celltypist <- labels$majority_voting
+  Seu_object@meta.data$autoAnnot <- labels$majority_voting
 
   #Create dotplot with prob
   probMatrix$cluster <- as.character(labels$over_clustering)
@@ -380,7 +382,7 @@ DO.CellTypist <- function(Seu_object,
   #calculate means
   probMatrix_mean <- probMatrix %>%
     dplyr::group_by(cluster) %>%
-    summarise(across(where(is.numeric), mean))
+    dplyr::summarise(across(where(is.numeric), mean))
 
   top_cluster <- probMatrix_mean %>%
     rowwise() %>%
@@ -394,10 +396,11 @@ DO.CellTypist <- function(Seu_object,
   top_cluster$label <- factor(top_cluster$label, levels = unique(sort(top_cluster$label, decreasing = T)))
   top_cluster$cluster <- factor(top_cluster$cluster, levels = top_cluster$cluster[order(top_cluster$label, decreasing = T)])
 
+  .logger("Creating probality plot")
 
   pmain <- ggplot(top_cluster, aes(x = cluster, y = label)) +
-    geom_point(aes(size = pct.exp, color = prob)) +
-    scale_color_gradient2(low = "royalblue3", high = "firebrick", midpoint = 0.5, limits = c(0, 1)) +
+    geom_point(aes(size = pct.exp, fill = prob), shape=21, color="black", stroke=0.3) +
+    scale_fill_gradient2(low = "royalblue3",mid = "white", high = "firebrick",midpoint=0.5, limits = c(0, 1)) +
     scale_size(range = c(2,10), breaks = c(20,40,60,80,100), limits = c(0,100)) +
     DOtools:::theme_box() +
     theme(plot.margin = ggplot2::margin(t = 1,
@@ -423,7 +426,7 @@ DO.CellTypist <- function(Seu_object,
           panel.grid.minor = element_blank(),
     )
 
-  guides.layer <- ggplot2::guides(color = ggplot2::guide_colorbar(title = "Mean propability",
+  guides.layer <- ggplot2::guides(fill = ggplot2::guide_colorbar(title = "Mean propability",
                                                                  title.position = "top",
                                                                  title.hjust = 0.5,
                                                                  barwidth = unit(3.8,"cm"), # changes the width of the color legend
@@ -455,13 +458,13 @@ DO.CellTypist <- function(Seu_object,
 #' @title DO.FullRecluster
 #' @description Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
 #' It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
-#' The new clustering results are stored in a metadata column called `seurat_Recluster`.
+#' The new clustering results are stored in a metadata column called `annotation_recluster`.
 #' Suitable for improving cluster precision and granularity after initial clustering.
 #' @param Seu_object The seurat object
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
-#' @return a Seurat Object with new clustering named seurat_Recluster
+#' @return a Seurat Object with new clustering named annotation_recluster
 #'
 #' @import Seurat
 #' @import progress
@@ -487,8 +490,16 @@ DO.FullRecluster <- function(Seu_object,
   }
   Idents(Seu_object) <- over_clustering
 
-  Seu_object$seurat_Recluster <- as.vector(Seu_object@meta.data[[over_clustering]])
-  pb <- progress::progress_bar$new(total = length(unique(Seu_object@meta.data[[over_clustering]])))
+  Seu_object$annotation_recluster <- as.vector(Seu_object@meta.data[[over_clustering]])
+
+  pb <- progress::progress_bar$new(
+    total = length(unique(Seu_object@meta.data[[over_clustering]])),
+    format = "  Reclustering [:bar] :percent eta: :eta"
+  )
+
+  #newline prints when the function exits (to clean up console)
+  on.exit(cat("\n"))
+
   for (cluster in unique(Seu_object@meta.data[[over_clustering]])) {
     pb$tick()
     Seu_object <- FindSubCluster(Seu_object,
@@ -498,7 +509,7 @@ DO.FullRecluster <- function(Seu_object,
                                  resolution = res)
 
     cluster_cells <- rownames(Seu_object@meta.data)[Seu_object@meta.data[[over_clustering]] == cluster]
-    Seu_object$seurat_Recluster[cluster_cells] <- Seu_object$sub.cluster[cluster_cells]
+    Seu_object$annotation_recluster[cluster_cells] <- Seu_object$sub.cluster[cluster_cells]
   }
   Seu_object$sub.cluster <- NULL
   return(Seu_object)
@@ -778,6 +789,50 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 }
 
 
+#' @title DO.PyEnv
+#' @description Sets up or connects to a conda Python environment for use with DOtools.
+#' If no environment path is provided, it will create one at `~/.venv/DOtools` and install required Python packages:
+#' `scvi-tools`, `celltypist`, and `scanpro`.
+#'
+#' @param conda_path character string specifying the path to an existing or new conda environment.
+#'
+#' @examples
+#' \dontrun{
+#' # Automatically create DOtools environment at ~/.venv/DOtools if it doesn't exist
+#' DO.PyEnv()
+#'
+#' # Use an existing conda environment at a custom location
+#' DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")
+#' }
+#'
+#'
+#' @export
+DO.PyEnv <- function(conda_path = NULL) {
+
+  # Handle conda environment
+  if (is.null(conda_path)) {
+    conda_path <- file.path(path.expand("~"), ".venv/DOtools")
+  } else {
+    conda_path <- path.expand(conda_path)
+  }
+
+  if (!dir.exists(conda_path)) {
+    .logger("Creating conda environment for DOtools")
+    conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/DOtools"), "python=3.11")
+    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scvi-tools", "celltypist", "scanpro")
+
+    tryCatch({
+      system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
+      system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
+      }, error = function(e) {
+        stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
+        })
+    } else {
+      .logger(sprintf("Using existing conda environment at: %s", conda_path))
+      }
+  .logger("Python packages ready for DOtools!")
+}
+
 #' @title DO.CellBender
 #' @description It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 #' This function wraps a system call to a bash script for running CellBender on CellRanger outputs.
@@ -854,8 +909,8 @@ DO.CellBender <- function(cellranger_path,
 
   if (!dir.exists(conda_path)) {
     message("Creating conda environment for CellBender...")
-    conda_args1 <- c("conda","create","-y", "-p", "/home/mariano/.venv/cellbender", "python=3.7")
-    conda_args2 <- c("conda","run", "-p", "/home/mariano/.venv/cellbender", "pip", "install", "cellbender", "lxml_html_clean")
+    conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/cellbender"), "python=3.7")
+    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/cellbender"), "pip", "install", "cellbender", "lxml_html_clean")
     tryCatch({
       system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
       system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
@@ -1005,6 +1060,151 @@ DO.scVI <- function(Seu_object,
   Seu_object@reductions[["scVI"]] <- scVI_reduction
 
   return(Seu_object)
+}
+
+
+#' @title DO.TransferLabel
+#' @description Transfers cell-type annotations from a re-annotated subset of a Seurat object
+#' back to the full Seurat object. This is useful when clusters have been refined
+#' or re-labeled in a subset and need to be reflected in the original object.
+#'
+#' @param Seu_object Seurat object with annotation in meta.data
+#' @param Subset_obj subsetted Seurat object with re-annotated clusters
+#' @param annotation_column column name in meta.data with annotation
+#' @param subset_annotation column name in meta.data with annotation in the subsetted object
+#'
+#'
+#' @import Seurat
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' Seu_obj <- DO.TransferLabel(Seu_obj,
+#'                             Subset_obj,
+#'                             annotation_column="annotation",
+#'                             subset_annotation="annotation"
+#'                            )
+#' }
+#'
+#'
+#' @return Seurat Object with transfered labels
+#' @export
+
+DO.TransferLabel <- function(Seu_obj,
+                             Subset_obj,
+                             annotation_column,
+                             subset_annotation){
+
+  #Get annotation with barcodes as rownames
+  annotation_pre <- Seu_obj@meta.data[annotation_column]
+  annotation_pre[[annotation_column]] <- as.character(annotation_pre[[annotation_column]])
+  annotation_subset <- Subset_obj@meta.data[subset_annotation]
+  annotation_subset[[subset_annotation]] <- as.character(annotation_subset[[subset_annotation]])
+
+  #assign the new labels
+  barcodes <- rownames(annotation_pre)[rownames(annotation_pre) %in% rownames(annotation_subset)]
+  annotation_pre[rownames(annotation_pre) %in% barcodes,] <- annotation_subset[[subset_annotation]]
+
+  Seu_obj@meta.data[[annotation_column]] <- factor(annotation_pre$annotation)
+
+  return(Seu_obj)
+
+}
+
+#' @title DO.enrichR
+#' @description
+#' Performs Gene Ontology enrichment analysis on differentially expressed genes using the EnrichR API.
+#' Separately analyzes upregulated and downregulated genes and returns results.
+#'
+#' @param df_DGE data.frame containing differential gene expression results.
+#' @param gene_column column name in `df` with gene symbols.
+#' @param pval_column column name in `df` with p-values.
+#' @param log2fc_column column name in `df` with log2 fold changes.
+#' @param pval_cutoff adjusted p-value threshold for significance (default = 0.05).
+#' @param log2fc_cutoff log2 fold change threshold for up/down regulation (default = 0.25).
+#' @param path folder path where the output Excel file will be saved. A subfolder "GSA_Tables" will be created.
+#' @param filename suffix used in the Excel filename (e.g., "GSA_CellType_MyAnalysis.xlsx").
+#' @param species species name for enrichment analysis. Options include "Human", "Mouse", "Yeast", etc. (default = "Mouse").
+#' @param go_catgs GO databases to use. Defaults to c("GO_Molecular_Function_2023", "GO_Cellular_Component_2023", "GO_Biological_Process_2023").
+#'
+#' @return data.frame with GO enrichment results if `path` is NULL, otherwise writes an Excel file.
+#'
+#'
+#' @import enrichR
+#' @import openxlsx
+#' @import dplyr
+#'
+#' @examples
+#' \dontrun{
+#' #GO analysis on differential expression results:
+#' results <- go_analysis(df_DGE = deg_results,
+#'                        gene_key = "gene",
+#'                        pval_key = "adj_pval",
+#'                        log2fc_key = "log2FC",
+#'                        species = "Human")
+#'
+#' #Or save the results to a file:
+#' go_analysis(df_DGE = deg_results,
+#'             gene_key = "gene",
+#'             pval_key = "p_val_adj",
+#'             log2fc_key = "log2FC",
+#'             path = "results/",
+#'             filename = "experiment.xlsx",
+#'             species = "Mouse")
+#' }
+#'
+#' @export
+DO.enrichR <- function(df_DGE,
+                       gene_column,
+                       pval_column,
+                       log2fc_column,
+                       pval_cutoff = 0.05,
+                       log2fc_cutoff = 0.25,
+                       path = NULL,
+                       filename = '',
+                       species = 'Human',
+                       go_catgs = c('GO_Molecular_Function_2023',
+                                    'GO_Cellular_Component_2023',
+                                    'GO_Biological_Process_2023')) {
+
+
+  # Subset up/down-regulated
+  df_up <- df_DGE[df_DGE[[pval_column]] < pval_cutoff & df_DGE[[log2fc_column]] > log2fc_cutoff, ]
+  df_down <- df_DGE[df_DGE[[pval_column]] < pval_cutoff & df_DGE[[log2fc_column]] < -log2fc_cutoff, ]
+
+  # Set enrichR organism
+  enrichR::setEnrichrSite("Enrichr")  # explicitly connect to Enrichr API
+
+  # Run enrichment
+  res_up <- enrichR::enrichr(genes = df_up[[gene_column]], databases = go_catgs)
+  res_down <- enrichR::enrichr(genes = df_down[[gene_column]], databases = go_catgs)
+
+  # Combine results
+  enrich_results <- function(result_list, label) {
+    do.call(rbind, lapply(names(result_list), function(db) {
+      df <- result_list[[db]]
+      df$Database <- db
+      df$State <- label
+      return(df)
+    }))
+  }
+
+  combined_up <- enrich_results(res_up, "enriched")
+  combined_down <- enrich_results(res_down, "depleted")
+
+  combined_res <- rbind(combined_up, combined_down)
+
+  # Write to Excel or return
+  if (!is.null(path)) {
+    dir.create(file.path(path, "GO_Tables"), showWarnings = FALSE, recursive = TRUE)
+    out_file <- file.path(path, "GO_Tables", paste0("GO_", filename, ".xlsx"))
+    openxlsx::write.xlsx(combined_res, out_file, rowNames = FALSE)
+    .logger("Write results to: ", out_file)
+    return(invisible(NULL))
+  } else {
+    return(combined_res)
+  }
 }
 
 
