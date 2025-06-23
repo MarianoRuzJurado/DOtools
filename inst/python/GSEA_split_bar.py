@@ -165,8 +165,8 @@ def split_bar_gsea(df: pd.DataFrame,
                  df_neg.sort_values(col_split, ascending=False)[term_col].iloc[i],
                  va='center', ha='right', color='k', fontweight='bold', fontsize=txt_size)
     # Save Plot
-    if path is not None:
-        plt.savefig(os.path.join(path, filename), bbox_inches='tight')
+    # if path is not None:
+      #  plt.savefig(os.path.join(path, filename), bbox_inches='tight')
 
     # If showP is False, return axs
     if not showP:

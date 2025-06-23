@@ -15,6 +15,7 @@ DO.CellBender(
   estimator_multiple_cpu = FALSE,
   log = TRUE,
   conda_path = NULL,
+  BarcodeRanking = TRUE,
   bash_script = system.file("bash", "_run_CellBender.sh", package = "DOtools")
 )
 }
@@ -38,6 +39,8 @@ DO.CellBender(
 \item{log}{Whether to enable logging.}
 
 \item{conda_path}{Optional path to the conda environment.}
+
+\item{BarcodeRanking}{Optional Calculation of estimated cells in samples through DropletUtils implementation}
 
 \item{bash_script}{Path to the bash script that runs CellBender.}
 }

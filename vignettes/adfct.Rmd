@@ -1,0 +1,131 @@
+---
+title: "Usage of functions"
+author:
+  - name: Mariano Ruz Jurado
+    affiliation:
+    - Goethe University
+output: 
+  BiocStyle::html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+package: "`r pkg_ver('DOtools')`"
+vignette: >
+  %\VignetteIndexEntry{Usage of functions}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r chunk_setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+```{r vignette_setup, echo=FALSE, message=FALSE, warning = FALSE}
+# Track time spent on making the vignette.
+start_time <- Sys.time()
+pkg <- function(x) {
+  paste0("[*", x, "*](https://cran.r-project.org/package=", x, ")")
+}
+pypkg <- function(x) {
+  paste0("[*", x, "*](https://pypi.org/project/", x, "/)")
+}
+```
+
+In this tutorial we compile examples on how to use the different functions available in the R package. You can refer to previous tutorial to see how to use CellBender and perform quality control and basic downstream analysis of sc/snRNA-seq. We are going to use the object generated in the section: Quality control of sc/snRNA-seq.
+
+## Libraries & Set-Up
+```{r load_library, message=FALSE, echo=FALSE}
+library(DOtools)
+
+DO.PyEnv()
+reticulate::use_python("~/.venv/DOtools/bin/python")
+Seu_obj <- readRDS("~/Downloads/Data10x/Seu_obj_blood10x.rds")
+```
+
+## Dotplot
+
+The `DO.Dotplot` function generates a plot in a similar manner as the Dotplot function implemented in `r pypkg("scanpy")` but with additional functionalities, e.g. the visualisation of 3 variables at the same time. For example, we can visualise the expression of a gene across celltypes and conditions:
+
+```{r dotplot, fig.width=5, fig.height=5}
+DO.Dotplot(Seu_object = Seu_obj,
+           group.by.x = "condition",
+           group.by.y = "annotation",
+           Feature = "NKG7")
+```
+
+## UMAP
+
+The `DO.UMAP` function facilitatesthe visualisation of UMAP embeddings since it combines the ability to show cell groupings and gene expression.
+
+```{r UMAP, fig.width=12, fig.height=8, warning = FALSE}
+
+DO.UMAP(Seu_object = Seu_obj,
+        group.by = "annotation",
+        split.by = "condition",
+        FeaturePlot = T,
+        features = "NKG7",
+        legend.position = "right")
+```
+
+## Cell composition changes
+
+As shown in the tutorial, we can also test for significant changes in cell population.
+
+```{r CellComposition, fig.width=6, fig.height=5, warning = FALSE}
+
+DO.CellComposition(Seu_object = Seu_obj,
+                   assay_normalized = "RNA",
+                   cluster_column = "annotation",
+                   sample_column = "orig.ident",
+                   condition_column = "condition",
+                   transform_method = "arcsin",
+                   n_reps = 3)
+
+```
+
+## Expression of genes and continuous metadata
+
+We can visualize the average expression of a gene in a cell type or continuous metadata information across condition with violinplots, barplots and boxplots. Additionally, we can test for significance.
+
+```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
+p <- DO.VlnPlot(Seu_obj,
+                Feature = "NKG7",
+                group.by = "condition",
+                group.by.2 = "annotation",
+                ctrl.condition = "healthy")
+```
+
+```{r Bar, fig.width=5, fig.height=6, warning = FALSE}
+Seu_obj_NK <- DO.Subset(Seu_obj, ident = "annotation", ident_name = "NK")
+DO.BarplotWilcox(Seu_obj_NK,
+                 group.by = "condition",
+                 ctrl.condition = "healthy",
+                 Feature = "NKG7",
+                 x_label_rotation = 0)
+```
+
+```{r Box, fig.width=5, fig.height=6, warning = FALSE}
+set.seed(123)
+Seu_obj$rdm_sample <- sample(rep(c("A", "B", "C"), length.out = ncol(Seu_obj)))
+DO.BoxPlot(Seu_obj,
+           group.by = "rdm_sample",
+           ctrl.condition = "A",
+           Feature = "nCount_RNA",
+           step_mod = 100,
+           plot_sample = F)
+```
+
+
+# Session information
+
+```{r session_info, echo=FALSE}
+options(width = 120)
+sessioninfo::session_info()
+```

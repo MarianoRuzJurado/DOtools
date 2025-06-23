@@ -1,0 +1,74 @@
+---
+title: "Remove ambient RNA with CellBender"
+author:
+  - name: Mariano Ruz Jurado
+    affiliation:
+    - Goethe University
+output: 
+  BiocStyle::html_document:
+    self_contained: true
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+package: "`r pkg_ver('DOtools')`"
+vignette: >
+  %\VignetteIndexEntry{Remove ambient RNA with CellBender}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+```{r chunk_setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+```{r vignette_setup, echo=FALSE, message=FALSE, warning = FALSE}
+# Track time spent on making the vignette.
+start_time <- Sys.time()
+pkg <- function(x) {
+  paste0("[*", x, "*](https://cran.r-project.org/package=", x, ")")
+}
+pypkg <- function(x) {
+  paste0("[*", x, "*](https://pypi.org/project/", x, "/)")
+}
+```
+
+Despite advances in optimizing and standardizing droplet-based single-cell omics protocols like single-cell and single-nucleus RNA sequencing (sc/snRNA-seq), these experiments still suffer from systematic biases and background noise. In particular, ambient RNA in snRNA-seq can lead to an overestimation of expression levels for certain genes. Computational tools such as `r pypkg("cellbender")` have been developed to address these biases by correcting for ambient RNA contamination.
+
+We have integrated a wrapper function to run CellBender within the `r Biocpkg("DOtools")` package. The current implementation supports processing samples generated with CellRanger.
+
+## Libraries
+```{r load_library, message=FALSE}
+library(DOtools)
+```
+
+## Ambient removal
+```{r read_example_data, warning = FALSE}
+base <- DOtools:::.example_10x()
+dir.create(file.path(base, "/cellbender"))
+
+
+DO.CellBender(cellranger_path = base,
+              output_path = file.path(base, "/cellbender"),
+              samplenames = c("healthy", "disease"),
+              cuda = T,
+              BarcodeRanking = F,  
+              cpu_threads = 38,
+              epochs = 5) # 150 is default 
+
+```
+After running the analysis, several files are saved in the `output_folder`, including a summary report to check for any issues during CellBender execution, individual log files for each sample, and a `commands_Cellbender.txt` file with the exact command used. The corrected `.h5` files can now be used for downstream analysis.
+
+# Session information
+
+```{r session_info, echo=FALSE}
+options(width = 120)
+sessioninfo::session_info()
+```
+

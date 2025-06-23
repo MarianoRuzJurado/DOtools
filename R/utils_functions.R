@@ -819,11 +819,12 @@ DO.PyEnv <- function(conda_path = NULL) {
   if (!dir.exists(conda_path)) {
     .logger("Creating conda environment for DOtools")
     conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/DOtools"), "python=3.11")
-    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scvi-tools", "celltypist", "scanpro")
-
+    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scvi-tools==1.3.0", "celltypist==1.6.3", "scanpro==0.3.2")
+    conda_args3 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scipy==1.15.3")
     tryCatch({
       system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
       system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
+      system2(conda_args3[1], args = conda_args3[-1], stdout = F, stderr = F)
       }, error = function(e) {
         stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
         })
@@ -848,6 +849,7 @@ DO.PyEnv <- function(conda_path = NULL) {
 #' @param estimator_multiple_cpu Use estimator with multiple CPU threads (experimental).
 #' @param log Whether to enable logging.
 #' @param conda_path Optional path to the conda environment.
+#' @param BarcodeRanking Optional Calculation of estimated cells in samples through DropletUtils implementation
 #' @param bash_script Path to the bash script that runs CellBender.
 #'
 #'
@@ -877,16 +879,17 @@ DO.PyEnv <- function(conda_path = NULL) {
 #'
 #' @export
 DO.CellBender <- function(cellranger_path,
-                           output_path,
-                           samplenames = NULL,
-                           cuda = TRUE,
-                           cpu_threads = 15,
-                           epochs = 150,
-                           lr = 0.00001,
-                           estimator_multiple_cpu = FALSE,
-                           log = TRUE,
-                           conda_path = NULL,
-                           bash_script = system.file("bash", "_run_CellBender.sh", package = "DOtools")) {
+                          output_path,
+                          samplenames = NULL,
+                          cuda = TRUE,
+                          cpu_threads = 15,
+                          epochs = 150,
+                          lr = 0.00001,
+                          estimator_multiple_cpu = FALSE,
+                          log = TRUE,
+                          conda_path = NULL,
+                          BarcodeRanking = TRUE,
+                          bash_script = system.file("bash", "_run_CellBender.sh", package = "DOtools")) {
 
   # Check input paths
   stopifnot(file.exists(cellranger_path))
@@ -894,11 +897,11 @@ DO.CellBender <- function(cellranger_path,
 
   # Warnings and logs
   if (estimator_multiple_cpu)
-    message("Warning: estimator_multiple_cpu is TRUE. Not recommended for large datasets (>20–30k cells).")
+    .logger("Warning: estimator_multiple_cpu is TRUE. Not recommended for large datasets (>20–30k cells).")
   if (epochs > 150)
-    message("Warning: Training for more than 150 epochs may lead to overfitting.")
+    .logger("Warning: Training for more than 150 epochs may lead to overfitting.")
   if (!cuda)
-    message("Warning: Running without CUDA (GPU) may significantly increase run time.")
+    .logger("Warning: Running without CUDA (GPU) may significantly increase run time.")
 
   # Handle conda environment
   if (is.null(conda_path)) {
@@ -908,7 +911,7 @@ DO.CellBender <- function(cellranger_path,
   }
 
   if (!dir.exists(conda_path)) {
-    message("Creating conda environment for CellBender...")
+    .logger("Creating conda environment for CellBender...")
     conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/cellbender"), "python=3.7")
     conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/cellbender"), "pip", "install", "cellbender", "lxml_html_clean")
     tryCatch({
@@ -918,7 +921,7 @@ DO.CellBender <- function(cellranger_path,
       stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
     })
   } else {
-    message(sprintf("Using existing conda environment at: %s", conda_path))
+    .logger(sprintf("Using existing conda environment at: %s", conda_path))
   }
 
   # Detect samples
@@ -928,7 +931,7 @@ DO.CellBender <- function(cellranger_path,
     samples <- samplenames
   }
 
-  message(sprintf("Running CellBender for %d sample(s)", length(samples)))
+  .logger(sprintf("Running CellBender for %d sample(s)", length(samples)))
 
   # Loop through each sample
   for (sample in samples) {
@@ -939,33 +942,45 @@ DO.CellBender <- function(cellranger_path,
     h5_file <- file.path(cellranger_path, sample, "outs", "raw_feature_bc_matrix.h5")
     tdata <- DropletUtils::read10xCounts(h5_file)
 
-    result_barcoderanks = DO.BarcodeRanks(tdata)
+    if (BarcodeRanking == TRUE) {
+      result_barcoderanks = .DO.BarcodeRanks(tdata)
 
-    # Build command
-    cmd <- c("conda", "run", "-p", conda_path,
-             "bash", bash_script,
-             "-i", sample, "-o", output_path,
-             "--cellRanger-output", cellranger_path,
-             "--cpu-threads", cpu_threads,
-             "--epochs", epochs,
-             "--lr", lr,
-             "--expected-cells", result_barcoderanks[1],
-             "--total-droplets", result_barcoderanks[2])
+      # Build command
+      cmd <- c("conda", "run", "-p", conda_path,
+               "bash", bash_script,
+               "-i", sample, "-o", output_path,
+               "--cellRanger-output", cellranger_path,
+               "--cpu-threads", cpu_threads,
+               "--epochs", epochs,
+               "--lr", lr,
+               "--expected-cells", result_barcoderanks[1],
+               "--total-droplets", result_barcoderanks[2])
+    } else{
+
+      # Build command
+      cmd <- c("conda", "run", "-p", conda_path,
+               "bash", bash_script,
+               "-i", sample, "-o", output_path,
+               "--cellRanger-output", cellranger_path,
+               "--cpu-threads", cpu_threads,
+               "--epochs", epochs,
+               "--lr", lr)
+    }
 
     if (cuda) cmd <- c(cmd, "--cuda")
     if (log) cmd <- c(cmd, "--log")
     if (estimator_multiple_cpu) cmd <- c(cmd, "--estimator_multiple_cpu")
 
     # Run command
-    message(sprintf("Running CellBender for sample: %s", sample))
+    .logger(sprintf("Running CellBender for sample: %s", sample))
     tryCatch({
       system2(cmd[1], args = cmd[-1], stdout = T, stderr = T)
     }, error = function(e) {
-      message(sprintf("Error running CellBender for sample %s: %s", sample, e$message))
+      .logger(sprintf("Error running CellBender for sample %s: %s", sample, e$message))
     })
   }
 
-  message("Finished running CellBender.")
+  .logger("Finished running CellBender.")
   invisible(NULL)
 }
 

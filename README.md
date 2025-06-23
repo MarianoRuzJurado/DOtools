@@ -1,10 +1,8 @@
-# <b> DOtools </b>
+# DOtools <img src="man/figures/LogoDoTools.png" align="right" alt="" width="240" />
 
-
-[![BioC status](https://www.bioconductor.org/shields/build/release/bioc/DOtools.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/DOtools)
-[![BioC dev status](https://www.bioconductor.org/shields/build/devel/bioc/DOtools.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/DOtools)
 <!-- badges: start -->
-[![Pkgdown](https://img.shields.io/badge/docs-pkgdown-blue.svg)](https://MarianoRuzJurado.github.io/DOtools/)
+<!-- [![BioC status](https://www.bioconductor.org/shields/build/release/bioc/DOtools.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/DOtools) -->
+<!-- [![BioC dev status](https://www.bioconductor.org/shields/build/devel/bioc/DOtools.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/DOtools) -->
 [![Issues](https://img.shields.io/github/issues/MarianoRuzJurado/DOtools)](https://github.com/MarianoRuzJurado/DOtools/issues)
 [![Stars](https://img.shields.io/github/stars/MarianoRuzJurado/DOtools?style=flat&logo=github&color=yellow)](https://github.com/MarianoRuzJurado/DOtools/stargazers)
 <!-- badges: end -->
