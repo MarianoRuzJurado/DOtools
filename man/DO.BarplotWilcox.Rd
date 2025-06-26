@@ -47,8 +47,6 @@ DO.BarplotWilcox(
 \item{y_limits}{set limits for y-axis}
 
 \item{log1p_nUMI}{If nUMIs should be log1p transformed}
-
-\item{SeuV5}{Seuratv5 object? (TRUE or FALSE)}
 }
 \value{
 a ggplot or a list with plot and data frame

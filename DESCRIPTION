@@ -36,6 +36,8 @@ Imports:
         openxlsx (>= 4.2.8),
         tibble (>= 3.2.1),
         scDblFinder (>= 1.20.0),
+        ggcorrplot (>= 0.1.4.1),
+        DESeq2 (>= 1.48.1),
         enrichR (>= 3.4)
 Suggests:
         knitr,

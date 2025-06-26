@@ -6,18 +6,22 @@
 \usage{
 DO.BarplotClustert(
   Seu_object,
-  Features,
+  Feature,
   ListTest = NULL,
   returnValues = FALSE,
   ctrl.condition = NULL,
   group.by = "condition",
-  returnPlot = FALSE
+  returnPlot = TRUE,
+  bar_colours = NULL,
+  stat_pos_mod = 1.15,
+  step_mod = 0.2,
+  x_label_rotation = 45,
+  y_limits = NULL,
+  log1p_nUMI = T
 )
 }
 \arguments{
 \item{Seu_object}{Combined Seu_object}
-
-\item{Features}{Vector containing featurenames}
 
 \item{ListTest}{List for which conditions t-test will be performed, if NULL always against provided CTRL}
 
@@ -26,6 +30,20 @@ DO.BarplotClustert(
 \item{ctrl.condition}{set your ctrl condition, relevant if running with empty comparison List}
 
 \item{group.by}{select the seurat object slot where your conditions can be found, default conditon}
+
+\item{bar_colours}{colour vector}
+
+\item{stat_pos_mod}{Defines the distance to the graphs of the statistic}
+
+\item{step_mod}{Defines the distance between each statistics bracket}
+
+\item{x_label_rotation}{Rotation of x-labels}
+
+\item{y_limits}{set limits for y-axis}
+
+\item{log1p_nUMI}{If nUMIs should be log1p transformed}
+
+\item{Features}{Vector containing featurenames}
 }
 \value{
 a ggplot or a dataframe

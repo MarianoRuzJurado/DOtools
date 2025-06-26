@@ -108,6 +108,6 @@
 Used for segment the plot for further annotations
 }
 \author{
-Mariano Ruz Jurado (originally: Jun Zhang)
+Mariano Ruz Jurado (edited from: Jun Zhang)
 }
 \keyword{internal}

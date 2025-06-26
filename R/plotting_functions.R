@@ -11,6 +11,12 @@
 #' @param returnValues return df.melt.sum data frame containing means and SEM for the set group
 #' @param ctrl.condition set your ctrl condition, relevant if running with empty comparison List
 #' @param group.by select the seurat object slot where your conditions can be found, default conditon
+#' @param bar_colours colour vector
+#' @param stat_pos_mod Defines the distance to the graphs of the statistic
+#' @param step_mod Defines the distance between each statistics bracket
+#' @param x_label_rotation Rotation of x-labels
+#' @param log1p_nUMI If nUMIs should be log1p transformed
+#' @param y_limits set limits for y-axis
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -39,27 +45,47 @@
 #'
 #' @export
 DO.BarplotClustert <- function(Seu_object,
-                                         Features,
-                                         ListTest=NULL,
-                                         returnValues=FALSE,
-                                         ctrl.condition=NULL,
-                                         group.by = "condition",
-                                         returnPlot=FALSE){
-  print("Please use 'DO.Mean.SEM.Graphs.wilcox' for Seurat wilcox Test and Seuratv5 Support.")
-  warning("Only limited support for DO.Barplot.cluster.t")
+                               Feature,
+                               ListTest=NULL,
+                               returnValues=FALSE,
+                               ctrl.condition=NULL,
+                               group.by = "condition",
+                               returnPlot=TRUE,
+                               bar_colours=NULL,
+                               stat_pos_mod = 1.15,
+                               step_mod=0.2,
+                               x_label_rotation=45,
+                               y_limits = NULL,
+                               log1p_nUMI=T){
+
+  if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
+    stop("Feature not found in Seurat Object!")
+  }
+
   #SEM function defintion
   SEM <- function(x) sqrt(var(x)/length(x))
   #create data frame with conditions from provided Seu_object, aswell as original identifier of samples
   df<-data.frame(condition=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
                  ,orig.ident = Seu_object$orig.ident)
   #get expression values for genes from individual cells, add to df
-  for(i in Features){
-    df[,i] <- expm1(Seu_object@assays$RNA$data[i,])
-
+  #if (SeuV5==F) {
+  #  for(i in Feature){
+  #    df[,i] <- expm1(Seu_object@assays$RNA@data[i,])
+  #
+  #  }
+  #}
+  #For Seuratv5 where everything is a layer now
+  #if (SeuV5==T) {
+  #rlang::warn("\nSeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
+  if (Feature %in% rownames(Seu_object)) {
+    df[,Feature] <- expm1(FetchData(Seu_object, vars = Feature))
+  }else{
+    df[,Feature] <- FetchData(Seu_object, vars = Feature)
   }
+  #}
 
   #melt results
-  df.melt <- dplyr::melt(df)
+  df.melt <- melt(df)
   #group results and summarize, also add/use SEM
   df.melt.sum <- df.melt %>%
     dplyr::group_by(condition, variable) %>%
@@ -70,26 +96,26 @@ DO.BarplotClustert <- function(Seu_object,
     dplyr::summarise(Mean = mean(value))
 
 
-  #add SEM calculated over sample means
-  df.melt.sum$SEM <- NA
-  for (condition in df.melt.sum$condition) {
-    df.melt.orig.con <- df.melt.orig[df.melt.orig$condition %in% condition,] # condition wise
-    for (gene in Features) {
-      df.melt.orig.con.gen <- df.melt.orig.con[df.melt.orig.con$variable %in% gene,] #gene wise
-      df.melt.sum[df.melt.sum$condition %in% condition & df.melt.sum$variable %in% gene,]$SEM <- SEM(df.melt.orig.con.gen$Mean)
-    }
+  if (Feature %in% names(Seu_object@meta.data)) {
+    plot.title <- paste("Mean", Feature, sep = " ")
+  }  else if (log1p_nUMI==T) {
+    df.melt.sum$Mean <- log1p(df.melt.sum$Mean)
+    df.melt.orig$Mean <- log1p(df.melt.orig$Mean)
+    plot.title <- "Mean log(nUMI)"
+  } else{
+    plot.title <- "Mean nUMI"
   }
 
-  #create comparison list for t.test, always against control, so please check your sample ordering
+  #create comparison list for wilcox, always against control, so please check your sample ordering
   # ,alternative add your own list as argument
   if (is.null(ListTest)) {
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
-    cat("ListTest empty, comparing every sample with provided control")
+    cat("ListTest empty, comparing every sample with each other\n")
     conditions <- unique(Seu_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
-      ctrl.condition <- conditions[grep(pattern = paste(c("CTRL","Ctrl","WT","Wt","wt"),collapse ="|")
+      ctrl.condition <- conditions[grep(pattern = paste(c("CTRL","Ctrl","ctrl","WT","Wt","wt"),collapse ="|")
                                         ,conditions)[1]]
     }
 
@@ -98,15 +124,62 @@ DO.BarplotClustert <- function(Seu_object,
     #create ListTest
     ListTest <- list()
     for (i in 1:length(conditions)) {
-      cndtn <- conditions[i]
+      cndtn <- as.character(conditions[i])
       if(cndtn!=ctrl.condition)
       {
-        ListTest[[i]] <- as.character(c(ctrl.condition,cndtn))
+        ListTest[[i]] <- c(ctrl.condition,cndtn)
       }
     }
   }
-  #delete Null values, created by count index
+
+  #delete Null values, created by count index also reorder for betetr p-value depiction
   ListTest <- ListTest[!sapply(ListTest, is.null)]
+  indices <- sapply(ListTest, function(x) match(x[2], df.melt.sum$condition))
+  ListTest <- ListTest[order(indices)]
+
+  #Function to remove vectors with both elements having a mean of 0 in df.melt.sum, so the testing does not fail
+  remove_zeros <- function(lst, df) {
+    lst_filtered <- lst
+    for (i in seq_along(lst)) {
+      elements <- lst[[i]]
+      if (all(df[df$condition %in% elements, "Mean"] == 0)) {
+        lst_filtered <- lst_filtered[-i]
+        warning(paste0("Removing Test ", elements[1], " vs ", elements[2], " since both values are 0"))
+      }
+    }
+    return(lst_filtered)
+  }
+
+  # Remove vectors with both elements having a mean of 0
+  ListTest <- remove_zeros(ListTest, df.melt.sum)
+
+
+  #add SEM calculated over sample means
+  df.melt.sum$SEM <- NA
+  for (condition in df.melt.sum$condition) {
+    df.melt.orig.con <- df.melt.orig[df.melt.orig$condition %in% condition,] # condition wise
+    for (gene in Feature) {
+      df.melt.orig.con.gen <- df.melt.orig.con[df.melt.orig.con$variable %in% gene,] #gene wise
+      df.melt.sum[df.melt.sum$condition %in% condition & df.melt.sum$variable %in% gene,]$SEM <- SEM(df.melt.orig.con.gen$Mean)
+    }
+  }
+
+  if (is.null(bar_colours)) {
+    bar_colours <- rep(c("#1f77b4","#ea7e1eff","royalblue4","tomato2","darkgoldenrod","palegreen4","maroon","thistle3"),5)#20 colours set for more change number
+  }
+
+  if (x_label_rotation == 45) {
+    hjust <- 1
+  } else{hjust <- 0.5}
+
+
+  #Adjustments when ylim is changed manually
+  y_pos_test <- max(df.melt.orig$Mean)*stat_pos_mod
+  if (!is.null(y_limits) && y_pos_test > max(y_limits)) {
+    y_pos_test <- max(y_limits)* stat_pos_mod - 0.1 * diff(y_limits)
+  }
+
+
   #create barplot with significance
   p<-ggplot(df.melt.sum, aes(x = condition, y = Mean, fill = condition))+
     geom_col(color = "black")+
@@ -115,21 +188,25 @@ DO.BarplotClustert <- function(Seu_object,
     #ordering, control always first
     scale_x_discrete(limits=c(as.character(ctrl.condition),levels(factor(df.melt.sum$condition))[!(levels(factor(df.melt.sum$condition)) %in% ctrl.condition)]))+
     #t-test, always against control, using means from orig sample identifier
-    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=3)+
+    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=3, y.position = y_pos_test, step.increase = step_mod)+
     facet_wrap(~variable, ncol = 9, scales = "free") +
-    scale_fill_manual(values = rep(c("royalblue" ,"forestgreen", "tomato", "sandybrown"),4) #20 colours set for more change number
+    scale_fill_manual(values = bar_colours #20 colours set for more change number
                       , name = "Condition")+
-    labs(title = "", y = "Mean UMI") +
+    labs(title = "", y = plot.title) +
     theme_classic() +
-    theme(axis.text.x = element_text(color = "black",angle = 45,hjust = 1, size = 14),
-          axis.text.y = element_text(color = "black", size = 14),
+    theme(axis.text.x = element_text(color = "black",angle = x_label_rotation,hjust = hjust, size = 16),
+          axis.text.y = element_text(color = "black", size = 16),
           axis.title.x = element_blank(),
-          axis.title = element_text(size = 14, color = "black"),
-          plot.title = element_text(size = 14, hjust = 0.5),
+          axis.title = element_text(size = 16, color = "black"),
+          plot.title = element_text(size = 16, hjust = 0.5),
           axis.line = element_line(color = "black"),
-          strip.text.x = element_text(size = 14, color = "black"),
-          legend.position = "bottom")
-  print(p)
+          strip.text.x = element_text(size = 16, color = "black"),
+          legend.position = "none")
+  # print(p)
+  if (!is.null(y_limits)) {
+    p = p + ylim(y_limits)
+  }
+
   if (returnValues==TRUE) {
     return(df.melt.sum)
   }
@@ -154,7 +231,6 @@ DO.BarplotClustert <- function(Seu_object,
 #' @param group.by select the seurat object slot where your conditions can be found, default conditon
 #' @param bar_colours colour vector
 #' @param plotPvalue plot the non adjusted p-value without correcting for multiple tests
-#' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
 #' @param stat_pos_mod Defines the distance to the graphs of the statistic
 #' @param step_mod Defines the distance between each statistics bracket
 #' @param x_label_rotation Rotation of x-labels
@@ -2209,8 +2285,130 @@ DO.SplitBarGSEA <- function(df_GSEA,
   }
 }
 
+#' @author Mariano Ruz Jurado
+#' @title DO Correlation Plot for visualizing similarity between categories
+#' @description#' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
+#' Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
+#' Ideal for comparing transcriptional profiles between conditions or clusters.
+#' @param Seu_obj Seurat Object
+#' @param group_by Column to aggregate the expression over it, default "orig.ident"
+#' @param assay Assay in object to use, default "RNA"
+#' @param features What genes to include by default all, default "None"
+#' @param method Correlation method, default "spearman"
+#' @param plotdesign Plot design, default "circle"
+#' @param plottype Show the full plot or only half of it, default "full"
+#' @param auto_limits Automatically rescales the colour bar based on the values in the correlation matrix, default "TRUE"
+#' @param outline.color the outline color of square or circle. Default value is "white".
+#' @param colormap Defines the colormap used in the plot, default c("royalblue4", "royalblue2","firebrick","firebrick4")
+#' @param lab_size Size to be used for the correlation coefficient labels. used when lab = TRUE.
+#' @param lab logical value. If TRUE, add correlation coefficient on the plot.
+#' @param lab_col color to be used for the correlation coefficient labels. used when lab = TRUE.
+#' @param ... Additionally arguments passed to ggcorrplot function
+#'
+#'
+#' @return ggplot2
+#'
+#' @import ggcorrplot
+#' @import ggplot2
+#' @import Seurat
+#'
+#' @examples
+#' \dontrun{
+#' DO.Correlation(
+#'   Seu_obj = seurat_object,
+#'   group_by = "orig.ident",
+#'   assay = "RNA",
+#'   features = NULL,
+#'   method = "spearman",
+#'   plotdesign = "square",
+#'   plottype = "full",
+#'   auto_limits = TRUE,
+#'   outline.color = "white",
+#'   colormap = c("royalblue4", "royalblue2", "firebrick", "firebrick4"),
+#'   lab_size = 10,
+#'   lab = TRUE,
+#'   lab_col = "white"
+#' )
+#' }
+#'
+#' @export
+DO.Correlation <- function(Seu_obj,
+                           group_by="orig.ident",
+                           assay="RNA",
+                           features=NULL,
+                           method="spearman",
+                           plotdesign="square",
+                           plottype="full",
+                           auto_limits=TRUE,
+                           outline.color="white",
+                           colormap=c("royalblue4", "royalblue2","firebrick","firebrick4"),
+                           lab_size=10,
+                           lab=TRUE,
+                           lab_col="white",
+                           ...){
+
+  #Aggregate Expression, creating Pseudobulk
+  corr_frame <- AggregateExpression(Seu_obj,
+                                    assays = assay,
+                                    features = features,
+                                    group.by = group_by)$RNA
+
+  corr_frame <- as.data.frame(corr_frame)
+
+  #Calculate correlation
+  corr_df <- cor(corr_frame, method = method)
+
+
+  # Auto color limits based on matrix
+  if (auto_limits == TRUE) {
+    min_val <- min(corr_df, na.rm = TRUE)*0.99
+    max_val <- max(corr_df, na.rm = TRUE)*1.01
+  } else {
+    min_val <- -1
+    max_val <- 1
+  }
+
+  pmain <- ggcorrplot(corr_df,
+                      method = plotdesign,
+                      type = plottype,
+                      colors = colormap,
+                      outline.color = outline.color,
+                      lab_col = lab_col,
+                      lab_size = lab_size,
+                      lab = lab,
+                      ...)+
+    scale_fill_gradientn(colors = colormap,
+                        limits = c(min_val, max_val),
+                        name = paste0(tools::toTitleCase(method), "Correlation"))+
+    ggplot2::theme(axis.text = ggplot2::element_text(color = "black"),
+                   legend.direction = "horizontal",
+                   axis.text.x = element_text(color = "black",angle = 0,hjust = 0.5, size = 14, family = "Helvetica"),
+                   axis.text.y = element_text(color = "black",angle=90,,hjust = 0.5, size = 14, family = "Helvetica"),
+                   axis.title = element_text(size = 14, color = "black", family = "Helvetica"),
+                   plot.title = element_text(size = 14, hjust = 0.5, face="bold", family = "Helvetica"),
+                   plot.subtitle = element_text(size = 14, hjust = 0, family = "Helvetica"),
+                   strip.text.x = element_text(size = 14, color = "black", family = "Helvetica", face = "bold"),
+                   legend.text = element_text(size = 10, color = "black", family = "Helvetica"),
+                   legend.title = element_text(size = 10, color = "black", family = "Helvetica", hjust =0),
+                   legend.position = "bottom")
+
+  guides.layer <- ggplot2::guides(fill = ggplot2::guide_colorbar(title = paste0(tools::toTitleCase(method), " \nCorrelation"),
+                                                                 title.position = "top",
+                                                                 title.hjust = 0.5,
+                                                                 barwidth = unit(3.8,"cm"), # changes the width of the color legend
+                                                                 barheight = unit(0.5,"cm"),
+                                                                 frame.colour = "black",
+                                                                 frame.linewidth = 0.3,
+                                                                 ticks.colour = "black",
+                                                                 order = 1))
+  pmain <- pmain + guides.layer
+
+  return(pmain)
+
+}
+
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
-#' @author Mariano Ruz Jurado (originally: Jun Zhang)
+#' @author Mariano Ruz Jurado (edited from: Jun Zhang)
 #' @title Annotation modifier for plots
 #' @description Used for segment the plot for further annotations
 #' @param object ggplot list. Default(NULL).
