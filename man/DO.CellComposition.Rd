@@ -14,7 +14,7 @@ DO.CellComposition(
   sort_x = NULL,
   sub_ident = NULL,
   sort_fill = NULL,
-  scanpro_plots = F,
+  scanpro_plots = FALSE,
   scanpro_group = NULL,
   outputFolder = NULL,
   return_df = FALSE,
@@ -75,7 +75,7 @@ ggplot object or list
 Computes and visualizes cell composition changes from a Seurat object using Scanpro.
 Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 Generates customizable plots with options for transformation, grouping, and bootstrapping.
-Returns a ggplot object or a list containing plot data and visualization.
+Returns a ggplot object or a list containing plot data and visualisation.
 }
 \examples{
 \dontrun{

@@ -69,7 +69,7 @@ The `DO.UMAP` function facilitatesthe visualisation of UMAP embeddings since it 
 DO.UMAP(Seu_object = Seu_obj,
         group.by = "annotation",
         split.by = "condition",
-        FeaturePlot = T,
+        FeaturePlot = TRUE,
         features = "NKG7",
         legend.position = "right")
 ```
@@ -119,7 +119,7 @@ DO.BoxPlot(Seu_obj,
            ctrl.condition = "A",
            Feature = "nCount_RNA",
            step_mod = 100,
-           plot_sample = F)
+           plot_sample = FALSE)
 ```
 
 

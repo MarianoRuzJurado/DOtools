@@ -2,6 +2,8 @@
 #' @import cli
 #' @import curl
 #'
+#' @return directory path where the data was saved
+#'
 #' @keywords internal
 .example_10x <- function(base_dir = tempfile("dotools_datasets_")) {
 

@@ -26,6 +26,7 @@ reference:
     contents:
       - DO.CellBender
       - DO.Import
+      - DO.Correlation
   - title: Downstream processing
     desc: >
     contents:
@@ -34,6 +35,7 @@ reference:
       - DO.FullRecluster
       - DO.TransferLabel
       - DO.enrichR
+      - DO.MultiDGE
   - title: scRNA plotting
     desc: >
     contents:

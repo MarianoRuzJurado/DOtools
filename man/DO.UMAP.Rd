@@ -6,14 +6,14 @@
 \usage{
 DO.UMAP(
   Seu_object,
-  FeaturePlot = F,
+  FeaturePlot = FALSE,
   features = NULL,
   group.by = "seurat_clusters",
   umap_colors = NULL,
   text_size = 14,
-  label = T,
-  order = T,
-  plot.title = T,
+  label = TRUE,
+  order = TRUE,
+  plot.title = TRUE,
   legend.position = "none",
   ...
 )
@@ -34,8 +34,8 @@ Plot with Refined colors and axes
 }
 \description{
 Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
-It allows customization of colors, labels, and other plot elements for better visualization.
-The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+It allows customization of colors, labels, and other plot elements for better visualisation.
+The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 }
 \examples{

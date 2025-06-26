@@ -6,7 +6,7 @@
 \usage{
 DO.VlnPlot(
   Seu_object,
-  SeuV5 = T,
+  SeuV5 = TRUE,
   Feature,
   ListTest = NULL,
   returnValues = FALSE,
@@ -17,7 +17,7 @@ DO.VlnPlot(
   geom_jitter_args_group_by2 = c(0.1, 0.1, 1),
   vector_colors = c("#1f77b4", "#ea7e1eff", "royalblue4", "tomato2", "darkgoldenrod",
     "palegreen4", "maroon", "thistle3"),
-  wilcox_test = T,
+  wilcox_test = TRUE,
   stat_pos_mod = 1.15,
   hjust.wilcox = 0.8,
   vjust.wilcox = 2,
@@ -60,7 +60,7 @@ a ggplot or a list used data frames
 Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
 It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
 The plot can be customized with options for data transformation, jitter display, and significance annotations.
-The function also supports multiple conditions and allows for visualization of statistical results from wilcoxon test.
+The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
 }
 \examples{
 \dontrun{

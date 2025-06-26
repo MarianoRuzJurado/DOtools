@@ -12,7 +12,7 @@ DO.CellTypist(
   over_clustering = "seurat_clusters",
   assay_normalized = "RNA",
   returnProb = FALSE,
-  SeuV5 = T
+  SeuV5 = TRUE
 )
 }
 \arguments{

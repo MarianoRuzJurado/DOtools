@@ -44,6 +44,9 @@ DO.CellBender(
 
 \item{bash_script}{Path to the bash script that runs CellBender.}
 }
+\value{
+None
+}
 \description{
 It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
 This function wraps a system call to a bash script for running CellBender on CellRanger outputs.

@@ -97,8 +97,8 @@ paths = c(file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
 
 Seu_obj <- DO.Import(pathways = paths,
                      ids = c("healthy-1", "disease-1"),
-                     TenX = T,
-                     DeleteDoublets = T,
+                     TenX = TRUE,
+                     DeleteDoublets = TRUE,
                      cut_mt = .05,
                      min_counts = 500,
                      min_genes = 300,
@@ -118,6 +118,11 @@ pQC2 <- magick::image_read_svg(postfilterplots[1])
 plot(pQC2)
 ```
 
+<br>
+In Addition, we can observe how similar the samples are through running a correlation analysis.
+```{r, fig.width=6, fig.height=6}
+DO.Correlation(Seu_obj)
+```
 
 We observed that most cells were removed due to increased mitochondrial content. Depending on the experimental design, the mitochondrial content threshold can be adjusted to retain a higher number of cells, if minimizing cell loss is of relevance.
 
@@ -131,7 +136,7 @@ Seu_obj <- IntegrateLayers(object = Seu_obj,
                            method = CCAIntegration,
                            orig.reduction = "pca",
                            new.reduction = "integrated.cca",
-                           verbose = T)
+                           verbose = TRUE)
 
 #After Integration we join the layers 
 Seu_obj <- JoinLayers(Seu_obj)
@@ -148,11 +153,11 @@ After the integration finished, both corrected expression matrices can be found 
 
 ```{r Clustering and UMAP, warning = FALSE}
 Seu_obj <- FindNeighbors(object = Seu_obj, reduction = "integrated.cca", dims = 1:50) #change dims accrodingly
-Seu_obj <- FindClusters(Seu_obj, resolution = 0.3, algorithm=4, random.seed = 1234)
+Seu_obj <- FindClusters(Seu_obj, resolution = 0.3, algorithm = 4, random.seed = 1234)
 Seu_obj <- RunUMAP(object = Seu_obj, reduction = "integrated.cca", dims = 1:50)
 
 DO.UMAP(Seu_obj, group.by = "seurat_clusters")
-DO.UMAP(Seu_obj, group.by = "condition", legend.position = "right", label = F)
+DO.UMAP(Seu_obj, group.by = "condition", legend.position = "right", label = FALSE)
 
 ```
 
@@ -164,7 +169,7 @@ Next up, we implemented a wrapper around the semi-automatic annotation tool `r p
 ```{r annotation, warning = FALSE}
 Seu_obj <- DO.CellTypist(Seu_obj,
                          modelName = "Healthy_COVID19_PBMC.pkl", 
-                         runCelltypistUpdate=T,
+                         runCelltypistUpdate=TRUE,
                          over_clustering = "seurat_clusters")
 DO.UMAP(Seu_obj, group.by = "autoAnnot", legend.position = "right")
 
@@ -190,9 +195,9 @@ p1 <- DO.Dotplot(Seu_object = Seu_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
-                 annotation_x = T,
+                 annotation_x = TRUE,
                  point_stroke = 0.1,
-                 annotation_x_rev = T,
+                 annotation_x_rev = TRUE,
                  textSize = 14,
                  hjust = 0.5,
                  vjust = 0,
@@ -213,9 +218,9 @@ p2 <- DO.Dotplot(Seu_object = Seu_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
-                 annotation_x = T,
+                 annotation_x = TRUE,
                  point_stroke = 0.1,
-                 annotation_x_rev = T,
+                 annotation_x_rev = TRUE,
                  textSize = 14,
                  hjust = 0.5,
                  vjust = 0,
@@ -265,15 +270,15 @@ Seu_obj <- DO.FullRecluster(Seu_obj, over_clustering = "annotation")
 DO.UMAP(Seu_obj, group.by = "annotation_recluster")
 T_cells <- DO.Subset(Seu_obj,
                      ident = "annotation_recluster",
-                     ident_name = grep("T_cells", unique(Seu_obj$annotation_recluster), value = T))
+                     ident_name = grep("T_cells", unique(Seu_obj$annotation_recluster), value = TRUE))
 
 T_markers <- FindAllMarkers(T_cells, group.by = "annotation_recluster")
 
 T_cells <- DO.CellTypist(T_cells,
                          modelName = "Healthy_COVID19_PBMC.pkl",
-                         runCelltypistUpdate=F,
+                         runCelltypistUpdate=FALSE,
                          over_clustering = "annotation_recluster",
-                         SeuV5 = F)
+                         SeuV5 = FALSE)
 T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster, c(`T_cells_1` = "CD4_T_cells",
                                                                     `T_cells_2` = "CD4_T_cells",
                                                                     `T_cells_3` = "CD4_T_cells",
@@ -281,7 +286,7 @@ T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster, c(`T_cells_1` 
 
 ```
 
-Now that we identified the marker genes describing the different T cell populations. We can re-annotate them based on their expression profile and a new prediciton from Celltypist.
+Now that we identified the marker genes describing the different T cell populations. We can re-annotate them based on their expression profile and a new prediciton from Celltypist. After this we, can easily transfer the labels in the subset to the original object.
 
 ```{r re-annotate}
 Seu_obj <- DO.TransferLabel(Seu_obj,
@@ -294,24 +299,33 @@ DO.UMAP(Seu_obj, group.by = "annotation", legend.position = "right")
 
 ## Gene ontology analysis
 
-To explore which biological processes are enriched in a specific cell type across conditions, we can perform gene ontology analysis. We'll start by identifying differentially expressed genes, focusing here on T cells. The `DO.enrichR` function uses the enrichR API to run gene set enrichment. It separates the DE genes into up- and down-regulated sets and runs the analysis for each group independently.
+To explore which biological processes are enriched in a specific cell type across conditions, we can perform gene ontology analysis. We'll start by identifying differentially expressed genes, focusing here on T cells. For differential gene expression analysis, we introduced a new function, which combines DGE analysis using a single cell approach, e.g. the popular Wilcoxon test and a pseudobulk testing using DESeq2. We can then observe the results in a combined dataframe.
 
 
 ```{r GO analysis, warning=FALSE}
+# this data set contains only one sample per condition we introduce replicates for showing the pseudo bulk approach
+set.seed(123)
+Seu_obj$orig.ident2 <- sample(rep(c("A", "B", "C", "D", "E", "F"), length.out = ncol(Seu_obj)))
 CD4T_cells <- DO.Subset(Seu_obj, ident = "annotation", ident_name = "CD4_T_cells")
-DGE_result <- FindMarkers(CD4T_cells,
-                          ident.1 = "disease",
-                          ident.2 = "healthy",
-                          group.by = "condition",
-                          min.pct=0,
-                          logfc.threshold=0)
 
-DGE_result <- tibble::rownames_to_column(DGE_result, var = "gene")
+DGE_result <- DO.MultiDGE(CD4T_cells,
+                          sample_col = "orig.ident2",
+                          method_sc = "wilcox",
+                          ident_ctrl = "healthy")
 
+head(DGE_result,10) %>%
+  kable(format = "html", table.attr = "style='width:100%;'") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+```
+
+After inspecting the DGE analysis, we continue with `DO.enrichR` function, which uses the enrichR API to run gene set enrichment. It separates the DE genes into up- and down-regulated sets and runs the analysis for each group independently
+
+```{r GO analysis2, warning=FALSE}
 result_GO <- DO.enrichR(df_DGE = DGE_result,
                         gene_column = "gene",
-                        pval_column = "p_val_adj",
-                        log2fc_column = "avg_log2FC",
+                        pval_column = "p_val_adj_SC_wilcox",
+                        log2fc_column = "avg_log2FC_SC_wilcox",
                         pval_cutoff = 0.05,
                         log2fc_cutoff = 0.25,
                         path = NULL,
@@ -322,7 +336,6 @@ result_GO <- DO.enrichR(df_DGE = DGE_result,
 head(result_GO,5) %>%
   kable(format = "html", table.attr = "style='width:100%;'") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-
 ```
 
 The top significant results can then be visualized in a bar plot.
@@ -336,7 +349,7 @@ DO.SplitBarGSEA(df_GSEA = result_GO_sig,
                 col_split = "Combined.Score",
                 cond_col = "State",
                 pos_cond = "enriched",
-                showP = F,
+                showP = FALSE,
                 path = paste0(base, "/"))
 GSEA_plot <- list.files(path = base, pattern = "SplitBar.*\\.svg$", full.names = TRUE, recursive = TRUE)
 plot(magick::image_read_svg(GSEA_plot))

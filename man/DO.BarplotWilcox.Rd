@@ -18,7 +18,7 @@ DO.BarplotWilcox(
   x_label_rotation = 45,
   plotPvalue = FALSE,
   y_limits = NULL,
-  log1p_nUMI = T
+  log1p_nUMI = TRUE
 )
 }
 \arguments{

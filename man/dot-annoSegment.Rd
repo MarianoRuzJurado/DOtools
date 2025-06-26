@@ -104,6 +104,9 @@
 
 \item{aes_y}{= NULL You should supply the plot Y mapping name when annotate a facetd plot. Default(NULL).}
 }
+\value{
+ggplot
+}
 \description{
 Used for segment the plot for further annotations
 }

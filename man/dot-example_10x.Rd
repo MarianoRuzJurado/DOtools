@@ -6,6 +6,9 @@
 \usage{
 .example_10x(base_dir = tempfile("dotools_datasets_"))
 }
+\value{
+directory path where the data was saved
+}
 \description{
 Download example dataset 10x
 }

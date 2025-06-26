@@ -8,7 +8,7 @@ DO.Import(
   pathways,
   ids,
   minCellGenes = 5,
-  FilterCells = T,
+  FilterCells = TRUE,
   cut_mt = 0.05,
   min_counts = NULL,
   max_counts = NULL,
@@ -16,8 +16,8 @@ DO.Import(
   max_genes = NULL,
   low_quantile = NULL,
   high_quantile = NULL,
-  DeleteDoublets = T,
-  include_rbs = T,
+  DeleteDoublets = TRUE,
+  include_rbs = TRUE,
   ...
 )
 }

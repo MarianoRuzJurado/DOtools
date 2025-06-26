@@ -17,7 +17,7 @@ DO.BarplotClustert(
   step_mod = 0.2,
   x_label_rotation = 45,
   y_limits = NULL,
-  log1p_nUMI = T
+  log1p_nUMI = TRUE
 )
 }
 \arguments{

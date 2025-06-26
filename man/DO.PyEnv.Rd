@@ -9,6 +9,9 @@ DO.PyEnv(conda_path = NULL)
 \arguments{
 \item{conda_path}{character string specifying the path to an existing or new conda environment.}
 }
+\value{
+None
+}
 \description{
 Sets up or connects to a conda Python environment for use with DOtools.
 If no environment path is provided, it will create one at \verb{~/.venv/DOtools} and install required Python packages:

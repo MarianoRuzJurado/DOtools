@@ -57,8 +57,8 @@ dir.create(file.path(base, "/cellbender"))
 DO.CellBender(cellranger_path = base,
               output_path = file.path(base, "/cellbender"),
               samplenames = c("healthy", "disease"),
-              cuda = T,
-              BarcodeRanking = F,  
+              cuda = TRUE,
+              BarcodeRanking = FALSE,  
               cpu_threads = 38,
               epochs = 5) # 150 is default 
 

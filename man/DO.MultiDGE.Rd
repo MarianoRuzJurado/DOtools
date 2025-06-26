@@ -14,7 +14,7 @@ DO.MultiDGE(
   ident_ctrl = "ctrl",
   min_pct = 0,
   logfc_threshold = 0,
-  only_pos = F,
+  only_pos = FALSE,
   min_cells_group = 3,
   ...
 )
@@ -41,6 +41,9 @@ DO.MultiDGE(
 \item{min_cells_group}{Minimum number of cells in one of the groups, default 3}
 
 \item{Seu_object}{The seurat object}
+}
+\value{
+Dataframe containing statistics for each gene from the single cell and the Pseudobulk DGE approach.
 }
 \description{
 Performs differential gene expression analysis using both single-cell and pseudo-bulk approaches across all annotated cell types.

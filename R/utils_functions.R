@@ -53,7 +53,7 @@
 DO.Import <- function(pathways,
                       ids,
                       minCellGenes=5,
-                      FilterCells=T,
+                      FilterCells=TRUE,
                       cut_mt=.05,
                       min_counts=NULL,
                       max_counts=NULL,
@@ -61,8 +61,8 @@ DO.Import <- function(pathways,
                       max_genes=NULL,
                       low_quantile=NULL,
                       high_quantile=NULL,
-                      DeleteDoublets=T,
-                      include_rbs=T,
+                      DeleteDoublets=TRUE,
+                      include_rbs=TRUE,
                       ...){
 
   object_list <- list()
@@ -87,7 +87,7 @@ DO.Import <- function(pathways,
       mtx <- Seurat::Read10X_h5(file_path)
       #Capture the case of multiomics saved in the cellranger results
       if (is.list(mtx)) {
-        mtx <- mtx[[grep("gene",names(mtx), value = T, ignore.case = T)]]
+        mtx <- mtx[[grep("gene",names(mtx), value = TRUE, ignore.case = TRUE)]]
       }
     }, error = function(x) {
       warning("Matrix is not produced by Cellranger. Trying CellBender read...")
@@ -129,7 +129,7 @@ DO.Import <- function(pathways,
       .logger("Get Mitochondrial content")
     }
 
-    if (include_rbs==T) {
+    if (include_rbs==TRUE) {
       sel_ribofeatures <- grep("^(RPS|RPL)", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
       pt_ribo <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
       Seu_obj$pt_ribo <- pt_ribo
@@ -147,7 +147,7 @@ DO.Import <- function(pathways,
     prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
     ggsave(plot = prefilter_plot, filename = paste0(outPath, "/QC_Plots_prefiltered.svg"), width = 10, height = 6)
 
-    if (FilterCells==T) {
+    if (FilterCells==TRUE) {
       .logger("Start Filtering")
 
       #check if absolute values are set for counts and quantile is set too
@@ -253,7 +253,7 @@ DO.Import <- function(pathways,
   .logger("Running ScaleData")
   merged_obj <- ScaleData(object = merged_obj)
   .logger("Run PCA")
-  merged_obj <- RunPCA(merged_obj, verbose = F, ...)
+  merged_obj <- RunPCA(merged_obj, verbose = FALSE, ...)
   #No idea why this is needed, but without the next two lines it doesnt work...
   merged_obj <- JoinLayers(merged_obj)
   merged_obj[["RNA"]] <- split(merged_obj[["RNA"]], f = merged_obj$orig.ident)
@@ -290,7 +290,7 @@ DO.Import <- function(pathways,
 #'   modelName = "Healthy_Adult_Heart.pkl",
 #'   runCelltypistUpdate = TRUE,
 #'   over_clustering = "seurat_clusters",
-#'   SeuV5=T
+#'   SeuV5=TRUE
 #' )
 #' }
 #'
@@ -302,7 +302,7 @@ DO.CellTypist <- function(Seu_object,
                           over_clustering = "seurat_clusters",
                           assay_normalized = "RNA",
                           returnProb=FALSE,
-                          SeuV5=T) {
+                          SeuV5=TRUE) {
 
   # Make sure R Zellkonverter package is installed
   zk <- system.file(package = "zellkonverter")
@@ -365,7 +365,7 @@ DO.CellTypist <- function(Seu_object,
 
   labelFile <- paste0(outDir, "/predicted_labels.csv")
   probFile <- paste0(outDir, "/probability_matrix.csv")
-  labels <- utils::read.csv(labelFile, header = T, row.names = 1, stringsAsFactors = FALSE)
+  labels <- utils::read.csv(labelFile, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
 
   #ad <- import(module = "anndata")
   #ad_obj <- ad$AnnData(X = labels)
@@ -373,7 +373,7 @@ DO.CellTypist <- function(Seu_object,
   #ct <- import(module = "celltypist")
   #ct$dotplot(ad_obj, use_as_reference = "cell_type", use_as_prediction = "majority_voting")
 
-  probMatrix <- utils::read.csv(probFile, header = T, row.names = 1, stringsAsFactors = FALSE)
+  probMatrix <- utils::read.csv(probFile, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
   Seu_object@meta.data$autoAnnot <- labels$majority_voting
 
   #Create dotplot with prob
@@ -393,8 +393,8 @@ DO.CellTypist <- function(Seu_object,
     select(cluster, label, prob)
   top_cluster$pct.exp <- 100 #since majority voting is set TRUE #TODO make this general if majority voting will become a boolean argument in the future
 
-  top_cluster$label <- factor(top_cluster$label, levels = unique(sort(top_cluster$label, decreasing = T)))
-  top_cluster$cluster <- factor(top_cluster$cluster, levels = top_cluster$cluster[order(top_cluster$label, decreasing = T)])
+  top_cluster$label <- factor(top_cluster$label, levels = unique(sort(top_cluster$label, decreasing = TRUE)))
+  top_cluster$cluster <- factor(top_cluster$cluster, levels = top_cluster$cluster[order(top_cluster$label, decreasing = TRUE)])
 
   .logger("Creating probality plot")
 
@@ -519,8 +519,8 @@ DO.FullRecluster <- function(Seu_object,
 #' @author Mariano Ruz Jurado
 #' @title DO.UMAP
 #' @description Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
-#' It allows customization of colors, labels, and other plot elements for better visualization.
-#' The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+#' It allows customization of colors, labels, and other plot elements for better visualisation.
+#' The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 #' Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 #' @param Seu_object The seurat object
 #' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
@@ -543,26 +543,26 @@ DO.FullRecluster <- function(Seu_object,
 #'
 #' DO.UMAP(
 #'   Seu_object = Seurat,
-#'   FeaturePlot=T,
+#'   FeaturePlot=TRUE,
 #'   features=c("CDH5","TTN")
 #' )
 #' }
 #'
 #' @export
 DO.UMAP <- function(Seu_object,
-                    FeaturePlot=F,
+                    FeaturePlot=FALSE,
                     features=NULL,
                     group.by="seurat_clusters",
                     umap_colors=NULL,
                     text_size=14,
-                    label=T,
-                    order=T,
-                    plot.title=T,
+                    label=TRUE,
+                    order=TRUE,
+                    plot.title=TRUE,
                     legend.position="none",
                     ...){
 
   #Dimplot
-  if (FeaturePlot==F) {
+  if (FeaturePlot==FALSE) {
     if (is.null(umap_colors)) {
       umap_colors <- rep(c(
         "#1f77b4", "#ff7f0e", "#2ca02c", "tomato2", "#9467bd", "chocolate3","#e377c2", "#ffbb78", "#bcbd22",
@@ -584,17 +584,17 @@ DO.UMAP <- function(Seu_object,
             legend.position = legend.position,
             legend.text = element_text(face = "bold"))
 
-    if (label==T) {
-      p <-LabelClusters(p, id  = group.by, fontface="bold", box = F)
+    if (label==TRUE) {
+      p <-LabelClusters(p, id  = group.by, fontface="bold", box = FALSE)
     }
     return(p)
   }
 
   #FeaturePlot
-  if (FeaturePlot==T) {
+  if (FeaturePlot==TRUE) {
 
     if (is.null(features)) {
-      stop("Please provide any gene names if using FeaturePlot=T.")
+      stop("Please provide any gene names if using FeaturePlot=TRUE.")
     }
 
     if (is.null(umap_colors)) {
@@ -618,7 +618,7 @@ DO.UMAP <- function(Seu_object,
             legend.position = legend.position,
             legend.text = element_text(face = "bold"))
 
-    if (plot.title == F) {
+    if (plot.title == FALSE) {
       p <- p & theme(plot.title = element_blank())
     }
 
@@ -795,6 +795,7 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 #' `scvi-tools`, `celltypist`, and `scanpro`.
 #'
 #' @param conda_path character string specifying the path to an existing or new conda environment.
+#' @return None
 #'
 #' @examples
 #' \dontrun{
@@ -822,9 +823,9 @@ DO.PyEnv <- function(conda_path = NULL) {
     conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scvi-tools==1.3.0", "celltypist==1.6.3", "scanpro==0.3.2")
     conda_args3 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/DOtools"), "pip", "install", "scipy==1.15.3")
     tryCatch({
-      system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
-      system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
-      system2(conda_args3[1], args = conda_args3[-1], stdout = F, stderr = F)
+      system2(conda_args1[1], args = conda_args1[-1], stdout = FALSE, stderr = FALSE)
+      system2(conda_args2[1], args = conda_args2[-1], stdout = FALSE, stderr = FALSE)
+      system2(conda_args3[1], args = conda_args3[-1], stdout = FALSE, stderr = FALSE)
       }, error = function(e) {
         stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
         })
@@ -854,7 +855,7 @@ DO.PyEnv <- function(conda_path = NULL) {
 #'
 #'
 #' @import DropletUtils
-#'
+#' @return None
 #'
 #' @examples
 #' \dontrun{
@@ -915,8 +916,8 @@ DO.CellBender <- function(cellranger_path,
     conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/cellbender"), "python=3.7")
     conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/cellbender"), "pip", "install", "cellbender", "lxml_html_clean")
     tryCatch({
-      system2(conda_args1[1], args = conda_args1[-1], stdout = F, stderr = F)
-      system2(conda_args2[1], args = conda_args2[-1], stdout = F, stderr = F)
+      system2(conda_args1[1], args = conda_args1[-1], stdout = FALSE, stderr = FALSE)
+      system2(conda_args2[1], args = conda_args2[-1], stdout = FALSE, stderr = FALSE)
     }, error = function(e) {
       stop("Failed to create conda environment. Provide a valid environment path or fix installation.")
     })
@@ -974,7 +975,7 @@ DO.CellBender <- function(cellranger_path,
     # Run command
     .logger(sprintf("Running CellBender for sample: %s", sample))
     tryCatch({
-      system2(cmd[1], args = cmd[-1], stdout = T, stderr = T)
+      system2(cmd[1], args = cmd[-1], stdout = TRUE, stderr = TRUE)
     }, error = function(e) {
       .logger(sprintf("Error running CellBender for sample %s: %s", sample, e$message))
     })
@@ -1247,6 +1248,7 @@ DO.enrichR <- function(df_DGE,
 #' @import tibble
 #' @import dplyr
 #'
+#' @return Dataframe containing statistics for each gene from the single cell and the Pseudobulk DGE approach.
 #'
 #' @examples
 #' \dontrun{
@@ -1269,10 +1271,14 @@ DO.MultiDGE <- function(Seu_obj,
                         ident_ctrl="ctrl",
                         min_pct=0,
                         logfc_threshold=0,
-                        only_pos=F,
+                        only_pos=FALSE,
                         min_cells_group=3,
                         ...
                         ){
+
+  if (!ident_ctrl %in% Seu_obj@meta.data[[group_by]]) {
+    stop(paste0(ident_ctrl, " was not found in meta data under the specified group_by column: ", group_by))
+  }
 
   DEG_stats_collector_sc <- list() #list for collecting sc method results
   DEG_stats_collector_pb <- list() #list for collecting pseudo_bulk method results
@@ -1280,7 +1286,7 @@ DO.MultiDGE <- function(Seu_obj,
   #Create a PseudoBulk representation of the Seurat single cell expression
   Seu_obj_PB <- AggregateExpression(Seu_obj,
                                     assays = assay,
-                                    return.seurat = T,
+                                    return.seurat = TRUE,
                                     group.by = c(group_by, sample_col, annotation_col))
   #internally AggregateExpression uses interaction() this replaces _ with -, check if the names changed in annotation:
   original_annots <- unique(Seu_obj@meta.data[[annotation_col]])
@@ -1387,14 +1393,20 @@ DO.MultiDGE <- function(Seu_obj,
   }
   .logger("Finished DGE pseudo bulk method analysis")
 
-  #combine the two df
-  df_pb <- DEG_stats_collector_pb %>%
-    rename(
-      p_val_PB_DESeq2 = p_val,
-      p_val_adj_PB_DESeq2 = p_val_adj,
-      avg_log2FC_PB_DESeq2 = avg_log2FC
-    ) %>%
-    select(gene, celltype, condition, p_val_PB_DESeq2, p_val_adj_PB_DESeq2, avg_log2FC_PB_DESeq2)
+  if (!length(DEG_stats_collector_pb) == 0) {
+    #combine the two df
+    df_pb <- DEG_stats_collector_pb %>%
+      rename(
+        p_val_PB_DESeq2 = p_val,
+        p_val_adj_PB_DESeq2 = p_val_adj,
+        avg_log2FC_PB_DESeq2 = avg_log2FC
+      ) %>%
+      select(gene, celltype, condition, p_val_PB_DESeq2, p_val_adj_PB_DESeq2, avg_log2FC_PB_DESeq2)
+  } else{
+    .logger("DGE pseudo bulk result is empty...")
+    df_pb <- data.frame(gene=NA, celltype=NA, condition=NA)
+  }
+
 
   rename_map <- rlang::set_names(
     c("p_val", "p_val_adj", "avg_log2FC"),

@@ -21,7 +21,7 @@ DO.SplitBarGSEA(
   txt_size = 12,
   filename = "SplitBar.svg",
   title = "Top 10 GO Terms in each Condition: ",
-  showP = F,
+  showP = FALSE,
   celltype = "all"
 )
 }
@@ -83,7 +83,7 @@ df_GSEA <- read.csv("path/to/GSEA_results.csv")
 head(df_GSEA)
 #Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.
 
-#Run SplitBarGSEA visualization
+#Run SplitBarGSEA visualisation
 DO.SplitBarGSEA(df_GSEA = df_GSEA,
                 term_col = "Term",
                 col_split = "Combined.Score",

@@ -56,7 +56,7 @@ DO.BarplotClustert <- function(Seu_object,
                                step_mod=0.2,
                                x_label_rotation=45,
                                y_limits = NULL,
-                               log1p_nUMI=T){
+                               log1p_nUMI=TRUE){
 
   if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
@@ -68,14 +68,14 @@ DO.BarplotClustert <- function(Seu_object,
   df<-data.frame(condition=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
                  ,orig.ident = Seu_object$orig.ident)
   #get expression values for genes from individual cells, add to df
-  #if (SeuV5==F) {
+  #if (SeuV5==FALSE) {
   #  for(i in Feature){
   #    df[,i] <- expm1(Seu_object@assays$RNA@data[i,])
   #
   #  }
   #}
   #For Seuratv5 where everything is a layer now
-  #if (SeuV5==T) {
+  #if (SeuV5==TRUE) {
   #rlang::warn("\nSeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
   if (Feature %in% rownames(Seu_object)) {
     df[,Feature] <- expm1(FetchData(Seu_object, vars = Feature))
@@ -98,7 +98,7 @@ DO.BarplotClustert <- function(Seu_object,
 
   if (Feature %in% names(Seu_object@meta.data)) {
     plot.title <- paste("Mean", Feature, sep = " ")
-  }  else if (log1p_nUMI==T) {
+  }  else if (log1p_nUMI==TRUE) {
     df.melt.sum$Mean <- log1p(df.melt.sum$Mean)
     df.melt.orig$Mean <- log1p(df.melt.orig$Mean)
     plot.title <- "Mean log(nUMI)"
@@ -276,13 +276,13 @@ DO.BarplotWilcox <- function(Seu_object,
                              x_label_rotation=45,
                              plotPvalue=FALSE,
                              y_limits = NULL,
-                             log1p_nUMI=T){
+                             log1p_nUMI=TRUE){
 
   if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
   }
 
-  if (wilcox_test == T) {
+  if (wilcox_test == TRUE) {
     rstat <- system.file(package = "rstatix") # Make sure package is installed
     ifelse(nzchar(rstat), "", stop("Install rstatix R package for wilcox statistic!"))
   }
@@ -293,14 +293,14 @@ DO.BarplotWilcox <- function(Seu_object,
   df<-data.frame(condition=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
                  ,orig.ident = Seu_object$orig.ident)
   #get expression values for genes from individual cells, add to df
-  #if (SeuV5==F) {
+  #if (SeuV5==FALSE) {
   #  for(i in Feature){
   #    df[,i] <- expm1(Seu_object@assays$RNA@data[i,])
   #
   #  }
   #}
   #For Seuratv5 where everything is a layer now
-  #if (SeuV5==T) {
+  #if (SeuV5==TRUE) {
   #rlang::warn("\nSeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
   if (Feature %in% rownames(Seu_object)) {
     df[,Feature] <- expm1(FetchData(Seu_object, vars = Feature))
@@ -327,7 +327,7 @@ DO.BarplotWilcox <- function(Seu_object,
 
   if (Feature %in% names(Seu_object@meta.data)) {
     plot.title <- paste("Mean", Feature, sep = " ")
-  }  else if (log1p_nUMI==T) {
+  }  else if (log1p_nUMI==TRUE) {
     df.melt.sum$Mean <- log1p(df.melt.sum$Mean)
     df.melt.orig$Mean <- log1p(df.melt.orig$Mean)
     plot.title <- "Mean log(nUMI)"
@@ -469,7 +469,7 @@ DO.BarplotWilcox <- function(Seu_object,
 #' @description Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
 #' It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
 #' The plot can be customized with options for data transformation, jitter display, and significance annotations.
-#' The function also supports multiple conditions and allows for visualization of statistical results from wilcoxon test.
+#' The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
 #' @param Seu_object combined Seurat object
 #' @param Feature name of the feature
 #' @param ListTest List for which conditions wilcox will be performed, if NULL always CTRL group against everything
@@ -501,7 +501,7 @@ DO.BarplotWilcox <- function(Seu_object,
 #'
 #' DO.VlnPlot(
 #'   Seu_object = Seurat,
-#'   SeuV5=T,
+#'   SeuV5=TRUE,
 #'   Feature = "CDH5",
 #'   ListTest = ListTest,
 #'   ctrl.condition = "CTRL",
@@ -511,7 +511,7 @@ DO.BarplotWilcox <- function(Seu_object,
 #'
 #' @export
 DO.VlnPlot <- function(Seu_object,
-                               SeuV5=T,
+                               SeuV5=TRUE,
                                Feature,
                                ListTest=NULL,
                                returnValues=FALSE,
@@ -521,7 +521,7 @@ DO.VlnPlot <- function(Seu_object,
                                geom_jitter_args = c(0.20, 0.25, 0.25),
                                geom_jitter_args_group_by2 = c(0.1, 0.1, 1),
                                vector_colors = c("#1f77b4","#ea7e1eff","royalblue4","tomato2","darkgoldenrod","palegreen4","maroon","thistle3"),
-                               wilcox_test = T,
+                               wilcox_test = TRUE,
                                stat_pos_mod = 1.15,
                                hjust.wilcox=0.8,
                                vjust.wilcox = 2.0,
@@ -535,7 +535,7 @@ DO.VlnPlot <- function(Seu_object,
     stop("Feature not found in Seurat Object!")
   }
 
-  if (wilcox_test == T) {
+  if (wilcox_test == TRUE) {
     rstat <- system.file(package = "rstatix") # Make sure package is installed
     ifelse(nzchar(rstat), "", stop("Install rstatix R package for wilcox statistic!"))
   }
@@ -544,7 +544,7 @@ DO.VlnPlot <- function(Seu_object,
     stop("Please specify the ctrl condition as string!")
   }
 
-  if (SeuV5==T) {
+  if (SeuV5==TRUE) {
     rlang::warn("SeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
 
     if (Feature %in% rownames(Seu_object)) {
@@ -577,7 +577,7 @@ DO.VlnPlot <- function(Seu_object,
 
   }
 
-  if (SeuV5==F) {
+  if (SeuV5==FALSE) {
     if (Feature %in% rownames(Seu_object)) {
       vln.df = data.frame(Feature = Seu_object[["RNA"]]@data[Feature,],
                           cluster = Seu_object[[group.by]])
@@ -746,7 +746,7 @@ DO.VlnPlot <- function(Seu_object,
   #normal violin
   if(is.null(group.by.2)){
     p <- ggplot(vln.df, aes(x = group, y = Feature))+
-      geom_violin(aes(fill = group), trim = T, scale = "width", )+
+      geom_violin(aes(fill = group), trim = TRUE, scale = "width", )+
       geom_jitter(size = geom_jitter_args[1], width = geom_jitter_args[2], alpha = geom_jitter_args[3])+
       labs(title = Feature, y = "Expression Level")+
       xlab("")+
@@ -775,7 +775,7 @@ DO.VlnPlot <- function(Seu_object,
   if(!is.null(group.by.2)){
     #plot
     p <- ggplot(vln.df, aes(x = !!sym(group.by.2), y = Feature, fill = !!sym(group.by)))+
-      geom_violin(aes(fill = group), trim = T, scale = "width")+
+      geom_violin(aes(fill = group), trim = TRUE, scale = "width")+
       labs(title = Feature, y = "log(nUMI)")+
       xlab("")+
       theme_classic()+
@@ -947,10 +947,10 @@ DO.BoxPlot <- function(Seu_object,
                                group.by = "condition",
                                group.by.2 = NULL,
                                ctrl.condition=NULL,
-                               outlier_removal = T,
-                               plot_sample=T,
+                               outlier_removal = TRUE,
+                               plot_sample=TRUE,
                                vector_colors = c("#1f77b4","#ea7e1eff","royalblue4","tomato2","darkgoldenrod","palegreen4","maroon","thistle3"),
-                               wilcox_test = T,
+                               wilcox_test = TRUE,
                                stat_pos_mod = 1.15,
                                step_mod = 0,
                                hjust.wilcox=0.5,
@@ -967,18 +967,18 @@ DO.BoxPlot <- function(Seu_object,
   if (is.null(group.by.2)) {
     pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
                                               assays = "RNA",
-                                              return.seurat = T,
+                                              return.seurat = TRUE,
                                               group.by = c(group.by, sample.column),
-                                              verbose = F)
+                                              verbose = FALSE)
 
     pseudo_Seu$celltype.con <- pseudo_Seu[[group.by]]
 
   } else{
     pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
                                               assays = "RNA",
-                                              return.seurat = T,
+                                              return.seurat = TRUE,
                                               group.by = c(group.by, group.by.2, sample.column),
-                                              verbose = F)
+                                              verbose = FALSE)
 
     #cover the case of subsetted to only have one cell type
     if (length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
@@ -1194,7 +1194,7 @@ DO.BoxPlot <- function(Seu_object,
 
   #TODO there might be a problem with the quantiles, recheck
   #SCpubr does not support outlier removal, therefore identify manually
-  if (outlier_removal == T) {
+  if (outlier_removal == TRUE) {
 
     if (Feature %in% rownames(Seu_object)) {
       data_matrix <- pseudo_Seu@assays$RNA$data[Feature,]
@@ -1237,7 +1237,7 @@ DO.BoxPlot <- function(Seu_object,
     p <- SCpubr::do_BoxPlot(sample = pseudo_Seu,
                             feature = Feature,
                             group.by = group.by,
-                            order = F,
+                            order = FALSE,
                             boxplot.width = 0.8,
                             legend.position = "right")
 
@@ -1247,10 +1247,10 @@ DO.BoxPlot <- function(Seu_object,
                             group.by = group.by.2,
                             split.by = group.by,
                             boxplot.width = 0.8,
-                            order = F)
+                            order = FALSE)
   }
 
-  if (plot_sample == T) {
+  if (plot_sample == TRUE) {
     p <- p + geom_point(size=2, alpha=1, position = position_dodge(width = 0.8))
   }
 
@@ -1374,7 +1374,7 @@ DO.BoxPlot <- function(Seu_object,
 #' @param hide_zero Removes dots for genes with 0 expression
 #' @param annotation_x Adds annotation on top of x axis instead on y axis
 #' @param point_stroke Defines the thickness of the black stroke on the dots
-#' @param ... Further arguments passed to annoSegment function if annotation_x == T
+#' @param ... Further arguments passed to annoSegment function if annotation_x == TRUE
 #'
 #' @import ggplot2
 #' @import tidyverse
@@ -1403,29 +1403,29 @@ DO.Dotplot <- function(Seu_object,
                        group.by.x = NULL,
                        group.by.y = NULL,
                        group.by.y2 = NULL,
-                       across.group.by.x=F,
-                       across.group.by.y=F,
+                       across.group.by.x=FALSE,
+                       across.group.by.y=FALSE,
                        sort_x=NULL,
                        dot.size = c(1,6),
                        plot.margin = c(1, 1, 1, 1),
                        midpoint = 0.5,
-                       scale_gene=F,
-                       returnValue = F,
-                       log1p_nUMI=T,
-                       hide_zero=T,
-                       annotation_x=F,
+                       scale_gene=FALSE,
+                       returnValue = FALSE,
+                       log1p_nUMI=TRUE,
+                       hide_zero=TRUE,
+                       annotation_x=FALSE,
                        annotation_x_position=0.25,
-                       annotation_x_rev=F,
+                       annotation_x_rev=FALSE,
                        point_stroke=0.2,
                        limits_colorscale=NULL,
-                       coord_flip=F,
+                       coord_flip=FALSE,
                        ... ){
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
   }
 
-  if(across.group.by.x==T && across.group.by.y==T){
+  if(across.group.by.x==TRUE && across.group.by.y==TRUE){
     stop("Both Pseudobulk options are set to true, please define just one!")
   }
 
@@ -1433,7 +1433,7 @@ DO.Dotplot <- function(Seu_object,
   FeatureType <- mode(Feature)
 
   #check if Feature is a vector and annotation specified as true -> no cluster information provided for annotation
-  if (is.vector(Feature) && annotation_x == T) {
+  if (is.vector(Feature) && annotation_x == TRUE) {
     stop("Feature is a vector, but annotation_x is set to TRUE. If annotation on xaxis is wanted with specific cluster names you need to provide a dataframe with a column containing cluster names for the genes, like in Seurat::FindAllMarkers!")
   }
 
@@ -1441,7 +1441,7 @@ DO.Dotplot <- function(Seu_object,
   if (!is.vector(Feature)) {
     orig_DF <- Feature # save original df for annotation purposes
     orig_DF$cluster <- as.vector(orig_DF$cluster)
-    cluster_name <- grep("cluster|group|annotation|cell", colnames(Feature), value = T) # Grep name of column, relevant for downstream assignments
+    cluster_name <- grep("cluster|group|annotation|cell", colnames(Feature), value = TRUE) # Grep name of column, relevant for downstream assignments
     cluster <- unique(Feature[[grep("cluster|group|annotation|cell", colnames(Feature))]])
     Feature <- unique(Feature[[grep("gene|feature", colnames(Feature))]])
 
@@ -1491,7 +1491,7 @@ DO.Dotplot <- function(Seu_object,
 
   #add the cluster information to the plot if annotation_x is set to true and a dataframe was provided with cluster annotation
   #TODO Clean this part a bit up
-  if (annotation_x==T && !is.null(cluster)) {
+  if (annotation_x==TRUE && !is.null(cluster)) {
     data.plot.res <- purrr::map_df(seq_len(nrow(data.plot.res)), function(x){
       tmp <- data.plot.res[x,]
       tmp$celltype <- orig_DF[which(orig_DF[[grep("gene|feature", colnames(orig_DF))]] == tmp[[grep("gene|feature", colnames(tmp))]]), cluster_name][[1]]
@@ -1522,13 +1522,13 @@ DO.Dotplot <- function(Seu_object,
                                            split = "\\(|\\)"), "[", 2)
   }
 
-  if (hide_zero==T) {
+  if (hide_zero==TRUE) {
     data.plot.res$pct.exp <- ifelse(data.plot.res$pct.exp == 0, NA, data.plot.res$pct.exp) # so fraction 0 is not displayed in plot
     data.plot.res <- data.plot.res[complete.cases(data.plot.res$pct.exp),]# remove empty lines
   }
 
   #create bulk expression for group.by.x
-  if (across.group.by.x == T) {
+  if (across.group.by.x == TRUE) {
     bulk_tmp <- data.plot.res %>%
       dplyr::group_by(id, gene) %>%
       summarise(avg.exp = mean(avg.exp),
@@ -1539,7 +1539,7 @@ DO.Dotplot <- function(Seu_object,
   }
 
   #create bulk expression for group.by.y, will divide by group.by.y2 if provided
-  if (across.group.by.y == T) {
+  if (across.group.by.y == TRUE) {
     if (is.null(group.by.y2)) {
       bulk_tmp <- data.plot.res %>% dplyr::group_by(xaxis, gene) %>%
         summarise(avg.exp = mean(avg.exp), pct.exp = mean(pct.exp))
@@ -1558,14 +1558,14 @@ DO.Dotplot <- function(Seu_object,
   }
 
   # get the scale pvalue for plotting
-  if (log1p_nUMI==T) {
+  if (log1p_nUMI==TRUE) {
     data.plot.res$avg.exp.plot <- log1p(data.plot.res$avg.exp) # reapply the log transformation if wanted
   } else{
     data.plot.res$avg.exp.plot <- data.plot.res$avg.exp
   }
 
   #define how expression values are transformed
-  if (scale_gene==T) {
+  if (scale_gene==TRUE) {
     data.plot.res <- data.plot.res %>%
       dplyr::group_by(gene) %>%
       dplyr::mutate(z_avg_exp = (avg.exp - mean(avg.exp, na.rm=TRUE)) / sd(avg.exp, na.rm=TRUE)) %>%
@@ -1573,7 +1573,7 @@ DO.Dotplot <- function(Seu_object,
     exp.title = "Z-score expression \n per gene"
     fill.values = data.plot.res$z_avg_exp
     ###
-  } else if(log1p_nUMI ==T){
+  } else if(log1p_nUMI ==TRUE){
     exp.title = "Mean log(nUMI) \n in group"
     fill.values = data.plot.res$avg.exp.plot
   } else{
@@ -1586,9 +1586,9 @@ DO.Dotplot <- function(Seu_object,
     # get rid of previous factoring to set new one, first alphabetical order on y
     data.plot.res$xaxis <- as.vector(data.plot.res$xaxis)
     data.plot.res$id <- factor(data.plot.res$id, levels = sort(unique(data.plot.res$id)))
-    data.plot.res$gene <- factor(data.plot.res$gene, levels = orig_DF[order(orig_DF$cluster, decreasing = F),]$gene)
+    data.plot.res$gene <- factor(data.plot.res$gene, levels = orig_DF[order(orig_DF$cluster, decreasing = FALSE),]$gene)
 
-    if (annotation_x_rev == T) {
+    if (annotation_x_rev == TRUE) {
       data.plot.res$id <- factor(data.plot.res$id, levels = rev(sort(unique(data.plot.res$id))))
     }
 
@@ -1680,7 +1680,7 @@ DO.Dotplot <- function(Seu_object,
                                                    high = dot.col[3],
                                                    midpoint = midpoint, name = "Gradient")
   }
-  if (across.group.by.x == T) {
+  if (across.group.by.x == TRUE) {
 
     pmain <- pmain +
       ggplot2::geom_point(ggplot2::aes(fill = fill.values,
@@ -1697,7 +1697,7 @@ DO.Dotplot <- function(Seu_object,
         return(labels)
       })
 
-  } else if(across.group.by.y == T){
+  } else if(across.group.by.y == TRUE){
 
     pmain <- pmain + ggplot2::geom_point(ggplot2::aes(fill = fill.values, size = pct.exp), shape = 21, stroke = point_stroke)+
       guides.layer + facet_grid(cols = vars(gene %>% factor(levels = Feature)), scales = "fixed") +
@@ -1723,7 +1723,7 @@ DO.Dotplot <- function(Seu_object,
                                      limits = c(min(pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)])*.95,max(data.plot.res$pct.exp)*1.05))+
       theme(panel.spacing = unit(0, "lines"))
 
-    if (annotation_x==T) {
+    if (annotation_x==TRUE) {
       #use the annotation function from jjAnno package
       # jjA <- system.file(package = "jjAnno") # Make sure package is installed
       # ifelse(nzchar(jjA), "", stop("Install jjAnno CRAN package for annotation on xaxis:!"))
@@ -1738,15 +1738,15 @@ DO.Dotplot <- function(Seu_object,
       pmain <- .annoSegment(
         object = pmain,
         annoPos = "top",
-        aesGroup = T,
+        aesGroup = TRUE,
         aesGroName = "celltype",
         fontface = "bold",
         fontfamily = "Helvetica",
         pCol = rep("black", length(cluster)),
         textCol = rep("black", length(cluster)),
-        addBranch = T,
+        addBranch = TRUE,
         branDirection = -1,
-        addText = T,
+        addText = TRUE,
         yPosition = plot_max_y,
         # textSize = 14,
         # hjust = 0.5,
@@ -1760,11 +1760,11 @@ DO.Dotplot <- function(Seu_object,
 
     }
 
-    if (coord_flip==T) {
+    if (coord_flip==TRUE) {
       pmain <- pmain + ggplot2::coord_flip()
     }
 
-    if (coord_flip==T && annotation_x==T) {
+    if (coord_flip==TRUE && annotation_x==TRUE) {
       warning("Annotation_x and coord_flip set on TRUE, might result in unwanted behaviour!")
     }
 
@@ -1781,7 +1781,7 @@ DO.Dotplot <- function(Seu_object,
       theme(panel.spacing = unit(0, "lines"))
   }
 
-  if(returnValue == T){
+  if(returnValue == TRUE){
     return(data.plot.res)
   }
   return(pmain)
@@ -1808,7 +1808,7 @@ theme_box <- function(){
 #' @description Computes and visualizes cell composition changes from a Seurat object using Scanpro.
 #' Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 #' Generates customizable plots with options for transformation, grouping, and bootstrapping.
-#' Returns a ggplot object or a list containing plot data and visualization.
+#' Returns a ggplot object or a list containing plot data and visualisation.
 #' @param Seu_object The seurat object
 #' @param assay_normalized Assay with raw counts
 #' @param cluster_column Column in meta data which will be used to segment the bar plot
@@ -1844,7 +1844,7 @@ theme_box <- function(){
 #'   Seu_object = Seurat,
 #'   cluster_column="cell_type",
 #'   condition_column="condition",
-#'   scanpro_plots=T,
+#'   scanpro_plots=TRUE,
 #'   bar_colors=c("#ff7f0e","tomato2", "darkgoldenrod2","#aec7e8"), # can also be a named vector
 #'   n_reps=5)
 #'
@@ -1862,7 +1862,7 @@ DO.CellComposition <- function(Seu_object,
                                sort_x=NULL,
                                sub_ident=NULL,
                                sort_fill=NULL,
-                               scanpro_plots=F,
+                               scanpro_plots=FALSE,
                                scanpro_group=NULL,
                                outputFolder=NULL,
                                return_df=FALSE,
@@ -1875,7 +1875,7 @@ DO.CellComposition <- function(Seu_object,
                                ...
 ){
 
-  if(scanpro_plots==T && is.null(outputFolder)){
+  if(scanpro_plots==TRUE && is.null(outputFolder)){
     warning(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
     outputFolder <- getwd()
   }
@@ -1921,14 +1921,14 @@ DO.CellComposition <- function(Seu_object,
                      n_reps=as.integer(n_reps))
   }
 
-  if (scanpro_plots==T) {
+  if (scanpro_plots==TRUE) {
     if (!dir.exists(paste0(outputFolder,"/scanpro"))) {
       dir.create(paste0(outputFolder,"/scanpro"))
     }
   }
 
   #Plot scanpro plots if requested
-  if(scanpro_plots==T && is.null(scanpro_group)){
+  if(scanpro_plots==TRUE && is.null(scanpro_group)){
     out$plot(kind="boxplot", ...)
     plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_box_plot.svg"), dpi=300, bbox_inches="tight")
     plt$close()
@@ -1949,7 +1949,7 @@ DO.CellComposition <- function(Seu_object,
 
   }
 
-  if(scanpro_plots==T && !is.null(scanpro_group)){
+  if(scanpro_plots==TRUE && !is.null(scanpro_group)){
     out$plot(kind="boxplot",clusters=scanpro_group, ...)
     plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_",scanpro_group,"_box_plot.svg"), dpi=300, bbox_inches="tight")
     plt$close()
@@ -2134,7 +2134,7 @@ DO.CellComposition <- function(Seu_object,
 
 
 
-  if (return_df == T) {
+  if (return_df == TRUE) {
     return(list(prop_df, plot_p))
   } else{
     return(plot_p)
@@ -2186,7 +2186,7 @@ DO.CellComposition <- function(Seu_object,
 #' head(df_GSEA)
 #' #Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.
 #'
-#' #Run SplitBarGSEA visualization
+#' #Run SplitBarGSEA visualisation
 #' DO.SplitBarGSEA(df_GSEA = df_GSEA,
 #'                 term_col = "Term",
 #'                 col_split = "Combined.Score",
@@ -2224,7 +2224,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
                             txt_size=12,
                             filename="SplitBar.svg",
                             title="Top 10 GO Terms in each Condition: ",
-                            showP=F,
+                            showP=FALSE,
                             celltype="all")
 {
 
@@ -2410,7 +2410,9 @@ DO.Correlation <- function(Seu_obj,
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
 #' @author Mariano Ruz Jurado (edited from: Jun Zhang)
 #' @title Annotation modifier for plots
+#'
 #' @description Used for segment the plot for further annotations
+#'
 #' @param object ggplot list. Default(NULL).
 #' @param relSideDist The relative distance ratio to the y axis range. Default(0.1).
 #' @param aesGroup Whether use your group column to add rect annotation. Default("FALSE").
@@ -2443,6 +2445,9 @@ DO.Correlation <- function(Seu_obj,
 #' @param myFacetGrou Your facet group name to be added with annotation when object is a faceted object. Default(NULL).
 #' @param aes_x = NULL You should supply the plot X mapping name when annotate a facetd plot. Default(NULL).
 #' @param aes_y = NULL You should supply the plot Y mapping name when annotate a facetd plot. Default(NULL).
+#'
+#' @return ggplot
+#'
 #' @keywords internal
 .annoSegment <- function (object = NULL,
                          relSideDist = 0.1,
@@ -2745,7 +2750,7 @@ DO.Correlation <- function(Seu_obj,
         object <- object + ggplot2::annotation_custom(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
                                                                                             fontsize = textSize, fontfamily = fontfamily,
                                                                                             fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                            label = textLabel[i], check.overlap = T, just = "centre",
+                                                                            label = textLabel[i], check.overlap = TRUE, just = "centre",
                                                                             rot = textRot), xmin = ggplot2::unit(xmin[i],
                                                                                                                  "native"), xmax = ggplot2::unit(xmax[i], "native"),
                                                       ymin = ggplot2::unit(ymin + textHVjust, "native"),
@@ -2757,7 +2762,7 @@ DO.Correlation <- function(Seu_obj,
         object <- object + ggplot2::annotation_custom(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
                                                                                             fontsize = textSize, fontfamily = fontfamily,
                                                                                             fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                            label = textLabel[i], check.overlap = T, just = "centre",
+                                                                            label = textLabel[i], check.overlap = TRUE, just = "centre",
                                                                             rot = textRot), xmin = ggplot2::unit(xmin +
                                                                                                                    textHVjust, "native"), xmax = ggplot2::unit(xmax +
                                                                                                                                                                  textHVjust, "native"), ymin = ggplot2::unit(ymin[i],
@@ -2773,7 +2778,7 @@ DO.Correlation <- function(Seu_obj,
         object <- object + annotation_custom2(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
                                                                                     fontsize = textSize, fontfamily = fontfamily,
                                                                                     fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                    label = textLabel[i], check.overlap = T, just = "centre",
+                                                                    label = textLabel[i], check.overlap = TRUE, just = "centre",
                                                                     rot = textRot), data = facet_data, xmin = xmin[i],
                                               xmax = xmax[i], ymin = ymin + textHVjust, ymax = ymax +
                                                 textHVjust)
@@ -2784,7 +2789,7 @@ DO.Correlation <- function(Seu_obj,
         object <- object + annotation_custom2(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
                                                                                     fontsize = textSize, fontfamily = fontfamily,
                                                                                     fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                    label = textLabel[i], check.overlap = T, just = "centre",
+                                                                    label = textLabel[i], check.overlap = TRUE, just = "centre",
                                                                     rot = textRot), data = facet_data, xmin = xmin +
                                                 textHVjust, xmax = xmin + textHVjust, ymin = ymin[i],
                                               ymax = ymax[i])
