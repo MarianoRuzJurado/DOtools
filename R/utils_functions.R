@@ -1274,6 +1274,10 @@ DO.MultiDGE <- function(Seu_obj,
                         ...
                         ){
 
+  if (!ident_ctrl %in% Seu_obj@meta.data[[group_by]]) {
+    stop(paste0(ident_ctrl, " was not found in meta data under the specified group_by column: ", group_by))
+  }
+
   DEG_stats_collector_sc <- list() #list for collecting sc method results
   DEG_stats_collector_pb <- list() #list for collecting pseudo_bulk method results
 
@@ -1387,14 +1391,20 @@ DO.MultiDGE <- function(Seu_obj,
   }
   .logger("Finished DGE pseudo bulk method analysis")
 
-  #combine the two df
-  df_pb <- DEG_stats_collector_pb %>%
-    rename(
-      p_val_PB_DESeq2 = p_val,
-      p_val_adj_PB_DESeq2 = p_val_adj,
-      avg_log2FC_PB_DESeq2 = avg_log2FC
-    ) %>%
-    select(gene, celltype, condition, p_val_PB_DESeq2, p_val_adj_PB_DESeq2, avg_log2FC_PB_DESeq2)
+  if (!length(DEG_stats_collector_pb) == 0) {
+    #combine the two df
+    df_pb <- DEG_stats_collector_pb %>%
+      rename(
+        p_val_PB_DESeq2 = p_val,
+        p_val_adj_PB_DESeq2 = p_val_adj,
+        avg_log2FC_PB_DESeq2 = avg_log2FC
+      ) %>%
+      select(gene, celltype, condition, p_val_PB_DESeq2, p_val_adj_PB_DESeq2, avg_log2FC_PB_DESeq2)
+  } else{
+    .logger("DGE pseudo bulk result is empty...")
+    df_pb <- data.frame(gene=NA, celltype=NA, condition=NA)
+  }
+
 
   rename_map <- rlang::set_names(
     c("p_val", "p_val_adj", "avg_log2FC"),
