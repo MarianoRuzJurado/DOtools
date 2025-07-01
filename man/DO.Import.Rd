@@ -40,9 +40,9 @@ DO.Import(
 
 \item{max_genes}{Numeric. Maximum number of genes detected per cell to retain. Optional.}
 
-\item{low_quantile}{Numeric. Quantile threshold (0–1) to filter low UMI cells (used if \code{min_counts} is \code{NULL}).}
+\item{low_quantile}{Numeric. Quantile threshold (0 to 1) to filter low UMI cells (used if \code{min_counts} is \code{NULL}).}
 
-\item{high_quantile}{Numeric. Quantile threshold (0–1) to filter high UMI cells (used if \code{max_counts} is \code{NULL}).}
+\item{high_quantile}{Numeric. Quantile threshold (0 to 1) to filter high UMI cells (used if \code{max_counts} is \code{NULL}).}
 
 \item{DeleteDoublets}{Logical. If \code{TRUE}, doublets are detected and removed using \code{scDblFinder}. Default is \code{TRUE}.}
 

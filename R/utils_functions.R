@@ -14,8 +14,8 @@
 #' @param max_counts Numeric. Maximum UMI count threshold (optional, used only if `high_quantile` is `NULL`).
 #' @param min_genes Numeric. Minimum number of genes detected per cell to retain. Optional.
 #' @param max_genes Numeric. Maximum number of genes detected per cell to retain. Optional.
-#' @param low_quantile Numeric. Quantile threshold (0–1) to filter low UMI cells (used if `min_counts` is `NULL`).
-#' @param high_quantile Numeric. Quantile threshold (0–1) to filter high UMI cells (used if `max_counts` is `NULL`).
+#' @param low_quantile Numeric. Quantile threshold (0 to 1) to filter low UMI cells (used if `min_counts` is `NULL`).
+#' @param high_quantile Numeric. Quantile threshold (0 to 1) to filter high UMI cells (used if `max_counts` is `NULL`).
 #' @param DeleteDoublets Logical. If `TRUE`, doublets are detected and removed using `scDblFinder`. Default is `TRUE`.
 #' @param include_rbs Logical. If `TRUE`, calculates ribosomal gene content in addition to mitochondrial content. Default is `TRUE`.
 #' @param ... Additional arguments passed to `RunPCA()`.
@@ -270,29 +270,31 @@ DO.Import <- function(pathways,
 #' Optionally updates the CellTypist models and returns the probability matrix.
 #' Useful for annotating cell types in single-cell RNA sequencing datasets.
 #' @param Seu_object The seurat object
+#' @param modelName Specify the model you want to use for celltypist
 #' @param minCellsToRun If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.
 #' @param runCelltypistUpdate If true, --update-models will be run for celltypist prior to scoring cells.
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param assay_normalized Assay with log1p normalized expressions
 #' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
-#'
+#' @param SeuV5 Specify if the object is made with Seuratv5
 #' @import dplyr
 #' @import ggplot2
 #'
 #' @return a seurat
 #'
 #' @examples
-#' \dontrun{
+#' reticulate::use_python("~/.venv/DOtools/bin/python")
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
 #'
-#' DO.CellTypist(
-#'   Seu_object = Seurat,
+#' sc_data <- DO.CellTypist(
+#'   Seu_object = sc_data,
 #'   modelName = "Healthy_Adult_Heart.pkl",
 #'   runCelltypistUpdate = TRUE,
 #'   over_clustering = "seurat_clusters",
+#'   minCellsToRun=5,
 #'   SeuV5=TRUE
 #' )
-#' }
 #'
 #' @export
 DO.CellTypist <- function(Seu_object,
@@ -402,7 +404,7 @@ DO.CellTypist <- function(Seu_object,
     geom_point(aes(size = pct.exp, fill = prob), shape=21, color="black", stroke=0.3) +
     scale_fill_gradient2(low = "royalblue3",mid = "white", high = "firebrick",midpoint=0.5, limits = c(0, 1)) +
     scale_size(range = c(2,10), breaks = c(20,40,60,80,100), limits = c(0,100)) +
-    DOtools:::theme_box() +
+    theme_box() +
     theme(plot.margin = ggplot2::margin(t = 1,
                                         r = 1,
                                         b = 1,
@@ -464,19 +466,18 @@ DO.CellTypist <- function(Seu_object,
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
+#' @param graph.name A builded neirest neighbor graph
 #' @return a Seurat Object with new clustering named annotation_recluster
 #'
 #' @import Seurat
 #' @import progress
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#'
-#' DO.FullRecluster(
-#'   Seu_object = Seurat
+#' sc_data <- DO.FullRecluster(
+#'   Seu_object = sc_data
 #' )
-#' }
 #'
 #' @export
 DO.FullRecluster <- function(Seu_object,
@@ -526,6 +527,12 @@ DO.FullRecluster <- function(Seu_object,
 #' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
 #' @param features features for Featureplot
 #' @param group.by grouping of plot in DImplot and defines in featureplot the labels
+#' @param umap_colors what colors to use for UMAP, specify as vector
+#' @param text_size Size of text
+#' @param label label the clusters on the plot by group.by column
+#' @param order Boolean determining whether to plot cells in order of expression.
+#' @param plot.title title for UMAP
+#' @param legend.position specify legend position
 #' @param ... Further arguments passed to DimPlot or FeaturePlot function from Seurat
 #' @return Plot with Refined colors and axes
 #'
@@ -533,20 +540,18 @@ DO.FullRecluster <- function(Seu_object,
 #' @import ggplot2
 #'
 #' @examples
-#' \dontrun{
-#'
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
 #' DO.UMAP(
-#'   Seu_object = Seurat,
+#'   Seu_object = sc_data,
 #'   group.by="seurat_clusters"
 #' )
 #'
 #' DO.UMAP(
-#'   Seu_object = Seurat,
+#'   Seu_object = sc_data,
 #'   FeaturePlot=TRUE,
-#'   features=c("CDH5","TTN")
+#'   features=c("BAG2","CD74")
 #' )
-#' }
 #'
 #' @export
 DO.UMAP <- function(Seu_object,
@@ -646,21 +651,14 @@ DO.UMAP <- function(Seu_object,
 #' @import SeuratObject
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#'
-#' DO.Subset(
-#'   Seu_object = Seurat,
+#' sc_data_sub <- DO.Subset(
+#'   Seu_object = sc_data,
 #'   ident="condition",
-#'   ident_name="CTRL"
+#'   ident_name="healthy"
 #' )
 #'
-#' DO.Subset(
-#'   Seu_object = Seurat,
-#'   ident="nFeature_RNA",
-#'   ident_thresh=c(">5", "<200")
-#' )
-#' }
 #'
 #'
 #' @export
@@ -679,13 +677,13 @@ DO.Subset <- function(Seu_object,
 
   #By a name in the provided column
   if (!is.null(ident_name) && is.null(ident_thresh))  {
-    cat("Specified 'ident_name': expecting a categorical variable.\n")
+    .logger("Specified 'ident_name': expecting a categorical variable.")
     SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] %in% ident_name]
   }
 
   #By a threshold in the provided column
   if (is.null(ident_name) && !is.null(ident_thresh))  {
-    cat(paste0("Specified 'ident_thresh': expecting numeric thresholds specified as character, ident_thresh = ", paste0(ident_thresh, collapse = " "),"\n"))
+    .logger(paste0("Specified 'ident_thresh': expecting numeric thresholds specified as character, ident_thresh = ", paste0(ident_thresh, collapse = " ")))
 
     #Extract the numeric value and operator
     operator <- gsub("[0-9.]", "", ident_thresh)
@@ -759,21 +757,10 @@ DO.Subset <- function(Seu_object,
 #' @import SeuratObject
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
+#' sc_data <- DO.DietSeurat(sc_data, pattern = "data")
 #'
-#' DO.Subset(
-#'   Seu_object = Seurat,
-#'   ident="condition",
-#'   ident_name="CTRL"
-#' )
-#'
-#' DO.Subset(
-#'   Seu_object = Seurat,
-#'   ident="nFeature_RNA",
-#'   ident_thresh=c(">5", "<200")
-#' )
-#' }
 #'
 #' @export
 DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
@@ -798,13 +785,11 @@ DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
 #' @return None
 #'
 #' @examples
-#' \dontrun{
 #' # Automatically create DOtools environment at ~/.venv/DOtools if it doesn't exist
 #' DO.PyEnv()
 #'
 #' # Use an existing conda environment at a custom location
 #' DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")
-#' }
 #'
 #'
 #' @export
@@ -898,7 +883,7 @@ DO.CellBender <- function(cellranger_path,
 
   # Warnings and logs
   if (estimator_multiple_cpu)
-    .logger("Warning: estimator_multiple_cpu is TRUE. Not recommended for large datasets (>20–30k cells).")
+    .logger("Warning: estimator_multiple_cpu is TRUE. Not recommended for large datasets (above 20 to 30k cells).")
   if (epochs > 150)
     .logger("Warning: Training for more than 150 epochs may lead to overfitting.")
   if (!cuda)
@@ -944,7 +929,7 @@ DO.CellBender <- function(cellranger_path,
     tdata <- DropletUtils::read10xCounts(h5_file)
 
     if (BarcodeRanking == TRUE) {
-      result_barcoderanks = .DO.BarcodeRanks(tdata)
+      result_barcoderanks <- .DO.BarcodeRanks(tdata)
 
       # Build command
       cmd <- c("conda", "run", "-p", conda_path,
@@ -992,17 +977,17 @@ DO.CellBender <- function(cellranger_path,
 #' and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
 #'
 #' @param Seu_object Seurat object with annotation in meta.data
-#' @param batch_key: meta data column with batch information.
-#' @param layer_counts: layer with counts. Raw counts are required.
-#' @param layer_logcounts: layer with log-counts. Log-counts required for calculation of HVG.
-#' @param categorical_covariates: meta data column names with categorical covariates for scVI inference.
-#' @param continuos_covariates: meta data  column names with continuous covariates for scVI inference.
-#' @param n_hidden: number of hidden layers.
-#' @param n_latent: dimensions of the latent space.
-#' @param n_layers: number of layers.
-#' @param dispersion: dispersion mode for scVI.
-#' @param gene_likelihood: gene likelihood.
-#' @param get_model: return the trained model.
+#' @param batch_key meta data column with batch information.
+#' @param layer_counts layer with counts. Raw counts are required.
+#' @param layer_logcounts layer with log-counts. Log-counts required for calculation of HVG.
+#' @param categorical_covariates meta data column names with categorical covariates for scVI inference.
+#' @param continuos_covariates meta data  column names with continuous covariates for scVI inference.
+#' @param n_hidden number of hidden layers.
+#' @param n_latent dimensions of the latent space.
+#' @param n_layers number of layers.
+#' @param dispersion dispersion mode for scVI.
+#' @param gene_likelihood gene likelihood.
+#' @param get_model return the trained model.
 #' @param ... additional arguments for `scvi.model.SCVI`.
 #'
 #' @import Seurat
@@ -1011,10 +996,11 @@ DO.CellBender <- function(cellranger_path,
 #'
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sc_data <- Seurat::FindVariableFeatures(sc_data)
+#'
 #' # Run scVI using the 'orig.ident' column as the batch key
-#' Seu_object <- DO.scVI(Seu_object, batch_key = "orig.ident")
-#' }
+#' sc_data <- DO.scVI(sc_data, batch_key = "orig.ident")
 #'
 #' @return Seurat Object with dimensionality reduction from scVI
 #' @export
@@ -1084,7 +1070,7 @@ DO.scVI <- function(Seu_object,
 #' back to the full Seurat object. This is useful when clusters have been refined
 #' or re-labeled in a subset and need to be reflected in the original object.
 #'
-#' @param Seu_object Seurat object with annotation in meta.data
+#' @param Seu_obj Seurat object with annotation in meta.data
 #' @param Subset_obj subsetted Seurat object with re-annotated clusters
 #' @param annotation_column column name in meta.data with annotation
 #' @param subset_annotation column name in meta.data with annotation in the subsetted object
@@ -1094,14 +1080,14 @@ DO.scVI <- function(Seu_object,
 #'
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#' Seu_obj <- DO.TransferLabel(Seu_obj,
-#'                             Subset_obj,
+#' sc_data <- DO.TransferLabel(sc_data,
+#'                             sc_data,
 #'                             annotation_column="annotation",
 #'                             subset_annotation="annotation"
 #'                            )
-#' }
+#'
 #'
 #'
 #' @return Seurat Object with transfered labels
@@ -1152,23 +1138,27 @@ DO.TransferLabel <- function(Seu_obj,
 #' @import dplyr
 #'
 #' @examples
-#' \dontrun{
-#' #GO analysis on differential expression results:
-#' results <- go_analysis(df_DGE = deg_results,
-#'                        gene_key = "gene",
-#'                        pval_key = "adj_pval",
-#'                        log2fc_key = "log2FC",
-#'                        species = "Human")
+#' library(enrichR)
 #'
-#' #Or save the results to a file:
-#' go_analysis(df_DGE = deg_results,
-#'             gene_key = "gene",
-#'             pval_key = "p_val_adj",
-#'             log2fc_key = "log2FC",
-#'             path = "results/",
-#'             filename = "experiment.xlsx",
-#'             species = "Mouse")
-#' }
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sc_data,
+#'                          sample_col = "orig.ident",
+#'                          method_sc = "wilcox",
+#'                          annotation_col = "annotation",
+#'                          ident_ctrl = "healthy")
+#'
+#' DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+#'
+#' result_GO <- DO.enrichR(df_DGE = DGE_result,
+#'                        gene_column = "gene",
+#'                        pval_column = "p_val_SC_wilcox",
+#'                        log2fc_column = "avg_log2FC_SC_wilcox",
+#'                        pval_cutoff = 0.05,
+#'                        log2fc_cutoff = 0.25,
+#'                        path = NULL,
+#'                        filename = "",
+#'                        species = "Human",
+#'                        go_catgs = "GO_Biological_Process_2023")
 #'
 #' @export
 DO.enrichR <- function(df_DGE,
@@ -1216,7 +1206,7 @@ DO.enrichR <- function(df_DGE,
     dir.create(file.path(path, "GO_Tables"), showWarnings = FALSE, recursive = TRUE)
     out_file <- file.path(path, "GO_Tables", paste0("GO_", filename, ".xlsx"))
     openxlsx::write.xlsx(combined_res, out_file, rowNames = FALSE)
-    .logger("Write results to: ", out_file)
+    .logger(paste0("Write results to: ", out_file))
     return(invisible(NULL))
   } else {
     return(combined_res)
@@ -1230,7 +1220,7 @@ DO.enrichR <- function(df_DGE,
 #' The single-cell method uses Seurat's `FindMarkers`, while pseudo-bulk testing uses `DESeq2` on aggregated expression profiles.
 #' Outputs a merged data frame with DGE statistics from both methods per condition and cell type.
 #'
-#' @param Seu_object The seurat object
+#' @param Seu_obj The seurat object
 #' @param assay Specified assay in Seurat object, default "RNA"
 #' @param method_sc method to use for single cell DEG analysis, see FindMarkers from Seurat for options, default "wilcox"
 #' @param group_by Column in meta data containing groups used for testing, default "condition"
@@ -1241,7 +1231,7 @@ DO.enrichR <- function(df_DGE,
 #' @param logfc_threshold Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells, default is 0.
 #' @param only_pos Only return positive markers, default FALSE
 #' @param min_cells_group Minimum number of cells in one of the groups, default 3
-#'
+#' @param ... Additional arguments passed to FindMarkers function
 #'
 #' @import Seurat
 #' @import DESeq2
@@ -1251,15 +1241,13 @@ DO.enrichR <- function(df_DGE,
 #' @return Dataframe containing statistics for each gene from the single cell and the Pseudobulk DGE approach.
 #'
 #' @examples
-#' \dontrun{
-#' merged_dge_results <- DO.MultiDGE(
-#'   Seu_obj = your_seurat_object,
-#'   group_by = "condition",
-#'   annotation_col = "celltype",
-#'   ident_ctrl = "healthy"
-#' )
-#' head(merged_dge_results)
-#' }
+#'
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sc_data,
+#'                          sample_col = "orig.ident",
+#'                          method_sc = "wilcox",
+#'                          annotation_col = "annotation",
+#'                          ident_ctrl = "healthy")
 #'
 #' @export
 DO.MultiDGE <- function(Seu_obj,
@@ -1433,9 +1421,10 @@ DO.MultiDGE <- function(Seu_obj,
 #' @description Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets
 #' using the knee and inflection points from barcodeRanks.
 #'
-#' @param SCE_object A Single cell experiment object.
+#' @param SCE_obj A Single cell experiment object.
 #'
-#' @return A named numeric vector: `c(xpc_cells = ..., total_cells = ...)`
+#' @return A named numeric vector: `c(xpc_cells = ..., total_cells = ...)
+#' @rdname dot-DO.BarcodeRanks
 #' @keywords internal
 .DO.BarcodeRanks <- function(SCE_obj) {
   if (!inherits(SCE_obj, c("SingleCellExperiment"))) {
@@ -1479,7 +1468,7 @@ umap_colors <- c(
 #'
 #' @import Seurat
 #' @import ggplot2
-#'
+#' @rdname dot-QC_Vlnplot
 #' @keywords internal
 .QC_Vlnplot <- function(Seu_obj, id, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
   p1<- VlnPlot(Seu_obj,layer = "counts", features = features[1], ncol = 1, pt.size = 0, cols = "grey")+

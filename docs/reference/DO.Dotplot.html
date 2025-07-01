@@ -19,7 +19,7 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -52,7 +53,7 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Dot plot</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
       <div class="d-none name"><code>DO.Dotplot.Rd</code></div>
     </div>
 
@@ -71,22 +72,22 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 <span>  group.by.x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group.by.y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group.by.y2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  across.group.by.x <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  across.group.by.y <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  across.group.by.x <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  across.group.by.y <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sort_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dot.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>,</span>
 <span>  plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  midpoint <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  scale_gene <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  returnValue <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  log1p_nUMI <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>  hide_zero <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>  annotation_x <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  scale_gene <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  returnValue <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  log1p_nUMI <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  hide_zero <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  annotation_x <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  annotation_x_position <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  annotation_x_rev <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  annotation_x_rev <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  point_stroke <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  limits_colorscale <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  coord_flip <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  coord_flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -143,12 +144,28 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 <dd><p>IF True calculates the Z-score of the average expression per gene</p></dd>
 
 
+<dt id="arg-returnvalue">returnValue<a class="anchor" aria-label="anchor" href="#arg-returnvalue"></a></dt>
+<dd><p>return the dataframe behind the plot</p></dd>
+
+
+<dt id="arg-log-p-numi">log1p_nUMI<a class="anchor" aria-label="anchor" href="#arg-log-p-numi"></a></dt>
+<dd><p>log1p the plotted values, boolean</p></dd>
+
+
 <dt id="arg-hide-zero">hide_zero<a class="anchor" aria-label="anchor" href="#arg-hide-zero"></a></dt>
 <dd><p>Removes dots for genes with 0 expression</p></dd>
 
 
 <dt id="arg-annotation-x">annotation_x<a class="anchor" aria-label="anchor" href="#arg-annotation-x"></a></dt>
 <dd><p>Adds annotation on top of x axis instead on y axis</p></dd>
+
+
+<dt id="arg-annotation-x-position">annotation_x_position<a class="anchor" aria-label="anchor" href="#arg-annotation-x-position"></a></dt>
+<dd><p>specifies the position for the annotation</p></dd>
+
+
+<dt id="arg-annotation-x-rev">annotation_x_rev<a class="anchor" aria-label="anchor" href="#arg-annotation-x-rev"></a></dt>
+<dd><p>reverses the annotations label order</p></dd>
 
 
 <dt id="arg-point-stroke">point_stroke<a class="anchor" aria-label="anchor" href="#arg-point-stroke"></a></dt>
@@ -159,8 +176,12 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 <dd><p>Set manually colorscale limits</p></dd>
 
 
+<dt id="arg-coord-flip">coord_flip<a class="anchor" aria-label="anchor" href="#arg-coord-flip"></a></dt>
+<dd><p>flips the coordinates of the plot with each other</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments passed to annoSegment function if annotation_x == T</p></dd>
+<dd><p>Further arguments passed to annoSegment function if annotation_x == TRUE</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -174,15 +195,16 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.Dotplot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
-<span class="r-in"><span>  Feature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDH5"</span>,<span class="st">"TTN"</span>,<span class="st">"MALAT1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">sc_data</span>,</span></span>
+<span class="r-in"><span>  Feature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NKG7"</span>,<span class="st">"IL6"</span>,<span class="st">"MALAT1"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  group.by.x<span class="op">=</span><span class="st">"condition"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Scale for <span style="color: #00BB00;">size</span> is already present.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span>
+<span class="r-plt img"><img src="DO.Dotplot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

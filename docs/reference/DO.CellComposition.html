@@ -8,10 +8,10 @@
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO CellComposition — DO.CellComposition"><meta name="description" content="Computes and visualizes cell composition changes from a Seurat object using Scanpro.
 Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 Generates customizable plots with options for transformation, grouping, and bootstrapping.
-Returns a ggplot object or a list containing plot data and visualization."><meta property="og:description" content="Computes and visualizes cell composition changes from a Seurat object using Scanpro.
+Returns a ggplot object or a list containing plot data and visualisation."><meta property="og:description" content="Computes and visualizes cell composition changes from a Seurat object using Scanpro.
 Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 Generates customizable plots with options for transformation, grouping, and bootstrapping.
-Returns a ggplot object or a list containing plot data and visualization."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+Returns a ggplot object or a list containing plot data and visualisation."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +19,7 @@ Returns a ggplot object or a list containing plot data and visualization."><scri
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@ Returns a ggplot object or a list containing plot data and visualization."><scri
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -52,7 +53,7 @@ Returns a ggplot object or a list containing plot data and visualization."><scri
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO CellComposition</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
       <div class="d-none name"><code>DO.CellComposition.Rd</code></div>
     </div>
 
@@ -60,7 +61,7 @@ Returns a ggplot object or a list containing plot data and visualization."><scri
     <p>Computes and visualizes cell composition changes from a Seurat object using Scanpro.
 Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 Generates customizable plots with options for transformation, grouping, and bootstrapping.
-Returns a ggplot object or a list containing plot data and visualization.</p>
+Returns a ggplot object or a list containing plot data and visualisation.</p>
     </div>
 
     <div class="section level2">
@@ -75,7 +76,7 @@ Returns a ggplot object or a list containing plot data and visualization.</p>
 <span>  sort_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sub_ident <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  scanpro_plots <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  scanpro_plots <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  scanpro_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  outputFolder <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  return_df <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -184,20 +185,29 @@ Returns a ggplot object or a list containing plot data and visualization.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_python</a></span><span class="op">(</span><span class="st">"~/.venv/DOtools/bin/python"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.CellComposition</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
-<span class="r-in"><span>  cluster_column<span class="op">=</span><span class="st">"cell_type"</span>,</span></span>
+<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">sc_data</span>,</span></span>
+<span class="r-in"><span>  cluster_column<span class="op">=</span><span class="st">"annotation"</span>,</span></span>
 <span class="r-in"><span>  condition_column<span class="op">=</span><span class="st">"condition"</span>,</span></span>
-<span class="r-in"><span>  scanpro_plots<span class="op">=</span><span class="cn">T</span>,</span></span>
-<span class="r-in"><span>  bar_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#ff7f0e"</span>,<span class="st">"tomato2"</span>, <span class="st">"darkgoldenrod2"</span>,<span class="st">"#aec7e8"</span><span class="op">)</span>, <span class="co"># can also be a named vector</span></span></span>
+<span class="r-in"><span>  scanpro_plots<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  n_reps<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 15:50:37 - Bootstrapping method activated with 5 simulated replicates!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> .</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`PackageCheck()` was deprecated in SeuratObject 5.0.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `rlang::check_installed()` instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;</span><a href="https://github.com/satijalab/seurat/issues" class="external-link"><span style="color: #0000BB; font-style: italic;">https://github.com/satijalab/seurat/issues</span></a><span style="color: #0000BB; font-style: italic;">&gt;</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using orig.ident, condition as id variables</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using condition as id variables</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Multiple components found; returning the first one. To return all, use `return_all = TRUE`.</span>
+<span class="r-plt img"><img src="DO.CellComposition-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

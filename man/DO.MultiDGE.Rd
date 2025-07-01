@@ -20,6 +20,8 @@ DO.MultiDGE(
 )
 }
 \arguments{
+\item{Seu_obj}{The seurat object}
+
 \item{assay}{Specified assay in Seurat object, default "RNA"}
 
 \item{method_sc}{method to use for single cell DEG analysis, see FindMarkers from Seurat for options, default "wilcox"}
@@ -40,7 +42,7 @@ DO.MultiDGE(
 
 \item{min_cells_group}{Minimum number of cells in one of the groups, default 3}
 
-\item{Seu_object}{The seurat object}
+\item{...}{Additional arguments passed to FindMarkers function}
 }
 \value{
 Dataframe containing statistics for each gene from the single cell and the Pseudobulk DGE approach.
@@ -51,15 +53,13 @@ The single-cell method uses Seurat's \code{FindMarkers}, while pseudo-bulk testi
 Outputs a merged data frame with DGE statistics from both methods per condition and cell type.
 }
 \examples{
-\dontrun{
-merged_dge_results <- DO.MultiDGE(
-  Seu_obj = your_seurat_object,
-  group_by = "condition",
-  annotation_col = "celltype",
-  ident_ctrl = "healthy"
-)
-head(merged_dge_results)
-}
+
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sc_data,
+                         sample_col = "orig.ident",
+                         method_sc = "wilcox",
+                         annotation_col = "annotation",
+                         ident_ctrl = "healthy")
 
 }
 \author{

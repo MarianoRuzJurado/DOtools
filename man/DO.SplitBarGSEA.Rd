@@ -30,35 +30,37 @@ DO.SplitBarGSEA(
 
 \item{term_col}{column in the dataframe that contains the terms}
 
-\item{col_split:}{column in the dataframe that will be used to sort and split the plot}
+\item{col_split}{column in the dataframe that will be used to sort and split the plot}
 
-\item{cond_col:}{column in the dataframe that contains the condition information}
+\item{cond_col}{column in the dataframe that contains the condition information}
 
-\item{pos_cond:}{condition that will be shown in the positive side of the plot}
+\item{pos_cond}{condition that will be shown in the positive side of the plot}
 
-\item{cutoff:}{maximum number of characters per line}
+\item{cutoff}{maximum number of characters per line}
 
-\item{log10_transform:}{if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation}
+\item{log10_transform}{if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation}
 
-\item{figsize:}{figure size}
+\item{figsize}{figure size}
 
-\item{topN:}{how many terms are shown}
+\item{topN}{how many terms are shown}
 
-\item{path:}{path to save the plot}
+\item{colors_pairs}{colors for each condition (1st color --> negative axis; 2nd color --> positive axis)}
 
-\item{filename:}{filename for the plot}
+\item{alpha_colors}{alpha value for the colors of the bars}
 
-\item{spacing:}{space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 \% of the maximum X axis value.}
+\item{path}{path to save the plot}
 
-\item{txt_size:}{size of the go terms text}
+\item{spacing}{space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 \% of the maximum X axis value.}
 
-\item{alpha_colors:}{alpha value for the colors of the bars}
+\item{txt_size}{size of the go terms text}
 
-\item{colors_pairs:}{colors for each condition (1st color --> negative axis; 2nd color --> positive axis)}
+\item{filename}{filename for the plot}
 
-\item{title:}{title of the plot}
+\item{title}{title of the plot}
 
-\item{showP:}{if False, the axis is return}
+\item{showP}{if False, the axis is return}
+
+\item{celltype}{vector with cell types you want to subset for, use "all" for all celltypes contained in the dataframe column "celltype"}
 }
 \value{
 : None or the axis
@@ -75,34 +77,49 @@ you can control the maximum number of characters per line.
 Pre-filter of the dataframe to contain significant Terms is recommended
 }
 \examples{
-\dontrun{
-#df with GSEA results e.g. Metascape results
-df_GSEA <- read.csv("path/to/GSEA_results.csv")
+library(enrichR)
+reticulate::use_python("~/.venv/DOtools/bin/python")
 
-#Please add a 'celltype' and 'condition' column
-head(df_GSEA)
-#Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sc_data,
+                         sample_col = "orig.ident",
+                         method_sc = "wilcox",
+                         annotation_col = "annotation",
+                         ident_ctrl = "healthy")
+DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+
+result_GO <- DO.enrichR(df_DGE = DGE_result,
+                       gene_column = "gene",
+                       pval_column = "p_val_SC_wilcox",
+                       log2fc_column = "avg_log2FC_SC_wilcox",
+                       pval_cutoff = 0.05,
+                       log2fc_cutoff = 0.25,
+                       path = NULL,
+                       filename = "",
+                       species = "Human",
+                       go_catgs = "GO_Biological_Process_2023")
+
+result_GO$celltype <- "CM1"
 
 #Run SplitBarGSEA visualisation
-DO.SplitBarGSEA(df_GSEA = df_GSEA,
+DO.SplitBarGSEA(df_GSEA = result_GO,
                 term_col = "Term",
                 col_split = "Combined.Score",
-                cond_col = "condition",          # condition column (e.g., experimental group)
-                pos_cond = "Treatment",
-                cutoff = 40,                 # max term length before truncation
+                cond_col = "State",
+                pos_cond = "enriched",
+                cutoff = 40,
                 log10_transform = TRUE,
                 figsize = c(12, 8),
-                topN = 10,                   # top N GO terms to show
-                color_pairs = c("sandybrown", "royalblue"),
+                topN = 10,
+                colors_pairs = c("sandybrown", "royalblue"),
                 alpha_colors = 0.3,
-                path = "results/plots",
+                path = NULL,
                 spacing = 5,
                 txt_size = 12,
                 filename = "SplitBar.svg",
                 title = "Top 10 GO Terms in each Condition: ",
                 showP = FALSE,
                 celltype = "all")
-}
 
 }
 \author{

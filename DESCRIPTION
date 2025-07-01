@@ -1,21 +1,22 @@
 Package: DOtools
-Title: Convenient functions to streamline your single cell data analysis workflow.
-Version: 0.4.0
+Title: Convenient functions to streamline your single cell data analysis workflow
+Version: 0.99.0
 Authors@R: c(
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5354-5336")),
     person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut"), comment = c(ORCID = "0000-0002-1819-6991")),
     person("David", "John", , "john@med.uni-frankfurt.de", role = c("aut"), comment = c(ORCID = "0000-0003-3217-5449"))
     )
 Description: This package provides functions for creating various visualizations, convenient wrappers, and quality-of-life utilities for single cell experiment objects. It offers a streamlined approach to visualize results and integrates different tools for easy use.
-License: MIT + file LICENSE
+License: MIT
 BugReports: https://github.com/MarianoRuzJurado/DOtools/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-biocViews: SingleCell, RNASeq, Visualization, Clustering, Annotation, WorkflowStep, QualityControl
-Depends: R (>= 3.5.0)
+biocViews: SingleCell, RNASeq, Visualization, Clustering, Annotation, WorkflowStep, QualityControl, GeneExpression
+Depends: R (>= 4.5.0)
 Imports:
         Seurat (>= 5.2.0),
+        SeuratObject (>= 5.1.0),
         ggplot2 (>= 3.5.0),
         ggpubr (>= 0.6.0),
         ggtext (>= 0.1.2),
@@ -32,7 +33,6 @@ Imports:
         ggiraphExtra (>= 0.3.0),
         grid (>= 4.4.3),
         SCpubr (>= 2.0.2),
-        basilisk (>= 1.10.0),
         DropletUtils (>= 1.26.0),
         scCustomize (>= 3.0.1),
         openxlsx (>= 4.2.8),
@@ -40,7 +40,16 @@ Imports:
         scDblFinder (>= 1.20.0),
         ggcorrplot (>= 0.1.4.1),
         DESeq2 (>= 1.48.1),
-        enrichR (>= 3.4)
+        enrichR (>= 3.4),
+        cli (>= 3.6.5),
+        curl(>= 6.3.0),
+        magrittr (>= 2.0.3),
+        Matrix (>= 1.7.3),
+        purrr(>= 1.0.4),
+        rlang(>= 1.1.6),
+        scales (>= 1.4.0),
+        SingleCellExperiment (>= 1.30.1),
+        S4Vectors (>= 0.46.0)
 Suggests:
         knitr,
         kableExtra,
@@ -50,7 +59,11 @@ Suggests:
         roxygen2,
         httr,
         magick,
-        rmarkdown
+        rmarkdown,
+        assertthat,
+        plyr,
+        rsvg,
+        sessioninfo
 VignetteBuilder:
     knitr
 URL: https://marianoruzjurado.github.io/DOtools/

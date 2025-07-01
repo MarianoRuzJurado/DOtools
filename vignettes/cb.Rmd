@@ -49,17 +49,19 @@ library(DOtools)
 ```
 
 ## Ambient removal
-```{r read_example_data, warning = FALSE}
+```{r read_example_data, eval=FALSE, warning = FALSE}
 base <- DOtools:::.example_10x()
 dir.create(file.path(base, "/cellbender"))
 
+raw_files <- list.files(base, pattern = "raw_feature_bc_matrix\\.h5$", recursive = TRUE, full.names = TRUE)
+file.remove(raw_files[-1])
 
 DO.CellBender(cellranger_path = base,
               output_path = file.path(base, "/cellbender"),
-              samplenames = c("healthy", "disease"),
+              samplenames = c("disease"),
               cuda = TRUE,
               BarcodeRanking = FALSE,  
-              cpu_threads = 38,
+              cpu_threads = 48,
               epochs = 5) # 150 is default 
 
 ```

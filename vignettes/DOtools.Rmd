@@ -89,7 +89,7 @@ After filtering, samples are merged into one `r pkg("Seurat")` object, followed 
 
 To show how the quality control works, we are going to use a public dataset from 10X from human blood of healthy and donors with a malignant tumor:
 
-```{r read_example_data, warning = FALSE}
+```{r read_example_data, warning = FALSE, eval=FALSE}
 base <- DOtools:::.example_10x()
 
 paths = c(file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
@@ -97,30 +97,34 @@ paths = c(file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
 
 Seu_obj <- DO.Import(pathways = paths,
                      ids = c("healthy-1", "disease-1"),
-                     TenX = TRUE,
                      DeleteDoublets = TRUE,
                      cut_mt = .05,
                      min_counts = 500,
                      min_genes = 300,
                      high_quantile = .95)
-prefilterplots <- list.files(path = base, pattern = "prefiltered.*\\.svg$", full.names = TRUE, recursive = TRUE)
-postfilterplots <- list.files(path = base, pattern = "postfiltered.*\\.svg$", full.names = TRUE, recursive = TRUE)
 ```
 We can now check the quality before introducing filterings:
-```{r, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
-pQC1 <- magick::image_read_svg(prefilterplots[1])
+```{r prefilterplots, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
+prefilterplots <- system.file("figures", "prefilterplots-1.png", package = "DOtools")
+pQC1 <- magick::image_read(prefilterplots)
 plot(pQC1)
 ```
 <br>
 And after:
-```{r, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
-pQC2 <- magick::image_read_svg(postfilterplots[1])
+```{r postfilterplots, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
+postfilterplots <- system.file("figures", "postfilterplots-1.png", package = "DOtools")
+pQC2 <- magick::image_read(postfilterplots)
 plot(pQC2)
 ```
 
 <br>
-In Addition, we can observe how similar the samples are through running a correlation analysis.
-```{r, fig.width=6, fig.height=6}
+The DOtools package provides a slim object of this data set. Please feel free, to use the one created from DO.Import for prettier results or this slim downed version. We can observe how similar the samples are through running a correlation analysis.
+```{r heatmap, fig.width=6, fig.height=6}
+#Making sure we have a save folder
+base <- tempfile("my_tempdir_")
+dir.create(base)
+  
+Seu_obj <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 DO.Correlation(Seu_obj)
 ```
 
@@ -131,6 +135,9 @@ We observed that most cells were removed due to increased mitochondrial content.
 After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI Integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
 
 ```{r Integration, warning = FALSE}
+#Object has already joined layers
+Seu_obj[["RNA"]] <- split(Seu_obj[["RNA"]], f = Seu_obj$orig.ident)
+
 #Integration through Seurat
 Seu_obj <- IntegrateLayers(object = Seu_obj,
                            method = CCAIntegration,
@@ -353,7 +360,6 @@ DO.SplitBarGSEA(df_GSEA = result_GO_sig,
                 path = paste0(base, "/"))
 GSEA_plot <- list.files(path = base, pattern = "SplitBar.*\\.svg$", full.names = TRUE, recursive = TRUE)
 plot(magick::image_read_svg(GSEA_plot))
-saveRDS(Seu_obj, "~/Downloads/Data10x/Seu_obj_blood10x.rds")
 ```
 
 

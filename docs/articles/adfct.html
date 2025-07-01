@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
@@ -76,7 +77,8 @@
                         <h4 data-toc-skip class="author">Mariano Ruz
 Jurado</h4>
             <address class="author_afil">
-      Goethe University<br><div class="d-none name"><code>adfct.Rmd</code></div>
+      Goethe University<br><small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/vignettes/adfct.Rmd" class="external-link"><code>vignettes/adfct.Rmd</code></a></small>
+      <div class="d-none name"><code>adfct.Rmd</code></div>
     </address>
 </div>
 
@@ -90,8 +92,8 @@ generated in the section: Quality control of sc/snRNA-seq.</p>
 <div class="section level3">
 <h3 id="libraries-set-up">Libraries &amp; Set-Up<a class="anchor" aria-label="anchor" href="#libraries-set-up"></a>
 </h3>
-<pre><code><span><span class="co">#&gt; 2025-06-30 16:10:08 - Using existing conda environment at: /home/mariano/.venv/DOtools</span></span>
-<span><span class="co">#&gt; 2025-06-30 16:10:08 - Python packages ready for DOtools!</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; 2025-07-08 15:55:41 - Using existing conda environment at: /home/mariano/.venv/DOtools</span></span>
+<span><span class="co">#&gt; 2025-07-08 15:55:41 - Python packages ready for DOtools!</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dotplot">Dotplot<a class="anchor" aria-label="anchor" href="#dotplot"></a>
@@ -121,7 +123,7 @@ gene expression.</p>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span>Seu_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
 <span>        group.by <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>        split.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>        FeaturePlot <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>        FeaturePlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        features <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>        legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/UMAP-1.png" width="1152"></p>
@@ -140,11 +142,13 @@ cell population.</p>
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-07-08 15:55:45 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span></span>
 <span><span class="co">#&gt; [INFO] Your data doesn't have replicates! Artificial replicates will be simulated to run scanpro.</span></span>
 <span><span class="co">#&gt; [INFO] Simulation may take some minutes...</span></span>
 <span><span class="co">#&gt; [INFO] Generating 3 replicates and running 100 simulations...</span></span>
-<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.19 seconds</span></span>
+<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.81 seconds</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/CellComposition-1.png" width="576"></p>
@@ -162,18 +166,18 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-08 15:55:55 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Seu_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-08 15:55:57 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">Seu_obj_NK</span>,</span>
 <span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-08 15:55:57 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -183,12 +187,31 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span>           ctrl.condition <span class="op">=</span> <span class="st">"A"</span>,</span>
 <span>           Feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>,</span>
 <span>           step_mod <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>           plot_sample <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-07-08 15:55:58 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Box-1.png" width="480"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dotools_plots_"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">path_file</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/DO.Heatmap.html">DO.Heatmap</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<span>           features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
+<span>           xticks_rotation<span class="op">=</span><span class="fl">45</span>,</span>
+<span>           path <span class="op">=</span> <span class="va">path_file</span>,</span>
+<span>           stats_x_size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Calculating cluster 1</span></span>
+<span><span class="co">#&gt; Calculating cluster 2</span></span>
+<span><span class="co">#&gt; Calculating cluster 3</span></span>
+<span><span class="co">#&gt; Calculating cluster 4</span></span>
+<span><span class="co">#&gt; Calculating cluster 5</span></span>
+<span><span class="co">#&gt; Calculating cluster 6</span></span>
+<span><span class="co">#&gt; Calculating cluster 7</span></span>
+<span><span class="co">#&gt; Calculating cluster 8</span></span>
+<span><span class="va">Heatmap_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">path_file</span>, pattern <span class="op">=</span> <span class="st">"Heatmap*\\.svg$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read_svg</a></span><span class="op">(</span><span class="va">Heatmap_plot</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="adfct_files/figure-html/Heat%20map-1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
@@ -203,7 +226,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  collate  en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       Europe/Berlin</span></span>
-<span><span class="co">#&gt;  date     2025-06-30</span></span>
+<span><span class="co">#&gt;  date     2025-07-08</span></span>
 <span><span class="co">#&gt;  pandoc   3.4 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   1.6.42 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/quarto</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -242,7 +265,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  digest                 0.6.37   <span style="color: #555555;">2024-08-19</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dir.expiry             1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dotCall64              1.2      <span style="color: #555555;">2024-10-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  DOtools              * 0.4.0    <span style="color: #555555;">2025-06-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
+<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-08</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
 <span><span class="co">#&gt;  dplyr                  1.1.4    <span style="color: #555555;">2023-11-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dqrng                  0.4.1    <span style="color: #555555;">2024-05-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  DropletUtils           1.28.0   <span style="color: #555555;">2025-04-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
@@ -301,6 +324,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  listenv                0.9.1    <span style="color: #555555;">2024-01-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  lmtest                 0.9-40   <span style="color: #555555;">2022-03-21</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  locfit                 1.5-9.12 <span style="color: #555555;">2025-03-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  magick                 2.8.7    <span style="color: #555555;">2025-06-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  magrittr               2.0.3    <span style="color: #555555;">2022-03-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  MASS                   7.3-65   <span style="color: #555555;">2025-02-28</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.3)</span></span></span>
 <span><span class="co">#&gt;  Matrix                 1.7-3    <span style="color: #555555;">2025-03-11</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.3)</span></span></span>
@@ -320,6 +344,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  plyr                   1.8.9    <span style="color: #555555;">2023-10-02</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  png                    0.1-8    <span style="color: #555555;">2022-11-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  polyclip               1.10-7   <span style="color: #555555;">2024-07-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  presto                 1.0.0    <span style="color: #555555;">2025-05-22</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">Github (immunogenomics/presto@7636b3d)</span></span></span>
 <span><span class="co">#&gt;  prettyunits            1.2.0    <span style="color: #555555;">2023-09-24</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  progress               1.2.3    <span style="color: #555555;">2023-12-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  progressr              0.15.1   <span style="color: #555555;">2024-11-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -347,6 +372,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  RSpectra               0.16-2   <span style="color: #555555;">2024-07-18</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rstatix                0.7.2    <span style="color: #555555;">2023-02-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rstudioapi             0.17.1   <span style="color: #555555;">2024-10-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  rsvg                   2.6.2    <span style="color: #555555;">2025-03-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  Rtsne                  0.17     <span style="color: #555555;">2023-12-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  S4Arrays               1.8.1    <span style="color: #555555;">2025-06-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  S4Vectors              0.46.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
@@ -400,7 +426,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  zip                    2.3.3    <span style="color: #555555;">2025-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  zoo                    1.8-14   <span style="color: #555555;">2025-04-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpuFksXT/temp_libpath11c41779698a8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpKVkn4M/temp_libpath1f1d52e7eb912</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [2] /home/mariano/R/x86_64-pc-linux-gnu-library/4.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [3] /usr/local/lib/R/site-library</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [4] /usr/lib/R/site-library</span></span></span>
