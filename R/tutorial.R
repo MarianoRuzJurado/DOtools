@@ -25,7 +25,7 @@
     "disease raw" = disease_link2
   )
 
-  message("📥 Downloading data to ", base_dir)
+  message("Downloading data to ", base_dir)
 
   for (name in names(links)) {
     link <- links[[name]]
@@ -33,7 +33,7 @@
     dest_dir <- if (grepl("healthy", name)) healthy_path else disease_path
     dest_file <- file.path(dest_dir, filename)
 
-    message(sprintf("⬇️  Downloading %s to %s", name, dest_file))
+    message(sprintf("Downloading %s to %s", name, dest_file))
     curl_download(url = link, destfile = dest_file, mode = "wb")
   }
 

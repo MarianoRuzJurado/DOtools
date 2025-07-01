@@ -7,10 +7,10 @@
 .DO.BarcodeRanks(SCE_obj)
 }
 \arguments{
-\item{SCE_object}{A Single cell experiment object.}
+\item{SCE_obj}{A Single cell experiment object.}
 }
 \value{
-A named numeric vector: \code{c(xpc_cells = ..., total_cells = ...)}
+A named numeric vector: `c(xpc_cells = ..., total_cells = ...)
 }
 \description{
 Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets

@@ -18,6 +18,8 @@ DO.CellTypist(
 \arguments{
 \item{Seu_object}{The seurat object}
 
+\item{modelName}{Specify the model you want to use for celltypist}
+
 \item{minCellsToRun}{If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.}
 
 \item{runCelltypistUpdate}{If true, --update-models will be run for celltypist prior to scoring cells.}
@@ -27,6 +29,8 @@ DO.CellTypist(
 \item{assay_normalized}{Assay with log1p normalized expressions}
 
 \item{returnProb}{will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix}
+
+\item{SeuV5}{Specify if the object is made with Seuratv5}
 }
 \value{
 a seurat
@@ -38,17 +42,18 @@ Optionally updates the CellTypist models and returns the probability matrix.
 Useful for annotating cell types in single-cell RNA sequencing datasets.
 }
 \examples{
-\dontrun{
+reticulate::use_python("~/.venv/DOtools/bin/python")
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
 
-DO.CellTypist(
-  Seu_object = Seurat,
+sc_data <- DO.CellTypist(
+  Seu_object = sc_data,
   modelName = "Healthy_Adult_Heart.pkl",
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",
-  SeuV5=T
+  minCellsToRun=5,
+  SeuV5=TRUE
 )
-}
 
 }
 \author{

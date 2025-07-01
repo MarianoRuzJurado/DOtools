@@ -14,10 +14,12 @@ DO.Correlation(
   plottype = "full",
   auto_limits = TRUE,
   outline.color = "white",
-  colormap = c("royalblue4", "royalblue2", "firebrick", "firebrick4"),
+  colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
   lab_size = 10,
   lab = TRUE,
   lab_col = "white",
+  axis_size_x = 12,
+  axis_size_y = 12,
   ...
 )
 }
@@ -48,20 +50,25 @@ DO.Correlation(
 
 \item{lab_col}{color to be used for the correlation coefficient labels. used when lab = TRUE.}
 
+\item{axis_size_x}{Controls x labels size}
+
+\item{axis_size_y}{Controls y labels size}
+
 \item{...}{Additionally arguments passed to ggcorrplot function}
 }
 \value{
 ggplot2
 }
 \description{
-#' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
+' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
 Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
 Ideal for comparing transcriptional profiles between conditions or clusters.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+
 DO.Correlation(
-  Seu_obj = seurat_object,
+  Seu_obj = sc_data,
   group_by = "orig.ident",
   assay = "RNA",
   features = NULL,
@@ -70,12 +77,11 @@ DO.Correlation(
   plottype = "full",
   auto_limits = TRUE,
   outline.color = "white",
-  colormap = c("royalblue4", "royalblue2", "firebrick", "firebrick4"),
+  colormap = c("royalblue4", "lightsteelblue", "tomato","firebrick4"),
   lab_size = 10,
   lab = TRUE,
   lab_col = "white"
 )
-}
 
 }
 \author{

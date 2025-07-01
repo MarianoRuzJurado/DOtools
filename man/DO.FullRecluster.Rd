@@ -20,6 +20,8 @@ DO.FullRecluster(
 \item{res}{Resolution for the new clusters, default 0.5}
 
 \item{algorithm}{Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden}
+
+\item{graph.name}{A builded neirest neighbor graph}
 }
 \value{
 a Seurat Object with new clustering named annotation_recluster
@@ -31,13 +33,11 @@ The new clustering results are stored in a metadata column called \code{annotati
 Suitable for improving cluster precision and granularity after initial clustering.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-
-DO.FullRecluster(
-  Seu_object = Seurat
+sc_data <- DO.FullRecluster(
+  Seu_object = sc_data
 )
-}
 
 }
 \author{

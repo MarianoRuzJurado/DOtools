@@ -23,29 +23,29 @@ DO.scVI(
 \arguments{
 \item{Seu_object}{Seurat object with annotation in meta.data}
 
+\item{batch_key}{meta data column with batch information.}
+
+\item{layer_counts}{layer with counts. Raw counts are required.}
+
+\item{layer_logcounts}{layer with log-counts. Log-counts required for calculation of HVG.}
+
+\item{categorical_covariates}{meta data column names with categorical covariates for scVI inference.}
+
+\item{continuos_covariates}{meta data  column names with continuous covariates for scVI inference.}
+
+\item{n_hidden}{number of hidden layers.}
+
+\item{n_latent}{dimensions of the latent space.}
+
+\item{n_layers}{number of layers.}
+
+\item{dispersion}{dispersion mode for scVI.}
+
+\item{gene_likelihood}{gene likelihood.}
+
+\item{get_model}{return the trained model.}
+
 \item{...}{additional arguments for \code{scvi.model.SCVI}.}
-
-\item{batch_key:}{meta data column with batch information.}
-
-\item{layer_counts:}{layer with counts. Raw counts are required.}
-
-\item{layer_logcounts:}{layer with log-counts. Log-counts required for calculation of HVG.}
-
-\item{categorical_covariates:}{meta data column names with categorical covariates for scVI inference.}
-
-\item{continuos_covariates:}{meta data  column names with continuous covariates for scVI inference.}
-
-\item{n_hidden:}{number of hidden layers.}
-
-\item{n_latent:}{dimensions of the latent space.}
-
-\item{n_layers:}{number of layers.}
-
-\item{dispersion:}{dispersion mode for scVI.}
-
-\item{gene_likelihood:}{gene likelihood.}
-
-\item{get_model:}{return the trained model.}
 }
 \value{
 Seurat Object with dimensionality reduction from scVI
@@ -55,9 +55,10 @@ This function will run the scVI Integration from the scVI python package. It inc
 and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sc_data <- Seurat::FindVariableFeatures(sc_data)
+
 # Run scVI using the 'orig.ident' column as the batch key
-Seu_object <- DO.scVI(Seu_object, batch_key = "orig.ident")
-}
+sc_data <- DO.scVI(sc_data, batch_key = "orig.ident")
 
 }

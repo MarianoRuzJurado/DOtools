@@ -18,13 +18,11 @@ If no environment path is provided, it will create one at \verb{~/.venv/DOtools}
 \code{scvi-tools}, \code{celltypist}, and \code{scanpro}.
 }
 \examples{
-\dontrun{
 # Automatically create DOtools environment at ~/.venv/DOtools if it doesn't exist
 DO.PyEnv()
 
 # Use an existing conda environment at a custom location
 DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")
-}
 
 
 }

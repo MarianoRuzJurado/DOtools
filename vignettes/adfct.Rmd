@@ -123,6 +123,20 @@ DO.BoxPlot(Seu_obj,
 ```
 
 
+```{r Heat map, out.width="100%", fig.align="center", fig.width=10, fig.height=8, warning = FALSE}
+path_file <- tempfile("dotools_plots_")
+dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
+DO.Heatmap(Seu_obj,
+           features = rownames(Seu_obj)[1:10],
+           xticks_rotation=45,
+           path = path_file,
+           stats_x_size = 20)
+Heatmap_plot <- list.files(path = path_file, pattern = "Heatmap*\\.svg$", full.names = TRUE, recursive = TRUE)
+plot(magick::image_read_svg(Heatmap_plot))
+
+```
+
+
 # Session information
 
 ```{r session_info, echo=FALSE}
