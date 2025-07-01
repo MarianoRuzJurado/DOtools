@@ -7,13 +7,13 @@
 DO.TransferLabel(Seu_obj, Subset_obj, annotation_column, subset_annotation)
 }
 \arguments{
+\item{Seu_obj}{Seurat object with annotation in meta.data}
+
 \item{Subset_obj}{subsetted Seurat object with re-annotated clusters}
 
 \item{annotation_column}{column name in meta.data with annotation}
 
 \item{subset_annotation}{column name in meta.data with annotation in the subsetted object}
-
-\item{Seu_object}{Seurat object with annotation in meta.data}
 }
 \value{
 Seurat Object with transfered labels
@@ -24,14 +24,14 @@ back to the full Seurat object. This is useful when clusters have been refined
 or re-labeled in a subset and need to be reflected in the original object.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-Seu_obj <- DO.TransferLabel(Seu_obj,
-                            Subset_obj,
+sc_data <- DO.TransferLabel(sc_data,
+                            sc_data,
                             annotation_column="annotation",
                             subset_annotation="annotation"
                            )
-}
+
 
 
 }

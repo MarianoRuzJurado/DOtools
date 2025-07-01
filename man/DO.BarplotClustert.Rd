@@ -23,6 +23,8 @@ DO.BarplotClustert(
 \arguments{
 \item{Seu_object}{Combined Seu_object}
 
+\item{Feature}{gene name}
+
 \item{ListTest}{List for which conditions t-test will be performed, if NULL always against provided CTRL}
 
 \item{returnValues}{return df.melt.sum data frame containing means and SEM for the set group}
@@ -30,6 +32,8 @@ DO.BarplotClustert(
 \item{ctrl.condition}{set your ctrl condition, relevant if running with empty comparison List}
 
 \item{group.by}{select the seurat object slot where your conditions can be found, default conditon}
+
+\item{returnPlot}{IF TRUE returns ggplot}
 
 \item{bar_colours}{colour vector}
 
@@ -42,8 +46,6 @@ DO.BarplotClustert(
 \item{y_limits}{set limits for y-axis}
 
 \item{log1p_nUMI}{If nUMIs should be log1p transformed}
-
-\item{Features}{Vector containing featurenames}
 }
 \value{
 a ggplot or a dataframe
@@ -55,20 +57,19 @@ Performs pairwise t-tests comparing conditions, with optional custom control con
 Optionally returns a summary data frame.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-(optional)
+
 ListTest <- list()
-ListTest[[1]] <- c("CTRL", "CONDITION")
+ListTest[[1]] <- c("healthy", "disease")
 
 DO.BarplotClustert(
-  Seu_object = Seurat,
-  Features = "CDH5",
+  Seu_object = sc_data,
+  Feature = "NKG7",
   ListTest = ListTest,
-  ctrl.condition = "CTRL",
+  ctrl.condition = "healthy",
   group.by="condition"
 )
-}
 
 }
 \author{

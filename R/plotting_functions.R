@@ -6,7 +6,7 @@
 #' Performs pairwise t-tests comparing conditions, with optional custom control condition and clustering.
 #' Optionally returns a summary data frame.
 #' @param Seu_object Combined Seu_object
-#' @param Features Vector containing featurenames
+#' @param Feature gene name
 #' @param ListTest List for which conditions t-test will be performed, if NULL always against provided CTRL
 #' @param returnValues return df.melt.sum data frame containing means and SEM for the set group
 #' @param ctrl.condition set your ctrl condition, relevant if running with empty comparison List
@@ -17,6 +17,7 @@
 #' @param x_label_rotation Rotation of x-labels
 #' @param log1p_nUMI If nUMIs should be log1p transformed
 #' @param y_limits set limits for y-axis
+#' @param returnPlot IF TRUE returns ggplot
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -28,20 +29,19 @@
 #' @return a ggplot or a dataframe
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#' (optional)
+#'
 #' ListTest <- list()
-#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.BarplotClustert(
-#'   Seu_object = Seurat,
-#'   Features = "CDH5",
+#'   Seu_object = sc_data,
+#'   Feature = "NKG7",
 #'   ListTest = ListTest,
-#'   ctrl.condition = "CTRL",
+#'   ctrl.condition = "healthy",
 #'   group.by="condition"
 #' )
-#' }
 #'
 #' @export
 DO.BarplotClustert <- function(Seu_object,
@@ -111,7 +111,7 @@ DO.BarplotClustert <- function(Seu_object,
   if (is.null(ListTest)) {
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
-    cat("ListTest empty, comparing every sample with each other\n")
+    .logger("ListTest empty, comparing every sample with each other")
     conditions <- unique(Seu_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
@@ -179,7 +179,7 @@ DO.BarplotClustert <- function(Seu_object,
     y_pos_test <- max(y_limits)* stat_pos_mod - 0.1 * diff(y_limits)
   }
 
-
+  #TODO make the stat_compare nicier and more similar to BarplotWilcox
   #create barplot with significance
   p<-ggplot(df.melt.sum, aes(x = condition, y = Mean, fill = condition))+
     geom_col(color = "black")+
@@ -188,7 +188,7 @@ DO.BarplotClustert <- function(Seu_object,
     #ordering, control always first
     scale_x_discrete(limits=c(as.character(ctrl.condition),levels(factor(df.melt.sum$condition))[!(levels(factor(df.melt.sum$condition)) %in% ctrl.condition)]))+
     #t-test, always against control, using means from orig sample identifier
-    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=3, y.position = y_pos_test, step.increase = step_mod)+
+    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=5, y.position = y_pos_test, step.increase = step_mod)+
     facet_wrap(~variable, ncol = 9, scales = "free") +
     scale_fill_manual(values = bar_colours #20 colours set for more change number
                       , name = "Condition")+
@@ -204,7 +204,7 @@ DO.BarplotClustert <- function(Seu_object,
           legend.position = "none")
   # print(p)
   if (!is.null(y_limits)) {
-    p = p + ylim(y_limits)
+    p <- p + ylim(y_limits)
   }
 
   if (returnValues==TRUE) {
@@ -236,6 +236,7 @@ DO.BarplotClustert <- function(Seu_object,
 #' @param x_label_rotation Rotation of x-labels
 #' @param log1p_nUMI If nUMIs should be log1p transformed
 #' @param y_limits set limits for y-axis
+#' @param wilcox_test perform wilcox test. boolean default TRUE
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -247,20 +248,18 @@ DO.BarplotClustert <- function(Seu_object,
 #' @return a ggplot or a list with plot and data frame
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#' (optional)
 #' ListTest <- list()
-#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.BarplotWilcox(
-#'   Seu_object = Seurat,
-#'   Feature = "CDH5",
+#'   Seu_object = sc_data,
+#'   Feature = "NKG7",
 #'   ListTest = ListTest,
-#'   ctrl.condition = "CTRL",
+#'   ctrl.condition = "healthy",
 #'   group.by="condition"
 #' )
-#' }
 #'
 #' @export
 DO.BarplotWilcox <- function(Seu_object,
@@ -341,7 +340,7 @@ DO.BarplotWilcox <- function(Seu_object,
   if (is.null(ListTest)) {
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
-    cat("ListTest empty, comparing every sample with each other\n")
+    .logger("ListTest empty, comparing every sample with each other")
     conditions <- unique(Seu_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
@@ -434,7 +433,7 @@ DO.BarplotWilcox <- function(Seu_object,
           strip.text.x = element_text(size = 16, color = "black"),
           legend.position = "none")
   if (!is.null(y_limits)) {
-    p = p + ylim(y_limits)
+    p <- p + ylim(y_limits)
   }
   if (wilcox_test == TRUE) {
 
@@ -444,10 +443,10 @@ DO.BarplotWilcox <- function(Seu_object,
       y_pos_test <- max(y_limits)* stat_pos_mod - 0.1 * diff(y_limits)
     }
     if (plotPvalue==TRUE) {
-      p = p + stat_pvalue_manual(stat.test, label = "p = {p}", y.position = y_pos_test, step.increase = step_mod)
+      p <- p + stat_pvalue_manual(stat.test, label = "p = {p}", y.position = y_pos_test, step.increase = step_mod)
     }
     else{
-      p = p + stat_pvalue_manual(stat.test, label = "p = {p.adj}", y.position = y_pos_test, step.increase = step_mod)
+      p <- p + stat_pvalue_manual(stat.test, label = "p = {p.adj}", y.position = y_pos_test, step.increase = step_mod)
     }
   }
 
@@ -478,9 +477,17 @@ DO.BarplotWilcox <- function(Seu_object,
 #' @param group.by select the seurat Seu_object slot where your conditions can be found, default conditon
 #' @param group.by.2 relevant for multiple group testing, e.g. for each cell type the test between each of them in two conditions provided
 #' @param geom_jitter_args vector for dots visualisation in vlnplot: size, width, alpha value
-#' @param vector_colours specify a minimum number of colours as you have entries in your condition, default 2
+#' @param vector_colors specify a minimum number of colours as you have entries in your condition, default 2
 #' @param wilcox_test Bolean if TRUE a bonferoni wilcoxon test will be carried out between ctrl.condition and the rest
 #' @param stat_pos_mod value for modifiyng statistics height
+#' @param hjust.wilcox value for adjusting height of the text
+#' @param vjust.wilcox value for vertical of text
+#' @param hjust.wilcox.2 value for adjusting height of the text, with group.by.2 specified
+#' @param vjust.wilcox.2 value for vertical of text, with group.by.2 specified
+#' @param sign_bar adjusts the sign_bar with group.by.2 specified
+#' @param size.wilcox value for size of text of statistical test
+#' @param step_mod value for defining the space between one test and the next one
+#' @param geom_jitter_args_group_by2 controls the jittering of points if group.by.2 is specified
 #' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
 #'
 #' @import ggplot2
@@ -493,43 +500,41 @@ DO.BarplotWilcox <- function(Seu_object,
 #' @return a ggplot or a list used data frames
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#' (optional)
 #' ListTest <- list()
-#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.VlnPlot(
-#'   Seu_object = Seurat,
+#'   Seu_object = sc_data,
 #'   SeuV5=TRUE,
-#'   Feature = "CDH5",
+#'   Feature = "NKG7",
 #'   ListTest = ListTest,
-#'   ctrl.condition = "CTRL",
+#'   ctrl.condition = "healthy",
 #'   group.by="condition"
 #' )
-#' }
 #'
 #' @export
 DO.VlnPlot <- function(Seu_object,
-                               SeuV5=TRUE,
-                               Feature,
-                               ListTest=NULL,
-                               returnValues=FALSE,
-                               ctrl.condition=NULL,
-                               group.by = "condition",
-                               group.by.2 = NULL,
-                               geom_jitter_args = c(0.20, 0.25, 0.25),
-                               geom_jitter_args_group_by2 = c(0.1, 0.1, 1),
-                               vector_colors = c("#1f77b4","#ea7e1eff","royalblue4","tomato2","darkgoldenrod","palegreen4","maroon","thistle3"),
-                               wilcox_test = TRUE,
-                               stat_pos_mod = 1.15,
-                               hjust.wilcox=0.8,
-                               vjust.wilcox = 2.0,
-                               size.wilcox=3.33,
-                               step_mod=0,
-                               hjust.wilcox.2=0.5,
-                               vjust.wilcox.2=0,
-                               sign_bar=0.8){
+                       SeuV5=TRUE,
+                       Feature,
+                       ListTest=NULL,
+                       returnValues=FALSE,
+                       ctrl.condition=NULL,
+                       group.by = "condition",
+                       group.by.2 = NULL,
+                       geom_jitter_args = c(0.20, 0.25, 0.25),
+                       geom_jitter_args_group_by2 = c(0.1, 0.1, 1),
+                       vector_colors = c("#1f77b4","#ea7e1eff","royalblue4","tomato2","darkgoldenrod","palegreen4","maroon","thistle3"),
+                       wilcox_test = TRUE,
+                       stat_pos_mod = 1.15,
+                       hjust.wilcox=0.8,
+                       vjust.wilcox = 2.0,
+                       size.wilcox=3.33,
+                       step_mod=0,
+                       hjust.wilcox.2=0.5,
+                       vjust.wilcox.2=0,
+                       sign_bar=0.8){
 
   if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
@@ -548,16 +553,16 @@ DO.VlnPlot <- function(Seu_object,
     rlang::warn("SeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
 
     if (Feature %in% rownames(Seu_object)) {
-      vln.df = data.frame(Feature = Seu_object[["RNA"]]$data[Feature,],
+      vln.df <- data.frame(Feature = Seu_object[["RNA"]]$data[Feature,],
                           cluster = Seu_object[[group.by]])
     }else{
-      vln.df = data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
+      vln.df <- data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
                           cluster = Seu_object[[group.by]])
     }
 
 
 
-    df<-data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
+    df <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
                    ,orig.ident = Seu_object$orig.ident)
 
     # add a second group for individual splitting and testing in the wilcoxon
@@ -579,14 +584,14 @@ DO.VlnPlot <- function(Seu_object,
 
   if (SeuV5==FALSE) {
     if (Feature %in% rownames(Seu_object)) {
-      vln.df = data.frame(Feature = Seu_object[["RNA"]]@data[Feature,],
+      vln.df <- data.frame(Feature = Seu_object[["RNA"]]@data[Feature,],
                           cluster = Seu_object[[group.by]])
     }else{
-      vln.df = data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
+      vln.df <- data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
                           cluster = Seu_object[[group.by]])
     }
 
-    df<-data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
+    df <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
                    ,orig.ident = Seu_object$orig.ident)
     # add a second group for individual splitting and testing in the wilcoxon
     if (!is.null(group.by.2)) {
@@ -612,7 +617,7 @@ DO.VlnPlot <- function(Seu_object,
   if (is.null(ListTest)) {
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
-    cat("ListTest empty, comparing every sample with each other")
+    .logger("ListTest empty, comparing every sample with each other")
     group <- unique(Seu_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
@@ -760,13 +765,13 @@ DO.VlnPlot <- function(Seu_object,
       scale_fill_manual(values = vector_colors)
 
     if (Feature %in% rownames(Seu_object)) {
-      p_label="p = {p.adj}"
+      p_label <- "p = {p.adj}"
     } else{
-      p_label="p = {p}"
+      p_label <- "p = {p}"
     }
 
     if (wilcox_test == TRUE) {
-      p = p + stat_pvalue_manual(stat.test, label = p_label, y.position = max(vln.df$Feature)*1.15, step.increase = 0.2)
+      p <- p + stat_pvalue_manual(stat.test, label = p_label, y.position = max(vln.df$Feature)*1.15, step.increase = 0.2)
     }
     return(p)
   }
@@ -779,7 +784,7 @@ DO.VlnPlot <- function(Seu_object,
       labs(title = Feature, y = "log(nUMI)")+
       xlab("")+
       theme_classic()+
-      theme(plot.title = element_text(face = "bold", color = "black", hjus = 0.5, size = 14),
+      theme(plot.title = element_text(face = "bold", color = "black", hjust = 0.5, size = 14),
             axis.title.y = element_text(face = "bold", color = "black", size = 14),
             axis.text.x = element_text(face = "bold", color = "black", angle = 45, hjust = 1, size = 14),
             axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14),
@@ -797,7 +802,7 @@ DO.VlnPlot <- function(Seu_object,
       xlab("")+
       scale_fill_manual(values = rep("black",length(vector_colors)), name=group.by)+
       theme_classic()+
-      theme(plot.title = element_text(face = "bold", color = "transparent", hjus = 0.5, size = 14),
+      theme(plot.title = element_text(face = "bold", color = "transparent", hjust = 0.5, size = 14),
             axis.title.y = element_text(face = "bold", color = "transparent", size = 14),
             axis.text.x = element_text(face = "bold", color = "transparent", angle = 45, hjust = 1, size = 14),
             axis.text.y = element_text(face = "bold", color = "transparent", hjust = 1, size = 14),
@@ -900,15 +905,22 @@ DO.VlnPlot <- function(Seu_object,
 #' Supports comparison of conditions with optional second grouping.
 #' Useful for visualizing gene expression and statistical differences.
 #' @param Seu_object The seurat object
+#' @param Feature name of the feature/gene
+#' @param sample.column meta data column containing sample IDs
+#' @param ListTest List for which conditions wilcox will be performed, if NULL always CTRL group against everything
+#' @param plot_sample Plot individual sample dot in graph
 #' @param group.by group name to look for in meta data
 #' @param group.by.2 second group name to look for in meta data
 #' @param ctrl.condition select condition to compare to
 #' @param outlier_removal Outlier calculation
 #' @param vector_colors get the colours for the plot
-#' @param wilcox_test If you want to have wilcoxon performed between ctrl.condition and given ones
+#' @param wilcox_test If you want to have wilcoxon performed, boolean default TRUE
 #' @param stat_pos_mod modificator for where the p-value is plotted increase for higher
 #' @param hjust.wilcox value for adjusting height of the text
 #' @param vjust.wilcox value for vertical of text
+#' @param hjust.wilcox.2 value for adjusting height of the text, with group.by.2 specified
+#' @param vjust.wilcox.2 value for vertical of text, with group.by.2 specified
+#' @param sign_bar adjusts the sign_bar with group.by.2 specified
 #' @param size.wilcox value for size of text of statistical test
 #' @param step_mod value for defining the space between one test and the next one
 #' @param orderAxis vector for xaxis sorting, alphabetically by default
@@ -923,21 +935,19 @@ DO.VlnPlot <- function(Seu_object,
 #' @return a ggplot
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
-#' (optional)
 #' ListTest <- list()
-#' ListTest[[1]] <- c("CTRL", "CONDITION")
+#' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.BoxPlot(
-#'   Seu_object = Seurat,
-#'   Feature = "CDH5",
+#'   Seu_object = sc_data,
+#'   Feature = "NKG7",
 #'   sample.column="orig.ident",
 #'   ListTest = ListTest,
 #'   group.by="condition",
-#'   ctrl.condition = "CTRL",
+#'   ctrl.condition = "healthy",
 #' )
-#' }
 #'
 #' @export
 DO.BoxPlot <- function(Seu_object,
@@ -992,13 +1002,13 @@ DO.BoxPlot <- function(Seu_object,
 
 
   if (Feature %in% rownames(Seu_object)) {
-    df_Feature = data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
+    df_Feature <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
                             Feature = Seu_object[["RNA"]]$data[Feature,],
                             cluster = Seu_object[[sample.column]][,1])
     df_Feature[,Feature] <- expm1(Seu_object@assays$RNA$data[Feature,])
 
   }else{
-    df_Feature = data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
+    df_Feature <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
                             Feature = FetchData(Seu_object, vars = Feature)[,1],
                             cluster = Seu_object[[sample.column]][,1])
 
@@ -1070,7 +1080,7 @@ DO.BoxPlot <- function(Seu_object,
   if (is.null(ListTest)) {
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
-    cat("ListTest empty, comparing every sample with each other")
+    .logger("ListTest empty, comparing every sample with each other")
     group <- unique(Seu_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
@@ -1275,9 +1285,9 @@ DO.BoxPlot <- function(Seu_object,
   if (wilcox_test == TRUE & is.null(group.by.2)) {
 
     if (Feature %in% rownames(Seu_object)) {
-      p_label="p = {p.adj}"
+      p_label <- "p = {p.adj}"
     } else{
-      p_label="p = {p}"
+      p_label <- "p = {p}"
     }
 
 
@@ -1291,7 +1301,7 @@ DO.BoxPlot <- function(Seu_object,
     }
 
 
-    p = p + stat_pvalue_manual(stat.test_plot,
+    p <- p + stat_pvalue_manual(stat.test_plot,
                                label = "p = {p.adj}",
                                y.position = "y.position",
                                # step.increase = 0.2,
@@ -1306,9 +1316,9 @@ DO.BoxPlot <- function(Seu_object,
 
 
     if (Feature %in% rownames(Seu_object)) {
-      p_label="p = {p.adj}"
+      p_label <- "p = {p.adj}"
     } else{
-      p_label="p = {p}"
+      p_label <- "p = {p}"
     }
 
 
@@ -1331,7 +1341,7 @@ DO.BoxPlot <- function(Seu_object,
 
 
 
-    p = p + stat_pvalue_manual(stat.test_plot,
+    p <- p + stat_pvalue_manual(stat.test_plot,
                                label = p_label,
                                y.position = "y.position",
                                # x="x",
@@ -1373,7 +1383,12 @@ DO.BoxPlot <- function(Seu_object,
 #' @param scale_gene IF True calculates the Z-score of the average expression per gene
 #' @param hide_zero Removes dots for genes with 0 expression
 #' @param annotation_x Adds annotation on top of x axis instead on y axis
+#' @param annotation_x_position specifies the position for the annotation
+#' @param annotation_x_rev reverses the annotations label order
 #' @param point_stroke Defines the thickness of the black stroke on the dots
+#' @param coord_flip flips the coordinates of the plot with each other
+#' @param returnValue return the dataframe behind the plot
+#' @param log1p_nUMI log1p the plotted values, boolean
 #' @param ... Further arguments passed to annoSegment function if annotation_x == TRUE
 #'
 #' @import ggplot2
@@ -1386,15 +1401,13 @@ DO.BoxPlot <- function(Seu_object,
 #' @return a ggplot
 #'
 #' @examples
-#' \dontrun{
-#'
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
 #' DO.Dotplot(
-#'   Seu_object = Seurat,
-#'   Feature = c("CDH5","TTN","MALAT1"),
+#'   Seu_object = sc_data,
+#'   Feature = c("NKG7","IL6","MALAT1"),
 #'   group.by.x="condition"
 #' )
-#' }
 #'
 #'
 #' @export
@@ -1570,15 +1583,15 @@ DO.Dotplot <- function(Seu_object,
       dplyr::group_by(gene) %>%
       dplyr::mutate(z_avg_exp = (avg.exp - mean(avg.exp, na.rm=TRUE)) / sd(avg.exp, na.rm=TRUE)) %>%
       ungroup()
-    exp.title = "Z-score expression \n per gene"
-    fill.values = data.plot.res$z_avg_exp
+    exp.title <- "Z-score expression \n per gene"
+    fill.values <- data.plot.res$z_avg_exp
     ###
   } else if(log1p_nUMI ==TRUE){
-    exp.title = "Mean log(nUMI) \n in group"
-    fill.values = data.plot.res$avg.exp.plot
+    exp.title <- "Mean log(nUMI) \n in group"
+    fill.values <- data.plot.res$avg.exp.plot
   } else{
-    exp.title = "Mean nUMI \n in group"
-    fill.values = data.plot.res$avg.exp.plot
+    exp.title <- "Mean nUMI \n in group"
+    fill.values <- data.plot.res$avg.exp.plot
   }
 
   #Define which columns to take for dotplot, it should be able to correctly capture one group.by.x
@@ -1655,7 +1668,7 @@ DO.Dotplot <- function(Seu_object,
                                                                keywidth = ggplot2::unit(0.5, "cm"), # changes the width of the precentage dots in legend
                                                                order = 1))
 
-  dot.col = c("#fff5f0","#990000") # TODO change the scalefillgradient to +n in the else part
+  dot.col <- c("#fff5f0","#990000") # TODO change the scalefillgradient to +n in the else part
   gradient_colors <- c("#fff5f0", "#fcbba1", "#fc9272", "#fb6a4a", "#990000")
   # "#FFFFFF","#08519C","#BDD7E7" ,"#6BAED6", "#3182BD",
   if (length(dot.col) == 2) {
@@ -1837,20 +1850,18 @@ theme_box <- function(){
 #' @import ggalluvial
 #'
 #' @examples
-#' \dontrun{
-#'
+#' reticulate::use_python("~/.venv/DOtools/bin/python")
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 #'
 #' DO.CellComposition(
-#'   Seu_object = Seurat,
-#'   cluster_column="cell_type",
+#'   Seu_object = sc_data,
+#'   cluster_column="annotation",
 #'   condition_column="condition",
-#'   scanpro_plots=TRUE,
-#'   bar_colors=c("#ff7f0e","tomato2", "darkgoldenrod2","#aec7e8"), # can also be a named vector
+#'   scanpro_plots=FALSE,
 #'   n_reps=5)
 #'
 #'
 #'
-#' }
 #'
 #' @export
 DO.CellComposition <- function(Seu_object,
@@ -1876,12 +1887,12 @@ DO.CellComposition <- function(Seu_object,
 ){
 
   if(scanpro_plots==TRUE && is.null(outputFolder)){
-    warning(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
+    .logger(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
     outputFolder <- getwd()
   }
 
   if(!is.null(n_reps)){
-    warning(paste0("Bootstrapping method activated with ", n_reps, " simulated replicates!\n."))
+    .logger(paste0("Bootstrapping method activated with ", n_reps, " simulated replicates!\n."))
   }
 
   # Make sure R Zellkonverter package is installed
@@ -1905,16 +1916,17 @@ DO.CellComposition <- function(Seu_object,
 
   # Import scanpro
   sc <- import("scanpro.scanpro")
+  plt <- import("matplotlib.pyplot")
   merge_design_props_fct <- py_get_attr(sc$ScanproResult, "_merge_design_props")
 
   if(is.null(n_reps)){
-    out = sc$scanpro(AnnData_counts,
+    out <- sc$scanpro(AnnData_counts,
                      clusters_col=cluster_column,
                      samples_col=sample_column,
                      conds_col=condition_column,
                      transform = transform_method)
   } else{
-    out = sc$scanpro(AnnData_counts,
+    out <- sc$scanpro(AnnData_counts,
                      clusters_col=cluster_column,
                      conds_col=condition_column,
                      transform = transform_method,
@@ -2043,7 +2055,7 @@ DO.CellComposition <- function(Seu_object,
     scale_y_continuous(expand = c(0,0)) +
     xlab("")+
     theme_classic()+
-    theme(plot.title = element_text(face = "bold", color = "black", hjus = 0.5, size = 14),
+    theme(plot.title = element_text(face = "bold", color = "black", hjust = 0.5, size = 14),
           axis.title.y = element_text(face = "bold", color = "black", size = 14, family = "Helvetica"),
           axis.text.x = element_text(face = "bold", color = "black", angle = 0, hjust = 0.5, size = 14, family = "Helvetica"),
           axis.text.y = element_text(face = "bold", color = "black", hjust = 1, size = 14, family = "Helvetica"),
@@ -2074,7 +2086,7 @@ DO.CellComposition <- function(Seu_object,
     scale_y_continuous(expand = c(0,0)) +
     xlab("")+
     theme_classic()+
-    theme(plot.title = element_text(face = "bold", color = "transparent", hjus = 0.5, size = 14),
+    theme(plot.title = element_text(face = "bold", color = "transparent", hjust = 0.5, size = 14),
           axis.title.y = element_text(face = "bold", color = "transparent", size = 14),
           axis.text.x = element_text(face = "bold", color = "transparent", angle = 0, hjust = 0.5, size = 14),
           axis.text.y = element_text(face = "bold", color = "transparent", hjust = 1, size = 14),
@@ -2099,7 +2111,7 @@ DO.CellComposition <- function(Seu_object,
     scale_y_continuous(expand = c(0,0)) +
     xlab("")+
     theme_classic()+
-    theme(plot.title = element_text(face = "bold", color = "transparent", hjus = 0.5, size = 14),
+    theme(plot.title = element_text(face = "bold", color = "transparent", hjust = 0.5, size = 14),
           axis.title.y = element_text(face = "bold", color = "transparent", size = 14),
           axis.text.x = element_text(face = "bold", color = "transparent", angle = 0, hjust = 0.5, size = 14),
           axis.text.y = element_text(face = "bold", color = "transparent", hjust = 1, size = 14),
@@ -2156,56 +2168,71 @@ DO.CellComposition <- function(Seu_object,
 #'
 #' @param df_GSEA dataframe with the results of a gene set enrichment analysis
 #' @param term_col column in the dataframe that contains the terms
-#' @param col_split: column in the dataframe that will be used to sort and split the plot
-#' @param cond_col: column in the dataframe that contains the condition information
-#' @param pos_cond: condition that will be shown in the positive side of the plot
-#' @param cutoff: maximum number of characters per line
-#' @param log10_transform: if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation
-#' @param figsize: figure size
-#' @param topN: how many terms are shown
-#' @param path: path to save the plot
-#' @param filename: filename for the plot
-#' @param spacing: space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 % of the maximum X axis value.
-#' @param txt_size: size of the go terms text
-#' @param alpha_colors: alpha value for the colors of the bars
-#' @param colors_pairs: colors for each condition (1st color --> negative axis; 2nd color --> positive axis)
-#' @param title: title of the plot
-#' @param showP: if False, the axis is return
-#'
+#' @param col_split column in the dataframe that will be used to sort and split the plot
+#' @param cond_col column in the dataframe that contains the condition information
+#' @param pos_cond condition that will be shown in the positive side of the plot
+#' @param cutoff maximum number of characters per line
+#' @param log10_transform if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation
+#' @param figsize figure size
+#' @param topN how many terms are shown
+#' @param path path to save the plot
+#' @param filename filename for the plot
+#' @param spacing space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 % of the maximum X axis value.
+#' @param txt_size size of the go terms text
+#' @param alpha_colors alpha value for the colors of the bars
+#' @param colors_pairs colors for each condition (1st color --> negative axis; 2nd color --> positive axis)
+#' @param title title of the plot
+#' @param showP if False, the axis is return
+#' @param celltype vector with cell types you want to subset for, use "all" for all celltypes contained in the dataframe column "celltype"
 #'
 #' @return: None or the axis
 #'
 #' @import reticulate
 #'
 #' @examples
-#' \dontrun{
-#' #df with GSEA results e.g. Metascape results
-#' df_GSEA <- read.csv("path/to/GSEA_results.csv")
+#' library(enrichR)
+#' reticulate::use_python("~/.venv/DOtools/bin/python")
 #'
-#' #Please add a 'celltype' and 'condition' column
-#' head(df_GSEA)
-#' #Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sc_data,
+#'                          sample_col = "orig.ident",
+#'                          method_sc = "wilcox",
+#'                          annotation_col = "annotation",
+#'                          ident_ctrl = "healthy")
+#' DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+#'
+#' result_GO <- DO.enrichR(df_DGE = DGE_result,
+#'                        gene_column = "gene",
+#'                        pval_column = "p_val_SC_wilcox",
+#'                        log2fc_column = "avg_log2FC_SC_wilcox",
+#'                        pval_cutoff = 0.05,
+#'                        log2fc_cutoff = 0.25,
+#'                        path = NULL,
+#'                        filename = "",
+#'                        species = "Human",
+#'                        go_catgs = "GO_Biological_Process_2023")
+#'
+#' result_GO$celltype <- "CM1"
 #'
 #' #Run SplitBarGSEA visualisation
-#' DO.SplitBarGSEA(df_GSEA = df_GSEA,
+#' DO.SplitBarGSEA(df_GSEA = result_GO,
 #'                 term_col = "Term",
 #'                 col_split = "Combined.Score",
-#'                 cond_col = "condition",          # condition column (e.g., experimental group)
-#'                 pos_cond = "Treatment",
-#'                 cutoff = 40,                 # max term length before truncation
+#'                 cond_col = "State",
+#'                 pos_cond = "enriched",
+#'                 cutoff = 40,
 #'                 log10_transform = TRUE,
 #'                 figsize = c(12, 8),
-#'                 topN = 10,                   # top N GO terms to show
-#'                 color_pairs = c("sandybrown", "royalblue"),
+#'                 topN = 10,
+#'                 colors_pairs = c("sandybrown", "royalblue"),
 #'                 alpha_colors = 0.3,
-#'                 path = "results/plots",
+#'                 path = NULL,
 #'                 spacing = 5,
 #'                 txt_size = 12,
 #'                 filename = "SplitBar.svg",
 #'                 title = "Top 10 GO Terms in each Condition: ",
 #'                 showP = FALSE,
 #'                 celltype = "all")
-#' }
 #'
 #' @export
 DO.SplitBarGSEA <- function(df_GSEA,
@@ -2287,7 +2314,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
 
 #' @author Mariano Ruz Jurado
 #' @title DO Correlation Plot for visualizing similarity between categories
-#' @description#' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
+#' @description' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
 #' Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
 #' Ideal for comparing transcriptional profiles between conditions or clusters.
 #' @param Seu_obj Seurat Object
@@ -2303,6 +2330,8 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #' @param lab_size Size to be used for the correlation coefficient labels. used when lab = TRUE.
 #' @param lab logical value. If TRUE, add correlation coefficient on the plot.
 #' @param lab_col color to be used for the correlation coefficient labels. used when lab = TRUE.
+#' @param axis_size_x Controls x labels size
+#' @param axis_size_y Controls y labels size
 #' @param ... Additionally arguments passed to ggcorrplot function
 #'
 #'
@@ -2313,9 +2342,10 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #' @import Seurat
 #'
 #' @examples
-#' \dontrun{
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#'
 #' DO.Correlation(
-#'   Seu_obj = seurat_object,
+#'   Seu_obj = sc_data,
 #'   group_by = "orig.ident",
 #'   assay = "RNA",
 #'   features = NULL,
@@ -2324,12 +2354,11 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #'   plottype = "full",
 #'   auto_limits = TRUE,
 #'   outline.color = "white",
-#'   colormap = c("royalblue4", "royalblue2", "firebrick", "firebrick4"),
+#'   colormap = c("royalblue4", "lightsteelblue", "tomato","firebrick4"),
 #'   lab_size = 10,
 #'   lab = TRUE,
 #'   lab_col = "white"
 #' )
-#' }
 #'
 #' @export
 DO.Correlation <- function(Seu_obj,
@@ -2341,10 +2370,12 @@ DO.Correlation <- function(Seu_obj,
                            plottype="full",
                            auto_limits=TRUE,
                            outline.color="white",
-                           colormap=c("royalblue4", "royalblue2","firebrick","firebrick4"),
+                           colormap=c("royalblue4", "lightsteelblue", "tomato","firebrick4"),
                            lab_size=10,
                            lab=TRUE,
                            lab_col="white",
+                           axis_size_x = 12,
+                           axis_size_y = 12,
                            ...){
 
   #Aggregate Expression, creating Pseudobulk
@@ -2382,8 +2413,8 @@ DO.Correlation <- function(Seu_obj,
                         name = paste0(tools::toTitleCase(method), "Correlation"))+
     ggplot2::theme(axis.text = ggplot2::element_text(color = "black"),
                    legend.direction = "horizontal",
-                   axis.text.x = element_text(color = "black",angle = 0,hjust = 0.5, size = 14, family = "Helvetica"),
-                   axis.text.y = element_text(color = "black",angle=90,,hjust = 0.5, size = 14, family = "Helvetica"),
+                   axis.text.x = element_text(color = "black",angle = 0,hjust = 0.5, size = axis_size_x, family = "Helvetica"),
+                   axis.text.y = element_text(color = "black",angle=90,,hjust = 0.5, size = axis_size_y, family = "Helvetica"),
                    axis.title = element_text(size = 14, color = "black", family = "Helvetica"),
                    plot.title = element_text(size = 14, hjust = 0.5, face="bold", family = "Helvetica"),
                    plot.subtitle = element_text(size = 14, hjust = 0, family = "Helvetica"),
@@ -2406,6 +2437,223 @@ DO.Correlation <- function(Seu_obj,
   return(pmain)
 
 }
+
+#' @author Mariano Ruz Jurado & David Rodriguez Morales
+#' @title DO Heatmap of the mean expression of genes across a groups
+#' @description Wrapper around heatmap.py, which generates a heatmap of
+#' showing the average nUMI for a set of genes in different groups.
+#' Differential gene expression analysis between the different groups can be performed.
+#'
+#' @param Seu_object Seurat object with meta.data
+#' @param assay_normalized Assay with raw counts
+#' @param group_by meta data column name with categorical values
+#' @param features gene names or continuous value in meta data
+#' @param z_score apply z-score transformation
+#' @param path path to save the plot
+#' @param filename name of the file
+#' @param swap_axes whether to swap the axes or not
+#' @param cmap color map
+#' @param title title for the main plot
+#' @param title_fontprop font properties for the title (e.g., 'weight' and 'size')
+#' @param clustering_method clustering method to use when hierarchically clustering the x and y-axis
+#' @param clustering_metric metric to use when hierarchically clustering the x and y-axis
+#' @param cluster_x_axis hierarchically clustering the x-axis
+#' @param cluster_y_axis hierarchically clustering the y-axis
+#' @param axs matplotlib axis
+#' @param figsize figure size
+#' @param linewidth line width for the border of cells
+#' @param ticks_fontdict font properties for the x and y ticks (e.g.,  'weight' and 'size')
+#' @param xticks_rotation rotation of the x-ticks
+#' @param yticks_rotation rotations of the y-ticks
+#' @param vmin minimum value
+#' @param vcenter center value
+#' @param vmax maximum value
+#' @param legend_title title for the color bar
+#' @param add_stats add statistical annotation, will add a square with an '*' in the center if the expression is significantly different in a group with respect to the others
+#' @param df_pvals dataframe with the p-values, should be gene x group or group x gene in case of swap_axes is False
+#' @param stats_x_size size of the asterisk
+#' @param square_x_size size and thickness of the square
+#' @param test test to use for test for significance
+#' @param pval_cutoff cutoff for the p-value
+#' @param log2fc_cutoff minimum cutoff for the log2FC
+#' @param only_pos if set to TRUE, only use positive genes in the condition
+#' @param square whether to make the cell square or not
+#' @param showP if set to false return a dictionary with the axis
+#' @param logcounts whether the input is logcounts or not
+#' @return Depending on ``showP``, returns the plot if set to `TRUE` or a dictionary with the axes.
+#'
+#'
+#' @import reticulate
+#'
+#' @examples#'
+#' reticulate::use_python("~/.venv/DOtools/bin/python")
+#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#'
+#' DO.Heatmap(
+#' Seu_object = sc_data,
+#' assay_normalized = "RNA",
+#' group_by="seurat_clusters",
+#' features = rownames(sc_data)[1:10],
+#' z_score = NULL,
+#' path = NULL,
+#' filename = "Heatmap.svg",
+#' swap_axes = TRUE,
+#' cmap = "Reds",
+#' title = NULL,
+#' title_fontprop = NULL,
+#' clustering_method = "complete",
+#' clustering_metric = "euclidean",
+#' cluster_x_axis = FALSE,
+#' cluster_y_axis = FALSE,
+#' axs = NULL,
+#' figsize = c(5, 6),
+#' linewidth = 0.1,
+#' ticks_fontdict = NULL,
+#' xticks_rotation = 45,
+#' yticks_rotation = NULL,
+#' vmin = 0.0,
+#' vcenter = NULL,
+#' vmax = NULL,
+#' legend_title = "LogMean(nUMI)\nin group",
+#' add_stats = TRUE,
+#' df_pvals = NULL,
+#' stats_x_size = NULL,
+#' square_x_size = NULL,
+#' test = "wilcox",
+#' pval_cutoff = 0.05,
+#' log2fc_cutoff = 0,
+#' only_pos = TRUE,
+#' square = TRUE,
+#' showP = FALSE,
+#' logcounts = TRUE
+#' )
+#'
+#'
+#' @export
+DO.Heatmap <- function(
+    Seu_object,
+    assay_normalized = "RNA",
+    group_by="seurat_clusters",
+    features,
+    z_score = NULL,
+    path = NULL,
+    filename = "Heatmap.svg",
+    swap_axes = TRUE,
+    cmap = "Reds",
+    title = NULL,
+    title_fontprop = NULL,
+    clustering_method = "complete",
+    clustering_metric = "euclidean",
+    cluster_x_axis = FALSE,
+    cluster_y_axis = FALSE,
+    axs = NULL,
+    figsize = c(5, 6),
+    linewidth = 0.1,
+    ticks_fontdict = NULL,
+    xticks_rotation = NULL,
+    yticks_rotation = NULL,
+    vmin = 0.0,
+    vcenter = NULL,
+    vmax = NULL,
+    legend_title = "LogMean(nUMI)\nin group",
+    add_stats = TRUE,
+    df_pvals = NULL,
+    stats_x_size = NULL,
+    square_x_size = NULL,
+    test = "wilcox",
+    pval_cutoff = 0.05,
+    log2fc_cutoff = 0,
+    only_pos = TRUE,
+    square = TRUE,
+    showP = TRUE,
+    logcounts = TRUE
+) {
+
+  if (!reticulate::py_available(initialize = TRUE)) {
+    stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
+  }
+
+  #Make Anndata object
+  DefaultAssay(Seu_object) <- assay_normalized
+  Seu_object_sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
+  AnnData_counts <- zellkonverter::SCE2AnnData(Seu_object_sce, X_name = "logcounts")
+
+  if (add_stats == TRUE) {
+    if (is.null(df_pvals)) {
+
+    df_dge <- FindAllMarkers(Seu_object,
+                     features = features,
+                     group.by = group_by,
+                     min.pct = 0,
+                     test.use = test,
+                     logfc.threshold = log2fc_cutoff,
+                     only.pos = only_pos)
+
+    df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(Seu_object@meta.data[[group_by]]))))
+    rownames(df_pvals) <- features
+    colnames(df_pvals) <- unique(Seu_object@meta.data[[group_by]])
+
+    # Go through each row in df_dge
+    for (i in seq_len(nrow(df_dge))) {
+      gene <- df_dge$gene[i]
+      cluster <- as.character(df_dge$cluster[i])
+      pval_adj <- df_dge$p_val_adj[i]
+      df_pvals[gene, cluster] <- pval_adj
+    }
+    }
+  }
+
+  #source PATH to python script in install folder
+  path_py <- system.file("python", "heatmap.py", package = "DOtools")
+  source_python(path_py)
+
+  #Initialize matplot package
+  plt <- import("matplotlib.pyplot")
+
+  heatmap(adata = AnnData_counts,
+          group_by = group_by,
+          features = features,
+          z_score = z_score,
+          path = path,
+          filename = filename,
+          layer = NULL,
+          swap_axes = swap_axes,
+          cmap = cmap,
+          title = title,
+          title_fontprop = title_fontprop,
+          clustering_method = clustering_method,
+          clustering_metric = clustering_metric,
+          cluster_x_axis = cluster_x_axis,
+          cluster_y_axis = cluster_y_axis,
+          axs = axs,
+          figsize = figsize,
+          linewidth = linewidth,
+          ticks_fontdict = ticks_fontdict,
+          xticks_rotation = xticks_rotation,
+          yticks_rotation = yticks_rotation,
+          vmin = vmin,
+          vcenter = vcenter,
+          vmax = vmax,
+          legend_title = legend_title,
+          add_stats = add_stats,
+          df_pvals = df_pvals,
+          stats_x_size = stats_x_size,
+          square_x_size = square_x_size,
+          pval_cutoff = pval_cutoff,
+          square = square,
+          showP = showP,
+          logcounts = logcounts
+          )
+
+
+
+
+
+
+
+
+}
+
 
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
 #' @author Mariano Ruz Jurado (edited from: Jun Zhang)

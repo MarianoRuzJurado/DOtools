@@ -46,6 +46,7 @@ reference:
       - DO.Dotplot
       - DO.CellComposition
       - DO.SplitBarGSEA
+      - DO.Heatmap
   - title: Utils
     desc: >
     contents:

@@ -54,15 +54,25 @@ DO.Dotplot(
 
 \item{scale_gene}{IF True calculates the Z-score of the average expression per gene}
 
+\item{returnValue}{return the dataframe behind the plot}
+
+\item{log1p_nUMI}{log1p the plotted values, boolean}
+
 \item{hide_zero}{Removes dots for genes with 0 expression}
 
 \item{annotation_x}{Adds annotation on top of x axis instead on y axis}
+
+\item{annotation_x_position}{specifies the position for the annotation}
+
+\item{annotation_x_rev}{reverses the annotations label order}
 
 \item{point_stroke}{Defines the thickness of the black stroke on the dots}
 
 \item{limits_colorscale}{Set manually colorscale limits}
 
-\item{...}{Further arguments passed to annoSegment function if annotation_x == T}
+\item{coord_flip}{flips the coordinates of the plot with each other}
+
+\item{...}{Further arguments passed to annoSegment function if annotation_x == TRUE}
 }
 \value{
 a ggplot
@@ -74,15 +84,13 @@ Highly variable customization options allow control over dot size, color scaling
 The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.
 }
 \examples{
-\dontrun{
-
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
 DO.Dotplot(
-  Seu_object = Seurat,
-  Feature = c("CDH5","TTN","MALAT1"),
+  Seu_object = sc_data,
+  Feature = c("NKG7","IL6","MALAT1"),
   group.by.x="condition"
 )
-}
 
 
 }

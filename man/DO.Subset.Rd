@@ -34,21 +34,14 @@ Returns a new Seurat object containing only the subsetted cells and does not com
 Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-
-DO.Subset(
-  Seu_object = Seurat,
+sc_data_sub <- DO.Subset(
+  Seu_object = sc_data,
   ident="condition",
-  ident_name="CTRL"
+  ident_name="healthy"
 )
 
-DO.Subset(
-  Seu_object = Seurat,
-  ident="nFeature_RNA",
-  ident_thresh=c(">5", "<200")
-)
-}
 
 
 }
