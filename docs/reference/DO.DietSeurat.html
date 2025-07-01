@@ -15,7 +15,7 @@ It is supposed to make something similar than the no longer working DietSeurat f
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,7 @@ It is supposed to make something similar than the no longer working DietSeurat f
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -48,7 +49,7 @@ It is supposed to make something similar than the no longer working DietSeurat f
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Remove Layers from Seurat Object by Pattern</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/utils_functions.R" class="external-link"><code>R/utils_functions.R</code></a></small>
       <div class="d-none name"><code>DO.DietSeurat.Rd</code></div>
     </div>
 
@@ -85,21 +86,12 @@ It is supposed to make something similar than the no longer working DietSeurat f
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu">DO.DietSeurat</span><span class="op">(</span><span class="va">sc_data</span>, pattern <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> pattern:  data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> data is removed.scale.data is removed.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="DO.Subset.html">DO.Subset</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
-<span class="r-in"><span>  ident<span class="op">=</span><span class="st">"condition"</span>,</span></span>
-<span class="r-in"><span>  ident_name<span class="op">=</span><span class="st">"CTRL"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="DO.Subset.html">DO.Subset</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
-<span class="r-in"><span>  ident<span class="op">=</span><span class="st">"nFeature_RNA"</span>,</span></span>
-<span class="r-in"><span>  ident_thresh<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;5"</span>, <span class="st">"&lt;200"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

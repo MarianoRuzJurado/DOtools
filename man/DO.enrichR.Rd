@@ -47,22 +47,26 @@ Performs Gene Ontology enrichment analysis on differentially expressed genes usi
 Separately analyzes upregulated and downregulated genes and returns results.
 }
 \examples{
-\dontrun{
-#GO analysis on differential expression results:
-results <- go_analysis(df_DGE = deg_results,
-                       gene_key = "gene",
-                       pval_key = "adj_pval",
-                       log2fc_key = "log2FC",
-                       species = "Human")
+library(enrichR)
 
-#Or save the results to a file:
-go_analysis(df_DGE = deg_results,
-            gene_key = "gene",
-            pval_key = "p_val_adj",
-            log2fc_key = "log2FC",
-            path = "results/",
-            filename = "experiment.xlsx",
-            species = "Mouse")
-}
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sc_data,
+                         sample_col = "orig.ident",
+                         method_sc = "wilcox",
+                         annotation_col = "annotation",
+                         ident_ctrl = "healthy")
+
+DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+
+result_GO <- DO.enrichR(df_DGE = DGE_result,
+                       gene_column = "gene",
+                       pval_column = "p_val_SC_wilcox",
+                       log2fc_column = "avg_log2FC_SC_wilcox",
+                       pval_cutoff = 0.05,
+                       log2fc_cutoff = 0.25,
+                       path = NULL,
+                       filename = "",
+                       species = "Human",
+                       go_catgs = "GO_Biological_Process_2023")
 
 }

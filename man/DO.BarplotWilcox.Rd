@@ -34,6 +34,8 @@ DO.BarplotWilcox(
 
 \item{group.by}{select the seurat object slot where your conditions can be found, default conditon}
 
+\item{wilcox_test}{perform wilcox test. boolean default TRUE}
+
 \item{bar_colours}{colour vector}
 
 \item{stat_pos_mod}{Defines the distance to the graphs of the statistic}
@@ -58,20 +60,18 @@ Performs pairwise Wilcox tests comparing conditions, with optional custom contro
 Optionally returns a summary data frame, statistical test results, and the generated plot.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-(optional)
 ListTest <- list()
-ListTest[[1]] <- c("CTRL", "CONDITION")
+ListTest[[1]] <- c("healthy", "disease")
 
 DO.BarplotWilcox(
-  Seu_object = Seurat,
-  Feature = "CDH5",
+  Seu_object = sc_data,
+  Feature = "NKG7",
   ListTest = ListTest,
-  ctrl.condition = "CTRL",
+  ctrl.condition = "healthy",
   group.by="condition"
 )
-}
 
 }
 \author{

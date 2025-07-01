@@ -78,20 +78,18 @@ Generates customizable plots with options for transformation, grouping, and boot
 Returns a ggplot object or a list containing plot data and visualisation.
 }
 \examples{
-\dontrun{
-
+reticulate::use_python("~/.venv/DOtools/bin/python")
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
 DO.CellComposition(
-  Seu_object = Seurat,
-  cluster_column="cell_type",
+  Seu_object = sc_data,
+  cluster_column="annotation",
   condition_column="condition",
-  scanpro_plots=T,
-  bar_colors=c("#ff7f0e","tomato2", "darkgoldenrod2","#aec7e8"), # can also be a named vector
+  scanpro_plots=FALSE,
   n_reps=5)
 
 
 
-}
 
 }
 \author{

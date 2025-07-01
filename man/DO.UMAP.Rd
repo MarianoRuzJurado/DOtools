@@ -27,6 +27,18 @@ DO.UMAP(
 
 \item{group.by}{grouping of plot in DImplot and defines in featureplot the labels}
 
+\item{umap_colors}{what colors to use for UMAP, specify as vector}
+
+\item{text_size}{Size of text}
+
+\item{label}{label the clusters on the plot by group.by column}
+
+\item{order}{Boolean determining whether to plot cells in order of expression.}
+
+\item{plot.title}{title for UMAP}
+
+\item{legend.position}{specify legend position}
+
 \item{...}{Further arguments passed to DimPlot or FeaturePlot function from Seurat}
 }
 \value{
@@ -39,20 +51,18 @@ The function handles both cluster-based visualisations and gene-based visualisat
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 }
 \examples{
-\dontrun{
-
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
 DO.UMAP(
-  Seu_object = Seurat,
+  Seu_object = sc_data,
   group.by="seurat_clusters"
 )
 
 DO.UMAP(
-  Seu_object = Seurat,
-  FeaturePlot=T,
-  features=c("CDH5","TTN")
+  Seu_object = sc_data,
+  FeaturePlot=TRUE,
+  features=c("BAG2","CD74")
 )
-}
 
 }
 \author{

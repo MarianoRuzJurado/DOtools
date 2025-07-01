@@ -6,11 +6,11 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.UMAP — DO.UMAP"><meta name="description" content="Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
-It allows customization of colors, labels, and other plot elements for better visualization.
-The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+It allows customization of colors, labels, and other plot elements for better visualisation.
+The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation."><meta property="og:description" content="Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
-It allows customization of colors, labels, and other plot elements for better visualization.
-The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+It allows customization of colors, labels, and other plot elements for better visualisation.
+The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -19,7 +19,7 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -52,14 +53,14 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO.UMAP</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/utils_functions.R" class="external-link"><code>R/utils_functions.R</code></a></small>
       <div class="d-none name"><code>DO.UMAP.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
     <p>Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot functions.
-It allows customization of colors, labels, and other plot elements for better visualization.
-The function handles both cluster-based visualizations and gene-based visualizations in a UMAP plot.
+It allows customization of colors, labels, and other plot elements for better visualisation.
+The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation.</p>
     </div>
 
@@ -67,14 +68,14 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DO.UMAP</span><span class="op">(</span></span>
 <span>  <span class="va">Seu_object</span>,</span>
-<span>  FeaturePlot <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  FeaturePlot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  umap_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  text_size <span class="op">=</span> <span class="fl">14</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>  order <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>  plot.title <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  order <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot.title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  legend.position <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -100,6 +101,30 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
 <dd><p>grouping of plot in DImplot and defines in featureplot the labels</p></dd>
 
 
+<dt id="arg-umap-colors">umap_colors<a class="anchor" aria-label="anchor" href="#arg-umap-colors"></a></dt>
+<dd><p>what colors to use for UMAP, specify as vector</p></dd>
+
+
+<dt id="arg-text-size">text_size<a class="anchor" aria-label="anchor" href="#arg-text-size"></a></dt>
+<dd><p>Size of text</p></dd>
+
+
+<dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
+<dd><p>label the clusters on the plot by group.by column</p></dd>
+
+
+<dt id="arg-order">order<a class="anchor" aria-label="anchor" href="#arg-order"></a></dt>
+<dd><p>Boolean determining whether to plot cells in order of expression.</p></dd>
+
+
+<dt id="arg-plot-title">plot.title<a class="anchor" aria-label="anchor" href="#arg-plot-title"></a></dt>
+<dd><p>title for UMAP</p></dd>
+
+
+<dt id="arg-legend-position">legend.position<a class="anchor" aria-label="anchor" href="#arg-legend-position"></a></dt>
+<dd><p>specify legend position</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments passed to DimPlot or FeaturePlot function from Seurat</p></dd>
 
@@ -115,20 +140,24 @@ Ideal for refining UMAP outputs with added flexibility and enhanced presentation
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.UMAP</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
+<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">sc_data</span>,</span></span>
 <span class="r-in"><span>  group.by<span class="op">=</span><span class="st">"seurat_clusters"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="DO.UMAP-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.UMAP</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">Seurat</span>,</span></span>
-<span class="r-in"><span>  FeaturePlot<span class="op">=</span><span class="cn">T</span>,</span></span>
-<span class="r-in"><span>  features<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CDH5"</span>,<span class="st">"TTN"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  Seu_object <span class="op">=</span> <span class="va">sc_data</span>,</span></span>
+<span class="r-in"><span>  FeaturePlot<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  features<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BAG2"</span>,<span class="st">"CD74"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The `slot` argument of `FetchData()` is deprecated as of SeuratObject 5.0.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;</span><a href="https://github.com/satijalab/seurat/issues" class="external-link"><span style="color: #0000BB; font-style: italic;">https://github.com/satijalab/seurat/issues</span></a><span style="color: #0000BB; font-style: italic;">&gt;</span>.</span>
+<span class="r-plt img"><img src="DO.UMAP-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

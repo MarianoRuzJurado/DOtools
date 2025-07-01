@@ -1,6 +1,20 @@
-# DOtools 0.4.0
+# DOtools 0.99.0
 
-All notable changes to this project will be documented in this file.
+All notable changes to DOtools will be documented in this file.
+
+---
+
+## [0.99.0] - 2025-07-08
+
+### Added
+* `DO.Heatmap`: Heat map function for gene expression, includes statistics about significance.
+* Example data set, useable for running the tutorial.
+
+### Changed
+* Major adjustments across various functions for improved consistency.
+* Major adjustments across various examples.
+
+---
 
 ---
 

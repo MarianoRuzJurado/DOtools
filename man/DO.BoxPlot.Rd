@@ -31,6 +31,12 @@ DO.BoxPlot(
 \arguments{
 \item{Seu_object}{The seurat object}
 
+\item{Feature}{name of the feature/gene}
+
+\item{sample.column}{meta data column containing sample IDs}
+
+\item{ListTest}{List for which conditions wilcox will be performed, if NULL always CTRL group against everything}
+
 \item{group.by}{group name to look for in meta data}
 
 \item{group.by.2}{second group name to look for in meta data}
@@ -39,9 +45,11 @@ DO.BoxPlot(
 
 \item{outlier_removal}{Outlier calculation}
 
+\item{plot_sample}{Plot individual sample dot in graph}
+
 \item{vector_colors}{get the colours for the plot}
 
-\item{wilcox_test}{If you want to have wilcoxon performed between ctrl.condition and given ones}
+\item{wilcox_test}{If you want to have wilcoxon performed, boolean default TRUE}
 
 \item{stat_pos_mod}{modificator for where the p-value is plotted increase for higher}
 
@@ -52,6 +60,12 @@ DO.BoxPlot(
 \item{vjust.wilcox}{value for vertical of text}
 
 \item{size.wilcox}{value for size of text of statistical test}
+
+\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2 specified}
+
+\item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
+
+\item{sign_bar}{adjusts the sign_bar with group.by.2 specified}
 
 \item{orderAxis}{vector for xaxis sorting, alphabetically by default}
 }
@@ -65,21 +79,19 @@ Supports comparison of conditions with optional second grouping.
 Useful for visualizing gene expression and statistical differences.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-(optional)
 ListTest <- list()
-ListTest[[1]] <- c("CTRL", "CONDITION")
+ListTest[[1]] <- c("healthy", "disease")
 
 DO.BoxPlot(
-  Seu_object = Seurat,
-  Feature = "CDH5",
+  Seu_object = sc_data,
+  Feature = "NKG7",
   sample.column="orig.ident",
   ListTest = ListTest,
   group.by="condition",
-  ctrl.condition = "CTRL",
+  ctrl.condition = "healthy",
 )
-}
 
 }
 \author{

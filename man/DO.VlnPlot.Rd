@@ -47,11 +47,27 @@ DO.VlnPlot(
 
 \item{geom_jitter_args}{vector for dots visualisation in vlnplot: size, width, alpha value}
 
+\item{geom_jitter_args_group_by2}{controls the jittering of points if group.by.2 is specified}
+
+\item{vector_colors}{specify a minimum number of colours as you have entries in your condition, default 2}
+
 \item{wilcox_test}{Bolean if TRUE a bonferoni wilcoxon test will be carried out between ctrl.condition and the rest}
 
 \item{stat_pos_mod}{value for modifiyng statistics height}
 
-\item{vector_colours}{specify a minimum number of colours as you have entries in your condition, default 2}
+\item{hjust.wilcox}{value for adjusting height of the text}
+
+\item{vjust.wilcox}{value for vertical of text}
+
+\item{size.wilcox}{value for size of text of statistical test}
+
+\item{step_mod}{value for defining the space between one test and the next one}
+
+\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2 specified}
+
+\item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
+
+\item{sign_bar}{adjusts the sign_bar with group.by.2 specified}
 }
 \value{
 a ggplot or a list used data frames
@@ -63,21 +79,19 @@ The plot can be customized with options for data transformation, jitter display,
 The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
 }
 \examples{
-\dontrun{
+sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 
-(optional)
 ListTest <- list()
-ListTest[[1]] <- c("CTRL", "CONDITION")
+ListTest[[1]] <- c("healthy", "disease")
 
 DO.VlnPlot(
-  Seu_object = Seurat,
-  SeuV5=T,
-  Feature = "CDH5",
+  Seu_object = sc_data,
+  SeuV5=TRUE,
+  Feature = "NKG7",
   ListTest = ListTest,
-  ctrl.condition = "CTRL",
+  ctrl.condition = "healthy",
   group.by="condition"
 )
-}
 
 }
 \author{

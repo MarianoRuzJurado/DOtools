@@ -25,16 +25,17 @@
         \item \code{\link{DO.TransferLabel}}: A function for transfering annotation from a subseted object to the original seurat object.
         \item \code{\link{DO.PyEnv}}: A function for creating a conda envrionment holding all python packages needed for some functions.
         \item \code{\link{DO.Correlation}}: A function for creating a correlation plot between provided samples in the category specified.
+        \item \code{\link{DO.Heatmap}}: A function for generating Heat maps on gene expression data.
         \item \code{\link{DO.MultiDGE}}: A function for calculating DEGs on a single cell and speudo bulk level.
-        \item \code{\link{dot-Do.BarcodeRanks}}: A function for estimating the number of expected cells and droplets.
-        \item \code{\link{dot-QC.Vlnplot}}: A function for estimating the number of expected cells and droplets.
+        \item \code{dot-Do.BarcodeRanks}: A function for estimating the number of expected cells and droplets.
+        \item \code{dot-QC.Vlnplot}: A function for estimating the number of expected cells and droplets.
     }
 }
 \author{Mariano Ruz Jurado, David Rodriguez Morales}
 \seealso{
-    \code{\link{DO.Box.Plot.wilcox}}, \code{\link{DO.CellTypist}}, \code{\link{DO.DietSeurat}}, \code{\link{DO.Dotplot}},
-    \code{\link{DO.FullRecluster}}, \code{\link{DO.Mean.SEM.Graphs.cluster.t}}, \code{\link{DO.Mean.SEM.Graphs.wilcox}},
-    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.Vln.Plot.wilcox}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender}},
-    \code{\link{DO.SplitBarGSEA}}, \code{\link{DO.scVI}}, \code{\link{DO.TransferLabel}}, \code{\link{DO.PyEnv}}, \code{\link{DO.Correlation}},
-    \code{\link{DO.MultiDGE}}, \code{\link{dot-Do.BarcodeRanks}}, \code{\link{dot-QC.Vlnplot}}
+    \code{\link{DO.BoxPlot}}, \code{\link{DO.CellTypist}}, \code{\link{DO.DietSeurat}}, \code{\link{DO.Dotplot}},
+    \code{\link{DO.FullRecluster}}, \code{\link{DO.BarplotClustert}}, \code{\link{DO.BarplotWilcox}},
+    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.VlnPlot}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender}},
+    \code{\link{DO.SplitBarGSEA}}, \code{\link{DO.scVI}}, \code{\link{DO.TransferLabel}},\code{\link{DO.Heatmap}}, \code{\link{DO.PyEnv}}, \code{\link{DO.Correlation}},
+    \code{\link{DO.MultiDGE}},\code{\link{DO.TransferLabel}}, \code{dot-Do.BarcodeRanks}, \code{dot-QC.Vlnplot}
 }

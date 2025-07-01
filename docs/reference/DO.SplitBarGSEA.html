@@ -25,7 +25,7 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MarianoRuzJurado/DOtools/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -58,7 +59,7 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Bar plot for GSEA df result</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
       <div class="d-none name"><code>DO.SplitBarGSEA.Rd</code></div>
     </div>
 
@@ -91,7 +92,7 @@ you can control the maximum number of characters per line.</p>
 <span>  txt_size <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  filename <span class="op">=</span> <span class="st">"SplitBar.svg"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Top 10 GO Terms in each Condition: "</span>,</span>
-<span>  showP <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  showP <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  celltype <span class="op">=</span> <span class="st">"all"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -108,64 +109,68 @@ you can control the maximum number of characters per line.</p>
 <dd><p>column in the dataframe that contains the terms</p></dd>
 
 
-<dt id="arg-col-split-">col_split:<a class="anchor" aria-label="anchor" href="#arg-col-split-"></a></dt>
+<dt id="arg-col-split">col_split<a class="anchor" aria-label="anchor" href="#arg-col-split"></a></dt>
 <dd><p>column in the dataframe that will be used to sort and split the plot</p></dd>
 
 
-<dt id="arg-cond-col-">cond_col:<a class="anchor" aria-label="anchor" href="#arg-cond-col-"></a></dt>
+<dt id="arg-cond-col">cond_col<a class="anchor" aria-label="anchor" href="#arg-cond-col"></a></dt>
 <dd><p>column in the dataframe that contains the condition information</p></dd>
 
 
-<dt id="arg-pos-cond-">pos_cond:<a class="anchor" aria-label="anchor" href="#arg-pos-cond-"></a></dt>
+<dt id="arg-pos-cond">pos_cond<a class="anchor" aria-label="anchor" href="#arg-pos-cond"></a></dt>
 <dd><p>condition that will be shown in the positive side of the plot</p></dd>
 
 
-<dt id="arg-cutoff-">cutoff:<a class="anchor" aria-label="anchor" href="#arg-cutoff-"></a></dt>
+<dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
 <dd><p>maximum number of characters per line</p></dd>
 
 
-<dt id="arg-log-transform-">log10_transform:<a class="anchor" aria-label="anchor" href="#arg-log-transform-"></a></dt>
+<dt id="arg-log-transform">log10_transform<a class="anchor" aria-label="anchor" href="#arg-log-transform"></a></dt>
 <dd><p>if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation</p></dd>
 
 
-<dt id="arg-figsize-">figsize:<a class="anchor" aria-label="anchor" href="#arg-figsize-"></a></dt>
+<dt id="arg-figsize">figsize<a class="anchor" aria-label="anchor" href="#arg-figsize"></a></dt>
 <dd><p>figure size</p></dd>
 
 
-<dt id="arg-topn-">topN:<a class="anchor" aria-label="anchor" href="#arg-topn-"></a></dt>
+<dt id="arg-topn">topN<a class="anchor" aria-label="anchor" href="#arg-topn"></a></dt>
 <dd><p>how many terms are shown</p></dd>
 
 
-<dt id="arg-path-">path:<a class="anchor" aria-label="anchor" href="#arg-path-"></a></dt>
-<dd><p>path to save the plot</p></dd>
-
-
-<dt id="arg-filename-">filename:<a class="anchor" aria-label="anchor" href="#arg-filename-"></a></dt>
-<dd><p>filename for the plot</p></dd>
-
-
-<dt id="arg-spacing-">spacing:<a class="anchor" aria-label="anchor" href="#arg-spacing-"></a></dt>
-<dd><p>space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 % of the maximum X axis value.</p></dd>
-
-
-<dt id="arg-txt-size-">txt_size:<a class="anchor" aria-label="anchor" href="#arg-txt-size-"></a></dt>
-<dd><p>size of the go terms text</p></dd>
-
-
-<dt id="arg-alpha-colors-">alpha_colors:<a class="anchor" aria-label="anchor" href="#arg-alpha-colors-"></a></dt>
-<dd><p>alpha value for the colors of the bars</p></dd>
-
-
-<dt id="arg-colors-pairs-">colors_pairs:<a class="anchor" aria-label="anchor" href="#arg-colors-pairs-"></a></dt>
+<dt id="arg-colors-pairs">colors_pairs<a class="anchor" aria-label="anchor" href="#arg-colors-pairs"></a></dt>
 <dd><p>colors for each condition (1st color –&gt; negative axis; 2nd color –&gt; positive axis)</p></dd>
 
 
-<dt id="arg-title-">title:<a class="anchor" aria-label="anchor" href="#arg-title-"></a></dt>
+<dt id="arg-alpha-colors">alpha_colors<a class="anchor" aria-label="anchor" href="#arg-alpha-colors"></a></dt>
+<dd><p>alpha value for the colors of the bars</p></dd>
+
+
+<dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
+<dd><p>path to save the plot</p></dd>
+
+
+<dt id="arg-spacing">spacing<a class="anchor" aria-label="anchor" href="#arg-spacing"></a></dt>
+<dd><p>space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 % of the maximum X axis value.</p></dd>
+
+
+<dt id="arg-txt-size">txt_size<a class="anchor" aria-label="anchor" href="#arg-txt-size"></a></dt>
+<dd><p>size of the go terms text</p></dd>
+
+
+<dt id="arg-filename">filename<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
+<dd><p>filename for the plot</p></dd>
+
+
+<dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
 <dd><p>title of the plot</p></dd>
 
 
-<dt id="arg-showp-">showP:<a class="anchor" aria-label="anchor" href="#arg-showp-"></a></dt>
+<dt id="arg-showp">showP<a class="anchor" aria-label="anchor" href="#arg-showp"></a></dt>
 <dd><p>if False, the axis is return</p></dd>
+
+
+<dt id="arg-celltype">celltype<a class="anchor" aria-label="anchor" href="#arg-celltype"></a></dt>
+<dd><p>vector with cell types you want to subset for, use "all" for all celltypes contained in the dataframe column "celltype"</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -179,34 +184,102 @@ you can control the maximum number of characters per line.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co">#df with GSEA results e.g. Metascape results</span></span></span>
-<span class="r-in"><span><span class="va">df_GSEA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"path/to/GSEA_results.csv"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">enrichR</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Welcome to enrichR</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Checking connections ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Enrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> FlyEnrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> WormEnrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> YeastEnrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> FishEnrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> OxEnrichr ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-in"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_python</a></span><span class="op">(</span><span class="st">"~/.venv/DOtools/bin/python"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Please add a 'celltype' and 'condition' column</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_GSEA</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co">#Columns should include: "Term", "Combined.Score", "conditon", "celltype", etc.</span></span></span>
+<span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">sc_data</span>,</span></span>
+<span class="r-in"><span>                         sample_col <span class="op">=</span> <span class="st">"orig.ident"</span>,</span></span>
+<span class="r-in"><span>                         method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span></span>
+<span class="r-in"><span>                         annotation_col <span class="op">=</span> <span class="st">"annotation"</span>,</span></span>
+<span class="r-in"><span>                         ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Starting DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:27 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Finished DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Starting DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping NK since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Skipping pDC since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - Finished DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-08 13:33:28 - DGE pseudo bulk result is empty...</span>
+<span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="va">DGE_result</span><span class="op">[</span><span class="va">DGE_result</span><span class="op">$</span><span class="va">celltype</span> <span class="op">==</span> <span class="st">"CD4_T_cells"</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Run SplitBarGSEA visualization</span></span></span>
-<span class="r-in"><span><span class="fu">DO.SplitBarGSEA</span><span class="op">(</span>df_GSEA <span class="op">=</span> <span class="va">df_GSEA</span>,</span></span>
+<span class="r-in"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span>df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span></span>
+<span class="r-in"><span>                       gene_column <span class="op">=</span> <span class="st">"gene"</span>,</span></span>
+<span class="r-in"><span>                       pval_column <span class="op">=</span> <span class="st">"p_val_SC_wilcox"</span>,</span></span>
+<span class="r-in"><span>                       log2fc_column <span class="op">=</span> <span class="st">"avg_log2FC_SC_wilcox"</span>,</span></span>
+<span class="r-in"><span>                       pval_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span></span>
+<span class="r-in"><span>                       log2fc_cutoff <span class="op">=</span> <span class="fl">0.25</span>,</span></span>
+<span class="r-in"><span>                       path <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                       filename <span class="op">=</span> <span class="st">""</span>,</span></span>
+<span class="r-in"><span>                       species <span class="op">=</span> <span class="st">"Human"</span>,</span></span>
+<span class="r-in"><span>                       go_catgs <span class="op">=</span> <span class="st">"GO_Biological_Process_2023"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection changed to https://maayanlab.cloud/Enrichr/</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Uploading data to Enrichr... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Server error: (504) Gateway Timeout</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Querying GO_Biological_Process_2023... Done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parsing results... Done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Uploading data to Enrichr... Done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Querying GO_Biological_Process_2023... Done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parsing results... Done.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in rbind(deparse.level, ...):</span> numbers of columns of arguments do not match</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">result_GO</span><span class="op">$</span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="st">"CM1"</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'result_GO' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Run SplitBarGSEA visualisation</span></span></span>
+<span class="r-in"><span><span class="fu">DO.SplitBarGSEA</span><span class="op">(</span>df_GSEA <span class="op">=</span> <span class="va">result_GO</span>,</span></span>
 <span class="r-in"><span>                term_col <span class="op">=</span> <span class="st">"Term"</span>,</span></span>
 <span class="r-in"><span>                col_split <span class="op">=</span> <span class="st">"Combined.Score"</span>,</span></span>
-<span class="r-in"><span>                cond_col <span class="op">=</span> <span class="st">"condition"</span>,          <span class="co"># condition column (e.g., experimental group)</span></span></span>
-<span class="r-in"><span>                pos_cond <span class="op">=</span> <span class="st">"Treatment"</span>,</span></span>
-<span class="r-in"><span>                cutoff <span class="op">=</span> <span class="fl">40</span>,                 <span class="co"># max term length before truncation</span></span></span>
+<span class="r-in"><span>                cond_col <span class="op">=</span> <span class="st">"State"</span>,</span></span>
+<span class="r-in"><span>                pos_cond <span class="op">=</span> <span class="st">"enriched"</span>,</span></span>
+<span class="r-in"><span>                cutoff <span class="op">=</span> <span class="fl">40</span>,</span></span>
 <span class="r-in"><span>                log10_transform <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                figsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">8</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                topN <span class="op">=</span> <span class="fl">10</span>,                   <span class="co"># top N GO terms to show</span></span></span>
-<span class="r-in"><span>                color_pairs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sandybrown"</span>, <span class="st">"royalblue"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                topN <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                colors_pairs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sandybrown"</span>, <span class="st">"royalblue"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                alpha_colors <span class="op">=</span> <span class="fl">0.3</span>,</span></span>
-<span class="r-in"><span>                path <span class="op">=</span> <span class="st">"results/plots"</span>,</span></span>
+<span class="r-in"><span>                path <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
 <span class="r-in"><span>                spacing <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>                txt_size <span class="op">=</span> <span class="fl">12</span>,</span></span>
 <span class="r-in"><span>                filename <span class="op">=</span> <span class="st">"SplitBar.svg"</span>,</span></span>
 <span class="r-in"><span>                title <span class="op">=</span> <span class="st">"Top 10 GO Terms in each Condition: "</span>,</span></span>
 <span class="r-in"><span>                showP <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                celltype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'result_GO' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
