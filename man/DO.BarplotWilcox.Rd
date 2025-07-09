@@ -5,7 +5,7 @@
 \title{SEM Graph with wilcox test on single cell level}
 \usage{
 DO.BarplotWilcox(
-  Seu_object,
+  sce_object,
   Feature,
   ListTest = NULL,
   returnValues = FALSE,
@@ -22,7 +22,7 @@ DO.BarplotWilcox(
 )
 }
 \arguments{
-\item{Seu_object}{combined Seurat object}
+\item{sce_object}{combined SCE object or Seurat}
 
 \item{Feature}{name of the feature/gene}
 
@@ -60,13 +60,13 @@ Performs pairwise Wilcox tests comparing conditions, with optional custom contro
 Optionally returns a summary data frame, statistical test results, and the generated plot.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.BarplotWilcox(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   Feature = "NKG7",
   ListTest = ListTest,
   ctrl.condition = "healthy",

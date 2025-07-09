@@ -5,7 +5,7 @@
 \title{DO.UMAP}
 \usage{
 DO.UMAP(
-  Seu_object,
+  sce_object,
   FeaturePlot = FALSE,
   features = NULL,
   group.by = "seurat_clusters",
@@ -19,7 +19,7 @@ DO.UMAP(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The seurat or SCE object}
 
 \item{FeaturePlot}{Is it going to be a Dimplot or a FeaturePlot?}
 
@@ -51,15 +51,15 @@ The function handles both cluster-based visualisations and gene-based visualisat
 Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.UMAP(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   group.by="seurat_clusters"
 )
 
 DO.UMAP(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   FeaturePlot=TRUE,
   features=c("BAG2","CD74")
 )

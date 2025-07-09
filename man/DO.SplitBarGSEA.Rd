@@ -80,8 +80,8 @@ Pre-filter of the dataframe to contain significant Terms is recommended
 library(enrichR)
 reticulate::use_python("~/.venv/DOtools/bin/python")
 
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-DGE_result <- DO.MultiDGE(sc_data,
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sce_data,
                          sample_col = "orig.ident",
                          method_sc = "wilcox",
                          annotation_col = "annotation",

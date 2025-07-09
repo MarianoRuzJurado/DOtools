@@ -5,7 +5,7 @@
 \title{DO.MultiDGE}
 \usage{
 DO.MultiDGE(
-  Seu_obj,
+  sce_object,
   assay = "RNA",
   method_sc = "wilcox",
   group_by = "condition",
@@ -20,9 +20,9 @@ DO.MultiDGE(
 )
 }
 \arguments{
-\item{Seu_obj}{The seurat object}
+\item{sce_object}{The seurat or SCE object}
 
-\item{assay}{Specified assay in Seurat object, default "RNA"}
+\item{assay}{Specified assay in Seurat or SCE object, default "RNA"}
 
 \item{method_sc}{method to use for single cell DEG analysis, see FindMarkers from Seurat for options, default "wilcox"}
 
@@ -54,8 +54,8 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
 }
 \examples{
 
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-DGE_result <- DO.MultiDGE(sc_data,
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sce_data,
                          sample_col = "orig.ident",
                          method_sc = "wilcox",
                          annotation_col = "annotation",

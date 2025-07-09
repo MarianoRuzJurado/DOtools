@@ -5,14 +5,14 @@
 \title{.QC_Vlnplot}
 \usage{
 .QC_Vlnplot(
-  Seu_obj,
+  sce_object,
   id,
   layer = "counts",
   features = c("nFeature_RNA", "nCount_RNA", "pt_mito")
 )
 }
 \arguments{
-\item{Seu_obj}{A Seurat object containing single-cell RNA-seq data.}
+\item{sce_object}{A Seurat object containing single-cell RNA-seq data.}
 
 \item{layer}{A character string specifying the assay layer to use (default is "counts").}
 

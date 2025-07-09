@@ -5,7 +5,7 @@
 \title{SEM Graph with t test on cluster level}
 \usage{
 DO.BarplotClustert(
-  Seu_object,
+  sce_object,
   Feature,
   ListTest = NULL,
   returnValues = FALSE,
@@ -21,7 +21,7 @@ DO.BarplotClustert(
 )
 }
 \arguments{
-\item{Seu_object}{Combined Seu_object}
+\item{sce_object}{Combined SCE object or Seurat}
 
 \item{Feature}{gene name}
 
@@ -57,14 +57,17 @@ Performs pairwise t-tests comparing conditions, with optional custom control con
 Optionally returns a summary data frame.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
+set.seed(123)
+sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
+
 DO.BarplotClustert(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   Feature = "NKG7",
   ListTest = ListTest,
   ctrl.condition = "healthy",

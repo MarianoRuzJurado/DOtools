@@ -5,7 +5,7 @@
 \title{DO CellComposition}
 \usage{
 DO.CellComposition(
-  Seu_object,
+  sce_object,
   assay_normalized = "RNA",
   cluster_column = "seurat_clusters",
   sample_column = "orig.ident",
@@ -28,7 +28,7 @@ DO.CellComposition(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The SCE object or Seurat}
 
 \item{assay_normalized}{Assay with raw counts}
 
@@ -79,10 +79,10 @@ Returns a ggplot object or a list containing plot data and visualisation.
 }
 \examples{
 reticulate::use_python("~/.venv/DOtools/bin/python")
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.CellComposition(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   cluster_column="annotation",
   condition_column="condition",
   scanpro_plots=FALSE,

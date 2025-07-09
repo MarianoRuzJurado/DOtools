@@ -49,8 +49,8 @@ Separately analyzes upregulated and downregulated genes and returns results.
 \examples{
 library(enrichR)
 
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-DGE_result <- DO.MultiDGE(sc_data,
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+DGE_result <- DO.MultiDGE(sce_data,
                          sample_col = "orig.ident",
                          method_sc = "wilcox",
                          annotation_col = "annotation",

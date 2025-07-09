@@ -17,7 +17,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r chunk_setup, include = FALSE}
@@ -85,7 +85,7 @@ reticulate::use_python("~/.venv/DOtools/bin/python")
 
 During preprocessing, low-quality genes and cells are filtered out based on specified thresholds. Genes expressed in fewer than five cells are removed. Cells are filtered according to mitochondrial gene content, number of detected genes, total UMI counts, and potential doublets. The function supports doublet detection using `r Biocpkg("scDblFinder")`. Thresholds for mitochondrial content (e.g., 5% for scRNA-seq and 3% for snRNA-seq), gene counts, and UMI counts can be defined to tailor the filtering.
 
-After filtering, samples are merged into one `r pkg("Seurat")` object, followed by log-normalisation, scaling, and the identification of highly variable genes. To help assess the effect of quality control, violin plots showing distributions of key metrics before and after filtering are automatically generated and saved alongside the input files. A summary of removed genes and cells is also recorded. 
+After filtering, samples are merged into one `r pkg("Seurat")` or `r pkg("SingleCellExperiment")` object, followed by log-normalisation, scaling, and the identification of highly variable genes. To help assess the effect of quality control, violin plots showing distributions of key metrics before and after filtering are automatically generated and saved alongside the input files. A summary of removed genes and cells is also recorded. 
 
 To show how the quality control works, we are going to use a public dataset from 10X from human blood of healthy and donors with a malignant tumor:
 
@@ -95,13 +95,14 @@ base <- DOtools:::.example_10x()
 paths = c(file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
          file.path(base, "disease/outs/filtered_feature_bc_matrix.h5"))
 
-Seu_obj <- DO.Import(pathways = paths,
+SCE_obj <- DO.Import(pathways = paths,
                      ids = c("healthy-1", "disease-1"),
                      DeleteDoublets = TRUE,
                      cut_mt = .05,
                      min_counts = 500,
                      min_genes = 300,
-                     high_quantile = .95)
+                     high_quantile = .95,
+                     Seurat=FALSE) # Set to TRUE for Seurat object
 ```
 We can now check the quality before introducing filterings:
 ```{r prefilterplots, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
@@ -116,6 +117,7 @@ postfilterplots <- system.file("figures", "postfilterplots-1.png", package = "DO
 pQC2 <- magick::image_read(postfilterplots)
 plot(pQC2)
 ```
+We observed that most cells were removed due to increased mitochondrial content. Depending on the experimental design, the mitochondrial content threshold can be adjusted to retain a higher number of cells, if minimizing cell loss is of relevance.
 
 <br>
 The DOtools package provides a slim object of this data set. Please feel free, to use the one created from DO.Import for prettier results or this slim downed version. We can observe how similar the samples are through running a correlation analysis.
@@ -124,44 +126,58 @@ The DOtools package provides a slim object of this data set. Please feel free, t
 base <- tempfile("my_tempdir_")
 dir.create(base)
   
-Seu_obj <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-DO.Correlation(Seu_obj)
+SCE_obj <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+DO.Correlation(SCE_obj)
 ```
 
-We observed that most cells were removed due to increased mitochondrial content. Depending on the experimental design, the mitochondrial content threshold can be adjusted to retain a higher number of cells, if minimizing cell loss is of relevance.
+
 
 ## Data integration
 
-After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI Integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
+After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
 
-```{r Integration, warning = FALSE}
-#Object has already joined layers
+```{r CCA Integration, warning = FALSE}
+### ADDITIONAL STEPS FOR SCE OBJECTS, THESE STEPS WILL BE PERFORMED AUTOMATICALLY FOR SEURAT OBJECTS IN DO.IMPORT
+### SKIP IF YOU USE SEURAT OBJECT FROM DO.IMPORT() 
+Seu_obj <- as.Seurat(SCE_obj)
 Seu_obj[["RNA"]] <- split(Seu_obj[["RNA"]], f = Seu_obj$orig.ident)
+Seu_obj <- FindVariableFeatures(Seu_obj)
+Seu_obj <- ScaleData(object = Seu_obj)
+Seu_obj <- RunPCA(Seu_obj, verbose = FALSE, reduction.name = "PCA")
+Seu_obj <- JoinLayers(Seu_obj)
+Seu_obj[["RNA"]] <- split(Seu_obj[["RNA"]], f = Seu_obj$orig.ident)
+#####
 
 #Integration through Seurat
 Seu_obj <- IntegrateLayers(object = Seu_obj,
                            method = CCAIntegration,
-                           orig.reduction = "pca",
-                           new.reduction = "integrated.cca",
+                           orig.reduction = "PCA",
+                           new.reduction = "INTEGRATED.CCA",
                            verbose = TRUE)
 
 #After Integration we join the layers 
 Seu_obj <- JoinLayers(Seu_obj)
 
-#Integration with scVI
-Seu_obj <- DO.scVI(Seu_object = Seu_obj,
+#(Optional) convert back to SCE object if you prefer that data class
+SCE_obj <- as.SingleCellExperiment(Seu_obj)
+
+```
+
+```{r scVI Integration, warning=FALSE, eval=FALSE}
+#(Optional) Integration with scVI-Model
+Seu_obj <- DO.scVI(sce_object = Seu_obj,
                    batch_key ="orig.ident",
                    layer_counts = "counts",
                    layer_logcounts = "logcounts")
-
 ```
+
 
 After the integration finished, both corrected expression matrices can be found saved in the Seurat object and can be used for cluster calculations and UMAP projections. In this case, we will continue with Seuratv5 CCA Integration method.
 
 ```{r Clustering and UMAP, warning = FALSE}
-Seu_obj <- FindNeighbors(object = Seu_obj, reduction = "integrated.cca", dims = 1:50) #change dims accrodingly
+Seu_obj <- FindNeighbors(object = Seu_obj, reduction = "INTEGRATED.CCA", dims = 1:50) #change dims accordingly
 Seu_obj <- FindClusters(Seu_obj, resolution = 0.3, algorithm = 4, random.seed = 1234)
-Seu_obj <- RunUMAP(object = Seu_obj, reduction = "integrated.cca", dims = 1:50)
+Seu_obj <- RunUMAP(object = Seu_obj, reduction = "INTEGRATED.CCA", reduction.name = "UMAP", dims = 1:50)
 
 DO.UMAP(Seu_obj, group.by = "seurat_clusters")
 DO.UMAP(Seu_obj, group.by = "condition", legend.position = "right", label = FALSE)
@@ -198,7 +214,7 @@ annotation_Markers <- annotation_Markers %>%
   group_by(cluster) %>%
   slice_head(n = 5)   
 
-p1 <- DO.Dotplot(Seu_object = Seu_obj,
+p1 <- DO.Dotplot(sce_object = Seu_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
@@ -211,6 +227,7 @@ p1 <- DO.Dotplot(Seu_object = Seu_obj,
                  textRot = 0,
                  segWidth = 0.3,
                  lwd = 3)
+
 #manual set of markers
 annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
                                             rep("B_cells", 3),
@@ -221,7 +238,7 @@ annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
                                 genes = c("PTPRC", "CD79A", "BANK1", "MS4A1", "CD3E", "CD4", "IL7R", "NKG7", 
                                           "KLRD1","CD68", "CD14","ITGAM", "LILRA4", "CLEC4C", "LRRC26"))
 
-p2 <- DO.Dotplot(Seu_object = Seu_obj,
+p2 <- DO.Dotplot(sce_object = Seu_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
@@ -288,8 +305,7 @@ T_cells <- DO.CellTypist(T_cells,
                          SeuV5 = FALSE)
 T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster, c(`T_cells_1` = "CD4_T_cells",
                                                                     `T_cells_2` = "CD4_T_cells",
-                                                                    `T_cells_3` = "CD4_T_cells",
-                                                                    `T_cells_4` = "CD8_T_cells"))
+                                                                    `T_cells_3` = "CD8_T_cells"))
 
 ```
 

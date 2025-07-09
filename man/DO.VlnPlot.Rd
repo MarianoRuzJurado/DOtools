@@ -5,7 +5,7 @@
 \title{Violin Graph with wilcox test on single cell level}
 \usage{
 DO.VlnPlot(
-  Seu_object,
+  sce_object,
   SeuV5 = TRUE,
   Feature,
   ListTest = NULL,
@@ -29,7 +29,7 @@ DO.VlnPlot(
 )
 }
 \arguments{
-\item{Seu_object}{combined Seurat object}
+\item{sce_object}{combined SCE object or Seurat}
 
 \item{SeuV5}{Seuratv5 object? (TRUE or FALSE)}
 
@@ -41,7 +41,7 @@ DO.VlnPlot(
 
 \item{ctrl.condition}{set your ctrl condition, relevant if running with empty comparison List}
 
-\item{group.by}{select the seurat Seu_object slot where your conditions can be found, default conditon}
+\item{group.by}{select the seurat sce_object slot where your conditions can be found, default conditon}
 
 \item{group.by.2}{relevant for multiple group testing, e.g. for each cell type the test between each of them in two conditions provided}
 
@@ -79,13 +79,13 @@ The plot can be customized with options for data transformation, jitter display,
 The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.VlnPlot(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   SeuV5=TRUE,
   Feature = "NKG7",
   ListTest = ListTest,

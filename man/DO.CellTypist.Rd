@@ -5,7 +5,7 @@
 \title{DO Celltypist}
 \usage{
 DO.CellTypist(
-  Seu_object,
+  sce_object,
   modelName = "Healthy_Adult_Heart.pkl",
   minCellsToRun = 200,
   runCelltypistUpdate = TRUE,
@@ -16,11 +16,11 @@ DO.CellTypist(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The seurat or sce object}
 
 \item{modelName}{Specify the model you want to use for celltypist}
 
-\item{minCellsToRun}{If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.}
+\item{minCellsToRun}{If the input seurat or SCE object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.}
 
 \item{runCelltypistUpdate}{If true, --update-models will be run for celltypist prior to scoring cells.}
 
@@ -30,24 +30,24 @@ DO.CellTypist(
 
 \item{returnProb}{will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix}
 
-\item{SeuV5}{Specify if the object is made with Seuratv5}
+\item{SeuV5}{Specify if the Seurat object is made with Seuratv5}
 }
 \value{
-a seurat
+a seurat or sce object
 }
 \description{
-Runs the CellTypist model on a Seurat object to predict cell type labels, storing the results as metadata.
+Runs the CellTypist model on a Seurat or SCE object to predict cell type labels, storing the results as metadata.
 If the number of cells is less than the specified threshold, it returns NAs for the labels.
 Optionally updates the CellTypist models and returns the probability matrix.
 Useful for annotating cell types in single-cell RNA sequencing datasets.
 }
 \examples{
 reticulate::use_python("~/.venv/DOtools/bin/python")
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 
-sc_data <- DO.CellTypist(
-  Seu_object = sc_data,
+sce_data <- DO.CellTypist(
+  sce_object = sce_data,
   modelName = "Healthy_Adult_Heart.pkl",
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",

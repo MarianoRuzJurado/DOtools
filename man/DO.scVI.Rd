@@ -5,7 +5,7 @@
 \title{DO.scVI}
 \usage{
 DO.scVI(
-  Seu_object,
+  sce_object,
   batch_key,
   layer_counts = "counts",
   layer_logcounts = "logcounts",
@@ -21,7 +21,7 @@ DO.scVI(
 )
 }
 \arguments{
-\item{Seu_object}{Seurat object with annotation in meta.data}
+\item{sce_object}{Seurat or SCE object with annotation in meta.data}
 
 \item{batch_key}{meta data column with batch information.}
 
@@ -48,17 +48,17 @@ DO.scVI(
 \item{...}{additional arguments for \code{scvi.model.SCVI}.}
 }
 \value{
-Seurat Object with dimensionality reduction from scVI
+Seurat or SCE Object with dimensionality reduction from scVI
 }
 \description{
 This function will run the scVI Integration from the scVI python package. It includes all parameters from the actual python package
 and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-sc_data <- Seurat::FindVariableFeatures(sc_data)
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <- Seurat::FindVariableFeatures(sce_data)
 
 # Run scVI using the 'orig.ident' column as the batch key
-sc_data <- DO.scVI(sc_data, batch_key = "orig.ident")
+sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
 
 }

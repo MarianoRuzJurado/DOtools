@@ -5,7 +5,7 @@
 \title{DO.Subset}
 \usage{
 DO.Subset(
-  Seu_object,
+  sce_object,
   assay = "RNA",
   ident,
   ident_name = NULL,
@@ -13,7 +13,7 @@ DO.Subset(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The seurat or SCE object}
 
 \item{assay}{assay to subset by}
 
@@ -24,20 +24,20 @@ DO.Subset(
 \item{ident_thresh}{numeric thresholds as character, e.g ">5" or c(">5", "<200"), to subset barcodes in ident for}
 }
 \value{
-a subsetted Seurat object
+a subsetted Seurat or SCE object
 }
 \description{
-Creates a subset of a Seurat object based on either categorical or numeric thresholds in metadata.
+Creates a subset of a Seurat or SCE object based on either categorical or numeric thresholds in metadata.
 Allows for subsetting by specifying the ident column, group name, or threshold criteria.
 Ideal for extracting specific cell populations or clusters based on custom conditions.
-Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
+Returns a new Seurat or SCE object containing only the subsetted cells and does not come with the Seuratv5 subset issue
 Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
-sc_data_sub <- DO.Subset(
-  Seu_object = sc_data,
+sce_data_sub <- DO.Subset(
+  sce_object = sce_data,
   ident="condition",
   ident_name="healthy"
 )

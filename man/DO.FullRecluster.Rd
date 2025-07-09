@@ -5,7 +5,7 @@
 \title{DO.FullRecluster}
 \usage{
 DO.FullRecluster(
-  Seu_object,
+  sce_object,
   over_clustering = "seurat_clusters",
   res = 0.5,
   algorithm = 4,
@@ -13,7 +13,7 @@ DO.FullRecluster(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The seurat or SCE object}
 
 \item{over_clustering}{Column in metadata in object with clustering assignments for cells, default seurat_clusters}
 
@@ -24,19 +24,19 @@ DO.FullRecluster(
 \item{graph.name}{A builded neirest neighbor graph}
 }
 \value{
-a Seurat Object with new clustering named annotation_recluster
+a Seurat or SCE Object with new clustering named annotation_recluster
 }
 \description{
-Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
+Performs iterative reclustering on each major cluster found by FindClusters in a Seurat or SCE object.
 It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
 The new clustering results are stored in a metadata column called \code{annotation_recluster}.
 Suitable for improving cluster precision and granularity after initial clustering.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
-sc_data <- DO.FullRecluster(
-  Seu_object = sc_data
+sce_data <- DO.FullRecluster(
+  sce_object = sce_data
 )
 
 }

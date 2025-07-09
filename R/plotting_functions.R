@@ -5,7 +5,7 @@
 #' Calculates mean expression values and SEM for selected features, and visualizes them.
 #' Performs pairwise t-tests comparing conditions, with optional custom control condition and clustering.
 #' Optionally returns a summary data frame.
-#' @param Seu_object Combined Seu_object
+#' @param sce_object Combined SCE object or Seurat
 #' @param Feature gene name
 #' @param ListTest List for which conditions t-test will be performed, if NULL always against provided CTRL
 #' @param returnValues return df.melt.sum data frame containing means and SEM for the set group
@@ -25,18 +25,22 @@
 #' @import magrittr
 #' @import dplyr
 #' @import reshape2
+#' @importFrom SeuratObject as.Seurat
 #'
 #' @return a ggplot or a dataframe
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
+#' set.seed(123)
+#' sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 #'
 #' ListTest <- list()
 #' ListTest[[1]] <- c("healthy", "disease")
 #'
+#'
 #' DO.BarplotClustert(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   Feature = "NKG7",
 #'   ListTest = ListTest,
 #'   ctrl.condition = "healthy",
@@ -44,7 +48,7 @@
 #' )
 #'
 #' @export
-DO.BarplotClustert <- function(Seu_object,
+DO.BarplotClustert <- function(sce_object,
                                Feature,
                                ListTest=NULL,
                                returnValues=FALSE,
@@ -58,29 +62,34 @@ DO.BarplotClustert <- function(Seu_object,
                                y_limits = NULL,
                                log1p_nUMI=TRUE){
 
-  if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
+
+  if (!(Feature %in% rownames(sce_object)) && !(Feature %in% names(sce_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
   }
 
   #SEM function defintion
   SEM <- function(x) sqrt(var(x)/length(x))
-  #create data frame with conditions from provided Seu_object, aswell as original identifier of samples
-  df<-data.frame(condition=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
-                 ,orig.ident = Seu_object$orig.ident)
+  #create data frame with conditions from provided sce_object, aswell as original identifier of samples
+  df<-data.frame(condition=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]]))
+                 ,orig.ident = sce_object$orig.ident)
   #get expression values for genes from individual cells, add to df
   #if (SeuV5==FALSE) {
   #  for(i in Feature){
-  #    df[,i] <- expm1(Seu_object@assays$RNA@data[i,])
+  #    df[,i] <- expm1(sce_object@assays$RNA@data[i,])
   #
   #  }
   #}
   #For Seuratv5 where everything is a layer now
   #if (SeuV5==TRUE) {
   #rlang::warn("\nSeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
-  if (Feature %in% rownames(Seu_object)) {
-    df[,Feature] <- expm1(FetchData(Seu_object, vars = Feature))
+  if (Feature %in% rownames(sce_object)) {
+    df[,Feature] <- expm1(FetchData(sce_object, vars = Feature))
   }else{
-    df[,Feature] <- FetchData(Seu_object, vars = Feature)
+    df[,Feature] <- FetchData(sce_object, vars = Feature)
   }
   #}
 
@@ -96,7 +105,7 @@ DO.BarplotClustert <- function(Seu_object,
     dplyr::summarise(Mean = mean(value))
 
 
-  if (Feature %in% names(Seu_object@meta.data)) {
+  if (Feature %in% names(sce_object@meta.data)) {
     plot.title <- paste("Mean", Feature, sep = " ")
   }  else if (log1p_nUMI==TRUE) {
     df.melt.sum$Mean <- log1p(df.melt.sum$Mean)
@@ -112,7 +121,7 @@ DO.BarplotClustert <- function(Seu_object,
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
     .logger("ListTest empty, comparing every sample with each other")
-    conditions <- unique(Seu_object[[group.by]][,group.by])
+    conditions <- unique(sce_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
       ctrl.condition <- conditions[grep(pattern = paste(c("CTRL","Ctrl","ctrl","WT","Wt","wt"),collapse ="|")
@@ -223,7 +232,7 @@ DO.BarplotClustert <- function(Seu_object,
 #' Calculates mean expression values and SEM for the selected feature, and visualizes them.
 #' Performs pairwise Wilcox tests comparing conditions, with optional custom control condition and clustering.
 #' Optionally returns a summary data frame, statistical test results, and the generated plot.
-#' @param Seu_object combined Seurat object
+#' @param sce_object combined SCE object or Seurat
 #' @param Feature name of the feature/gene
 #' @param ListTest List for which conditions wilcoxon test will be performed, if NULL always CTRL group against everything
 #' @param returnValues return data frames needed for the plot, containing df.melt, df.melt.sum, df.melt.orig and wilcoxstats
@@ -244,17 +253,18 @@ DO.BarplotClustert <- function(Seu_object,
 #' @import magrittr
 #' @import dplyr
 #' @import reshape2
+#' @importFrom SeuratObject as.Seurat
 #'
 #' @return a ggplot or a list with plot and data frame
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' ListTest <- list()
 #' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.BarplotWilcox(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   Feature = "NKG7",
 #'   ListTest = ListTest,
 #'   ctrl.condition = "healthy",
@@ -262,7 +272,7 @@ DO.BarplotClustert <- function(Seu_object,
 #' )
 #'
 #' @export
-DO.BarplotWilcox <- function(Seu_object,
+DO.BarplotWilcox <- function(sce_object,
                              Feature,
                              ListTest=NULL,
                              returnValues=FALSE,
@@ -277,8 +287,13 @@ DO.BarplotWilcox <- function(Seu_object,
                              y_limits = NULL,
                              log1p_nUMI=TRUE){
 
-  if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
-    stop("Feature not found in Seurat Object!")
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
+
+  if (!(Feature %in% rownames(sce_object)) && !(Feature %in% names(sce_object@meta.data))) {
+    stop("Feature not found in SCE Object!")
   }
 
   if (wilcox_test == TRUE) {
@@ -288,30 +303,30 @@ DO.BarplotWilcox <- function(Seu_object,
 
   #SEM function defintion
   SEM <- function(x) sqrt(var(x)/length(x))
-  #create data frame with conditions from provided Seu_object, aswell as original identifier of samples
-  df<-data.frame(condition=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
-                 ,orig.ident = Seu_object$orig.ident)
+  #create data frame with conditions from provided sce_object, aswell as original identifier of samples
+  df<-data.frame(condition=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]]))
+                 ,orig.ident = sce_object$orig.ident)
   #get expression values for genes from individual cells, add to df
   #if (SeuV5==FALSE) {
   #  for(i in Feature){
-  #    df[,i] <- expm1(Seu_object@assays$RNA@data[i,])
+  #    df[,i] <- expm1(sce_object@assays$RNA@data[i,])
   #
   #  }
   #}
   #For Seuratv5 where everything is a layer now
   #if (SeuV5==TRUE) {
   #rlang::warn("\nSeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
-  if (Feature %in% rownames(Seu_object)) {
-    df[,Feature] <- expm1(FetchData(Seu_object, vars = Feature))
+  if (Feature %in% rownames(sce_object)) {
+    df[,Feature] <- expm1(FetchData(sce_object, vars = Feature))
   }else{
-    df[,Feature] <- FetchData(Seu_object, vars = Feature)
+    df[,Feature] <- FetchData(sce_object, vars = Feature)
   }
   #}
 
   # stat.df$condition <- factor(stat.df$condition)
   # stat.df$variable <- factor(stat.df$variable)
 
-  # stat.df.test <- data.frame(Mean = Seu_object[["RNA"]]@data["Figf",],condition = Seu_object[[group.by]][,group.by])
+  # stat.df.test <- data.frame(Mean = sce_object[["RNA"]]@data["Figf",],condition = sce_object[[group.by]][,group.by])
 
   #melt results
   df.melt <- melt(df)
@@ -324,7 +339,7 @@ DO.BarplotWilcox <- function(Seu_object,
     dplyr::group_by(condition, variable, orig.ident) %>%
     dplyr::summarise(Mean = mean(value))
 
-  if (Feature %in% names(Seu_object@meta.data)) {
+  if (Feature %in% names(sce_object@meta.data)) {
     plot.title <- paste("Mean", Feature, sep = " ")
   }  else if (log1p_nUMI==TRUE) {
     df.melt.sum$Mean <- log1p(df.melt.sum$Mean)
@@ -341,7 +356,7 @@ DO.BarplotWilcox <- function(Seu_object,
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
     .logger("ListTest empty, comparing every sample with each other")
-    conditions <- unique(Seu_object[[group.by]][,group.by])
+    conditions <- unique(sce_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
       ctrl.condition <- conditions[grep(pattern = paste(c("CTRL","Ctrl","ctrl","WT","Wt","wt"),collapse ="|")
@@ -389,7 +404,7 @@ DO.BarplotWilcox <- function(Seu_object,
       ungroup() %>%
       rstatix::wilcox_test(value ~ condition, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
-    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
+    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(sce_object)))
     stat.test$p.adj <- ifelse(stat.test$p.adj == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p.adj))
   }
   #add SEM calculated over sample means
@@ -469,12 +484,12 @@ DO.BarplotWilcox <- function(Seu_object,
 #' It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
 #' The plot can be customized with options for data transformation, jitter display, and significance annotations.
 #' The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
-#' @param Seu_object combined Seurat object
+#' @param sce_object combined SCE object or Seurat
 #' @param Feature name of the feature
 #' @param ListTest List for which conditions wilcox will be performed, if NULL always CTRL group against everything
 #' @param returnValues return df.melt.sum data frame containing means and SEM for the set group
 #' @param ctrl.condition set your ctrl condition, relevant if running with empty comparison List
-#' @param group.by select the seurat Seu_object slot where your conditions can be found, default conditon
+#' @param group.by select the seurat sce_object slot where your conditions can be found, default conditon
 #' @param group.by.2 relevant for multiple group testing, e.g. for each cell type the test between each of them in two conditions provided
 #' @param geom_jitter_args vector for dots visualisation in vlnplot: size, width, alpha value
 #' @param vector_colors specify a minimum number of colours as you have entries in your condition, default 2
@@ -496,17 +511,18 @@ DO.BarplotWilcox <- function(Seu_object,
 #' @import magrittr
 #' @import dplyr
 #' @import reshape2
+#' @importFrom SeuratObject as.Seurat
 #'
 #' @return a ggplot or a list used data frames
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' ListTest <- list()
 #' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.VlnPlot(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   SeuV5=TRUE,
 #'   Feature = "NKG7",
 #'   ListTest = ListTest,
@@ -515,7 +531,7 @@ DO.BarplotWilcox <- function(Seu_object,
 #' )
 #'
 #' @export
-DO.VlnPlot <- function(Seu_object,
+DO.VlnPlot <- function(sce_object,
                        SeuV5=TRUE,
                        Feature,
                        ListTest=NULL,
@@ -536,7 +552,12 @@ DO.VlnPlot <- function(Seu_object,
                        vjust.wilcox.2=0,
                        sign_bar=0.8){
 
-  if (!(Feature %in% rownames(Seu_object)) && !(Feature %in% names(Seu_object@meta.data))) {
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
+
+  if (!(Feature %in% rownames(sce_object)) && !(Feature %in% names(sce_object@meta.data))) {
     stop("Feature not found in Seurat Object!")
   }
 
@@ -552,30 +573,30 @@ DO.VlnPlot <- function(Seu_object,
   if (SeuV5==TRUE) {
     rlang::warn("SeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
 
-    if (Feature %in% rownames(Seu_object)) {
-      vln.df <- data.frame(Feature = Seu_object[["RNA"]]$data[Feature,],
-                          cluster = Seu_object[[group.by]])
+    if (Feature %in% rownames(sce_object)) {
+      vln.df <- data.frame(Feature = sce_object[["RNA"]]$data[Feature,],
+                          cluster = sce_object[[group.by]])
     }else{
-      vln.df <- data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
-                          cluster = Seu_object[[group.by]])
+      vln.df <- data.frame(Feature = FetchData(sce_object, vars = Feature)[,1],
+                          cluster = sce_object[[group.by]])
     }
 
 
 
-    df <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
-                   ,orig.ident = Seu_object$orig.ident)
+    df <- data.frame(group=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]]))
+                   ,orig.ident = sce_object$orig.ident)
 
     # add a second group for individual splitting and testing in the wilcoxon
     if (!is.null(group.by.2)) {
-      vln.df[group.by.2] <- Seu_object[[group.by.2]]
-      df[group.by.2] <- Seu_object[[group.by.2]]
+      vln.df[group.by.2] <- sce_object[[group.by.2]]
+      df[group.by.2] <- sce_object[[group.by.2]]
     }
 
     #get expression values for genes from individual cells, add to df
-    if (Feature %in% rownames(Seu_object)) {
-      df[,Feature] <- Seu_object@assays$RNA$data[Feature,]
+    if (Feature %in% rownames(sce_object)) {
+      df[,Feature] <- sce_object@assays$RNA$data[Feature,]
     }else{
-      df[,Feature] <- FetchData(Seu_object, vars = Feature)[,1]
+      df[,Feature] <- FetchData(sce_object, vars = Feature)[,1]
     }
 
 
@@ -583,27 +604,27 @@ DO.VlnPlot <- function(Seu_object,
   }
 
   if (SeuV5==FALSE) {
-    if (Feature %in% rownames(Seu_object)) {
-      vln.df <- data.frame(Feature = Seu_object[["RNA"]]@data[Feature,],
-                          cluster = Seu_object[[group.by]])
+    if (Feature %in% rownames(sce_object)) {
+      vln.df <- data.frame(Feature = sce_object[["RNA"]]@data[Feature,],
+                          cluster = sce_object[[group.by]])
     }else{
-      vln.df <- data.frame(Feature = FetchData(Seu_object, vars = Feature)[,1],
-                          cluster = Seu_object[[group.by]])
+      vln.df <- data.frame(Feature = FetchData(sce_object, vars = Feature)[,1],
+                          cluster = sce_object[[group.by]])
     }
 
-    df <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
-                   ,orig.ident = Seu_object$orig.ident)
+    df <- data.frame(group=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]]))
+                   ,orig.ident = sce_object$orig.ident)
     # add a second group for individual splitting and testing in the wilcoxon
     if (!is.null(group.by.2)) {
-      vln.df[group.by.2] <- Seu_object[[group.by.2]]
-      df[group.by.2] <- Seu_object[[group.by.2]]
+      vln.df[group.by.2] <- sce_object[[group.by.2]]
+      df[group.by.2] <- sce_object[[group.by.2]]
     }
 
     #get expression values for genes from individual cells, add to df
-    if (Feature %in% rownames(Seu_object)) {
-      df[,Feature] <- Seu_object@assays$RNA@data[Feature,]
+    if (Feature %in% rownames(sce_object)) {
+      df[,Feature] <- sce_object@assays$RNA@data[Feature,]
     }else{
-      df[,Feature] <- FetchData(Seu_object, vars = Feature)[,1]
+      df[,Feature] <- FetchData(sce_object, vars = Feature)[,1]
     }
   }
 
@@ -618,7 +639,7 @@ DO.VlnPlot <- function(Seu_object,
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
     .logger("ListTest empty, comparing every sample with each other")
-    group <- unique(Seu_object[[group.by]][,group.by])
+    group <- unique(sce_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
       ctrl.condition <- group[grep(pattern = paste(c("CTRL","Ctrl","ctrl","WT","Wt","wt"),collapse ="|")
@@ -727,7 +748,7 @@ DO.VlnPlot <- function(Seu_object,
       ungroup() %>%
       rstatix::wilcox_test(value ~ group, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
-    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
+    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(sce_object)))
     stat.test$p.adj <- ifelse(stat.test$p.adj == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p.adj))
     stat.test$p <- ifelse(stat.test$p == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p))
 
@@ -738,7 +759,7 @@ DO.VlnPlot <- function(Seu_object,
       dplyr::group_by(!!sym(group.by.2)) %>%
       rstatix::wilcox_test(value ~ group, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
-    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
+    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(sce_object)))
     stat.test$p.adj <- ifelse(stat.test$p.adj == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p.adj))
     stat.test$p <- ifelse(stat.test$p == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p))
 
@@ -764,7 +785,7 @@ DO.VlnPlot <- function(Seu_object,
             legend.position = "none")+
       scale_fill_manual(values = vector_colors)
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       p_label <- "p = {p.adj}"
     } else{
       p_label <- "p = {p}"
@@ -823,15 +844,15 @@ DO.VlnPlot <- function(Seu_object,
 
     if (wilcox_test == TRUE & !is.null(group.by.2)) {
 
-      if (Feature %in% rownames(Seu_object)) {
+      if (Feature %in% rownames(sce_object)) {
         stat.test_plot <- stat.test %>%
-          mutate(y.position = seq(from = max(Seu_object@assays$RNA$data[Feature,][!is.na(Seu_object@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))%>%
+          mutate(y.position = seq(from = max(sce_object@assays$RNA$data[Feature,][!is.na(sce_object@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))%>%
           mutate(x = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))),
                  xmin = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))) - 0.2,
                  xmax = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))) + 0.2)
       } else{
         stat.test_plot <- stat.test %>%
-          mutate(y.position = seq(from = max(Seu_object[[Feature]][,1][!is.na(Seu_object[[Feature]][,1])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))%>%
+          mutate(y.position = seq(from = max(sce_object[[Feature]][,1][!is.na(sce_object[[Feature]][,1])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))%>%
           mutate(x = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))),
                  xmin = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))) - 0.2,
                  xmax = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))) + 0.2)
@@ -840,7 +861,7 @@ DO.VlnPlot <- function(Seu_object,
       # dplyr::select(x.axis, y.position, p.adj)
 
       #if Feature not a gene than use the uncorrected p
-      if (Feature %in% rownames(Seu_object)) {
+      if (Feature %in% rownames(sce_object)) {
         p_label="p = {p.adj}"
       } else{
         p_label="p = {p}"
@@ -904,7 +925,7 @@ DO.VlnPlot <- function(Seu_object,
 #' Allows customization of outlier removal, statistical labels, and color schemes.
 #' Supports comparison of conditions with optional second grouping.
 #' Useful for visualizing gene expression and statistical differences.
-#' @param Seu_object The seurat object
+#' @param sce_object The SCE object or Seurat
 #' @param Feature name of the feature/gene
 #' @param sample.column meta data column containing sample IDs
 #' @param ListTest List for which conditions wilcox will be performed, if NULL always CTRL group against everything
@@ -935,13 +956,16 @@ DO.VlnPlot <- function(Seu_object,
 #' @return a ggplot
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#'
+#' set.seed(123)
+#' sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 #'
 #' ListTest <- list()
 #' ListTest[[1]] <- c("healthy", "disease")
 #'
 #' DO.BoxPlot(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   Feature = "NKG7",
 #'   sample.column="orig.ident",
 #'   ListTest = ListTest,
@@ -950,7 +974,7 @@ DO.VlnPlot <- function(Seu_object,
 #' )
 #'
 #' @export
-DO.BoxPlot <- function(Seu_object,
+DO.BoxPlot <- function(sce_object,
                                Feature,
                                sample.column = "orig.ident",
                                ListTest=NULL,
@@ -972,10 +996,14 @@ DO.BoxPlot <- function(Seu_object,
                                orderAxis=NULL
 ){
 
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
 
   #aggregate expression, pseudobulk to visualize the boxplot
   if (is.null(group.by.2)) {
-    pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
+    pseudo_Seu <- Seurat::AggregateExpression(sce_object,
                                               assays = "RNA",
                                               return.seurat = TRUE,
                                               group.by = c(group.by, sample.column),
@@ -984,16 +1012,16 @@ DO.BoxPlot <- function(Seu_object,
     pseudo_Seu$celltype.con <- pseudo_Seu[[group.by]]
 
   } else{
-    pseudo_Seu <- Seurat::AggregateExpression(Seu_object,
+    pseudo_Seu <- Seurat::AggregateExpression(sce_object,
                                               assays = "RNA",
                                               return.seurat = TRUE,
                                               group.by = c(group.by, group.by.2, sample.column),
                                               verbose = FALSE)
 
     #cover the case of subsetted to only have one cell type
-    if (length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
-      pseudo_Seu@meta.data[[group.by.2]] <- unique(Seu_object@meta.data[[group.by.2]])
-      pseudo_Seu@meta.data[[group.by]] <- gsub(paste0(".*(", paste(unique(Seu_object$condition), collapse = "|"), ").*"), "\\1", pseudo_Seu@meta.data[[group.by]])
+    if (length(unique(sce_object@meta.data[[group.by.2]])) == 1) {
+      pseudo_Seu@meta.data[[group.by.2]] <- unique(sce_object@meta.data[[group.by.2]])
+      pseudo_Seu@meta.data[[group.by]] <- gsub(paste0(".*(", paste(unique(sce_object$condition), collapse = "|"), ").*"), "\\1", pseudo_Seu@meta.data[[group.by]])
     }
 
     pseudo_Seu$celltype.con <- paste(pseudo_Seu[[group.by]][,1], pseudo_Seu[[group.by.2]][,1], sep = "_")
@@ -1001,19 +1029,19 @@ DO.BoxPlot <- function(Seu_object,
   }
 
 
-  if (Feature %in% rownames(Seu_object)) {
-    df_Feature <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
-                            Feature = Seu_object[["RNA"]]$data[Feature,],
-                            cluster = Seu_object[[sample.column]][,1])
-    df_Feature[,Feature] <- expm1(Seu_object@assays$RNA$data[Feature,])
+  if (Feature %in% rownames(sce_object)) {
+    df_Feature <- data.frame(group=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]])),
+                            Feature = sce_object[["RNA"]]$data[Feature,],
+                            cluster = sce_object[[sample.column]][,1])
+    df_Feature[,Feature] <- expm1(sce_object@assays$RNA$data[Feature,])
 
   }else{
-    df_Feature <- data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]])),
-                            Feature = FetchData(Seu_object, vars = Feature)[,1],
-                            cluster = Seu_object[[sample.column]][,1])
+    df_Feature <- data.frame(group=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]])),
+                            Feature = FetchData(sce_object, vars = Feature)[,1],
+                            cluster = sce_object[[sample.column]][,1])
 
     if (is.null(group.by.2)) {
-      aggregated_meta <- Seu_object@meta.data %>%
+      aggregated_meta <- sce_object@meta.data %>%
         group_by(!!sym(group.by), !!sym(sample.column)) %>%
         summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
 
@@ -1032,7 +1060,7 @@ DO.BoxPlot <- function(Seu_object,
 
     } else{
       #Compute mean for each orig.ident
-      aggregated_meta <- Seu_object@meta.data %>%
+      aggregated_meta <- sce_object@meta.data %>%
         group_by(!!sym(group.by), !!sym(sample.column), !!sym(group.by.2)) %>%
         summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
 
@@ -1042,10 +1070,10 @@ DO.BoxPlot <- function(Seu_object,
                                     sep = "_")
 
       #cover the case of subsetted to only have one cell type
-      if (!length(unique(Seu_object@meta.data[[group.by.2]])) == 1) {
+      if (!length(unique(sce_object@meta.data[[group.by.2]])) == 1) {
         pseudo_Seu[[sample.column]][,1] <- gsub("_", "-", pseudo_Seu[[sample.column]][,1])
       } else{
-        pseudo_Seu[[sample.column]][,1] <- paste0(gsub("_", "-", pseudo_Seu[[sample.column]][,1]), "-", unique(Seu_object@meta.data[[group.by.2]]))
+        pseudo_Seu[[sample.column]][,1] <- paste0(gsub("_", "-", pseudo_Seu[[sample.column]][,1]), "-", unique(sce_object@meta.data[[group.by.2]]))
         pseudo_Seu[[sample.column]][,1] <- gsub("_", "-", pseudo_Seu[[sample.column]][,1])
         rownames(pseudo_Seu@meta.data) <- pseudo_Seu[[sample.column]][,1]
       }
@@ -1057,9 +1085,9 @@ DO.BoxPlot <- function(Seu_object,
 
   }
 
-  # df_Feature<-data.frame(group=setNames(Seu_object[[group.by]][,group.by], rownames(Seu_object[[group.by]]))
-  # ,orig.ident = Seu_object$orig.ident)
-  # df_Feature[,Feature] <- expm1(Seu_object@assays$RNA$data[Feature,])
+  # df_Feature<-data.frame(group=setNames(sce_object[[group.by]][,group.by], rownames(sce_object[[group.by]]))
+  # ,orig.ident = sce_object$orig.ident)
+  # df_Feature[,Feature] <- expm1(sce_object@assays$RNA$data[Feature,])
 
   #group results and summarize
   if (is.null(group.by.2)) {
@@ -1068,7 +1096,7 @@ DO.BoxPlot <- function(Seu_object,
       dplyr::group_by(group, variable) %>%
       dplyr::summarise(Mean = mean(value))
   } else{
-    df_Feature[,{group.by.2}] <- setNames(Seu_object[[group.by.2]][,group.by.2], rownames(Seu_object[[group.by.2]]))
+    df_Feature[,{group.by.2}] <- setNames(sce_object[[group.by.2]][,group.by.2], rownames(sce_object[[group.by.2]]))
     df_melt <- reshape2::melt(df_Feature)
     df_melt_sum <- df_melt %>%
       dplyr::group_by(group, !!sym(group.by.2), variable) %>% #!!sym(), gets the actual variable name useable for dplyr functions
@@ -1081,7 +1109,7 @@ DO.BoxPlot <- function(Seu_object,
     #if ListTest is empty, so grep the ctrl conditions out of the list
     # and define ListTest comparing every other condition with that ctrl condition
     .logger("ListTest empty, comparing every sample with each other")
-    group <- unique(Seu_object[[group.by]][,group.by])
+    group <- unique(sce_object[[group.by]][,group.by])
     #set automatically ctrl condition if not provided
     if (is.null(ctrl.condition)) {
       ctrl.condition <- group[grep(pattern = paste(c("CTRL","Ctrl","WT","Wt","wt"),collapse ="|")
@@ -1167,7 +1195,7 @@ DO.BoxPlot <- function(Seu_object,
       dplyr::ungroup() %>%
       rstatix::wilcox_test(value ~ group, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
-    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
+    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(sce_object)))
     stat.test$p.adj <- ifelse(stat.test$p.adj == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p.adj))
     stat.test$p <- ifelse(stat.test$p == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p))
 
@@ -1179,7 +1207,7 @@ DO.BoxPlot <- function(Seu_object,
       dplyr::group_by(!!sym(group.by.2)) %>%
       rstatix::wilcox_test(value ~ group, comparisons = ListTest, p.adjust.method = "none") %>%
       rstatix::add_significance()
-    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(Seu_object)))
+    stat.test$p.adj <- stats::p.adjust(stat.test$p, method = "bonferroni", n = length(rownames(sce_object)))
     stat.test$p.adj <- ifelse(stat.test$p.adj == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p.adj))
     stat.test$p <- ifelse(stat.test$p == 0, sprintf("%.2e",.Machine$double.xmin), sprintf("%.2e", stat.test$p))
 
@@ -1206,7 +1234,7 @@ DO.BoxPlot <- function(Seu_object,
   #SCpubr does not support outlier removal, therefore identify manually
   if (outlier_removal == TRUE) {
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       data_matrix <- pseudo_Seu@assays$RNA$data[Feature,]
     } else{
       data_matrix <- pseudo_Seu[[Feature]]
@@ -1229,7 +1257,7 @@ DO.BoxPlot <- function(Seu_object,
                                   subset_mat,
                                   NA)
 
-        if (Feature %in% rownames(Seu_object)) {
+        if (Feature %in% rownames(sce_object)) {
           pseudo_Seu@assays$RNA$data[Feature, group_cells] <- data_matrix_sub
         } else{
           pseudo_Seu@meta.data[group_cells,Feature] <- data_matrix_sub
@@ -1284,14 +1312,14 @@ DO.BoxPlot <- function(Seu_object,
   # for only one group
   if (wilcox_test == TRUE & is.null(group.by.2)) {
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       p_label <- "p = {p.adj}"
     } else{
       p_label <- "p = {p}"
     }
 
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       stat.test_plot <- stat.test %>%
         mutate(y.position = seq(from= max(pseudo_Seu@assays$RNA$data[Feature,][!is.na(pseudo_Seu@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))
     } else{
@@ -1315,14 +1343,14 @@ DO.BoxPlot <- function(Seu_object,
   if (wilcox_test == TRUE & !is.null(group.by.2)) {
 
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       p_label <- "p = {p.adj}"
     } else{
       p_label <- "p = {p}"
     }
 
 
-    if (Feature %in% rownames(Seu_object)) {
+    if (Feature %in% rownames(sce_object)) {
       stat.test_plot <- stat.test %>%
         mutate(y.position = seq(from = max(pseudo_Seu@assays$RNA$data[Feature,][!is.na(pseudo_Seu@assays$RNA$data[Feature,])])*stat_pos_mod, by = step_mod, length.out = nrow(stat.test)))%>%
         mutate(x = as.numeric(factor(stat.test[[group.by.2]], levels = unique(stat.test[[group.by.2]]))),
@@ -1368,7 +1396,7 @@ DO.BoxPlot <- function(Seu_object,
 #' It supports both individual and pseudobulk expression calculations.
 #' Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
 #' The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.
-#' @param Seu_object The seurat Seu_object
+#' @param sce_object The SCE object or Seurat
 #' @param group.by.x group name to plot on x-axis
 #' @param group.by.y group name to look for in meta data
 #' @param group.by.y2 second group name to look for in meta data
@@ -1397,21 +1425,22 @@ DO.BoxPlot <- function(Seu_object,
 #' @import dplyr
 #' @import reshape2
 #' @import ggtext
+#' @importFrom SeuratObject as.Seurat
 #'
 #' @return a ggplot
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.Dotplot(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   Feature = c("NKG7","IL6","MALAT1"),
 #'   group.by.x="condition"
 #' )
 #'
 #'
 #' @export
-DO.Dotplot <- function(Seu_object,
+DO.Dotplot <- function(sce_object,
                        Feature,
                        group.by.x = NULL,
                        group.by.y = NULL,
@@ -1433,6 +1462,10 @@ DO.Dotplot <- function(Seu_object,
                        limits_colorscale=NULL,
                        coord_flip=FALSE,
                        ... ){
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
 
   if(!is.vector(Feature) && !is.data.frame(Feature)){
     stop("Feature is not a vector of strings or a data frame!")
@@ -1464,22 +1497,22 @@ DO.Dotplot <- function(Seu_object,
   }
 
   # Create Feature expression data frame with grouping information
-  geneExp <- expm1(FetchData(object = Seu_object, vars = Feature, layer = "data")) #
+  geneExp <- expm1(FetchData(object = sce_object, vars = Feature, layer = "data")) #
 
   #catch wrong handling of arguments
   if (is.null(group.by.x) && !is.null(group.by.y) && is.null(group.by.y2)) {
     stop("If you want to make a Marker Plot with just one provided group.by then please use group.by.x!")
   }
 
-  geneExp$xaxis <- Seu_object@meta.data[[group.by.x]]
+  geneExp$xaxis <- sce_object@meta.data[[group.by.x]]
 
   if (!is.null(group.by.y) && is.null(group.by.y2)) {
-    geneExp$id <- paste(Seu_object@meta.data[[group.by.y]], sep = "")
+    geneExp$id <- paste(sce_object@meta.data[[group.by.y]], sep = "")
   } else if(!is.null(group.by.y) && !is.null(group.by.y2)){
-    geneExp$id <- paste(Seu_object@meta.data[[group.by.y]], " (",
-                        Seu_object@meta.data[[group.by.y2]], ")", sep = "")
+    geneExp$id <- paste(sce_object@meta.data[[group.by.y]], " (",
+                        sce_object@meta.data[[group.by.y2]], ")", sep = "")
   } else if(is.null(group.by.y) && is.null(group.by.y2)){
-    geneExp$id <- paste(Seu_object@meta.data[[group.by.x]], sep = "")
+    geneExp$id <- paste(sce_object@meta.data[[group.by.x]], sep = "")
   }
 
   # Include xaxis in the overall grouping
@@ -1822,7 +1855,7 @@ theme_box <- function(){
 #' Integrates R and Python via reticulate to convert Seurat to AnnData and run Scanpro.
 #' Generates customizable plots with options for transformation, grouping, and bootstrapping.
 #' Returns a ggplot object or a list containing plot data and visualisation.
-#' @param Seu_object The seurat object
+#' @param sce_object The SCE object or Seurat
 #' @param assay_normalized Assay with raw counts
 #' @param cluster_column Column in meta data which will be used to segment the bar plot
 #' @param sample_column Column in meta data containing individual sample names
@@ -1848,13 +1881,14 @@ theme_box <- function(){
 #' @import reticulate
 #' @import ggplot2
 #' @import ggalluvial
+#' @importFrom SeuratObject DefaultAssay
 #'
 #' @examples
 #' reticulate::use_python("~/.venv/DOtools/bin/python")
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.CellComposition(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   cluster_column="annotation",
 #'   condition_column="condition",
 #'   scanpro_plots=FALSE,
@@ -1864,7 +1898,7 @@ theme_box <- function(){
 #'
 #'
 #' @export
-DO.CellComposition <- function(Seu_object,
+DO.CellComposition <- function(sce_object,
                                assay_normalized="RNA",
                                cluster_column="seurat_clusters",
                                sample_column="orig.ident",
@@ -1907,12 +1941,19 @@ DO.CellComposition <- function(Seu_object,
     stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
   }
 
+  #support for Seurat objects
+  if (is(sce_object, "Seurat")) {
+    DefaultAssay(sce_object) <- assay_normalized
+    sce_object <- Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized)
+  }
+
   #Make Anndata object
-  DefaultAssay(Seu_object) <- assay_normalized
-  Seu_object_sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
-  AnnData_counts <- zellkonverter::SCE2AnnData(Seu_object_sce)
+  if (!"counts" %in% names(sce_object@assays)) {
+    stop("counts not found in assays of object!")
+  }
 
-
+  #AnnData creation
+  AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
 
   # Import scanpro
   sc <- import("scanpro.scanpro")
@@ -2193,8 +2234,8 @@ DO.CellComposition <- function(Seu_object,
 #' library(enrichR)
 #' reticulate::use_python("~/.venv/DOtools/bin/python")
 #'
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-#' DGE_result <- DO.MultiDGE(sc_data,
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sce_data,
 #'                          sample_col = "orig.ident",
 #'                          method_sc = "wilcox",
 #'                          annotation_col = "annotation",
@@ -2317,7 +2358,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #' @description' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
 #' Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
 #' Ideal for comparing transcriptional profiles between conditions or clusters.
-#' @param Seu_obj Seurat Object
+#' @param sce_object Seurat or SCE Object
 #' @param group_by Column to aggregate the expression over it, default "orig.ident"
 #' @param assay Assay in object to use, default "RNA"
 #' @param features What genes to include by default all, default "None"
@@ -2342,10 +2383,10 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #' @import Seurat
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.Correlation(
-#'   Seu_obj = sc_data,
+#'   sce_object = sce_data,
 #'   group_by = "orig.ident",
 #'   assay = "RNA",
 #'   features = NULL,
@@ -2361,7 +2402,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
 #' )
 #'
 #' @export
-DO.Correlation <- function(Seu_obj,
+DO.Correlation <- function(sce_object,
                            group_by="orig.ident",
                            assay="RNA",
                            features=NULL,
@@ -2378,11 +2419,16 @@ DO.Correlation <- function(Seu_obj,
                            axis_size_y = 12,
                            ...){
 
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
+
   #Aggregate Expression, creating Pseudobulk
-  corr_frame <- AggregateExpression(Seu_obj,
+  corr_frame <- AggregateExpression(sce_object,
                                     assays = assay,
                                     features = features,
-                                    group.by = group_by)$RNA
+                                    group.by = group_by)[[assay]]
 
   corr_frame <- as.data.frame(corr_frame)
 
@@ -2444,7 +2490,7 @@ DO.Correlation <- function(Seu_obj,
 #' showing the average nUMI for a set of genes in different groups.
 #' Differential gene expression analysis between the different groups can be performed.
 #'
-#' @param Seu_object Seurat object with meta.data
+#' @param sce_object SCE object or Seurat with meta.data
 #' @param assay_normalized Assay with raw counts
 #' @param group_by meta data column name with categorical values
 #' @param features gene names or continuous value in meta data
@@ -2484,16 +2530,17 @@ DO.Correlation <- function(Seu_obj,
 #'
 #'
 #' @import reticulate
+#' @import Seurat
 #'
 #' @examples#'
 #' reticulate::use_python("~/.venv/DOtools/bin/python")
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.Heatmap(
-#' Seu_object = sc_data,
+#' sce_object = sce_data,
 #' assay_normalized = "RNA",
 #' group_by="seurat_clusters",
-#' features = rownames(sc_data)[1:10],
+#' features = rownames(sce_data)[1:10],
 #' z_score = NULL,
 #' path = NULL,
 #' filename = "Heatmap.svg",
@@ -2531,7 +2578,7 @@ DO.Correlation <- function(Seu_obj,
 #'
 #' @export
 DO.Heatmap <- function(
-    Seu_object,
+    sce_object,
     assay_normalized = "RNA",
     group_by="seurat_clusters",
     features,
@@ -2573,15 +2620,23 @@ DO.Heatmap <- function(
     stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
   }
 
+  #support for Seurat objects
+  if (is(sce_object, "Seurat")) {
+    DefaultAssay(sce_object) <- assay_normalized
+    sce_object <- Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized)
+  }
+
   #Make Anndata object
-  DefaultAssay(Seu_object) <- assay_normalized
-  Seu_object_sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
-  AnnData_counts <- zellkonverter::SCE2AnnData(Seu_object_sce, X_name = "logcounts")
+  if (!"logcounts" %in% names(sce_object@assays)) {
+    stop("logcounts not found in assays of object!")
+  }
+
+  AnnData_counts <- zellkonverter::SCE2AnnData(sce_object, X_name = "logcounts")
 
   if (add_stats == TRUE) {
     if (is.null(df_pvals)) {
-
-    df_dge <- FindAllMarkers(Seu_object,
+    Seu_obj <- as.Seurat(sce_object)
+    df_dge <- FindAllMarkers(Seu_obj,
                      features = features,
                      group.by = group_by,
                      min.pct = 0,
@@ -2589,9 +2644,9 @@ DO.Heatmap <- function(
                      logfc.threshold = log2fc_cutoff,
                      only.pos = only_pos)
 
-    df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(Seu_object@meta.data[[group_by]]))))
+    df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(sce_object[[group_by]]))))
     rownames(df_pvals) <- features
-    colnames(df_pvals) <- unique(Seu_object@meta.data[[group_by]])
+    colnames(df_pvals) <- unique(sce_object[[group_by]])
 
     # Go through each row in df_dge
     for (i in seq_len(nrow(df_dge))) {

@@ -46,7 +46,7 @@ library(DOtools)
 
 DO.PyEnv()
 reticulate::use_python("~/.venv/DOtools/bin/python")
-Seu_obj <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_object <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 ```
 
 ## Dotplot
@@ -54,7 +54,7 @@ Seu_obj <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 The `DO.Dotplot` function generates a plot in a similar manner as the Dotplot function implemented in `r pypkg("scanpy")` but with additional functionalities, e.g. the visualisation of 3 variables at the same time. For example, we can visualise the expression of a gene across celltypes and conditions:
 
 ```{r dotplot, fig.width=5, fig.height=5}
-DO.Dotplot(Seu_object = Seu_obj,
+DO.Dotplot(sce_object = sce_object,
            group.by.x = "condition",
            group.by.y = "annotation",
            Feature = "NKG7")
@@ -66,7 +66,7 @@ The `DO.UMAP` function facilitatesthe visualisation of UMAP embeddings since it 
 
 ```{r UMAP, fig.width=12, fig.height=8, warning = FALSE}
 
-DO.UMAP(Seu_object = Seu_obj,
+DO.UMAP(sce_object = sce_object,
         group.by = "annotation",
         split.by = "condition",
         FeaturePlot = TRUE,
@@ -80,7 +80,7 @@ As shown in the tutorial, we can also test for significant changes in cell popul
 
 ```{r CellComposition, fig.width=6, fig.height=5, warning = FALSE}
 
-DO.CellComposition(Seu_object = Seu_obj,
+DO.CellComposition(sce_object = sce_object,
                    assay_normalized = "RNA",
                    cluster_column = "annotation",
                    sample_column = "orig.ident",
@@ -95,7 +95,7 @@ DO.CellComposition(Seu_object = Seu_obj,
 We can visualize the average expression of a gene in a cell type or continuous metadata information across condition with violinplots, barplots and boxplots. Additionally, we can test for significance.
 
 ```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
-p <- DO.VlnPlot(Seu_obj,
+p <- DO.VlnPlot(sce_object,
                 Feature = "NKG7",
                 group.by = "condition",
                 group.by.2 = "annotation",
@@ -103,8 +103,8 @@ p <- DO.VlnPlot(Seu_obj,
 ```
 
 ```{r Bar, fig.width=5, fig.height=6, warning = FALSE}
-Seu_obj_NK <- DO.Subset(Seu_obj, ident = "annotation", ident_name = "NK")
-DO.BarplotWilcox(Seu_obj_NK,
+sce_object_NK <- DO.Subset(sce_object, ident = "annotation", ident_name = "NK")
+DO.BarplotWilcox(sce_object_NK,
                  group.by = "condition",
                  ctrl.condition = "healthy",
                  Feature = "NKG7",
@@ -113,8 +113,8 @@ DO.BarplotWilcox(Seu_obj_NK,
 
 ```{r Box, fig.width=5, fig.height=6, warning = FALSE}
 set.seed(123)
-Seu_obj$rdm_sample <- sample(rep(c("A", "B", "C"), length.out = ncol(Seu_obj)))
-DO.BoxPlot(Seu_obj,
+sce_object$rdm_sample <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_object)))
+DO.BoxPlot(sce_object,
            group.by = "rdm_sample",
            ctrl.condition = "A",
            Feature = "nCount_RNA",
@@ -126,8 +126,8 @@ DO.BoxPlot(Seu_obj,
 ```{r Heat map, out.width="100%", fig.align="center", fig.width=10, fig.height=8, warning = FALSE}
 path_file <- tempfile("dotools_plots_")
 dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
-DO.Heatmap(Seu_obj,
-           features = rownames(Seu_obj)[1:10],
+DO.Heatmap(sce_object,
+           features = rownames(sce_object)[1:10],
            xticks_rotation=45,
            path = path_file,
            stats_x_size = 20)

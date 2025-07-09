@@ -5,7 +5,7 @@
 \title{DO Correlation Plot for visualizing similarity between categories}
 \usage{
 DO.Correlation(
-  Seu_obj,
+  sce_object,
   group_by = "orig.ident",
   assay = "RNA",
   features = NULL,
@@ -24,7 +24,7 @@ DO.Correlation(
 )
 }
 \arguments{
-\item{Seu_obj}{Seurat Object}
+\item{sce_object}{Seurat or SCE Object}
 
 \item{group_by}{Column to aggregate the expression over it, default "orig.ident"}
 
@@ -65,10 +65,10 @@ Allows customization of plot type, correlation method, and color scaling using t
 Ideal for comparing transcriptional profiles between conditions or clusters.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Correlation(
-  Seu_obj = sc_data,
+  sce_object = sce_data,
   group_by = "orig.ident",
   assay = "RNA",
   features = NULL,

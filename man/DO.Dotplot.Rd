@@ -5,7 +5,7 @@
 \title{DO Dot plot}
 \usage{
 DO.Dotplot(
-  Seu_object,
+  sce_object,
   Feature,
   group.by.x = NULL,
   group.by.y = NULL,
@@ -30,7 +30,7 @@ DO.Dotplot(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat Seu_object}
+\item{sce_object}{The SCE object or Seurat}
 
 \item{Feature}{Genes or DF of interest, Data frame should have columns with gene and annotation information, e.g. output of FindAllMarkers}
 
@@ -84,10 +84,10 @@ Highly variable customization options allow control over dot size, color scaling
 The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Dotplot(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   Feature = c("NKG7","IL6","MALAT1"),
   group.by.x="condition"
 )

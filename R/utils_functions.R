@@ -3,7 +3,7 @@
 #' @description
 #' Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
 #' performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-#' Returns a merged and processed Seurat object ready for downstream analysis.
+#' Returns a merged and processed Seurat or SCE object ready for downstream analysis.
 #'
 #' @param pathways A character vector of paths to directories or files containing raw expression matrices.
 #' @param ids A character vector of sample identifiers, matching the order of `pathways`.
@@ -18,9 +18,10 @@
 #' @param high_quantile Numeric. Quantile threshold (0 to 1) to filter high UMI cells (used if `max_counts` is `NULL`).
 #' @param DeleteDoublets Logical. If `TRUE`, doublets are detected and removed using `scDblFinder`. Default is `TRUE`.
 #' @param include_rbs Logical. If `TRUE`, calculates ribosomal gene content in addition to mitochondrial content. Default is `TRUE`.
+#' @param Seurat Logical. If `TRUE`, returns Seurat object otherwise SCE object.
 #' @param ... Additional arguments passed to `RunPCA()`.
 #'
-#' @return A merged Seurat object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
+#' @return A merged Seurat or SCE object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
 #'
 #' @import Seurat
 #' @import SeuratObject
@@ -63,6 +64,7 @@ DO.Import <- function(pathways,
                       high_quantile=NULL,
                       DeleteDoublets=TRUE,
                       include_rbs=TRUE,
+                      Seurat=TRUE,
                       ...){
 
   object_list <- list()
@@ -111,16 +113,16 @@ DO.Import <- function(pathways,
                          nFeatures = nrow(mtx))
 
     #Create object + Filtering by minimum Genes per cell
-    .logger("Create Seurat")
-    Seu_obj <- SeuratObject::CreateSeuratObject(counts = mtx,
+    .logger("Create Single Cell Object")
+    sce_object <- SeuratObject::CreateSeuratObject(counts = mtx,
                                   project = id,
                                   min.cells=minCellGenes)
 
-    df_met[2,] <- c("Rm_undetected_genes", ncol(Seu_obj), nrow(Seu_obj))
+    df_met[2,] <- c("Rm_undetected_genes", ncol(sce_object), nrow(sce_object))
 
-    Seu_obj$sample <- id #some naming
+    sce_object$sample <- id #some naming
     .logger(paste0("Setting condition in object to: ", sub("[-|_].*", "", id))) # automatized condition settings
-    Seu_obj$condition <- sub("[-|_].*", "", id)
+    sce_object$condition <- sub("[-|_].*", "", id)
 
     #Set the filter on mito/ribo genes
     if (include_rbs == TRUE) {
@@ -130,21 +132,21 @@ DO.Import <- function(pathways,
     }
 
     if (include_rbs==TRUE) {
-      sel_ribofeatures <- grep("^(RPS|RPL)", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
-      pt_ribo <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
-      Seu_obj$pt_ribo <- pt_ribo
+      sel_ribofeatures <- grep("^(RPS|RPL)", rownames(sce_object), value = TRUE, ignore.case = TRUE)
+      pt_ribo <- Matrix::colSums(GetAssayData(sce_object, layer = 'counts')[sel_ribofeatures, ]) / Matrix::colSums(GetAssayData(sce_object, layer = 'counts'))
+      sce_object$pt_ribo <- pt_ribo
     }
-    flt_mitofeatures <- grep("^MT-", rownames(Seu_obj), value = TRUE, ignore.case = TRUE)
+    flt_mitofeatures <- grep("^MT-", rownames(sce_object), value = TRUE, ignore.case = TRUE)
     if (length(flt_mitofeatures)<1) {
       warning("Warning: Could not find MT genes")
     }
-    pt_mito <- Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts')[flt_mitofeatures, ]) / Matrix::colSums(GetAssayData(Seu_obj, layer = 'counts'))
-    Seu_obj$pt_mito <- pt_mito
+    pt_mito <- Matrix::colSums(GetAssayData(sce_object, layer = 'counts')[flt_mitofeatures, ]) / Matrix::colSums(GetAssayData(sce_object, layer = 'counts'))
+    sce_object$pt_mito <- pt_mito
 
     .logger("Create QC images")
 
     #write QC to file
-    prefilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
+    prefilter_plot <- .QC_Vlnplot(sce_object = sce_object, id, layer = "counts")
     ggsave(plot = prefilter_plot, filename = paste0(outPath, "/QC_Plots_prefiltered.svg"), width = 10, height = 6)
 
     if (FilterCells==TRUE) {
@@ -169,54 +171,54 @@ DO.Import <- function(pathways,
 
       #Remove all cells with below gene threshold
       if (!is.null(min_genes)) {
-        Seu_obj <- subset(Seu_obj, subset = nFeature_RNA > min_genes)
+        sce_object <- subset(sce_object, subset = nFeature_RNA > min_genes)
       }
 
       if (!is.null(max_genes)) {
-        Seu_obj <- subset(Seu_obj, subset = nFeature_RNA < max_genes)
+        sce_object <- subset(sce_object, subset = nFeature_RNA < max_genes)
       }
       if (!is.null(min_genes) || !is.null(max_genes)) {
-        df_met[3,] <- c("Rm_cells_based_on_genes", ncol(Seu_obj), nrow(Seu_obj))
+        df_met[3,] <- c("Rm_cells_based_on_genes", ncol(sce_object), nrow(sce_object))
       }
 
       #Remove all cells with high MT content
-      Seu_obj <- subset(Seu_obj, subset = pt_mito < cut_mt)
-      df_met[4,] <- c("Rm_cell_high_MT", ncol(Seu_obj), nrow(Seu_obj))
+      sce_object <- subset(sce_object, subset = pt_mito < cut_mt)
+      df_met[4,] <- c("Rm_cell_high_MT", ncol(sce_object), nrow(sce_object))
 
       #Remove by absolute values or quantiles
       if (!is.null(min_counts) && is.null(low_quantile)) {
-        Seu_obj <- subset(Seu_obj, subset = nCount_RNA > min_counts)
+        sce_object <- subset(sce_object, subset = nCount_RNA > min_counts)
       } else{
         #Calculate the Quantile for the lower end
-        Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
-                              nGene=Seu_obj$nFeature_RNA,
-                              label = factor(Seu_obj$sample),
-                              pt_mit_rib=Seu_obj$pt_mito)
+        Quality <- data.frame(UMI=sce_object$nCount_RNA,
+                              nGene=sce_object$nFeature_RNA,
+                              label = factor(sce_object$sample),
+                              pt_mit_rib=sce_object$pt_mito)
 
         Quantile.low.UMI <- Quality %>% group_by(label) %>%
           summarise(UMI = list(tibble::enframe(quantile(UMI,probs = low_quantile)))) %>%
           tidyr::unnest(cols = c(UMI))
 
         #Subset
-        Seu_obj <- subset(Seu_obj, subset = nCount_RNA > Quantile.low.UMI$value)
+        sce_object <- subset(sce_object, subset = nCount_RNA > Quantile.low.UMI$value)
       }
 
       #Remove by absolute values
       if (!is.null(max_counts) && is.null(high_quantile)) {
-        Seu_obj <- subset(Seu_obj, subset = nCount_RNA < max_counts)
+        sce_object <- subset(sce_object, subset = nCount_RNA < max_counts)
       } else{
         #Calculate the Quantile for the lower end
-        Quality <- data.frame(UMI=Seu_obj$nCount_RNA,
-                              nGene=Seu_obj$nFeature_RNA,
-                              label = factor(Seu_obj$sample),
-                              pt_mit_rib=Seu_obj$pt_mito)
+        Quality <- data.frame(UMI=sce_object$nCount_RNA,
+                              nGene=sce_object$nFeature_RNA,
+                              label = factor(sce_object$sample),
+                              pt_mit_rib=sce_object$pt_mito)
 
         Quantile.high.UMI <- Quality %>% group_by(label) %>%
           summarise(UMI = list(tibble::enframe(quantile(UMI,probs = high_quantile)))) %>%
           tidyr::unnest(cols = c(UMI))
 
         #Subset
-        Seu_obj <- subset(Seu_obj, subset = nCount_RNA < Quantile.high.UMI$value)
+        sce_object <- subset(sce_object, subset = nCount_RNA < Quantile.high.UMI$value)
       }
     }
 
@@ -225,26 +227,26 @@ DO.Import <- function(pathways,
     write.xlsx(df_met, file = paste0(outPath,"/", met_file))
 
     #write QC after filtering to file
-    postfilter_plot <- .QC_Vlnplot(Seu_obj = Seu_obj, id, layer = "counts")
+    postfilter_plot <- .QC_Vlnplot(sce_object = sce_object, id, layer = "counts")
     ggsave(plot = postfilter_plot, filename = paste0(outPath, "/QC_Plots_postfiltered.svg"), width = 10, height = 6)
 
     #Preprocess steps Seurat
     .logger("Running Normalisation")
-    Seu_obj <- NormalizeData(object = Seu_obj,verbose = FALSE)
+    sce_object <- NormalizeData(object = sce_object,verbose = FALSE)
 
     .logger("Running Variable Gene Detection")
-    Seu_obj <- FindVariableFeatures(object = Seu_obj, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+    sce_object <- FindVariableFeatures(object = sce_object, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
 
     if(DeleteDoublets==TRUE){
       .logger("Running scDblFinder")
-      SCE_obj <- suppressWarnings(as.SingleCellExperiment(Seu_obj)) # suppress this scale.data empty warning
+      SCE_obj <- suppressWarnings(as.SingleCellExperiment(sce_object)) # suppress this scale.data empty warning
       SCE_obj <- scDblFinder::scDblFinder(SCE_obj)
-      Seu_obj$scDblFinder_score <- SCE_obj$scDblFinder.score
-      Seu_obj$scDblFinder_class <- SCE_obj$scDblFinder.class
-      Seu_obj <- subset(Seu_obj, scDblFinder_class == "singlet")
+      sce_object$scDblFinder_score <- SCE_obj$scDblFinder.score
+      sce_object$scDblFinder_class <- SCE_obj$scDblFinder.class
+      sce_object <- subset(sce_object, scDblFinder_class == "singlet")
     }
 
-    object_list[[i]] <- Seu_obj # capture the final objects
+    object_list[[i]] <- sce_object # capture the final objects
   }
 
   #concatenate objects
@@ -256,7 +258,12 @@ DO.Import <- function(pathways,
   merged_obj <- RunPCA(merged_obj, verbose = FALSE, ...)
   #No idea why this is needed, but without the next two lines it doesnt work...
   merged_obj <- JoinLayers(merged_obj)
-  merged_obj[["RNA"]] <- split(merged_obj[["RNA"]], f = merged_obj$orig.ident)
+
+  if (Seurat == FALSE) {
+    merged_obj <- as.SingleCellExperiment(merged_obj)
+  } else{
+    merged_obj[["RNA"]] <- split(merged_obj[["RNA"]], f = merged_obj$orig.ident)
+  }
 
   return(merged_obj)
 }
@@ -265,30 +272,30 @@ DO.Import <- function(pathways,
 
 #' @author Mariano Ruz Jurado
 #' @title DO Celltypist
-#' @description Runs the CellTypist model on a Seurat object to predict cell type labels, storing the results as metadata.
+#' @description Runs the CellTypist model on a Seurat or SCE object to predict cell type labels, storing the results as metadata.
 #' If the number of cells is less than the specified threshold, it returns NAs for the labels.
 #' Optionally updates the CellTypist models and returns the probability matrix.
 #' Useful for annotating cell types in single-cell RNA sequencing datasets.
-#' @param Seu_object The seurat object
+#' @param sce_object The seurat or sce object
 #' @param modelName Specify the model you want to use for celltypist
-#' @param minCellsToRun If the input seurat object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.
+#' @param minCellsToRun If the input seurat or SCE object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.
 #' @param runCelltypistUpdate If true, --update-models will be run for celltypist prior to scoring cells.
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param assay_normalized Assay with log1p normalized expressions
 #' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
-#' @param SeuV5 Specify if the object is made with Seuratv5
+#' @param SeuV5 Specify if the Seurat object is made with Seuratv5
 #' @import dplyr
 #' @import ggplot2
 #'
-#' @return a seurat
+#' @return a seurat or sce object
 #'
 #' @examples
 #' reticulate::use_python("~/.venv/DOtools/bin/python")
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #'
-#' sc_data <- DO.CellTypist(
-#'   Seu_object = sc_data,
+#' sce_data <- DO.CellTypist(
+#'   sce_object = sce_data,
 #'   modelName = "Healthy_Adult_Heart.pkl",
 #'   runCelltypistUpdate = TRUE,
 #'   over_clustering = "seurat_clusters",
@@ -297,7 +304,7 @@ DO.Import <- function(pathways,
 #' )
 #'
 #' @export
-DO.CellTypist <- function(Seu_object,
+DO.CellTypist <- function(sce_object,
                           modelName = "Healthy_Adult_Heart.pkl",
                           minCellsToRun = 200,
                           runCelltypistUpdate = TRUE,
@@ -308,7 +315,7 @@ DO.CellTypist <- function(Seu_object,
 
   # Make sure R Zellkonverter package is installed
   zk <- system.file(package = "zellkonverter")
-  ifelse(nzchar(zk), "", stop("Install zellkonverter R package for Seurat tranformation!"))
+  ifelse(nzchar(zk), "", stop("Install zellkonverter R package for object tranformation!"))
 
   # Make sure R reticulate package is installed
   rt <- system.file(package = "reticulate")
@@ -322,11 +329,11 @@ DO.CellTypist <- function(Seu_object,
     stop('The celltypist python package has not been installed in this python environment!')
   }
 
-  if (ncol(Seu_object) < minCellsToRun) {
+  if (ncol(sce_object) < minCellsToRun) {
     warning('Too few cells, will not run celltypist. NAs will be added instead')
     expectedCols <- c('predicted_labels_celltypist')
-    Seu_object[[expectedCols]] <- NA
-    return(Seu_object)
+    sce_object[[expectedCols]] <- NA
+    return(sce_object)
   }
 
   .logger(paste0('Running celltypist using model: ', modelName))
@@ -341,17 +348,30 @@ DO.CellTypist <- function(Seu_object,
 
   #Uppercasing gene names
   #zellkonverter h5ad
-  DefaultAssay(Seu_object) <- assay_normalized
-  if (SeuV5 == TRUE) {
-    tmp.assay <- Seu_object
-    tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
-    tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay, assay = assay_normalized)
-    rownames(tmp.sce) <- toupper(rownames(tmp.sce))
 
+  #support for Seurat objects
+  if (is(sce_object, "Seurat")) {
+    DefaultAssay(sce_object) <- assay_normalized
+    if (SeuV5 == TRUE) {
+      tmp.assay <- sce_object
+      tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
+      tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay, assay = assay_normalized)
+      rownames(tmp.sce) <- toupper(rownames(tmp.sce))
+
+    } else{
+      tmp.sce <- Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized)
+      rownames(tmp.sce) <- toupper(rownames(tmp.sce))
+    }
   } else{
-    tmp.sce <- Seurat::as.SingleCellExperiment(Seu_object, assay = assay_normalized)
+    tmp.assay <- sce_object
     rownames(tmp.sce) <- toupper(rownames(tmp.sce))
   }
+
+  #Make Anndata object
+  if (!"logcounts" %in% names(tmp.sce@assays)) {
+    stop("logcounts not found in assays of object!")
+  }
+
   zellkonverter::writeH5AD(tmp.sce, file = paste0(outDir,"/ad.h5ad"), X_name = "logcounts")
 
   # Ensure models present:
@@ -376,7 +396,7 @@ DO.CellTypist <- function(Seu_object,
   #ct$dotplot(ad_obj, use_as_reference = "cell_type", use_as_prediction = "majority_voting")
 
   probMatrix <- utils::read.csv(probFile, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
-  Seu_object@meta.data$autoAnnot <- labels$majority_voting
+  sce_object$autoAnnot <- labels$majority_voting
 
   #Create dotplot with prob
   probMatrix$cluster <- as.character(labels$over_clustering)
@@ -447,73 +467,87 @@ DO.CellTypist <- function(Seu_object,
   print(pmain)
 
   if (returnProb==TRUE) {
-    returnProb <- list(Seu_object, probMatrix)
-    names(returnProb) <- c("SeuratObject", "probMatrix")
+    returnProb <- list(sce_object, probMatrix)
+    names(returnProb) <- c("SingleCellObject", "probMatrix")
     return(returnProb)
   } else {
-    return(Seu_object)}
+    return(sce_object)}
 }
 
 
 # Recluster function using FindSubCluster function from Seurat iterative over each cluster -> perfect for fine tuning annotation
 #' @author Mariano Ruz Jurado
 #' @title DO.FullRecluster
-#' @description Performs iterative reclustering on each major cluster found by FindClusters in a Seurat object.
+#' @description Performs iterative reclustering on each major cluster found by FindClusters in a Seurat or SCE object.
 #' It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
 #' The new clustering results are stored in a metadata column called `annotation_recluster`.
 #' Suitable for improving cluster precision and granularity after initial clustering.
-#' @param Seu_object The seurat object
+#' @param sce_object The seurat or SCE object
 #' @param over_clustering Column in metadata in object with clustering assignments for cells, default seurat_clusters
 #' @param res Resolution for the new clusters, default 0.5
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden
 #' @param graph.name A builded neirest neighbor graph
-#' @return a Seurat Object with new clustering named annotation_recluster
+#' @return a Seurat or SCE Object with new clustering named annotation_recluster
 #'
 #' @import Seurat
 #' @import progress
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
-#' sc_data <- DO.FullRecluster(
-#'   Seu_object = sc_data
+#' sce_data <- DO.FullRecluster(
+#'   sce_object = sce_data
 #' )
 #'
 #' @export
-DO.FullRecluster <- function(Seu_object,
+DO.FullRecluster <- function(sce_object,
                              over_clustering = "seurat_clusters",
                              res = 0.5,
                              algorithm=4,
                              graph.name="RNA_snn"){
-  #TODO add an argument for a new shared nearest neighbor call so you can use this function with other integration methods in the object otherwise it will use the latest calculated shared nearest neighbors and you need to do it outside of the function
-  if (is.null(Seu_object@meta.data[[over_clustering]])) {
-    stop("No seurat clusters defined, please run FindClusters before Reclustering, or fill the slot with a clustering")
-  }
-  Idents(Seu_object) <- over_clustering
 
-  Seu_object$annotation_recluster <- as.vector(Seu_object@meta.data[[over_clustering]])
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    class_obj <- "SingleCellExperiment"
+    sce_object <- as.Seurat(sce_object)
+  } else{
+    class_obj <- "Seurat"
+  }
+
+  #TODO add an argument for a new shared nearest neighbor call so you can use this function with other integration methods in the object otherwise it will use the latest calculated shared nearest neighbors and you need to do it outside of the function
+  if (is.null(sce_object@meta.data[[over_clustering]])) {
+    stop("No clusters defined, please run e.g. FindClusters before Reclustering, or fill the slot with a clustering")
+  }
+  Idents(sce_object) <- over_clustering
+
+  sce_object$annotation_recluster <- as.vector(sce_object@meta.data[[over_clustering]])
 
   pb <- progress::progress_bar$new(
-    total = length(unique(Seu_object@meta.data[[over_clustering]])),
+    total = length(unique(sce_object@meta.data[[over_clustering]])),
     format = "  Reclustering [:bar] :percent eta: :eta"
   )
 
   #newline prints when the function exits (to clean up console)
   on.exit(cat("\n"))
 
-  for (cluster in unique(Seu_object@meta.data[[over_clustering]])) {
+  for (cluster in unique(sce_object@meta.data[[over_clustering]])) {
     pb$tick()
-    Seu_object <- FindSubCluster(Seu_object,
+    sce_object <- FindSubCluster(sce_object,
                                  cluster = as.character(cluster),
                                  graph.name = graph.name,
                                  algorithm = algorithm,
                                  resolution = res)
 
-    cluster_cells <- rownames(Seu_object@meta.data)[Seu_object@meta.data[[over_clustering]] == cluster]
-    Seu_object$annotation_recluster[cluster_cells] <- Seu_object$sub.cluster[cluster_cells]
+    cluster_cells <- rownames(sce_object@meta.data)[sce_object@meta.data[[over_clustering]] == cluster]
+    sce_object$annotation_recluster[cluster_cells] <- sce_object$sub.cluster[cluster_cells]
   }
-  Seu_object$sub.cluster <- NULL
-  return(Seu_object)
+  sce_object$sub.cluster <- NULL
+
+  if (class_obj == "SingleCellExperiment") {
+    sce_object <- as.SingleCellExperiment(sce_object)
+  }
+
+  return(sce_object)
 }
 
 # Polished UMAP function using Dimplot or FeaturePlot function from Seurat
@@ -523,7 +557,7 @@ DO.FullRecluster <- function(Seu_object,
 #' It allows customization of colors, labels, and other plot elements for better visualisation.
 #' The function handles both cluster-based visualisations and gene-based visualisations in a UMAP plot.
 #' Ideal for refining UMAP outputs with added flexibility and enhanced presentation.
-#' @param Seu_object The seurat object
+#' @param sce_object The seurat or SCE object
 #' @param FeaturePlot Is it going to be a Dimplot or a FeaturePlot?
 #' @param features features for Featureplot
 #' @param group.by grouping of plot in DImplot and defines in featureplot the labels
@@ -540,21 +574,21 @@ DO.FullRecluster <- function(Seu_object,
 #' @import ggplot2
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.UMAP(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   group.by="seurat_clusters"
 #' )
 #'
 #' DO.UMAP(
-#'   Seu_object = sc_data,
+#'   sce_object = sce_data,
 #'   FeaturePlot=TRUE,
 #'   features=c("BAG2","CD74")
 #' )
 #'
 #' @export
-DO.UMAP <- function(Seu_object,
+DO.UMAP <- function(sce_object,
                     FeaturePlot=FALSE,
                     features=NULL,
                     group.by="seurat_clusters",
@@ -566,6 +600,11 @@ DO.UMAP <- function(Seu_object,
                     legend.position="none",
                     ...){
 
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    sce_object <- as.Seurat(sce_object)
+  }
+
   #Dimplot
   if (FeaturePlot==FALSE) {
     if (is.null(umap_colors)) {
@@ -576,7 +615,7 @@ DO.UMAP <- function(Seu_object,
       ),5)
     }
 
-    p <- DimPlot(Seu_object, group.by = group.by, cols = umap_colors, ...) +
+    p <- DimPlot(sce_object, group.by = group.by, cols = umap_colors, ...) +
       labs(x="UMAP1",y = "UMAP2")+
       theme(plot.title = element_blank(),
             # text = element_text(face = "bold",size = 20),
@@ -606,8 +645,8 @@ DO.UMAP <- function(Seu_object,
       umap_colors <- c("lightgrey","red2")
     }
 
-    Idents(Seu_object) <- group.by
-    p <- FeaturePlot(Seu_object,
+    Idents(sce_object) <- group.by
+    p <- FeaturePlot(sce_object,
                      features = features,
                      cols = umap_colors,
                      label = label,
@@ -632,29 +671,29 @@ DO.UMAP <- function(Seu_object,
 }
 
 
-# Seurat Subset function that actually works
+# SCE Subset function that actually works
 #' @author Mariano Ruz Jurado
 #' @title DO.Subset
-#' @description Creates a subset of a Seurat object based on either categorical or numeric thresholds in metadata.
+#' @description Creates a subset of a Seurat or SCE object based on either categorical or numeric thresholds in metadata.
 #' Allows for subsetting by specifying the ident column, group name, or threshold criteria.
 #' Ideal for extracting specific cell populations or clusters based on custom conditions.
-#' Returns a new Seurat object containing only the subsetted cells and does not come with the Seuratv5 subset issue
+#' Returns a new Seurat or SCE object containing only the subsetted cells and does not come with the Seuratv5 subset issue
 #' Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.
-#' @param Seu_object The seurat object
+#' @param sce_object The seurat or SCE object
 #' @param assay assay to subset by
 #' @param ident meta data column to subset for
 #' @param ident_name name of group of barcodes in ident of subset for
 #' @param ident_thresh numeric thresholds as character, e.g ">5" or c(">5", "<200"), to subset barcodes in ident for
-#' @return a subsetted Seurat object
+#' @return a subsetted Seurat or SCE object
 #'
 #' @import Seurat
 #' @import SeuratObject
-#'
+#' @importFrom SingleCellExperiment reducedDim
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
-#' sc_data_sub <- DO.Subset(
-#'   Seu_object = sc_data,
+#' sce_data_sub <- DO.Subset(
+#'   sce_object = sce_data,
 #'   ident="condition",
 #'   ident_name="healthy"
 #' )
@@ -662,14 +701,21 @@ DO.UMAP <- function(Seu_object,
 #'
 #'
 #' @export
-DO.Subset <- function(Seu_object,
+DO.Subset <- function(sce_object,
                       assay="RNA",
                       ident,
                       ident_name=NULL,
                       ident_thresh=NULL){
 
-  reduction_names <- names(Seu_object@reductions)
-  SCE_Object <- as.SingleCellExperiment(Seu_object)
+  #support for Seurat objects
+  if (is(sce_object, "Seurat")) {
+    Seu_obj <- sce_object
+    class_obj <- "Seurat"
+    reduction_names <- names(sce_object@reductions)
+    sce_object <- as.SingleCellExperiment(sce_object)
+  } else{
+    class_obj <- "SingleCellExperiment"
+  }
 
   if (!is.null(ident_name) && !is.null(ident_thresh))  {
     stop("Please provide ident_name for subsetting by a name in the column or ident_thresh if it by a threshold")
@@ -678,7 +724,7 @@ DO.Subset <- function(Seu_object,
   #By a name in the provided column
   if (!is.null(ident_name) && is.null(ident_thresh))  {
     .logger("Specified 'ident_name': expecting a categorical variable.")
-    SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] %in% ident_name]
+    sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] %in% ident_name]
   }
 
   #By a threshold in the provided column
@@ -698,13 +744,13 @@ DO.Subset <- function(Seu_object,
     if (length(operator) ==1) {
       if (operator == "<") {
         # filtered_cells <- ident_values[ident_values < threshold]
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] < threshold]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] < threshold]
       } else if (operator == ">") {
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] > threshold]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] > threshold]
       } else if (operator == "<=") {
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] <= threshold]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] <= threshold]
       } else if (operator == ">=") {
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] >= threshold]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] >= threshold]
       }
     }
 
@@ -712,67 +758,80 @@ DO.Subset <- function(Seu_object,
     if (length(operator) == 2) {
       if (paste(operator,collapse = "") ==  "><") {
         # filtered_cells <- ident_values[ident_values > threshold[1] & ident_values < threshold[2]]
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] > threshold[1] &
-                                       SingleCellExperiment::colData(SCE_Object)[, ident] < threshold[2]]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] > threshold[1] &
+                                       SingleCellExperiment::colData(sce_object)[, ident] < threshold[2]]
       } else if (paste(operator,collapse = "") ==  "<>") {
-        SCE_Object_sub <- SCE_Object[, SingleCellExperiment::colData(SCE_Object)[, ident] < threshold[1] &
-                                       SingleCellExperiment::colData(SCE_Object)[, ident] > threshold[2]]
+        sce_object_sub <- sce_object[, SingleCellExperiment::colData(sce_object)[, ident] < threshold[1] &
+                                       SingleCellExperiment::colData(sce_object)[, ident] > threshold[2]]
       }
     }
   }
 
-  if (ncol(SCE_Object_sub) == 0) {
+  if (ncol(sce_object_sub) == 0) {
     stop("No cells left after subsetting!\n")
   }
 
-  Seu_object_sub <- as.Seurat(SCE_Object_sub)
-  Seu_object_sub[[assay]] <- as(object = Seu_object_sub[[assay]], Class = "Assay5")
-
-  #Identify reductions that are not in uppercase -> These are the old ones, not subsetted REMOVE
-  # non_uppercase_reductions <- reduction_names[!grepl("^[A-Z0-9_]+$", reduction_names)]
-  # Seu_object_sub@reductions <- Seu_object_sub@reductions[!names(Seu_object_sub@reductions) %in% non_uppercase_reductions]
-  names(Seu_object_sub@reductions) <- reduction_names
-  Seu_object_sub$ident <- NULL
-
-  #some checks
-  ncells_interest_prior <- nrow(Seu_object@meta.data[Seu_object@meta.data[[ident]] %in% ident_name, ])
-  ncells_interest_after <- nrow(Seu_object_sub@meta.data[Seu_object_sub@meta.data[[ident]] %in% ident_name, ])
-  if (ncells_interest_prior != ncells_interest_after) {
-    stop(paste0("Number of subsetted cell types is not equal in both objects! Before: ",ncells_interest_prior,"; After: ", ncells_interest_after))
+  #Seurat support
+  if (class_obj == "Seurat") {
+    sce_object_sub <- as.Seurat(sce_object_sub)
+    sce_object_sub[[assay]] <- as(object = sce_object_sub[[assay]], Class = "Assay5")
+    # Identify reductions that are not in uppercase -> These are the old ones, not subsetted REMOVE
+    # non_uppercase_reductions <- reduction_names[!grepl("^[A-Z0-9_]+$", reduction_names)]
+    # sce_object_sub@reductions <- sce_object_sub@reductions[!names(sce_object_sub@reductions) %in% non_uppercase_reductions]
+    names(sce_object_sub@reductions) <- reduction_names
+    sce_object_sub$ident <- NULL
+    #some checks
+    ncells_interest_prior <- nrow(Seu_obj@meta.data[Seu_obj@meta.data[[ident]] %in% ident_name, ])
+    ncells_interest_after <- nrow(sce_object_sub@meta.data[sce_object_sub@meta.data[[ident]] %in% ident_name, ])
+    if (ncells_interest_prior != ncells_interest_after) {
+      stop(paste0("Number of subsetted cell types is not equal in both objects! Before: ",ncells_interest_prior,"; After: ", ncells_interest_after,". Please check your metadata!"))
+    }
   }
 
-  return(Seu_object_sub)
+  return(sce_object_sub)
 }
 
 
 
-#' @title Remove Layers from Seurat Object by Pattern
+#' @title Remove Layers from Seurat or SCE Object by Pattern
 #' @author Mariano Ruz Jurado
-#' @description This function removes layers from a Seurat object's RNA assay based on a specified regular expression pattern.
-#' It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
-#' @param Seu_object Seurat object.
+#' @description This function removes layers from a Seurat or SCE object's RNA assay based on a specified regular expression pattern.
+#' It is supposed to remove no longer needed layers from th object.
+#' @param sce_object Seurat or SCE object.
 #' @param pattern regular expression pattern to match layer names. Default "^scale\\.data\\."
-#' @return Seurat object with specified layers removed.
+#' @return Seurat or SCE object with specified layers removed.
 #'
 #' @import SeuratObject
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
-#' sc_data <- DO.DietSeurat(sc_data, pattern = "data")
+#' sce_data <- DO.DietSeurat(sce_data, pattern = "data")
 #'
 #'
 #' @export
-DO.DietSeurat <- function(Seu_object, pattern = "^scale\\.data\\.") {
+DO.DietSCE <- function(sce_object, pattern = "^scale\\.data\\.") {
   message(paste("pattern: ", pattern))
-  stopifnot("object must be a Seurat object" = inherits(Seu_object, "Seurat"))
 
-  layers_to_remove <- grep(pattern, Layers(Seu_object), value = TRUE)
-  Seu_object@assays$RNA@layers[layers_to_remove] <- NULL
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    class_obj <- "SingleCellExperiment"
+    sce_object <- as.Seurat(sce_object)
+  } else{
+    class_obj <- "Seurat"
+  }
 
-  layerNames <- Layers(Seu_object)
+  layers_to_remove <- grep(pattern, Layers(sce_object), value = TRUE)
+  sce_object@assays$RNA@layers[layers_to_remove] <- NULL
+
+  layerNames <- Layers(sce_object)
   message(paste(layers_to_remove, "is removed."))
-  return(Seu_object)
+
+  if(class_obj == "SingleCellExperiment"){
+    sce_object <- as.SingleCellExperiment(sce_object)
+  }
+
+  return(sce_object)
 }
 
 
@@ -976,7 +1035,7 @@ DO.CellBender <- function(cellranger_path,
 #' @description This function will run the scVI Integration from the scVI python package. It includes all parameters from the actual python package
 #' and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
 #'
-#' @param Seu_object Seurat object with annotation in meta.data
+#' @param sce_object Seurat or SCE object with annotation in meta.data
 #' @param batch_key meta data column with batch information.
 #' @param layer_counts layer with counts. Raw counts are required.
 #' @param layer_logcounts layer with log-counts. Log-counts required for calculation of HVG.
@@ -993,18 +1052,18 @@ DO.CellBender <- function(cellranger_path,
 #' @import Seurat
 #' @import reticulate
 #' @import zellkonverter
-#'
+#' @importFrom SingleCellExperiment reducedDim
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-#' sc_data <- Seurat::FindVariableFeatures(sc_data)
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#' sce_data <- Seurat::FindVariableFeatures(sce_data)
 #'
 #' # Run scVI using the 'orig.ident' column as the batch key
-#' sc_data <- DO.scVI(sc_data, batch_key = "orig.ident")
+#' sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
 #'
-#' @return Seurat Object with dimensionality reduction from scVI
+#' @return Seurat or SCE Object with dimensionality reduction from scVI
 #' @export
-DO.scVI <- function(Seu_object,
+DO.scVI <- function(sce_object,
                     batch_key,
                     layer_counts="counts",
                     layer_logcounts="logcounts",
@@ -1018,18 +1077,38 @@ DO.scVI <- function(Seu_object,
                     get_model=FALSE,
                     ...){
 
-  #check if Variable Features are defined in the object
-  HVG <- VariableFeatures(Seu_object)
-  if (is.null(HVG)) {
-    stop("No highly variable Features found in the object! Please run FindVariableFeatures()!")
+  #support for Seurat objects
+  if (is(sce_object, "Seurat")) {
+    class_obj <- "Seurat"
+    HVG <- VariableFeatures(sce_object)
+    #check if Variable Features are defined in the object
+    if (length(HVG)==0) {
+
+      .logger("No highly variable genes found in the object! Calculating...")
+      HVG <- VariableFeatures(FindVariableFeatures(sce_obj))
+
+      if(length(HVG)==0){
+        stop("No highly variable genes found in the object, after automatic calculation!")
+      }
+    }
+
+    sc_obj <- Seurat::as.SingleCellExperiment(sce_object)
+    #Subset the object to the HVG
+    sce_object_sub <- sc_obj[rownames(sc_obj) %in% HVG, ]
+  } else{
+    class_obj <- "SingleCellExperiment"
+    Seu_obj <- as.Seurat(sce_object)
+    HVG <- VariableFeatures(FindVariableFeatures(Seu_obj))
+    sce_object_sub <- sce_object[rownames(sce_object) %in% HVG, ]
+
   }
 
-  #Subset the object to the HVG
-  Seu_object_sub <- subset(Seu_object, features = HVG)
+  #Make Anndata object
+  if (!"counts" %in% names(sce_object_sub@assays)) {
+    stop("counts not found in assays of object!")
+  }
 
-  #Conversion of Seu_object to anndata through zellkonverter
-  SCE_object <- as.SingleCellExperiment(Seu_object_sub)
-  anndata_object <- zellkonverter::SCE2AnnData(SCE_object)
+  anndata_object <- zellkonverter::SCE2AnnData(sce_object_sub)
   anndata_object$layers['counts'] <- anndata_object$X # set
 
   #source PATH to python script in install folder
@@ -1051,27 +1130,29 @@ DO.scVI <- function(Seu_object,
            ...)
 
   scvi_embedding <- anndata_object$obsm[["X_scVI"]]
-  rownames(scvi_embedding) <- colnames(Seu_object)
+  rownames(scvi_embedding) <- colnames(sce_object)
 
-  scVI_reduction <- suppressWarnings(Seurat::CreateDimReducObject(
-    embeddings = scvi_embedding,
-    key = "scVI_",
-    assay = DefaultAssay(Seu_object_sub)
-  ))
-
-  Seu_object@reductions[["scVI"]] <- scVI_reduction
-
-  return(Seu_object)
+  if (class_obj == "Seurat") {
+    scVI_reduction <- suppressWarnings(Seurat::CreateDimReducObject(
+      embeddings = scvi_embedding,
+      key = "scVI_",
+      assay = DefaultAssay(sce_object)
+    ))
+    sce_object@reductions[["scVI"]] <- scVI_reduction
+  } else{
+    reducedDim(sce_object, "scVI") <- scvi_embedding
+  }
+  return(sce_object)
 }
 
 
 #' @title DO.TransferLabel
-#' @description Transfers cell-type annotations from a re-annotated subset of a Seurat object
-#' back to the full Seurat object. This is useful when clusters have been refined
+#' @description Transfers cell-type annotations from a re-annotated subset of a Seurat or SCE object
+#' back to the full Seurat or SCE object. This is useful when clusters have been refined
 #' or re-labeled in a subset and need to be reflected in the original object.
 #'
-#' @param Seu_obj Seurat object with annotation in meta.data
-#' @param Subset_obj subsetted Seurat object with re-annotated clusters
+#' @param sce_object Seurat or SCE object with annotation in meta.data
+#' @param Subset_obj subsetted Seurat or SCE object with re-annotated clusters
 #' @param annotation_column column name in meta.data with annotation
 #' @param subset_annotation column name in meta.data with annotation in the subsetted object
 #'
@@ -1080,26 +1161,32 @@ DO.scVI <- function(Seu_object,
 #'
 #'
 #' @examples
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
-#' sc_data <- DO.TransferLabel(sc_data,
-#'                             sc_data,
+#' sce_data <- DO.TransferLabel(sce_data,
+#'                             sce_data,
 #'                             annotation_column="annotation",
 #'                             subset_annotation="annotation"
 #'                            )
 #'
 #'
 #'
-#' @return Seurat Object with transfered labels
+#' @return Seurat or SCE Object with transfered labels
 #' @export
 
-DO.TransferLabel <- function(Seu_obj,
+DO.TransferLabel <- function(sce_object,
                              Subset_obj,
                              annotation_column,
                              subset_annotation){
 
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    class_obj <- "SingleCellExperiment"
+    sce_object <- as.Seurat(sce_object)
+  }
+
   #Get annotation with barcodes as rownames
-  annotation_pre <- Seu_obj@meta.data[annotation_column]
+  annotation_pre <- sce_object@meta.data[annotation_column]
   annotation_pre[[annotation_column]] <- as.character(annotation_pre[[annotation_column]])
   annotation_subset <- Subset_obj@meta.data[subset_annotation]
   annotation_subset[[subset_annotation]] <- as.character(annotation_subset[[subset_annotation]])
@@ -1108,9 +1195,13 @@ DO.TransferLabel <- function(Seu_obj,
   barcodes <- rownames(annotation_pre)[rownames(annotation_pre) %in% rownames(annotation_subset)]
   annotation_pre[rownames(annotation_pre) %in% barcodes,] <- annotation_subset[[subset_annotation]]
 
-  Seu_obj@meta.data[[annotation_column]] <- factor(annotation_pre$annotation)
+  sce_object@meta.data[[annotation_column]] <- factor(annotation_pre$annotation)
 
-  return(Seu_obj)
+  if (class_obj == "SingleCellExperiment") {
+    sce_object <- as.SingleCellExperiment(sce_object)
+  }
+
+  return(sce_object)
 
 }
 
@@ -1140,8 +1231,8 @@ DO.TransferLabel <- function(Seu_obj,
 #' @examples
 #' library(enrichR)
 #'
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-#' DGE_result <- DO.MultiDGE(sc_data,
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sce_data,
 #'                          sample_col = "orig.ident",
 #'                          method_sc = "wilcox",
 #'                          annotation_col = "annotation",
@@ -1220,8 +1311,8 @@ DO.enrichR <- function(df_DGE,
 #' The single-cell method uses Seurat's `FindMarkers`, while pseudo-bulk testing uses `DESeq2` on aggregated expression profiles.
 #' Outputs a merged data frame with DGE statistics from both methods per condition and cell type.
 #'
-#' @param Seu_obj The seurat object
-#' @param assay Specified assay in Seurat object, default "RNA"
+#' @param sce_object The seurat or SCE object
+#' @param assay Specified assay in Seurat or SCE object, default "RNA"
 #' @param method_sc method to use for single cell DEG analysis, see FindMarkers from Seurat for options, default "wilcox"
 #' @param group_by Column in meta data containing groups used for testing, default "condition"
 #' @param annotation_col Column in meta data containing information of cell type annotation
@@ -1242,15 +1333,15 @@ DO.enrichR <- function(df_DGE,
 #'
 #' @examples
 #'
-#' sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
-#' DGE_result <- DO.MultiDGE(sc_data,
+#' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#' DGE_result <- DO.MultiDGE(sce_data,
 #'                          sample_col = "orig.ident",
 #'                          method_sc = "wilcox",
 #'                          annotation_col = "annotation",
 #'                          ident_ctrl = "healthy")
 #'
 #' @export
-DO.MultiDGE <- function(Seu_obj,
+DO.MultiDGE <- function(sce_object,
                         assay="RNA",
                         method_sc="wilcox",
                         group_by="condition",
@@ -1264,7 +1355,13 @@ DO.MultiDGE <- function(Seu_obj,
                         ...
                         ){
 
-  if (!ident_ctrl %in% Seu_obj@meta.data[[group_by]]) {
+  #support for single cell experiment objects
+  if (is(sce_object, "SingleCellExperiment")) {
+    class_obj <- "SingleCellExperiment"
+    sce_object <- as.Seurat(sce_object)
+  }
+
+  if (!ident_ctrl %in% sce_object@meta.data[[group_by]]) {
     stop(paste0(ident_ctrl, " was not found in meta data under the specified group_by column: ", group_by))
   }
 
@@ -1272,13 +1369,13 @@ DO.MultiDGE <- function(Seu_obj,
   DEG_stats_collector_pb <- list() #list for collecting pseudo_bulk method results
 
   #Create a PseudoBulk representation of the Seurat single cell expression
-  Seu_obj_PB <- AggregateExpression(Seu_obj,
+  sce_object_PB <- AggregateExpression(sce_object,
                                     assays = assay,
                                     return.seurat = TRUE,
                                     group.by = c(group_by, sample_col, annotation_col))
   #internally AggregateExpression uses interaction() this replaces _ with -, check if the names changed in annotation:
-  original_annots <- unique(Seu_obj@meta.data[[annotation_col]])
-  pb_annots <- unique(Seu_obj_PB@meta.data[[annotation_col]])
+  original_annots <- unique(sce_object@meta.data[[annotation_col]])
+  pb_annots <- unique(sce_object_PB@meta.data[[annotation_col]])
 
   #are all pseudo-bulk annotations in the original set
   if (!all(pb_annots %in% original_annots)) {
@@ -1286,7 +1383,7 @@ DO.MultiDGE <- function(Seu_obj,
     converted_annots <- gsub("-", "_", pb_annots)
 
     if (all(converted_annots %in% original_annots)) {
-      Seu_obj_PB@meta.data[[annotation_col]] <- gsub("-", "_", Seu_obj_PB@meta.data[[annotation_col]])
+      sce_object_PB@meta.data[[annotation_col]] <- gsub("-", "_", sce_object_PB@meta.data[[annotation_col]])
       .logger("Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.")
     } else {
       .logger("Annotation names do not match even after replacing '-' with '_'. Please inspect manually.")
@@ -1296,16 +1393,16 @@ DO.MultiDGE <- function(Seu_obj,
   }
 
   PB_ident <- paste(annotation_col,group_by, sep = "_")
-  Seu_obj_PB@meta.data[[PB_ident]] <- paste(Seu_obj_PB@meta.data[[annotation_col]], Seu_obj_PB@meta.data[[group_by]], sep = "_")
-  Idents(Seu_obj_PB) <- PB_ident
+  sce_object_PB@meta.data[[PB_ident]] <- paste(sce_object_PB@meta.data[[annotation_col]], sce_object_PB@meta.data[[group_by]], sep = "_")
+  Idents(sce_object_PB) <- PB_ident
 
   .logger("Starting DGE single cell method analysis")
-  for (ident_con in unique(Seu_obj@meta.data[[group_by]])) {
+  for (ident_con in unique(sce_object@meta.data[[group_by]])) {
     # .logger(ident_con)
     if(ident_con != ident_ctrl){ # skip the ctrl ident
-      for (celltype in unique(Seu_obj@meta.data[[annotation_col]])) {
+      for (celltype in unique(sce_object@meta.data[[annotation_col]])) {
         .logger(paste0("Comparing ",ident_con, " with ", ident_ctrl," in: ", celltype))
-        Seu_celltype <- subset(Seu_obj, subset = !!sym(annotation_col) == celltype)
+        Seu_celltype <- subset(sce_object, subset = !!sym(annotation_col) == celltype)
         #Check if there are groups with less than 3 cells
         table_cells_sc <- table(Seu_celltype@meta.data[[group_by]])
 
@@ -1340,23 +1437,23 @@ DO.MultiDGE <- function(Seu_obj,
   .logger("Finished DGE single cell method analysis")
   .logger("Starting DGE pseudo bulk method analysis")
 
-  for (celltype in unique(Seu_obj_PB@meta.data[[annotation_col]])) {
+  for (celltype in unique(sce_object_PB@meta.data[[annotation_col]])) {
     # .logger(celltype)
     # running find markers condition specific
-    for (ident_con in unique(Seu_obj_PB@meta.data[[group_by]])) {
+    for (ident_con in unique(sce_object_PB@meta.data[[group_by]])) {
       if (ident_con != ident_ctrl){
         .logger(paste0("Comparing ",ident_con, " with ", ident_ctrl," in: ", celltype))
         ident_1 <- paste0(c(celltype,ident_con), collapse = "_")
         ident_2 <- paste0(c(celltype,ident_ctrl), collapse = "_")
 
         #Check if any of the groups have fewer than 3 cells, test fail if this is the case
-        table_cells_pb <- table(Idents(Seu_obj_PB))
+        table_cells_pb <- table(Idents(sce_object_PB))
 
         count_1_pb <- table_cells_pb[ident_1]
         count_2_pb <- table_cells_pb[ident_2]
 
         if (count_1_pb >= 3 && count_2_pb >= 3) {
-          DEG_stats_pb <- FindMarkers(object = Seu_obj_PB,
+          DEG_stats_pb <- FindMarkers(object = sce_object_PB,
                                       ident.1 = ident_1,
                                       ident.2 = ident_2,
                                       min.pct = min_pct,
@@ -1460,7 +1557,7 @@ umap_colors <- c(
 #' The function displays three violin plots for the number of detected genes per cell (`nFeature_RNA`), total UMI counts per cell (`nCount_RNA`),
 #' and mitochondrial gene content percentage (`pt_mito`). Useful for visual inspection of QC thresholds and outliers.
 #'
-#' @param Seu_obj A Seurat object containing single-cell RNA-seq data.
+#' @param sce_object A Seurat object containing single-cell RNA-seq data.
 #' @param layer A character string specifying the assay layer to use (default is "counts").
 #' @param features A character vector of length 3 indicating the feature names to plot. Default is c("nFeature_RNA", "nCount_RNA", "pt_mito").
 #'
@@ -1470,8 +1567,8 @@ umap_colors <- c(
 #' @import ggplot2
 #' @rdname dot-QC_Vlnplot
 #' @keywords internal
-.QC_Vlnplot <- function(Seu_obj, id, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
-  p1<- VlnPlot(Seu_obj,layer = "counts", features = features[1], ncol = 1, pt.size = 0, cols = "grey")+
+.QC_Vlnplot <- function(sce_object, id, layer="counts", features=c("nFeature_RNA","nCount_RNA","pt_mito")){
+  p1<- VlnPlot(sce_object,layer = "counts", features = features[1], ncol = 1, pt.size = 0, cols = "grey")+
     geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
     theme_light()+
     xlab("") +
@@ -1484,7 +1581,7 @@ umap_colors <- c(
       legend.position = "none"
     )
 
-  p2<- VlnPlot(Seu_obj,layer = "counts", features = features[2], ncol = 1, pt.size = 0, cols = "grey")+
+  p2<- VlnPlot(sce_object,layer = "counts", features = features[2], ncol = 1, pt.size = 0, cols = "grey")+
     geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
     theme_light()+
     xlab("") +
@@ -1497,7 +1594,7 @@ umap_colors <- c(
       legend.position = "none"
     )
 
-  p3<-VlnPlot(Seu_obj,layer = "counts", features = features[3], ncol = 1, pt.size = 0, cols = "grey")+
+  p3<-VlnPlot(sce_object,layer = "counts", features = features[3], ncol = 1, pt.size = 0, cols = "grey")+
     geom_boxplot(width = 0.25, outlier.shape = NA, alpha=0.5, color="darkred", size=0.4)+
     theme_light()+
     xlab("") +

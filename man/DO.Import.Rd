@@ -18,6 +18,7 @@ DO.Import(
   high_quantile = NULL,
   DeleteDoublets = TRUE,
   include_rbs = TRUE,
+  Seurat = TRUE,
   ...
 )
 }
@@ -48,15 +49,17 @@ DO.Import(
 
 \item{include_rbs}{Logical. If \code{TRUE}, calculates ribosomal gene content in addition to mitochondrial content. Default is \code{TRUE}.}
 
+\item{Seurat}{Logical. If \code{TRUE}, returns Seurat object otherwise SCE object.}
+
 \item{...}{Additional arguments passed to \code{RunPCA()}.}
 }
 \value{
-A merged Seurat object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
+A merged Seurat or SCE object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
 }
 \description{
 Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
 performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-Returns a merged and processed Seurat object ready for downstream analysis.
+Returns a merged and processed Seurat or SCE object ready for downstream analysis.
 }
 \examples{
 \dontrun{

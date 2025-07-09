@@ -5,7 +5,7 @@
 \title{DO Heatmap of the mean expression of genes across a groups}
 \usage{
 DO.Heatmap(
-  Seu_object,
+  sce_object,
   assay_normalized = "RNA",
   group_by = "seurat_clusters",
   features,
@@ -44,7 +44,7 @@ DO.Heatmap(
 )
 }
 \arguments{
-\item{Seu_object}{Seurat object with meta.data}
+\item{sce_object}{SCE object or Seurat with meta.data}
 
 \item{assay_normalized}{Assay with raw counts}
 
@@ -127,13 +127,13 @@ Differential gene expression analysis between the different groups can be perfor
 \examples{
 #'
 reticulate::use_python("~/.venv/DOtools/bin/python")
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Heatmap(
-Seu_object = sc_data,
+sce_object = sce_data,
 assay_normalized = "RNA",
 group_by="seurat_clusters",
-features = rownames(sc_data)[1:10],
+features = rownames(sce_data)[1:10],
 z_score = NULL,
 path = NULL,
 filename = "Heatmap.svg",

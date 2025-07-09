@@ -5,7 +5,7 @@
 \title{Box Graph with wilcox test on single cell level}
 \usage{
 DO.BoxPlot(
-  Seu_object,
+  sce_object,
   Feature,
   sample.column = "orig.ident",
   ListTest = NULL,
@@ -29,7 +29,7 @@ DO.BoxPlot(
 )
 }
 \arguments{
-\item{Seu_object}{The seurat object}
+\item{sce_object}{The SCE object or Seurat}
 
 \item{Feature}{name of the feature/gene}
 
@@ -79,13 +79,16 @@ Supports comparison of conditions with optional second grouping.
 Useful for visualizing gene expression and statistical differences.
 }
 \examples{
-sc_data <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
+sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+
+set.seed(123)
+sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.BoxPlot(
-  Seu_object = sc_data,
+  sce_object = sce_data,
   Feature = "NKG7",
   sample.column="orig.ident",
   ListTest = ListTest,
