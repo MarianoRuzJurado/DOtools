@@ -92,8 +92,8 @@ generated in the section: Quality control of sc/snRNA-seq.</p>
 <div class="section level3">
 <h3 id="libraries-set-up">Libraries &amp; Set-Up<a class="anchor" aria-label="anchor" href="#libraries-set-up"></a>
 </h3>
-<pre><code><span><span class="co">#&gt; 2025-07-09 10:36:50 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:36:50 - Python packages ready for DOtools!</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; 2025-07-09 11:44:47 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
+<span><span class="co">#&gt; 2025-07-09 11:44:47 - Python packages ready for DOtools!</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dotplot">Dotplot<a class="anchor" aria-label="anchor" href="#dotplot"></a>
@@ -142,13 +142,13 @@ cell population.</p>
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:36:53 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-07-09 11:44:51 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span></span>
 <span><span class="co">#&gt; [INFO] Your data doesn't have replicates! Artificial replicates will be simulated to run scanpro.</span></span>
 <span><span class="co">#&gt; [INFO] Simulation may take some minutes...</span></span>
 <span><span class="co">#&gt; [INFO] Generating 3 replicates and running 100 simulations...</span></span>
-<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.91 seconds</span></span>
+<span><span class="co">#&gt; [INFO] Finished 100 simulations in 3.08 seconds</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/CellComposition-1.png" width="576"></p>
@@ -166,18 +166,18 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:37:04 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-09 11:45:02 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Seu_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:37:06 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-09 11:45:04 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">Seu_obj_NK</span>,</span>
 <span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:37:06 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-09 11:45:04 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -189,7 +189,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span>           step_mod <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 10:37:07 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-07-09 11:45:05 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Box-1.png" width="480"></p>
