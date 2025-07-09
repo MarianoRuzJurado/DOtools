@@ -116,6 +116,7 @@ postfilterplots <- system.file("figures", "postfilterplots-1.png", package = "DO
 pQC2 <- magick::image_read(postfilterplots)
 plot(pQC2)
 ```
+We observed that most cells were removed due to increased mitochondrial content. Depending on the experimental design, the mitochondrial content threshold can be adjusted to retain a higher number of cells, if minimizing cell loss is of relevance.
 
 <br>
 The DOtools package provides a slim object of this data set. Please feel free, to use the one created from DO.Import for prettier results or this slim downed version. We can observe how similar the samples are through running a correlation analysis.
@@ -128,11 +129,11 @@ Seu_obj <- readRDS(system.file("extdata", "sc_data.rds", package = "DOtools"))
 DO.Correlation(Seu_obj)
 ```
 
-We observed that most cells were removed due to increased mitochondrial content. Depending on the experimental design, the mitochondrial content threshold can be adjusted to retain a higher number of cells, if minimizing cell loss is of relevance.
+
 
 ## Data integration
 
-After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI Integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
+After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
 
 ```{r Integration, warning = FALSE}
 #Object has already joined layers

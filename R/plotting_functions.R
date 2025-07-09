@@ -2382,7 +2382,7 @@ DO.Correlation <- function(Seu_obj,
   corr_frame <- AggregateExpression(Seu_obj,
                                     assays = assay,
                                     features = features,
-                                    group.by = group_by)$RNA
+                                    group.by = group_by)[[assay]]
 
   corr_frame <- as.data.frame(corr_frame)
 
