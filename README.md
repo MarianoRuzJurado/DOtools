@@ -37,7 +37,7 @@ Please refer for the python version to: [DOtools_py](https://github.com/davidrm-
 ## <b> Contribution Guidelines </b>
 
 Raising up an issue in this Github repository might be the fastest way of submitting suggestions and bugs.
-Alternatively you can write an email: [ruzjurado\@med.uni-frankfurt.de](mailto:ruzjurado@med.uni-frankfurt.de){.email}
+Alternatively you can write an email: [ruzjurado\@med.uni-frankfurt.de](mailto:ruzjurado@med.uni-frankfurt.de)
 
 ## <b> Citation </b>
 
