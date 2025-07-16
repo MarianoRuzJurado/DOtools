@@ -4,10 +4,12 @@
 \alias{DO.DietSCE}
 \title{Remove Layers from Seurat or SCE Object by Pattern}
 \usage{
-DO.DietSCE(sce_object, pattern = "^scale\\\\.data\\\\.")
+DO.DietSCE(sce_object, assay = "RNA", pattern = "^scale\\\\.data\\\\.")
 }
 \arguments{
 \item{sce_object}{Seurat or SCE object.}
+
+\item{assay}{Name of the assay from where to remove layers from}
 
 \item{pattern}{regular expression pattern to match layer names. Default "^scale\\.data\\."}
 }
@@ -21,7 +23,7 @@ It is supposed to remove no longer needed layers from th object.
 \examples{
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
-sce_data <- DO.DietSeurat(sce_data, pattern = "data")
+sce_data <- DO.DietSCE(sce_data, pattern = "data")
 
 
 }

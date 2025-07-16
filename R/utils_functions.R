@@ -510,6 +510,7 @@ DO.FullRecluster <- function(sce_object,
   if (is(sce_object, "SingleCellExperiment")) {
     class_obj <- "SingleCellExperiment"
     sce_object <- as.Seurat(sce_object)
+    sce_object <- FindNeighbors(sce_object, reduction = "PCA")
   } else{
     class_obj <- "Seurat"
   }
@@ -798,6 +799,7 @@ DO.Subset <- function(sce_object,
 #' @description This function removes layers from a Seurat or SCE object's RNA assay based on a specified regular expression pattern.
 #' It is supposed to remove no longer needed layers from th object.
 #' @param sce_object Seurat or SCE object.
+#' @param assay Name of the assay from where to remove layers from
 #' @param pattern regular expression pattern to match layer names. Default "^scale\\.data\\."
 #' @return Seurat or SCE object with specified layers removed.
 #'
@@ -810,8 +812,8 @@ DO.Subset <- function(sce_object,
 #'
 #'
 #' @export
-DO.DietSCE <- function(sce_object, pattern = "^scale\\.data\\.") {
-  message(paste("pattern: ", pattern))
+DO.DietSCE <- function(sce_object, assay = "RNA", pattern = "^scale\\.data\\.") {
+  .logger(paste("pattern: ", pattern))
 
   #support for single cell experiment objects
   if (is(sce_object, "SingleCellExperiment")) {
@@ -822,10 +824,15 @@ DO.DietSCE <- function(sce_object, pattern = "^scale\\.data\\.") {
   }
 
   layers_to_remove <- grep(pattern, Layers(sce_object), value = TRUE)
-  sce_object@assays$RNA@layers[layers_to_remove] <- NULL
 
-  layerNames <- Layers(sce_object)
-  message(paste(layers_to_remove, "is removed."))
+  if ("layers" %in% slotNames(sce_object@assays[[assay]])) {
+    sce_object@assays[[assay]]@layers[layers_to_remove] <- NULL
+    layerNames <- Layers(sce_object)
+    .logger(paste(layers_to_remove, "is removed."))
+
+  } else {
+    .logger("Object has no layers, pattern does not need to be removed from layers.")
+  }
 
   if(class_obj == "SingleCellExperiment"){
     sce_object <- as.SingleCellExperiment(sce_object)
@@ -1165,9 +1172,9 @@ DO.scVI <- function(sce_object,
 #'
 #' sce_data <- DO.TransferLabel(sce_data,
 #'                             sce_data,
-#'                             annotation_column="annotation",
-#'                             subset_annotation="annotation"
-#'                            )
+#'                            annotation_column="annotation",
+#'                            subset_annotation="annotation"
+#'                           )
 #'
 #'
 #'
@@ -1183,6 +1190,7 @@ DO.TransferLabel <- function(sce_object,
   if (is(sce_object, "SingleCellExperiment")) {
     class_obj <- "SingleCellExperiment"
     sce_object <- as.Seurat(sce_object)
+    Subset_obj <- as.Seurat(Subset_obj)
   } else{
     class_obj <- "Seurat"
   }
@@ -1411,6 +1419,14 @@ DO.MultiDGE <- function(sce_object,
         count_1_sc <- table_cells_sc[ident_con]
         count_2_sc <- table_cells_sc[ident_ctrl]
 
+        if (is.na(count_1_sc)) {
+          count_1_sc <- 0
+        }
+
+        if (is.na(count_2_sc)) {
+          count_2_sc <- 0
+        }
+
         if (count_1_sc >= 3 && count_2_sc >= 3) {
           DEG_stats_sc <- FindMarkers(object = Seu_celltype,
                                       ident.1 = ident_con,
@@ -1453,6 +1469,15 @@ DO.MultiDGE <- function(sce_object,
 
         count_1_pb <- table_cells_pb[ident_1]
         count_2_pb <- table_cells_pb[ident_2]
+
+        if (is.na(count_1_pb)) {
+          count_1_pb <- 0
+        }
+
+        if (is.na(count_2_pb)) {
+          count_2_pb <- 0
+        }
+
 
         if (count_1_pb >= 3 && count_2_pb >= 3) {
           DEG_stats_pb <- FindMarkers(object = sce_object_PB,

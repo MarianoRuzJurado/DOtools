@@ -28,9 +28,9 @@ sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 sce_data <- DO.TransferLabel(sce_data,
                             sce_data,
-                            annotation_column="annotation",
-                            subset_annotation="annotation"
-                           )
+                           annotation_column="annotation",
+                           subset_annotation="annotation"
+                          )
 
 
 
