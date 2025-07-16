@@ -363,7 +363,7 @@ DO.CellTypist <- function(sce_object,
       rownames(tmp.sce) <- toupper(rownames(tmp.sce))
     }
   } else{
-    tmp.assay <- sce_object
+    tmp.sce <- sce_object
     rownames(tmp.sce) <- toupper(rownames(tmp.sce))
   }
 
@@ -806,7 +806,7 @@ DO.Subset <- function(sce_object,
 #' @examples
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
-#' sce_data <- DO.DietSeurat(sce_data, pattern = "data")
+#' sce_data <- DO.DietSCE(sce_data, pattern = "data")
 #'
 #'
 #' @export
@@ -1183,6 +1183,8 @@ DO.TransferLabel <- function(sce_object,
   if (is(sce_object, "SingleCellExperiment")) {
     class_obj <- "SingleCellExperiment"
     sce_object <- as.Seurat(sce_object)
+  } else{
+    class_obj <- "Seurat"
   }
 
   #Get annotation with barcodes as rownames

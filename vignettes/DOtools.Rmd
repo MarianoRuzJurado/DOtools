@@ -305,7 +305,8 @@ T_cells <- DO.CellTypist(T_cells,
                          SeuV5 = FALSE)
 T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster, c(`T_cells_1` = "CD4_T_cells",
                                                                     `T_cells_2` = "CD4_T_cells",
-                                                                    `T_cells_3` = "CD8_T_cells"))
+                                                                    `T_cells_3` = "CD4_T_cells",
+                                                                    `T_cells_4` = "CD8_T_cells"))
 
 ```
 

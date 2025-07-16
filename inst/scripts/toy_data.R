@@ -62,7 +62,7 @@ if (length(comb_genes) > 800) {
 
 SCE_obj <- as.SingleCellExperiment(subset(Seu_obj, features = selected_genes))
 
-saveRDS(SCE_obj, file = "/mnt/mariano/Sequencing_Storage/scStorage/Mariano/Rpackage/sce_data.rds", compress = "xz")
+saveRDS(SCE_obj, file = "/mnt/mariano/scStorage/Mariano/Rpackage/DOtools/inst/extdata", compress = "xz")
 
 # Subset the Seurat object
 sc_data <- subset(Seu_obj, features = random_genes)

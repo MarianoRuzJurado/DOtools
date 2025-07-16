@@ -17,7 +17,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r chunk_setup, include = FALSE}
@@ -95,7 +95,8 @@ DO.CellComposition(sce_object = sce_object,
 We can visualize the average expression of a gene in a cell type or continuous metadata information across condition with violinplots, barplots and boxplots. Additionally, we can test for significance.
 
 ```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
-p <- DO.VlnPlot(sce_object,
+sce_object_sub <- DO.Subset(sce_object, ident = "annotation", ident_name = c("NK", "CD4_T_cells", "B_cells"))
+p <- DO.VlnPlot(sce_object_sub,
                 Feature = "NKG7",
                 group.by = "condition",
                 group.by.2 = "annotation",
@@ -118,7 +119,8 @@ DO.BoxPlot(sce_object,
            group.by = "rdm_sample",
            ctrl.condition = "A",
            Feature = "nCount_RNA",
-           step_mod = 100,
+           step_mod = 50,
+           stat_pos_mod = 1.05,
            plot_sample = FALSE)
 ```
 
