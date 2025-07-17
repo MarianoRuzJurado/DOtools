@@ -1059,11 +1059,10 @@ DO.CellBender <- function(cellranger_path,
 #' @import Seurat
 #' @import reticulate
 #' @import zellkonverter
-#' @importFrom SingleCellExperiment reducedDim
+#' @import SingleCellExperiment
 #'
 #' @examples
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
-#' sce_data <- Seurat::FindVariableFeatures(sce_data)
 #'
 #' # Run scVI using the 'orig.ident' column as the batch key
 #' sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
