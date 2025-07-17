@@ -7,9 +7,9 @@
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.Import — DO.Import"><meta name="description" content="Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
 performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-Returns a merged and processed Seurat object ready for downstream analysis."><meta property="og:description" content="Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
+Returns a merged and processed Seurat or SCE object ready for downstream analysis."><meta property="og:description" content="Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
 performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-Returns a merged and processed Seurat object ready for downstream analysis."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+Returns a merged and processed Seurat or SCE object ready for downstream analysis."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -58,7 +58,7 @@ Returns a merged and processed Seurat object ready for downstream analysis."><sc
     <div class="ref-description section level2">
     <p>Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
 performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-Returns a merged and processed Seurat object ready for downstream analysis.</p>
+Returns a merged and processed Seurat or SCE object ready for downstream analysis.</p>
     </div>
 
     <div class="section level2">
@@ -77,6 +77,7 @@ Returns a merged and processed Seurat object ready for downstream analysis.</p>
 <span>  high_quantile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  DeleteDoublets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  include_rbs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  Seurat <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -137,13 +138,17 @@ Returns a merged and processed Seurat object ready for downstream analysis.</p>
 <dd><p>Logical. If <code>TRUE</code>, calculates ribosomal gene content in addition to mitochondrial content. Default is <code>TRUE</code>.</p></dd>
 
 
+<dt id="arg-seurat">Seurat<a class="anchor" aria-label="anchor" href="#arg-seurat"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, returns Seurat object otherwise SCE object.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code>RunPCA()</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A merged Seurat object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.</p>
+    <p>A merged Seurat or SCE object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

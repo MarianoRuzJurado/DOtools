@@ -64,7 +64,7 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DO.MultiDGE</span><span class="op">(</span></span>
-<span>  <span class="va">Seu_obj</span>,</span>
+<span>  <span class="va">sce_object</span>,</span>
 <span>  assay <span class="op">=</span> <span class="st">"RNA"</span>,</span>
 <span>  method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="st">"condition"</span>,</span>
@@ -83,12 +83,12 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-seu-obj">Seu_obj<a class="anchor" aria-label="anchor" href="#arg-seu-obj"></a></dt>
-<dd><p>The seurat object</p></dd>
+<dl><dt id="arg-sce-object">sce_object<a class="anchor" aria-label="anchor" href="#arg-sce-object"></a></dt>
+<dd><p>The seurat or SCE object</p></dd>
 
 
 <dt id="arg-assay">assay<a class="anchor" aria-label="anchor" href="#arg-assay"></a></dt>
-<dd><p>Specified assay in Seurat object, default "RNA"</p></dd>
+<dd><p>Specified assay in Seurat or SCE object, default "RNA"</p></dd>
 
 
 <dt id="arg-method-sc">method_sc<a class="anchor" aria-label="anchor" href="#arg-method-sc"></a></dt>
@@ -143,8 +143,8 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">sc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sc_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu">DO.MultiDGE</span><span class="op">(</span><span class="va">sc_data</span>,</span></span>
+<span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu">DO.MultiDGE</span><span class="op">(</span><span class="va">sce_data</span>,</span></span>
 <span class="r-in"><span>                         sample_col <span class="op">=</span> <span class="st">"orig.ident"</span>,</span></span>
 <span class="r-in"><span>                         method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span></span>
 <span class="r-in"><span>                         annotation_col <span class="op">=</span> <span class="st">"annotation"</span>,</span></span>
@@ -152,9 +152,11 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Names of identity class contain underscores ('_'), replacing with dashes ('-')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once every 8 hours.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:30 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:30 - Starting DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:30 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:56 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:56 - Starting DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:56 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:56 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:56 - Comparing disease with healthy in: CD4_T_cells</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> For a (much!) faster implementation of the Wilcoxon Rank Sum Test,</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> (default method for FindMarkers) please install the presto package</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------</span>
@@ -164,28 +166,27 @@ Outputs a merged data frame with DGE statistics from both methods per condition 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> After installation of presto, Seurat will automatically use the more </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> efficient implementation (no further action necessary).</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> This message will be shown once per session</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:31 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:33 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:33 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:33 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:34 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Finished DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Starting DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping NK since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Skipping pDC since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - Finished DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-10 08:45:35 - DGE pseudo bulk result is empty...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:58 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:58 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Finished DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Starting DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping NK since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping pDC since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - Finished DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-17 12:19:59 - DGE pseudo bulk result is empty...</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
