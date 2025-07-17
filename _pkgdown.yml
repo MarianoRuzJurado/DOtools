@@ -52,5 +52,5 @@ reference:
     contents:
       - DO.UMAP
       - DO.Subset
-      - DO.DietSeurat
+      - DO.DietSCE
       - DO.PyEnv

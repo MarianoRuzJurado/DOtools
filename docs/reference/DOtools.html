@@ -59,21 +59,21 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This package includes the following functions:</p><ul><li><p><code><a href="DO.BoxPlot.html">DO.BoxPlot</a></code>: A function for creating box plots with Wilcoxon test results.</p></li>
-<li><p><code><a href="DO.CellTypist.html">DO.CellTypist</a></code>: A function for running CellTypist on Seurat objects to predict cell types.</p></li>
-<li><p><code><a href="DO.DietSeurat.html">DO.DietSeurat</a></code>: A function for diet-based analysis of Seurat objects.</p></li>
+<li><p><code><a href="DO.CellTypist.html">DO.CellTypist</a></code>: A function for running CellTypist on Seurat and SCE objects to predict cell types.</p></li>
+<li><p><code><a href="DO.DietSCE.html">DO.DietSCE</a></code>: A function for diet-based analysis of Seurat and SCE objects.</p></li>
 <li><p><code><a href="DO.Dotplot.html">DO.Dotplot</a></code>: A function for creating dot plots for visualizing gene expression.</p></li>
-<li><p><code><a href="DO.FullRecluster.html">DO.FullRecluster</a></code>: A function for fine-grained reclustering of Seurat objects.</p></li>
+<li><p><code><a href="DO.FullRecluster.html">DO.FullRecluster</a></code>: A function for fine-grained reclustering of Seurat and SCE objects.</p></li>
 <li><p><code><a href="DO.BarplotClustert.html">DO.BarplotClustert</a></code>: A function for generating mean and SEM graphs for cluster-based analysis with t-tests.</p></li>
 <li><p><code><a href="DO.BarplotWilcox.html">DO.BarplotWilcox</a></code>: A function for generating mean and SEM graphs with Wilcoxon test results.</p></li>
-<li><p><code><a href="DO.Subset.html">DO.Subset</a></code>: A function for subsetting Seurat objects based on metadata.</p></li>
+<li><p><code><a href="DO.Subset.html">DO.Subset</a></code>: A function for subsetting Seurat and SCE objects based on metadata.</p></li>
 <li><p><code><a href="DO.UMAP.html">DO.UMAP</a></code>: A function for creating polished UMAP plots using either DimPlot or FeaturePlot.</p></li>
 <li><p><code><a href="DO.VlnPlot.html">DO.VlnPlot</a></code>: A function for generating violin plots with Wilcoxon test results.</p></li>
 <li><p><code><a href="DO.CellComposition.html">DO.CellComposition</a></code>: A function for visualizing and statistically analyzing cell-type composition changes across conditions using the Scanpro Python package, with support for bootstrapping, proportion plots, and customizable output.</p></li>
-<li><p><code><a href="DO.Import.html">DO.Import</a></code>: A function for building a merged Seurat object from 10x software output, or directly from provided tables.</p></li>
+<li><p><code><a href="DO.Import.html">DO.Import</a></code>: A function for building a merged Seurat and SCE object from 10x software output, or directly from provided tables.</p></li>
 <li><p><code><a href="DO.CellBender.html">DO.CellBender</a></code>: A function for running CellBender in a virtual conda env with provided raw count h5 files.</p></li>
 <li><p><code><a href="DO.SplitBarGSEA.html">DO.SplitBarGSEA</a></code>: A function for viusalizing GSEA result from a provided df from e.g. metascape</p></li>
 <li><p><code><a href="DO.scVI.html">DO.scVI</a></code>: A function for running the scVI Integration implemented in scvi-tools.</p></li>
-<li><p><code><a href="DO.TransferLabel.html">DO.TransferLabel</a></code>: A function for transfering annotation from a subseted object to the original seurat object.</p></li>
+<li><p><code><a href="DO.TransferLabel.html">DO.TransferLabel</a></code>: A function for transfering annotation from a subseted object to the original seurat and SCE object.</p></li>
 <li><p><code><a href="DO.PyEnv.html">DO.PyEnv</a></code>: A function for creating a conda envrionment holding all python packages needed for some functions.</p></li>
 <li><p><code><a href="DO.Correlation.html">DO.Correlation</a></code>: A function for creating a correlation plot between provided samples in the category specified.</p></li>
 <li><p><code><a href="DO.Heatmap.html">DO.Heatmap</a></code>: A function for generating Heat maps on gene expression data.</p></li>
@@ -87,7 +87,7 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="DO.BoxPlot.html">DO.BoxPlot</a></code>, <code><a href="DO.CellTypist.html">DO.CellTypist</a></code>, <code><a href="DO.DietSeurat.html">DO.DietSeurat</a></code>, <code><a href="DO.Dotplot.html">DO.Dotplot</a></code>,
+    <div class="dont-index"><p><code><a href="DO.BoxPlot.html">DO.BoxPlot</a></code>, <code><a href="DO.CellTypist.html">DO.CellTypist</a></code>, <code><a href="DO.DietSCE.html">DO.DietSCE</a></code>, <code><a href="DO.Dotplot.html">DO.Dotplot</a></code>,
     <code><a href="DO.FullRecluster.html">DO.FullRecluster</a></code>, <code><a href="DO.BarplotClustert.html">DO.BarplotClustert</a></code>, <code><a href="DO.BarplotWilcox.html">DO.BarplotWilcox</a></code>,
     <code><a href="DO.Subset.html">DO.Subset</a></code>, <code><a href="DO.UMAP.html">DO.UMAP</a></code>, <code><a href="DO.VlnPlot.html">DO.VlnPlot</a></code>, <code><a href="DO.Import.html">DO.Import</a></code>, <code><a href="DO.CellBender.html">DO.CellBender</a></code>,
     <code><a href="DO.SplitBarGSEA.html">DO.SplitBarGSEA</a></code>, <code><a href="DO.scVI.html">DO.scVI</a></code>, <code><a href="DO.TransferLabel.html">DO.TransferLabel</a></code>,<code><a href="DO.Heatmap.html">DO.Heatmap</a></code>, <code><a href="DO.PyEnv.html">DO.PyEnv</a></code>, <code><a href="DO.Correlation.html">DO.Correlation</a></code>,

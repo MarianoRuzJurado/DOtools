@@ -197,7 +197,7 @@ DO.BarplotClustert <- function(sce_object,
     #ordering, control always first
     scale_x_discrete(limits=c(as.character(ctrl.condition),levels(factor(df.melt.sum$condition))[!(levels(factor(df.melt.sum$condition)) %in% ctrl.condition)]))+
     #t-test, always against control, using means from orig sample identifier
-    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=5, y.position = y_pos_test, step.increase = step_mod)+
+    stat_compare_means(data=df.melt.orig, comparisons = ListTest, method = "t.test", size=4, y.position = y_pos_test, step.increase = step_mod)+
     facet_wrap(~variable, ncol = 9, scales = "free") +
     scale_fill_manual(values = bar_colours #20 colours set for more change number
                       , name = "Condition")+

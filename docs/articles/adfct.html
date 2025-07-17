@@ -92,8 +92,8 @@ generated in the section: Quality control of sc/snRNA-seq.</p>
 <div class="section level3">
 <h3 id="libraries-set-up">Libraries &amp; Set-Up<a class="anchor" aria-label="anchor" href="#libraries-set-up"></a>
 </h3>
-<pre><code><span><span class="co">#&gt; 2025-07-09 13:17:46 - Using existing conda environment at: /home/mariano/.venv/DOtools</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:46 - Python packages ready for DOtools!</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; 2025-07-17 14:08:55 - Using existing conda environment at: /home/mariano/.venv/DOtools</span></span>
+<span><span class="co">#&gt; 2025-07-17 14:08:55 - Python packages ready for DOtools!</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dotplot">Dotplot<a class="anchor" aria-label="anchor" href="#dotplot"></a>
@@ -104,10 +104,24 @@ additional functionalities, e.g. the visualisation of 3 variables at the
 same time. For example, we can visualise the expression of a gene across
 celltypes and conditions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>Seu_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">sce_object</span>,</span>
 <span>           group.by.x <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>           group.by.y <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>           Feature <span class="op">=</span> <span class="st">"NKG7"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `PackageCheck()` was deprecated in SeuratObject 5.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `rlang::check_installed()` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
+<span><span class="co">#&gt; Warning: The `slot` argument of `SetAssayData()` is deprecated as of SeuratObject 5.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/dotplot-1.png" width="480"></p>
@@ -120,7 +134,7 @@ UMAP embeddings since it combines the ability to show cell groupings and
 gene expression.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span>Seu_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">sce_object</span>,</span>
 <span>        group.by <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>        split.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>        FeaturePlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -135,20 +149,20 @@ gene expression.</p>
 cell population.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/DO.CellComposition.html">DO.CellComposition</a></span><span class="op">(</span>Seu_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<span><span class="fu"><a href="../reference/DO.CellComposition.html">DO.CellComposition</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">sce_object</span>,</span>
 <span>                   assay_normalized <span class="op">=</span> <span class="st">"RNA"</span>,</span>
 <span>                   cluster_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                   sample_column <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:49 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-07-17 14:08:59 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span></span>
 <span><span class="co">#&gt; [INFO] Your data doesn't have replicates! Artificial replicates will be simulated to run scanpro.</span></span>
 <span><span class="co">#&gt; [INFO] Simulation may take some minutes...</span></span>
 <span><span class="co">#&gt; [INFO] Generating 3 replicates and running 100 simulations...</span></span>
-<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.31 seconds</span></span>
+<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.27 seconds</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/CellComposition-1.png" width="576"></p>
@@ -160,44 +174,47 @@ cell population.</p>
 continuous metadata information across condition with violinplots,
 barplots and boxplots. Additionally, we can test for significance.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<code class="sourceCode R"><span><span class="va">sce_object_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">sce_object</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-07-17 14:09:05 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">sce_object_sub</span>,</span>
 <span>                Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:56 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-17 14:09:05 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:58 - Specified 'ident_name': expecting a categorical variable.</span></span>
-<span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">Seu_obj_NK</span>,</span>
+<code class="sourceCode R"><span><span class="va">sce_object_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">sce_object</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-07-17 14:09:06 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">sce_object_NK</span>,</span>
 <span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:58 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-17 14:09:07 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">rdm_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/DO.BoxPlot.html">DO.BoxPlot</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<span><span class="va">sce_object</span><span class="op">$</span><span class="va">rdm_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">sce_object</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/DO.BoxPlot.html">DO.BoxPlot</a></span><span class="op">(</span><span class="va">sce_object</span>,</span>
 <span>           group.by <span class="op">=</span> <span class="st">"rdm_sample"</span>,</span>
 <span>           ctrl.condition <span class="op">=</span> <span class="st">"A"</span>,</span>
 <span>           Feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>,</span>
-<span>           step_mod <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>           step_mod <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>           stat_pos_mod <span class="op">=</span> <span class="fl">1.05</span>,</span>
 <span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-09 13:17:59 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-07-17 14:09:07 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Box-1.png" width="480"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dotools_plots_"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">path_file</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/DO.Heatmap.html">DO.Heatmap</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
-<span>           features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
+<span><span class="fu"><a href="../reference/DO.Heatmap.html">DO.Heatmap</a></span><span class="op">(</span><span class="va">sce_object</span>,</span>
+<span>           features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">sce_object</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
 <span>           xticks_rotation<span class="op">=</span><span class="fl">45</span>,</span>
 <span>           path <span class="op">=</span> <span class="va">path_file</span>,</span>
 <span>           stats_x_size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
@@ -226,7 +243,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  collate  en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       Europe/Berlin</span></span>
-<span><span class="co">#&gt;  date     2025-07-09</span></span>
+<span><span class="co">#&gt;  date     2025-07-17</span></span>
 <span><span class="co">#&gt;  pandoc   3.4 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   1.6.42 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/quarto</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -265,7 +282,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  digest                 0.6.37   <span style="color: #555555;">2024-08-19</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dir.expiry             1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dotCall64              1.2      <span style="color: #555555;">2024-10-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-09</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
+<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-17</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
 <span><span class="co">#&gt;  dplyr                  1.1.4    <span style="color: #555555;">2023-11-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dqrng                  0.4.1    <span style="color: #555555;">2024-05-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  DropletUtils           1.28.0   <span style="color: #555555;">2025-04-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
@@ -426,7 +443,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  zip                    2.3.3    <span style="color: #555555;">2025-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  zoo                    1.8-14   <span style="color: #555555;">2025-04-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpgfvESI/temp_libpath4003337488d71</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpSfyrs5/temp_libpath700914fa7956d</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [2] /home/mariano/R/x86_64-pc-linux-gnu-library/4.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [3] /usr/local/lib/R/site-library</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [4] /usr/lib/R/site-library</span></span></span>
