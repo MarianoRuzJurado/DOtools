@@ -125,8 +125,8 @@ can be imported as:</p>
 <span></span>
 <span><span class="co">#Python installation set up</span></span>
 <span><span class="fu"><a href="../reference/DO.PyEnv.html">DO.PyEnv</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:25:34 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:25:34 - Python packages ready for DOtools!</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:05:40 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:05:40 - Python packages ready for DOtools!</span></span>
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_python</a></span><span class="op">(</span><span class="st">"~/.venv/DOtools/bin/python"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -277,21 +277,21 @@ Seuratv5 CCA Integration method.</p>
 <span><span class="co">#&gt; Computing SNN</span></span>
 <span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">Seu_obj</span>, resolution <span class="op">=</span> <span class="fl">0.3</span>, algorithm <span class="op">=</span> <span class="fl">4</span>, random.seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>, reduction <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>, reduction.name <span class="op">=</span> <span class="st">"UMAP"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 12:25:47 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 12:25:47 Read 2807 rows and found 50 numeric columns</span></span>
-<span><span class="co">#&gt; 12:25:47 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 12:25:47 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span><span class="co">#&gt; 09:05:52 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
+<span><span class="co">#&gt; 09:05:52 Read 2807 rows and found 50 numeric columns</span></span>
+<span><span class="co">#&gt; 09:05:52 Using Annoy for neighbor search, n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 09:05:52 Building Annoy index with metric = cosine, n_trees = 50</span></span>
 <span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
 <span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
 <span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 12:25:47 Writing NN index file to temp file /tmp/RtmpHKabi1/file24d148180</span></span>
-<span><span class="co">#&gt; 12:25:47 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 12:25:48 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 12:25:48 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 12:25:50 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 12:25:50 Commencing optimization for 500 epochs, with 130642 positive edges</span></span>
-<span><span class="co">#&gt; 12:25:50 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 12:25:53 Optimization finished</span></span>
+<span><span class="co">#&gt; 09:05:53 Writing NN index file to temp file /tmp/RtmpfGbPOd/file250a69128410</span></span>
+<span><span class="co">#&gt; 09:05:53 Searching Annoy index using 1 thread, search_k = 3000</span></span>
+<span><span class="co">#&gt; 09:05:53 Annoy recall = 100%</span></span>
+<span><span class="co">#&gt; 09:05:54 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 09:05:55 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
+<span><span class="co">#&gt; 09:05:56 Commencing optimization for 500 epochs, with 130642 positive edges</span></span>
+<span><span class="co">#&gt; 09:05:56 Using rng type: pcg</span></span>
+<span><span class="co">#&gt; 09:05:59 Optimization finished</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-1.png" width="700"></p>
@@ -311,13 +311,13 @@ will annotate the defined clusters based on the
 <span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>, </span>
 <span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                         over_clustering <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:25:57 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:25:57 - Saving celltypist results to temporary folder: /tmp/RtmpHKabi1/file24d124560e57</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:06:03 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:06:03 - Saving celltypist results to temporary folder: /tmp/RtmpfGbPOd/file250a4fa792f9</span></span>
 <span><span class="co">#&gt; + /home/runner/.cache/R/basilisk/1.20.0/0/bin/conda create --yes --prefix /home/runner/.cache/R/basilisk/1.20.0/zellkonverter/1.18.0/zellkonverterAnnDataEnv-0.11.4 'python=3.13.2' --quiet -c conda-forge --override-channels</span></span>
 <span><span class="co">#&gt; + /home/runner/.cache/R/basilisk/1.20.0/0/bin/conda install --yes --prefix /home/runner/.cache/R/basilisk/1.20.0/zellkonverter/1.18.0/zellkonverterAnnDataEnv-0.11.4 'python=3.13.2' -c conda-forge --override-channels</span></span>
 <span><span class="co">#&gt; + /home/runner/.cache/R/basilisk/1.20.0/0/bin/conda install --yes --prefix /home/runner/.cache/R/basilisk/1.20.0/zellkonverter/1.18.0/zellkonverterAnnDataEnv-0.11.4 -c conda-forge 'python=3.13.2' 'anndata=0.11.4' 'h5py=3.13.0' 'hdf5=1.14.3' 'natsort=8.4.0' 'numpy=2.2.4' 'packaging=24.2' 'pandas=2.2.3' 'python=3.13.2' 'scipy=1.15.2' --override-channels</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:38 - Running Celltypist</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:40 - Creating probality plot</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-24 09:08:22 - Running Celltypist</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:24 - Creating probality plot</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
@@ -432,13 +432,13 @@ python tool <a href="https://pypi.org/project/scanpro/" class="external-link"><e
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:49 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:33 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span></span>
 <span><span class="co">#&gt; [INFO] Your data doesn't have replicates! Artificial replicates will be simulated to run scanpro.</span></span>
 <span><span class="co">#&gt; [INFO] Simulation may take some minutes...</span></span>
 <span><span class="co">#&gt; [INFO] Generating 3 replicates and running 100 simulations...</span></span>
-<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.71 seconds</span></span>
+<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.81 seconds</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/cell%20populations-1.png" width="700"></p>
@@ -459,7 +459,7 @@ markers defining them.</p>
 <code class="sourceCode R"><span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
 <span>                     ident <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>                     ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:54 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:38 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">T_markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span><span class="va">T_cells</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculating cluster T_cells_1</span></span>
@@ -471,10 +471,10 @@ markers defining them.</p>
 <span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span>                         over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>                         SeuV5 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:59 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:27:59 - Saving celltypist results to temporary folder: /tmp/RtmpHKabi1/file24d18da6a40</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:06 - Running Celltypist</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:09 - Creating probality plot</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-24 09:08:43 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:43 - Saving celltypist results to temporary folder: /tmp/RtmpfGbPOd/file250aa6f35b2</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:51 - Running Celltypist</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:53 - Creating probality plot</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Recluster-2.png" width="700"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -511,7 +511,7 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">orig.ident2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">CD4T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:10 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:54 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">CD4T_cells</span>,</span>
 <span>                          sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
@@ -521,17 +521,17 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="co">#&gt; Centering and scaling data matrix</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:10 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:10 - Starting DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:10 - Comparing disease with healthy in: CD4_T_cells</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:12 - Finished DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:12 - Starting DGE pseudo bulk method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:12 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:54 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:54 - Starting DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:54 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:56 - Finished DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:56 - Starting DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:56 - Comparing disease with healthy in: CD4_T_cells</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; 2025-07-17 12:28:13 - Finished DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-24 09:08:58 - Finished DGE pseudo bulk method analysis</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>,<span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1197,7 +1197,7 @@ enriched
 <span><span class="co">#&gt;  collate  C.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    C.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       UTC</span></span>
-<span><span class="co">#&gt;  date     2025-07-17</span></span>
+<span><span class="co">#&gt;  date     2025-07-24</span></span>
 <span><span class="co">#&gt;  pandoc   3.1.11 @ /opt/hostedtoolcache/pandoc/3.1.11/x64/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   NA</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1235,7 +1235,7 @@ enriched
 <span><span class="co">#&gt;  digest                 0.6.37   <span style="color: #555555;">2024-08-19</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  dir.expiry             1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  dotCall64              1.2      <span style="color: #555555;">2024-10-04</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span></span>
+<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-24</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span></span>
 <span><span class="co">#&gt;  dplyr                * 1.1.4    <span style="color: #555555;">2023-11-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  dqrng                  0.4.1    <span style="color: #555555;">2024-05-28</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  DropletUtils           1.28.1   <span style="color: #555555;">2025-07-06</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
@@ -1312,7 +1312,7 @@ enriched
 <span><span class="co">#&gt;  openxlsx               4.2.8    <span style="color: #555555;">2025-01-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  parallelly             1.45.0   <span style="color: #555555;">2025-06-02</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  patchwork              1.3.1    <span style="color: #555555;">2025-06-21</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  pbapply                1.7-2    <span style="color: #555555;">2023-06-27</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  pbapply                1.7-4    <span style="color: #555555;">2025-07-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  pillar                 1.11.0   <span style="color: #555555;">2025-07-04</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  pkgconfig              2.0.3    <span style="color: #555555;">2019-09-22</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  pkgdown                2.1.3    <span style="color: #555555;">2025-05-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">any (@2.1.3)</span></span></span>
@@ -1337,7 +1337,7 @@ enriched
 <span><span class="co">#&gt;  RcppAnnoy              0.0.22   <span style="color: #555555;">2024-01-23</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  RcppHNSW               0.6.0    <span style="color: #555555;">2024-02-04</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  reshape2               1.4.4    <span style="color: #555555;">2020-04-09</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  reticulate             1.42.0   <span style="color: #555555;">2025-03-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  reticulate             1.43.0   <span style="color: #555555;">2025-07-21</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  rhdf5                  2.52.1   <span style="color: #555555;">2025-06-08</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  rhdf5filters           1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  Rhdf5lib               1.30.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
@@ -1369,12 +1369,12 @@ enriched
 <span><span class="co">#&gt;  SparseArray            1.8.0    <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  sparseMatrixStats      1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  spatstat.data          3.1-6    <span style="color: #555555;">2025-03-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  spatstat.explore       3.4-3    <span style="color: #555555;">2025-05-21</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  spatstat.geom          3.4-1    <span style="color: #555555;">2025-05-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  spatstat.explore       3.5-2    <span style="color: #555555;">2025-07-22</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  spatstat.geom          3.5-0    <span style="color: #555555;">2025-07-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  spatstat.random        3.4-1    <span style="color: #555555;">2025-05-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  spatstat.sparse        3.1-0    <span style="color: #555555;">2024-06-21</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  spatstat.univar        3.1-4    <span style="color: #555555;">2025-07-13</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  spatstat.utils         3.1-4    <span style="color: #555555;">2025-05-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  spatstat.utils         3.1-5    <span style="color: #555555;">2025-07-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  statmod                1.5.0    <span style="color: #555555;">2023-01-06</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  stringi                1.8.7    <span style="color: #555555;">2025-03-27</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  stringr                1.5.1    <span style="color: #555555;">2023-11-14</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
