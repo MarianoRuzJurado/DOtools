@@ -284,13 +284,14 @@ DO.Import <- function(pathways,
 #' @param assay_normalized Assay with log1p normalized expressions
 #' @param returnProb will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix
 #' @param SeuV5 Specify if the Seurat object is made with Seuratv5
+#'
+#' @importFrom basilisk basiliskRun
 #' @import dplyr
 #' @import ggplot2
 #'
 #' @return a seurat or sce object
 #'
 #' @examples
-#' reticulate::use_python("~/.venv/DOtools/bin/python")
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #'
@@ -321,13 +322,13 @@ DO.CellTypist <- function(sce_object,
   rt <- system.file(package = "reticulate")
   ifelse(nzchar(rt), "", stop("Install reticulate R package for Python usage in R!"))
 
-  if (!reticulate::py_available(initialize = TRUE)) {
-    stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
-  }
-
-  if (!reticulate::py_module_available('celltypist')) {
-    stop('The celltypist python package has not been installed in this python environment!')
-  }
+  # if (!reticulate::py_available(initialize = TRUE)) {
+  #   stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
+  # }
+  #
+  # if (!reticulate::py_module_available('celltypist')) {
+  #   stop('The celltypist python package has not been installed in this python environment!')
+  # }
 
   if (ncol(sce_object) < minCellsToRun) {
     warning('Too few cells, will not run celltypist. NAs will be added instead')
@@ -374,16 +375,21 @@ DO.CellTypist <- function(sce_object,
 
   zellkonverter::writeH5AD(tmp.sce, file = paste0(outDir,"/ad.h5ad"), X_name = "logcounts")
 
-  # Ensure models present:
-  if (runCelltypistUpdate) {
-    system2(reticulate::py_exe(), c("-m", "celltypist.command_line", "--update-models", "--quiet"))
-  }
+  #basilisk implementation
+  results <- basilisk::basiliskRun(env = DOtoolsEnv, fun=function(args){
 
-  .logger("Running Celltypist")
+    # Ensure models present:
+    if (runCelltypistUpdate) {
+      system2(reticulate::py_exe(), c("-m", "celltypist.command_line", "--update-models", "--quiet"))
+    }
 
-  # Run celltypist:
-  args <- c("-m", "celltypist.command_line", "--indata",  paste0(outDir,"/ad.h5ad"), "--model", modelName, "--outdir", outDir,"--majority-voting", "--over-clustering", over_clustering)
-  system2(reticulate::py_exe(), args)
+    .logger("Running Celltypist")
+
+    # Run celltypist:
+    args_cty <- c("-m", "celltypist.command_line", "--indata",  paste0(outDir,"/ad.h5ad"), "--model", modelName, "--outdir", outDir,"--majority-voting", "--over-clustering", over_clustering)
+    system2(reticulate::py_exe(), args_cty)
+
+  }, args=args)
 
   labelFile <- paste0(outDir, "/predicted_labels.csv")
   probFile <- paste0(outDir, "/probability_matrix.csv")
@@ -957,15 +963,15 @@ DO.CellBender <- function(cellranger_path,
 
   # Handle conda environment
   if (is.null(conda_path)) {
-    conda_path <- file.path(path.expand("~"), ".venv/cellbender")
+    conda_path <- file.path(path.expand("~"), ".cache/R/basilisk/1.20.0/DOtools/0.99.0/CellBen_env")
   } else {
     conda_path <- path.expand(conda_path)
   }
 
   if (!dir.exists(conda_path)) {
     .logger("Creating conda environment for CellBender...")
-    conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".venv/cellbender"), "python=3.7")
-    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".venv/cellbender"), "pip", "install", "cellbender", "lxml_html_clean")
+    conda_args1 <- c("conda","create","-y", "-p", file.path(path.expand("~"), ".cache/R/basilisk/1.20.0/DOtools/0.99.0/CellBen_env"), "python=3.7")
+    conda_args2 <- c("conda","run", "-p", file.path(path.expand("~"), ".cache/R/basilisk/1.20.0/DOtools/0.99.0/CellBen_env"), "pip", "install", "cellbender", "lxml_html_clean")
     tryCatch({
       system2(conda_args1[1], args = conda_args1[-1], stdout = FALSE, stderr = FALSE)
       system2(conda_args2[1], args = conda_args2[-1], stdout = FALSE, stderr = FALSE)
@@ -1054,12 +1060,12 @@ DO.CellBender <- function(cellranger_path,
 #' @param dispersion dispersion mode for scVI.
 #' @param gene_likelihood gene likelihood.
 #' @param get_model return the trained model.
-#' @param ... additional arguments for `scvi.model.SCVI`.
+#'
 #'
 #' @import Seurat
-#' @import reticulate
 #' @import zellkonverter
 #' @import SingleCellExperiment
+#' @importFrom basilisk basiliskRun
 #'
 #' @examples
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
@@ -1080,8 +1086,8 @@ DO.scVI <- function(sce_object,
                     n_layers=3,
                     dispersion="gene-batch",
                     gene_likelihood="zinb",
-                    get_model=FALSE,
-                    ...){
+                    get_model=FALSE
+                    ){
 
   #support for Seurat objects
   if (is(sce_object, "Seurat")) {
@@ -1114,28 +1120,50 @@ DO.scVI <- function(sce_object,
     stop("counts not found in assays of object!")
   }
 
-  anndata_object <- zellkonverter::SCE2AnnData(sce_object_sub)
-  anndata_object$layers['counts'] <- anndata_object$X # set
-
   #source PATH to python script in install folder
   path_py <- system.file("python", "scVI.py", package = "DOtools")
-  source_python(path_py)
 
-  run_scvi(adata = anndata_object,
-           batch_key = batch_key,
-           layer_counts = layer_counts,
-           layer_logcounts = layer_logcounts,
-           categorical_covariates = categorical_covariates,
-           continuos_covariates = continuos_covariates,
-           n_hidden = as.integer(n_hidden),
-           n_latent = as.integer(n_latent),
-           n_layers = as.integer(n_layers),
-           dispersion = dispersion,
-           gene_likelihood = gene_likelihood,
-           get_model = get_model,
-           ...)
+  #argument list passed to heatmap inside basilisk
+  args <- list(
+    sce_object = sce_object_sub,
+    batch_key = batch_key,
+    layer_counts = layer_counts,
+    layer_logcounts = layer_logcounts,
+    categorical_covariates = categorical_covariates,
+    continuos_covariates = continuos_covariates,
+    n_hidden = as.integer(n_hidden),
+    n_latent = as.integer(n_latent),
+    n_layers = as.integer(n_layers),
+    dispersion = dispersion,
+    gene_likelihood = gene_likelihood,
+    get_model = get_model
+  )
 
-  scvi_embedding <- anndata_object$obsm[["X_scVI"]]
+  #basilisk implementation
+  scvi_embedding <- basilisk::basiliskRun(env = DOtoolsEnv, fun=function(args){
+
+    anndata_object <- zellkonverter::SCE2AnnData(args$sce_object)
+    anndata_object$layers['counts'] <- anndata_object$X # set
+
+    reticulate::source_python(path_py)
+
+    run_scvi(adata = anndata_object,
+             batch_key = args$batch_key,
+             layer_counts = args$layer_counts,
+             layer_logcounts = args$layer_logcounts,
+             categorical_covariates = args$categorical_covariates,
+             continuos_covariates = args$continuos_covariates,
+             n_hidden = args$n_hidden,
+             n_latent = args$n_latent,
+             n_layers = args$n_layers,
+             dispersion = args$dispersion,
+             gene_likelihood = args$gene_likelihood,
+             get_model = args$get_model
+             )
+
+    return(anndata_object$obsm[["X_scVI"]])
+  }, args=args)
+
   rownames(scvi_embedding) <- colnames(sce_object)
 
   if (class_obj == "Seurat") {

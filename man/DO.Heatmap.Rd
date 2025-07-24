@@ -126,7 +126,6 @@ Differential gene expression analysis between the different groups can be perfor
 }
 \examples{
 #'
-reticulate::use_python("~/.venv/DOtools/bin/python")
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Heatmap(

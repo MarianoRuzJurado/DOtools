@@ -78,7 +78,6 @@ Generates customizable plots with options for transformation, grouping, and boot
 Returns a ggplot object or a list containing plot data and visualisation.
 }
 \examples{
-reticulate::use_python("~/.venv/DOtools/bin/python")
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.CellComposition(

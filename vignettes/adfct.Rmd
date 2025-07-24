@@ -44,8 +44,6 @@ In this tutorial we compile examples on how to use the different functions avail
 ```{r load_library, message=FALSE, echo=FALSE}
 library(DOtools)
 
-DO.PyEnv()
-reticulate::use_python("~/.venv/DOtools/bin/python")
 sce_object <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 ```
 

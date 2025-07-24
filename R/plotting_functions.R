@@ -25,6 +25,7 @@
 #' @import magrittr
 #' @import dplyr
 #' @import reshape2
+#' @import basilisk
 #' @importFrom SeuratObject as.Seurat
 #'
 #' @return a ggplot or a dataframe
@@ -1878,13 +1879,12 @@ theme_box <- function(){
 #'
 #' @return ggplot object or list
 #'
-#' @import reticulate
 #' @import ggplot2
 #' @import ggalluvial
+#' @importFrom basilisk basiliskRun
 #' @importFrom SeuratObject DefaultAssay
 #'
 #' @examples
-#' reticulate::use_python("~/.venv/DOtools/bin/python")
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.CellComposition(
@@ -1936,10 +1936,10 @@ DO.CellComposition <- function(sce_object,
   # Make sure R reticulate package is installed
   rt <- system.file(package = "reticulate")
   ifelse(nzchar(rt), "", stop("Install reticulate R package for Python usage in R!"))
-
-  if (!reticulate::py_available(initialize = TRUE)) {
-    stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
-  }
+  #deprectaed
+  # if (!reticulate::py_available(initialize = TRUE)) {
+  #   stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
+  # }
 
   #support for Seurat objects
   if (is(sce_object, "Seurat")) {
@@ -1953,84 +1953,81 @@ DO.CellComposition <- function(sce_object,
   }
 
   #AnnData creation
-  AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
+  # AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
 
-  # Import scanpro
-  sc <- import("scanpro.scanpro")
-  plt <- import("matplotlib.pyplot")
-  merge_design_props_fct <- py_get_attr(sc$ScanproResult, "_merge_design_props")
+  #basilisk implementation for scanpro
+  results <- basilisk::basiliskRun(env = DOtoolsEnv, fun=function(arg1, arg2, arg3, arg4, arg5, arg6, arg7){
 
-  if(is.null(n_reps)){
-    out <- sc$scanpro(AnnData_counts,
-                     clusters_col=cluster_column,
-                     samples_col=sample_column,
-                     conds_col=condition_column,
-                     transform = transform_method)
-  } else{
-    out <- sc$scanpro(AnnData_counts,
-                     clusters_col=cluster_column,
-                     conds_col=condition_column,
-                     transform = transform_method,
-                     n_reps=as.integer(n_reps))
-  }
+    AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
 
-  if (scanpro_plots==TRUE) {
-    if (!dir.exists(paste0(outputFolder,"/scanpro"))) {
-      dir.create(paste0(outputFolder,"/scanpro"))
+    sc <- reticulate::import("scanpro.scanpro")
+    plt <- reticulate::import("matplotlib.pyplot")
+    merge_funct <- reticulate::py_get_attr(sc$ScanproResult, "_merge_design_props")
+
+    if(is.null(n_reps)){
+      out <- sc$scanpro(AnnData_counts,
+                        clusters_col=cluster_column,
+                        samples_col=sample_column,
+                        conds_col=condition_column,
+                        transform = transform_method)
+    } else{
+      out <- sc$scanpro(AnnData_counts,
+                        clusters_col=cluster_column,
+                        conds_col=condition_column,
+                        transform = transform_method,
+                        n_reps=as.integer(n_reps))
     }
-  }
 
-  #Plot scanpro plots if requested
-  if(scanpro_plots==TRUE && is.null(scanpro_group)){
-    out$plot(kind="boxplot", ...)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_box_plot.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+    if (scanpro_plots==TRUE) {
+      if (!dir.exists(paste0(outputFolder,"/scanpro"))) {
+        dir.create(paste0(outputFolder,"/scanpro"))
+      }
+    }
 
-    out$plot(kind="barplot", ...)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_bar_plot.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+    #Plot scanpro plots if requested
+    if(scanpro_plots==TRUE && is.null(scanpro_group)){
 
-    #As stacked bar plot
-    out$plot_samples(stacked=TRUE)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_stacked_bar.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+        out$plot(kind="boxplot", ...)
+        plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_box_plot.svg"), dpi=300, bbox_inches="tight")
+        plt$close()
 
-    #As NON-stacked bar plot
-    out$plot_samples(x=cluster_column)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_notStacked_bar.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+        out$plot(kind="barplot", ...)
+        plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_bar_plot.svg"), dpi=300, bbox_inches="tight")
+        plt$close()
 
-  }
+    }
 
-  if(scanpro_plots==TRUE && !is.null(scanpro_group)){
-    out$plot(kind="boxplot",clusters=scanpro_group, ...)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_",scanpro_group,"_box_plot.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+    #Plot scanpro plots if requested
+    if(scanpro_plots==TRUE && !is.null(scanpro_group)){
 
-    out$plot(kind="barplot",clusters=scanpro_group, ...)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_",scanpro_group,"_bar_plot.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+      out$plot(kind="boxplot",clusters=scanpro_group, ...)
+      plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_",scanpro_group,"_box_plot.svg"), dpi=300, bbox_inches="tight")
+      plt$close()
 
-    #As stacked bar plot
-    out$plot_samples(stacked=TRUE)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_stacked_bar.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
+      out$plot(kind="barplot",clusters=scanpro_group, ...)
+      plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_",scanpro_group,"_bar_plot.svg"), dpi=300, bbox_inches="tight")
+      plt$close()
 
-    #As NON-stacked bar plot
-    out$plot_samples(x=cluster_column)
-    plt$savefig(paste0(outputFolder, "/scanpro/CellComposition_complete_notStacked_bar.svg"), dpi=300, bbox_inches="tight")
-    plt$close()
-  }
+    }
+
+    list(
+      df_res = reticulate::py_to_r(out$results),
+      df_counts = reticulate::py_to_r(out$counts),
+      df_design = reticulate::py_to_r(out$design),
+      df_merge = reticulate::py_to_r(merge_funct(out))
+    )
+
+  }, arg1=sce_object,arg2=cluster_column,arg3=sample_column,arg4=condition_column,arg5=transform_method,arg6=n_reps,arg7=...)
 
   #assign results df
-  results_df <- out$results
-  results_counts <- out$counts
+  results_df <- results$df_res
+  results_counts <- results$df_counts
   results_counts <- tibble::rownames_to_column(results_counts, var="orig.ident")
-  results_counts$condition <- result_vector <- apply(out$design, 1, function(x) names(x)[x == 1])
+  results_counts$condition <- result_vector <- apply(results$df_design, 1, function(x) names(x)[x == 1])
   results_counts <- reshape2::melt(results_counts)
 
   #per sample proportions
-  prop_merge <- merge_design_props_fct(out)
+  prop_merge <- results$df_merge
   prop_merge_melt <- reshape2::melt(prop_merge)
 
   #add count numbers
@@ -2057,8 +2054,6 @@ DO.CellComposition <- function(sce_object,
 
   prop_df$variable<- as.vector(prop_df$variable)
 
-  # sum(prop_df[prop_df[[condition_column]] == colnames(out$design)[1],]$proportion)
-  # sum(prop_df[prop_df[[condition_column]] == colnames(out$design)[2],]$proportion)
 
   if (is.null(bar_colors)) {
     bar_colors <- rep(c(
@@ -2228,11 +2223,10 @@ DO.CellComposition <- function(sce_object,
 #'
 #' @return: None or the axis
 #'
-#' @import reticulate
+#' @importFrom basilisk basiliskRun
 #'
 #' @examples
 #' library(enrichR)
-#' reticulate::use_python("~/.venv/DOtools/bin/python")
 #'
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #' DGE_result <- DO.MultiDGE(sce_data,
@@ -2296,61 +2290,87 @@ DO.SplitBarGSEA <- function(df_GSEA,
                             celltype="all")
 {
 
+  #Create argument list to pass
+  args <- list(
+    df_GSEA = df_GSEA,
+    term_col = term_col,
+    col_split = col_split,
+    cond_col = cond_col,
+    pos_cond = pos_cond,
+    title = paste0(title, celltype),
+    cutoff = cutoff,
+    log10_transform = log10_transform,
+    figsize = figsize,
+    topN = topN,
+    colors_pairs = colors_pairs,
+    alpha_colors = alpha_colors,
+    path = path,
+    spacing = spacing,
+    txt_size = txt_size,
+    filename = filename,
+    showP = showP
+  )
+
   if (!"celltype" %in% colnames(df_GSEA)) {
     stop("Provided data frame has no column named 'celltype'! Please add a column with cell type information.")
   }
 
   #source PATH to python script in install folder
   path_py <- system.file("python", "GSEA_split_bar.py", package = "DOtools")
-  source_python(path_py)
-
-  #Initialize matplot package
-  plt <- import("matplotlib.pyplot")
 
   #Subset by given celltype names
   if (!celltype=="all") {
     df_GSEA <- df_GSEA[df_GSEA$celltype %in% celltype,]
   }
 
-  #Run for each celltype the split_bar_gsea function
-  for (celltype in unique(df_GSEA$celltype)) {
-    df_GSEA_sub <- df_GSEA[df_GSEA$celltype == celltype,]
-    df_GSEA_sub$Term <- sapply(strsplit(df_GSEA_sub$Term, " \\(GO"), function(x)x[1])
+  #basilisk implementation
+  results <- basilisk::basiliskRun(env = DOtoolsEnv, fun=function(args){
 
-    #Conversion of the data.frame
-    df_GSEA_sub_pd <- r_to_py(df_GSEA_sub)
+    reticulate::source_python(path_py)
+    #Initialize matplot package
+    plt <- reticulate::import("matplotlib.pyplot")
 
-    #run python function with given arguments
-    plot <- split_bar_gsea(df = df_GSEA_sub_pd,
-                           term_col = term_col,
-                           col_split = col_split,
-                           cond_col = cond_col,
-                           pos_cond = pos_cond,
-                           title = paste0(title, celltype),
-                           cutoff = cutoff,
-                           log10_transform = log10_transform,
-                           figsize = figsize,
-                           topN = topN,
-                           colors_pairs = colors_pairs,
-                           alpha_colors = alpha_colors,
-                           path = path,
-                           spacing = spacing,
-                           txt_size = txt_size,
-                           filename = filename,
-                           showP = showP)
+    #Run for each celltype the split_bar_gsea function
+    for (celltype in unique(df_GSEA$celltype)) {
+      df_GSEA_sub <- df_GSEA[df_GSEA$celltype == celltype,]
+      df_GSEA_sub$Term <- sapply(strsplit(df_GSEA_sub$Term, " \\(GO"), function(x)x[1])
 
-    if (showP == TRUE) {
-      #x-title settings
-      # plot$set_xlabel("Combined Score")
-      plt$show()
+      #Conversion of the data.frame
+      df_GSEA_sub_pd <- reticulate::r_to_py(df_GSEA_sub)
+
+      #run python function with given arguments
+      plot <- split_bar_gsea(df = args$df_GSEA,
+                             term_col = args$term_col,
+                             col_split = args$col_split,
+                             cond_col = args$cond_col,
+                             pos_cond = args$pos_cond,
+                             title = args$title,
+                             cutoff = args$cutoff,
+                             log10_transform = args$log10_transform,
+                             figsize = args$figsize,
+                             topN = args$topN,
+                             colors_pairs = args$colors_pairs,
+                             alpha_colors = args$alpha_colors,
+                             path = args$path,
+                             spacing = args$spacing,
+                             txt_size = args$txt_size,
+                             filename = args$filename,
+                             showP = args$showP)
+
+      if (showP == TRUE) {
+        #x-title settings
+        # plot$set_xlabel("Combined Score")
+        plt$show()
+      }
+
+      if (!is.null(path)) {
+        #Save under provided PATH
+        plt$savefig(paste0(path, celltype, "_", filename), dpi=300, bbox_inches="tight")
+      }
+
     }
 
-    if (!is.null(path)) {
-    #Save under provided PATH
-    plt$savefig(paste0(path, celltype, "_", filename), dpi=300, bbox_inches="tight")
-    }
-
-  }
+  }, args = args)
 }
 
 #' @author Mariano Ruz Jurado
@@ -2529,11 +2549,10 @@ DO.Correlation <- function(sce_object,
 #' @return Depending on ``showP``, returns the plot if set to `TRUE` or a dictionary with the axes.
 #'
 #'
-#' @import reticulate
 #' @import Seurat
+#' @importFrom basilisk basiliskRun
 #'
 #' @examples#'
-#' reticulate::use_python("~/.venv/DOtools/bin/python")
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.Heatmap(
@@ -2616,10 +2635,6 @@ DO.Heatmap <- function(
     logcounts = TRUE
 ) {
 
-  if (!reticulate::py_available(initialize = TRUE)) {
-    stop(paste0('Python/reticulate not correctly configured. Run "usethis::edit_r_environ()" to specify your Python instance'))
-  }
-
   #support for Seurat objects
   if (is(sce_object, "Seurat")) {
     DefaultAssay(sce_object) <- assay_normalized
@@ -2630,8 +2645,6 @@ DO.Heatmap <- function(
   if (!"logcounts" %in% names(sce_object@assays)) {
     stop("logcounts not found in assays of object!")
   }
-
-  AnnData_counts <- zellkonverter::SCE2AnnData(sce_object, X_name = "logcounts")
 
   if (add_stats == TRUE) {
     if (is.null(df_pvals)) {
@@ -2660,51 +2673,91 @@ DO.Heatmap <- function(
 
   #source PATH to python script in install folder
   path_py <- system.file("python", "heatmap.py", package = "DOtools")
-  source_python(path_py)
-
-  #Initialize matplot package
-  plt <- import("matplotlib.pyplot")
-
-  heatmap(adata = AnnData_counts,
-          group_by = group_by,
-          features = features,
-          z_score = z_score,
-          path = path,
-          filename = filename,
-          layer = NULL,
-          swap_axes = swap_axes,
-          cmap = cmap,
-          title = title,
-          title_fontprop = title_fontprop,
-          clustering_method = clustering_method,
-          clustering_metric = clustering_metric,
-          cluster_x_axis = cluster_x_axis,
-          cluster_y_axis = cluster_y_axis,
-          axs = axs,
-          figsize = figsize,
-          linewidth = linewidth,
-          ticks_fontdict = ticks_fontdict,
-          xticks_rotation = xticks_rotation,
-          yticks_rotation = yticks_rotation,
-          vmin = vmin,
-          vcenter = vcenter,
-          vmax = vmax,
-          legend_title = legend_title,
-          add_stats = add_stats,
-          df_pvals = df_pvals,
-          stats_x_size = stats_x_size,
-          square_x_size = square_x_size,
-          pval_cutoff = pval_cutoff,
-          square = square,
-          showP = showP,
-          logcounts = logcounts
-          )
 
 
+  #argument list passed to heatmap inside basilisk
+  args <- list(
+    sce_object = sce_object,
+    group_by = group_by,
+    features = features,
+    z_score = z_score,
+    path = path,
+    filename = filename,
+    layer = NULL,
+    swap_axes = swap_axes,
+    cmap = cmap,
+    title = title,
+    title_fontprop = title_fontprop,
+    clustering_method = clustering_method,
+    clustering_metric = clustering_metric,
+    cluster_x_axis = cluster_x_axis,
+    cluster_y_axis = cluster_y_axis,
+    axs = axs,
+    figsize = figsize,
+    linewidth = linewidth,
+    ticks_fontdict = ticks_fontdict,
+    xticks_rotation = xticks_rotation,
+    yticks_rotation = yticks_rotation,
+    vmin = vmin,
+    vcenter = vcenter,
+    vmax = vmax,
+    legend_title = legend_title,
+    add_stats = add_stats,
+    df_pvals = df_pvals,
+    stats_x_size = stats_x_size,
+    square_x_size = square_x_size,
+    pval_cutoff = pval_cutoff,
+    square = square,
+    showP = showP,
+    logcounts = logcounts
+  )
 
 
+  #basilisk implementation
+  results <- basilisk::basiliskRun(env = DOtoolsEnv, fun=function(args){
 
+    AnnData_counts <- zellkonverter::SCE2AnnData(args$sce_object, X_name = "logcounts")
 
+    reticulate::source_python(path_py)
+
+    #Initialize matplot package
+    plt <- reticulate::import("matplotlib.pyplot")
+
+    heatmap(adata = AnnData_counts,
+            group_by = args$group_by,
+            features = args$features,
+            z_score = args$z_score,
+            path = args$path,
+            filename = args$filename,
+            layer = args$layer,
+            swap_axes = args$swap_axes,
+            cmap = args$cmap,
+            title = args$title,
+            title_fontprop = args$title_fontprop,
+            clustering_method = args$clustering_method,
+            clustering_metric = args$clustering_metric,
+            cluster_x_axis = args$cluster_x_axis,
+            cluster_y_axis = args$cluster_y_axis,
+            axs = args$axs,
+            figsize = args$figsize,
+            linewidth = args$linewidth,
+            ticks_fontdict = args$ticks_fontdict,
+            xticks_rotation = args$xticks_rotation,
+            yticks_rotation = args$yticks_rotation,
+            vmin = args$vmin,
+            vcenter = args$vcenter,
+            vmax = args$vmax,
+            legend_title = args$legend_title,
+            add_stats = args$add_stats,
+            df_pvals = args$df_pvals,
+            stats_x_size = args$stats_x_size,
+            square_x_size = args$square_x_size,
+            pval_cutoff = args$pval_cutoff,
+            square = args$square,
+            showP = args$showP,
+            logcounts = args$logcounts
+            )
+  },args=args)
 
 
 }

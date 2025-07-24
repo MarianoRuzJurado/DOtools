@@ -16,8 +16,7 @@ DO.scVI(
   n_layers = 3,
   dispersion = "gene-batch",
   gene_likelihood = "zinb",
-  get_model = FALSE,
-  ...
+  get_model = FALSE
 )
 }
 \arguments{
@@ -44,8 +43,6 @@ DO.scVI(
 \item{gene_likelihood}{gene likelihood.}
 
 \item{get_model}{return the trained model.}
-
-\item{...}{additional arguments for \code{scvi.model.SCVI}.}
 }
 \value{
 Seurat or SCE Object with dimensionality reduction from scVI
