@@ -44,8 +44,6 @@ In this tutorial we compile examples on how to use the different functions avail
 ```{r load_library, message=FALSE, echo=FALSE}
 library(DOtools)
 
-DO.PyEnv()
-reticulate::use_python("~/.venv/DOtools/bin/python")
 sce_object <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 ```
 
@@ -132,7 +130,8 @@ DO.Heatmap(sce_object,
            features = rownames(sce_object)[1:10],
            xticks_rotation=45,
            path = path_file,
-           stats_x_size = 20)
+           stats_x_size = 20,
+           showP = FALSE)
 Heatmap_plot <- list.files(path = path_file, pattern = "Heatmap*\\.svg$", full.names = TRUE, recursive = TRUE)
 plot(magick::image_read_svg(Heatmap_plot))
 

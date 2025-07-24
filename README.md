@@ -26,8 +26,8 @@ devtools::install_github("MarianoRuzJurado/DOtools")
 ```
 
 We highly recommend having [conda](https://www.anaconda.com/docs/getting-started/miniconda/main) installed for python environments.
-Some functions in this package rely on python packages/scripts, please make sure you specify with reticulate a useable python.
-We recommend to use our `DO.PyEnv()` function for easy-to-use solution.
+Some functions in this package depend on Python packages or scripts. These functions use [basilisk](https://www.bioconductor.org/packages/release/bioc/html/basilisk.html) to create isolated environments, which are built using conda. 
+As a result, a working conda installation is required.
 
 ## <b> Python package </b>
 

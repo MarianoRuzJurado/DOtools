@@ -74,10 +74,6 @@ library(dplyr)
 library(tibble)
 library(enrichR)
 library(kableExtra)
-
-#Python installation set up
-DO.PyEnv()
-reticulate::use_python("~/.venv/DOtools/bin/python")
 ```
 
 ## Quality control

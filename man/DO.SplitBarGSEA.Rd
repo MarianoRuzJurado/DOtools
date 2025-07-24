@@ -78,7 +78,6 @@ Pre-filter of the dataframe to contain significant Terms is recommended
 }
 \examples{
 library(enrichR)
-reticulate::use_python("~/.venv/DOtools/bin/python")
 
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 DGE_result <- DO.MultiDGE(sce_data,

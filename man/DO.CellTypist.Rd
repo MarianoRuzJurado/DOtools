@@ -42,7 +42,6 @@ Optionally updates the CellTypist models and returns the probability matrix.
 Useful for annotating cell types in single-cell RNA sequencing datasets.
 }
 \examples{
-reticulate::use_python("~/.venv/DOtools/bin/python")
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 
