@@ -199,8 +199,6 @@ you can control the maximum number of characters per line.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> OxEnrichr ... </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Connection is Live!</span>
-<span class="r-in"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_python</a></span><span class="op">(</span><span class="st">"~/.venv/DOtools/bin/python"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in reticulate::use_python("~/.venv/DOtools/bin/python"):</span> failed to initialize requested version of Python</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">sce_data</span>,</span></span>
@@ -209,32 +207,32 @@ you can control the maximum number of characters per line.</p>
 <span class="r-in"><span>                         annotation_col <span class="op">=</span> <span class="st">"annotation"</span>,</span></span>
 <span class="r-in"><span>                         ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:24 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:24 - Starting DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:24 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:24 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:24 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:26 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:27 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:27 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:27 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:27 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Finished DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Starting DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping NK since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping pDC since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - Finished DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-24 09:04:28 - DGE pseudo bulk result is empty...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:56 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:57 - Starting DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:57 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:57 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:57 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:58 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:59 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:59 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:19:59 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Finished DGE single cell method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Starting DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: B_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: NK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping NK since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: pDC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping pDC since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - Finished DGE pseudo bulk method analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-25 13:20:00 - DGE pseudo bulk result is empty...</span>
 <span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="va">DGE_result</span><span class="op">[</span><span class="va">DGE_result</span><span class="op">$</span><span class="va">celltype</span> <span class="op">==</span> <span class="st">"CD4_T_cells"</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span>df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span></span>
@@ -277,8 +275,6 @@ you can control the maximum number of characters per line.</p>
 <span class="r-in"><span>                title <span class="op">=</span> <span class="st">"Top 10 GO Terms in each Condition: "</span>,</span></span>
 <span class="r-in"><span>                showP <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                celltype <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in py_run_file_impl(file, local, convert):</span> ModuleNotFoundError: No module named 'pandas'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> Run `reticulate::py_last_error()` for details.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

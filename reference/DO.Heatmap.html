@@ -263,8 +263,6 @@ Differential gene expression analysis between the different groups can be perfor
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#'</span></span></span>
-<span class="r-in"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_python</a></span><span class="op">(</span><span class="st">"~/.venv/DOtools/bin/python"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in reticulate::use_python("~/.venv/DOtools/bin/python"):</span> Specified version of python '~/.venv/DOtools/bin/python' does not exist.</span>
 <span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.Heatmap</span><span class="op">(</span></span></span>
@@ -305,8 +303,25 @@ Differential gene expression analysis between the different groups can be perfor
 <span class="r-in"><span>showP <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>logcounts <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in py_module_import(module, convert = convert):</span> ModuleNotFoundError: No module named 'anndata'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> Run `reticulate::py_last_error()` for details.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 1</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No features pass logfc.threshold threshold; returning empty data.frame</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> For a (much!) faster implementation of the Wilcoxon Rank Sum Test,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> (default method for FindMarkers) please install the presto package</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> install.packages('devtools')</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> devtools::install_github('immunogenomics/presto')</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> After installation of presto, Seurat will automatically use the more </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> efficient implementation (no further action necessary).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> This message will be shown once per session</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 3</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 4</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 5</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 6</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 7</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No features pass logfc.threshold threshold; returning empty data.frame</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating cluster 8</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

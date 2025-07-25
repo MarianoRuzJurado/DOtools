@@ -92,8 +92,8 @@ generated in the section: Quality control of sc/snRNA-seq.</p>
 <div class="section level3">
 <h3 id="libraries-set-up">Libraries &amp; Set-Up<a class="anchor" aria-label="anchor" href="#libraries-set-up"></a>
 </h3>
-<pre><code><span><span class="co">#&gt; 2025-07-24 09:04:58 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:04:58 - Python packages ready for DOtools!</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; 2025-07-25 13:27:30 - Using existing conda environment at: /home/runner/.venv/DOtools</span></span>
+<span><span class="co">#&gt; 2025-07-25 13:27:30 - Python packages ready for DOtools!</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="dotplot">Dotplot<a class="anchor" aria-label="anchor" href="#dotplot"></a>
@@ -156,13 +156,13 @@ cell population.</p>
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:02 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-07-25 13:27:33 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using the <span style="color: #00BB00;">'counts'</span> assay as the <span style="color: #00BB00;">X matrix</span></span></span>
 <span><span class="co">#&gt; [INFO] Your data doesn't have replicates! Artificial replicates will be simulated to run scanpro.</span></span>
 <span><span class="co">#&gt; [INFO] Simulation may take some minutes...</span></span>
 <span><span class="co">#&gt; [INFO] Generating 3 replicates and running 100 simulations...</span></span>
-<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.93 seconds</span></span>
+<span><span class="co">#&gt; [INFO] Finished 100 simulations in 2.9 seconds</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/CellComposition-1.png" width="576"></p>
@@ -175,25 +175,25 @@ continuous metadata information across condition with violinplots,
 barplots and boxplots. Additionally, we can test for significance.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_object_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">sce_object</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:10 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-25 13:27:40 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">sce_object_sub</span>,</span>
 <span>                Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:10 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-25 13:27:41 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_object_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">sce_object</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:12 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-25 13:27:42 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">sce_object_NK</span>,</span>
 <span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
 <span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:12 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-25 13:27:42 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -206,7 +206,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span>           stat_pos_mod <span class="op">=</span> <span class="fl">1.05</span>,</span>
 <span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; 2025-07-24 09:05:13 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-07-25 13:27:43 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="adfct_files/figure-html/Box-1.png" width="480"></p>
@@ -252,7 +252,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  collate  C.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    C.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       UTC</span></span>
-<span><span class="co">#&gt;  date     2025-07-24</span></span>
+<span><span class="co">#&gt;  date     2025-07-25</span></span>
 <span><span class="co">#&gt;  pandoc   3.1.11 @ /opt/hostedtoolcache/pandoc/3.1.11/x64/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   NA</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -291,7 +291,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  digest                 0.6.37   <span style="color: #555555;">2024-08-19</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  dir.expiry             1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  dotCall64              1.2      <span style="color: #555555;">2024-10-04</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-24</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span></span>
+<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span></span>
 <span><span class="co">#&gt;  dplyr                  1.1.4    <span style="color: #555555;">2023-11-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  dqrng                  0.4.1    <span style="color: #555555;">2024-05-28</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  DropletUtils           1.28.1   <span style="color: #555555;">2025-07-06</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
@@ -309,7 +309,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  future                 1.58.0   <span style="color: #555555;">2025-06-05</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  future.apply           1.20.0   <span style="color: #555555;">2025-06-06</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  generics               0.1.4    <span style="color: #555555;">2025-05-09</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  GenomeInfoDb           1.44.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
+<span><span class="co">#&gt;  GenomeInfoDb           1.44.1   <span style="color: #555555;">2025-07-23</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  GenomeInfoDbData       1.2.14   <span style="color: #555555;">2025-06-16</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
 <span><span class="co">#&gt;  GenomicRanges          1.60.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  ggalluvial             0.12.5   <span style="color: #555555;">2023-02-22</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
@@ -360,7 +360,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  miniUI                 0.1.2    <span style="color: #555555;">2025-04-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  nlme                   3.1-168  <span style="color: #555555;">2025-03-31</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  openxlsx               4.2.8    <span style="color: #555555;">2025-01-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  parallelly             1.45.0   <span style="color: #555555;">2025-06-02</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  parallelly             1.45.1   <span style="color: #555555;">2025-07-24</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  patchwork              1.3.1    <span style="color: #555555;">2025-06-21</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  pbapply                1.7-4    <span style="color: #555555;">2025-07-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  pillar                 1.11.0   <span style="color: #555555;">2025-07-04</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
@@ -413,7 +413,7 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  SingleCellExperiment   1.30.1   <span style="color: #555555;">2025-05-07</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  sp                     2.2-0    <span style="color: #555555;">2025-02-01</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  spam                   2.11-1   <span style="color: #555555;">2025-01-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  SparseArray            1.8.0    <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
+<span><span class="co">#&gt;  SparseArray            1.8.1    <span style="color: #555555;">2025-07-23</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  sparseMatrixStats      1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  spatstat.data          3.1-6    <span style="color: #555555;">2025-03-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  spatstat.explore       3.5-2    <span style="color: #555555;">2025-07-22</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
@@ -456,13 +456,12 @@ barplots and boxplots. Additionally, we can test for significance.</p>
 <span><span class="co">#&gt;  <span style="color: #BBBBBB; background-color: #BB0000;">*</span> ── Packages attached to the search path.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Python configuration ───────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt;  python:         /home/runner/.venv/DOtools/bin/python</span></span>
-<span><span class="co">#&gt;  libpython:      /home/runner/.venv/DOtools/lib/libpython3.11.so</span></span>
-<span><span class="co">#&gt;  pythonhome:     /home/runner/.venv/DOtools:/home/runner/.venv/DOtools</span></span>
-<span><span class="co">#&gt;  version:        3.11.13 (main, Jun  5 2025, 13:12:00) [GCC 11.2.0]</span></span>
-<span><span class="co">#&gt;  numpy:          /home/runner/.venv/DOtools/lib/python3.11/site-packages/numpy</span></span>
+<span><span class="co">#&gt;  python:         /home/runner/.cache/R/basilisk/1.20.0/DOtools/0.99.0/DOtools_env/bin/python</span></span>
+<span><span class="co">#&gt;  libpython:      /home/runner/.cache/R/basilisk/1.20.0/DOtools/0.99.0/DOtools_env/lib/libpython3.11.so</span></span>
+<span><span class="co">#&gt;  pythonhome:     /home/runner/.cache/R/basilisk/1.20.0/DOtools/0.99.0/DOtools_env:/home/runner/.cache/R/basilisk/1.20.0/DOtools/0.99.0/DOtools_env</span></span>
+<span><span class="co">#&gt;  version:        3.11.13 | packaged by conda-forge | (main, Jun  4 2025, 14:48:23) [GCC 13.3.0]</span></span>
+<span><span class="co">#&gt;  numpy:          /home/runner/.cache/R/basilisk/1.20.0/DOtools/0.99.0/DOtools_env/lib/python3.11/site-packages/numpy</span></span>
 <span><span class="co">#&gt;  numpy_version:  1.26.4</span></span>
-<span><span class="co">#&gt;  anndata:        /home/runner/.venv/DOtools/lib/python3.11/site-packages/anndata</span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt;  NOTE: Python version was forced by use_python() function</span></span>
 <span><span class="co">#&gt; </span></span>
