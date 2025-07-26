@@ -271,21 +271,21 @@ Seuratv5 CCA Integration method.</p>
 <span><span class="co">#&gt; Computing SNN</span></span>
 <span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">Seu_obj</span>, resolution <span class="op">=</span> <span class="fl">0.3</span>, algorithm <span class="op">=</span> <span class="fl">4</span>, random.seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>, reduction <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>, reduction.name <span class="op">=</span> <span class="st">"UMAP"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 07:33:41 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 07:33:41 Read 2807 rows and found 50 numeric columns</span></span>
-<span><span class="co">#&gt; 07:33:41 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 07:33:41 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span><span class="co">#&gt; 07:55:45 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
+<span><span class="co">#&gt; 07:55:45 Read 2807 rows and found 50 numeric columns</span></span>
+<span><span class="co">#&gt; 07:55:45 Using Annoy for neighbor search, n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 07:55:45 Building Annoy index with metric = cosine, n_trees = 50</span></span>
 <span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
 <span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
 <span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 07:33:41 Writing NN index file to temp file /tmp/Rtmp3adQTx/file26f22c8c860a</span></span>
-<span><span class="co">#&gt; 07:33:41 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 07:33:42 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 07:33:43 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 07:33:45 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 07:33:45 Commencing optimization for 500 epochs, with 130642 positive edges</span></span>
-<span><span class="co">#&gt; 07:33:45 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 07:33:48 Optimization finished</span></span>
+<span><span class="co">#&gt; 07:55:46 Writing NN index file to temp file /tmp/RtmpiDFblR/file274142f7b27f</span></span>
+<span><span class="co">#&gt; 07:55:46 Searching Annoy index using 1 thread, search_k = 3000</span></span>
+<span><span class="co">#&gt; 07:55:47 Annoy recall = 100%</span></span>
+<span><span class="co">#&gt; 07:55:48 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
+<span><span class="co">#&gt; 07:55:49 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
+<span><span class="co">#&gt; 07:55:49 Commencing optimization for 500 epochs, with 130642 positive edges</span></span>
+<span><span class="co">#&gt; 07:55:49 Using rng type: pcg</span></span>
+<span><span class="co">#&gt; 07:55:52 Optimization finished</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-1.png" width="700"></p>
@@ -305,9 +305,9 @@ will annotate the defined clusters based on the
 <span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>, </span>
 <span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                         over_clustering <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:33:49 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:33:49 - Saving celltypist results to temporary folder: /tmp/Rtmp3adQTx/file26f272714652</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:34:58 - Creating probality plot</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-26 07:55:53 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:55:53 - Saving celltypist results to temporary folder: /tmp/RtmpiDFblR/file27415bf0374c</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:02 - Creating probality plot</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
@@ -422,7 +422,7 @@ python tool <a href="https://pypi.org/project/scanpro/" class="external-link"><e
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:07 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:10 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
@@ -444,7 +444,7 @@ markers defining them.</p>
 <code class="sourceCode R"><span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
 <span>                     ident <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>                     ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:26 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:28 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">T_markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span><span class="va">T_cells</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculating cluster T_cells_1</span></span>
@@ -456,9 +456,9 @@ markers defining them.</p>
 <span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span>                         over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>                         SeuV5 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:31 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:31 - Saving celltypist results to temporary folder: /tmp/Rtmp3adQTx/file26f22eb5beae</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:45 - Creating probality plot</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-07-26 07:57:32 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:32 - Saving celltypist results to temporary folder: /tmp/RtmpiDFblR/file274149622e36</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:46 - Creating probality plot</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Recluster-2.png" width="700"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -495,7 +495,7 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">orig.ident2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">CD4T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:47 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:47 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">CD4T_cells</span>,</span>
 <span>                          sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
@@ -505,17 +505,17 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="co">#&gt; Centering and scaling data matrix</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:47 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:47 - Starting DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:47 - Comparing disease with healthy in: CD4_T_cells</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:49 - Finished DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:49 - Starting DGE pseudo bulk method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:49 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:48 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:48 - Starting DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:48 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:49 - Finished DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:49 - Starting DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:49 - Comparing disease with healthy in: CD4_T_cells</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; 2025-07-26 07:35:50 - Finished DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-07-26 07:57:51 - Finished DGE pseudo bulk method analysis</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>,<span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
