@@ -1068,10 +1068,13 @@ DO.CellBender <- function(cellranger_path,
 #' @importFrom basilisk basiliskRun
 #'
 #' @examples
+#' \dontrun{
 #' sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' # Run scVI using the 'orig.ident' column as the batch key
 #' sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
+#'
+#' }
 #'
 #' @return Seurat or SCE Object with dimensionality reduction from scVI
 #' @export
