@@ -52,9 +52,12 @@ This function will run the scVI Integration from the scVI python package. It inc
 and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
 }
 \examples{
+\dontrun{
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 # Run scVI using the 'orig.ident' column as the batch key
 sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
+
+}
 
 }

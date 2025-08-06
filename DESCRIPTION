@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Convenient functions to streamline your single cell data analysis workflow
-Version: 0.99.2
+Version: 0.99.3
 Authors@R: c(
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5354-5336")),
     person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut"), comment = c(ORCID = "0000-0002-1819-6991")),

@@ -1,6 +1,9 @@
 \name{DOtools}
 \alias{DOtools}
 \title{DOtools: A Toolkit for scRNA Data Analysis}
+\value{
+    This is a package-level documentation file and does not return a value.
+}
 \description{
     The `DOtools` package provides a set of functions for advanced data processing, visualisation, and statistical analysis in Seurat objects. It includes functions for cell-type prediction, reclustering, creating polished UMAP plots, subsetting Seurat objects, and various statistical analyses like Wilcoxon tests and SEM graphs.
 }
