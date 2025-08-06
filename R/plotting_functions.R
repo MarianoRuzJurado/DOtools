@@ -1418,6 +1418,11 @@ DO.BoxPlot <- function(sce_object,
 #' @param coord_flip flips the coordinates of the plot with each other
 #' @param returnValue return the dataframe behind the plot
 #' @param log1p_nUMI log1p the plotted values, boolean
+#' @param stats_x Perform statistical test over categories on the xaxis
+#' @param stats_y Perform statistical test over categories on the yaxis
+#' @param sig_size Control the size of the significance stars in the plot
+#' @param nudge_x Control the position of the star on x axis
+#' @param nudge_y Control the position of the star on y axis
 #' @param ... Further arguments passed to annoSegment function if annotation_x == TRUE
 #'
 #' @import ggplot2
@@ -1462,6 +1467,11 @@ DO.Dotplot <- function(sce_object,
                        point_stroke=0.2,
                        limits_colorscale=NULL,
                        coord_flip=FALSE,
+                       stats_x=FALSE,
+                       stats_y=TRUE,
+                       sig_size=6,
+                       nudge_x=0.3,
+                       nudge_y=0.2,
                        ... ){
   #support for single cell experiment objects
   if (is(sce_object, "SingleCellExperiment")) {
@@ -1662,6 +1672,112 @@ DO.Dotplot <- function(sce_object,
   }
 
 
+  # Implemenent statistics in dotplot for x-axis
+  if (stats_x & !is.null(group.by.x) & !is.null(group.by.y)) {
+    data.plot.res$p_adj <- NA
+    for (names_y in as.vector(unique(data.plot.res[[aes_var[2]]]))) {
+
+      sce_object_sub <- subset(sce_object, subset = !!sym(group.by.y) == names_y)
+
+      #FindMarkers from Seurat for all genes in each cluster of group.by.x
+      stats_test <- Seurat::FindAllMarkers(sce_object_sub,
+                                           features = unique(c(data.plot.res$gene)),
+                                           min.pct = 0,
+                                           logfc.threshold=0,
+                                           group.by = group.by.x,
+                                           only.pos = TRUE)
+
+      if(!nrow(stats_test) == 0){
+        stats_test_ren <- stats_test %>%
+          rename(xaxis = cluster)
+      } else{
+        stats_test_ren <- data.frame(p_val=character(),
+                                     avg_log2FC=character(),
+                                     pct.1=character(),
+                                     pct.2=character(),
+                                     p_val_adj=character(),
+                                     xaxis=character(),
+                                     gene=character())
+      }
+
+      #add p-value if test fails add p-value 1
+      data.plot.res <- data.plot.res %>%
+        left_join(
+          stats_test_ren %>% select(gene, xaxis, p_val_adj),
+          by = c("gene", "xaxis")
+        ) %>%
+        mutate(
+          p_adj = case_when(
+            id == names_y & !is.na(p_val_adj) ~ p_val_adj,
+            id == names_y &  is.na(p_val_adj) ~ 1,
+            TRUE ~ p_adj
+          )
+        ) %>%
+        select(-p_val_adj)
+    }
+    data.plot.res <- data.plot.res %>%
+      mutate(
+        stars = case_when(
+          p_adj < 0.05 ~ "*",
+          TRUE         ~ "",
+        )
+      )
+    data.plot.res$significance <- ifelse(data.plot.res$p_adj < 0.05, "p < 0.05", "ns")
+  }
+
+
+  # Implemenent statistics in dotplot for y-axis
+  if (stats_y & !is.null(group.by.x) & !is.null(group.by.y)) {
+    data.plot.res$p_adj <- NA
+    for (names_x in as.vector(unique(data.plot.res[[aes_var[1]]]))) {
+
+      sce_object_sub <- subset(sce_object, subset = !!sym(group.by.x) == names_x)
+
+      #FindMarkers from Seurat for all genes in each cluster of group.by.x
+      stats_test <- Seurat::FindAllMarkers(sce_object_sub,
+                                           features = unique(c(data.plot.res$gene)),
+                                           min.pct = 0,
+                                           logfc.threshold=0,
+                                           group.by = group.by.y,
+                                           only.pos = TRUE)
+      if(!nrow(stats_test) == 0){
+        stats_test_ren <- stats_test %>%
+          rename(id = cluster)
+      } else{
+        stats_test_ren <- data.frame(p_val=character(),
+                                     avg_log2FC=character(),
+                                     pct.1=character(),
+                                     pct.2=character(),
+                                     p_val_adj=character(),
+                                     id=character(),
+                                     gene=character())
+      }
+
+      #add p-value if test fails add p-value 1
+      data.plot.res <- data.plot.res %>%
+        left_join(
+          stats_test_ren %>% select(gene, id, p_val_adj),
+          by = c("gene", "id")
+        ) %>%
+        mutate(
+          p_adj = case_when(
+            xaxis == names_x & !is.na(as.numeric(p_val_adj)) ~ as.numeric(p_val_adj),
+            xaxis == names_x &  is.na(as.numeric(p_val_adj)) ~ 1,
+            TRUE ~ as.numeric(p_adj)
+          )
+        ) %>%
+        select(-p_val_adj)
+    }
+
+    data.plot.res <- data.plot.res %>%
+      mutate(
+        stars = case_when(
+          p_adj < 0.05 ~ "*",
+          TRUE         ~ "",
+        )
+      )
+    data.plot.res$significance <- ifelse(data.plot.res$p_adj < 0.05, "p < 0.05", "ns")
+  }
 
   pmain <- ggplot2::ggplot(data.plot.res, ggplot2::aes(x = !!sym(aes_var[1]),y = !!sym(aes_var[2])))+
     ggplot2::theme_bw(base_size = 14)+
@@ -1826,6 +1942,17 @@ DO.Dotplot <- function(sce_object,
       ggplot2::scale_size_continuous(breaks = pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)],
                                      limits = c(min(pretty(round(as.vector(quantile(data.plot.res$pct.exp))), n =10)[seq(1, 10, by = 2)])*.95,max(data.plot.res$pct.exp)*1.05))+
       theme(panel.spacing = unit(0, "lines"))
+  }
+
+  if (!is.null(data.plot.res$stars)) {
+    pmain <- pmain +
+      geom_text(aes(label = stars), color = "black", size = sig_size, nudge_x = nudge_x, nudge_y = nudge_y, fontface = "bold") +
+      geom_point(data = subset(data.plot.res, significance == "p < 0.05"),
+                 aes(shape = significance),
+                 alpha = 0)+
+      scale_shape_manual(values = c("p < 0.05" = 8),
+                         name = "Significance")+
+      guides(shape = guide_legend(override.aes = list(alpha = 1, size = 4)))
   }
 
   if(returnValue == TRUE){
