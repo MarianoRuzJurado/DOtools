@@ -64,6 +64,8 @@ Suggests:
         assertthat,
         plyr,
         rsvg,
+        scran,
+        scater,
         sessioninfo
 VignetteBuilder:
     knitr

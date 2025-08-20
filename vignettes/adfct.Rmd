@@ -60,7 +60,7 @@ DO.Dotplot(sce_object = sce_object,
 
 ## UMAP
 
-The `DO.UMAP` function facilitatesthe visualisation of UMAP embeddings since it combines the ability to show cell groupings and gene expression.
+The `DO.UMAP` function facilitates the visualisation of UMAP embeddings since it combines the ability to show cell groupings and gene expression.
 
 ```{r UMAP, fig.width=12, fig.height=8, warning = FALSE}
 

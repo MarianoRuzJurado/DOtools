@@ -130,53 +130,42 @@ DO.Correlation(SCE_obj)
 
 ## Data integration
 
-After quality control the prefered integration method can be chosen within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
+After quality control the preferred integration method can be chosen, we support every integration method within Seurat's `IntegrateLayers` function. Additionally, we implemented a new wrapper function for the scVI integration from the [scvi-tools](https://pypi.org/project/scvi-tools/) package. After the integration completes, we run the Leiden algorithm to find clusters and generate UMAP embeddings.
 
 ```{r CCA Integration, warning = FALSE}
-### ADDITIONAL STEPS FOR SCE OBJECTS, THESE STEPS WILL BE PERFORMED AUTOMATICALLY FOR SEURAT OBJECTS IN DO.IMPORT
-### SKIP IF YOU USE SEURAT OBJECT FROM DO.IMPORT() 
-Seu_obj <- as.Seurat(SCE_obj)
-Seu_obj[["RNA"]] <- split(Seu_obj[["RNA"]], f = Seu_obj$orig.ident)
-Seu_obj <- FindVariableFeatures(Seu_obj)
-Seu_obj <- ScaleData(object = Seu_obj)
-Seu_obj <- RunPCA(Seu_obj, verbose = FALSE, reduction.name = "PCA")
-Seu_obj <- JoinLayers(Seu_obj)
-Seu_obj[["RNA"]] <- split(Seu_obj[["RNA"]], f = Seu_obj$orig.ident)
-#####
-
-#Integration through Seurat
-Seu_obj <- IntegrateLayers(object = Seu_obj,
-                           method = CCAIntegration,
-                           orig.reduction = "PCA",
-                           new.reduction = "INTEGRATED.CCA",
-                           verbose = TRUE)
-
-#After Integration we join the layers 
-Seu_obj <- JoinLayers(Seu_obj)
-
-#(Optional) convert back to SCE object if you prefer that data class
-SCE_obj <- as.SingleCellExperiment(Seu_obj)
-
+SCE_obj <- DO.Integration(sce_object = SCE_obj,
+                          split_key="orig.ident",
+                          HVG = TRUE,
+                          scale = TRUE,
+                          pca = TRUE,
+                          integration_method = "CCAIntegration")
 ```
 
 ```{r scVI Integration, warning=FALSE, eval=FALSE}
 #(Optional) Integration with scVI-Model
-Seu_obj <- DO.scVI(sce_object = Seu_obj,
+SCE_obj <- DO.scVI(sce_object = SCE_obj,
                    batch_key ="orig.ident",
                    layer_counts = "counts",
                    layer_logcounts = "logcounts")
+
+
+SNN_Graph <- scran::buildSNNGraph(SCE_obj,
+                                  use.dimred = "SCVI")
+
+clust_SCVI <- igraph::cluster_louvain(SNN_Graph,
+                                      resolution = 0.3)
+
+SCE_obj$leiden0.3 <- factor(igraph::membership(clust_SCVI))
+SCE_obj <- scater::runUMAP(SCE_obj, dimred = "SCVI", name = "UMAP")
 ```
 
 
-After the integration finished, both corrected expression matrices can be found saved in the Seurat object and can be used for cluster calculations and UMAP projections. In this case, we will continue with Seuratv5 CCA Integration method.
+After the integration finished, both corrected expression matrices can be found saved in the SCE object and can be used for cluster calculations and UMAP projections. In this case, we will continue with the CCA Integration method.
 
 ```{r Clustering and UMAP, warning = FALSE}
-Seu_obj <- FindNeighbors(object = Seu_obj, reduction = "INTEGRATED.CCA", dims = 1:50) #change dims accordingly
-Seu_obj <- FindClusters(Seu_obj, resolution = 0.3, algorithm = 4, random.seed = 1234)
-Seu_obj <- RunUMAP(object = Seu_obj, reduction = "INTEGRATED.CCA", reduction.name = "UMAP", dims = 1:50)
 
-DO.UMAP(Seu_obj, group.by = "seurat_clusters")
-DO.UMAP(Seu_obj, group.by = "condition", legend.position = "right", label = FALSE)
+DO.UMAP(SCE_obj, group.by = "leiden0.3")
+DO.UMAP(SCE_obj, group.by = "condition", legend.position = "right", label = FALSE)
 
 ```
 
@@ -186,18 +175,43 @@ DO.UMAP(Seu_obj, group.by = "condition", legend.position = "right", label = FALS
 Next up, we implemented a wrapper around the semi-automatic annotation tool `r pypkg("celltypist")`. It will annotate the defined clusters based on the `Adult_COVID19_PBMC.pkl` model.
 
 ```{r annotation, warning = FALSE}
-Seu_obj <- DO.CellTypist(Seu_obj,
+SCE_obj <- DO.CellTypist(SCE_obj,
                          modelName = "Healthy_COVID19_PBMC.pkl", 
                          runCelltypistUpdate=TRUE,
-                         over_clustering = "seurat_clusters")
-DO.UMAP(Seu_obj, group.by = "autoAnnot", legend.position = "right")
+                         over_clustering = "leiden0.3")
+DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
 
 ```
 
-The semi-automatic annotation is a good estimate of the cell types in your object. But you should always manually validate the findings of the model. You can manually define a set of marker genes for the cell population or check the most preeminent genes per cluster by using Seurat's `FindAllMarkers` function.
+The semi-automatic annotation is a good estimate of the cell types in your object. But you should always manually validate the findings of the model. You can manually define a set of marker genes for the cell population or check the most preeminent genes per cluster by using scran's `findMarkers` function.
 
 ```{r Manual annotation, fig.width=12, fig.height=7}
-#pick top 5 per cluster
+markers_list <- scran::findMarkers(
+  SCE_obj,
+  test.type="t",
+  groups = SingleCellExperiment::colData(SCE_obj)$autoAnnot,
+  direction="up",
+  lfc=0.25,
+  pval.type="any"
+)
+
+#pick top 5 per cluster, naming adjustments
+annotation_Markers <- lapply(names(markers_list), function(cluster) {
+  df <- as.data.frame(markers_list[[cluster]])
+  df$gene <- rownames(df)
+  df$cluster <- cluster
+  df %>%
+    rename(
+      avg_log2FC = summary.logFC,
+      p_val      = p.value,
+      p_val_adj  = FDR
+    ) %>%
+    dplyr::select(gene, cluster, avg_log2FC, p_val, p_val_adj)
+}) %>%
+  bind_rows()
+
+#or with seurat if preferred
+Seu_obj <- as.Seurat(SCE_obj)
 annotation_Markers <- FindAllMarkers(object = Seu_obj,
                                      assay = "RNA",
                                      group.by = "autoAnnot",
@@ -210,7 +224,7 @@ annotation_Markers <- annotation_Markers %>%
   group_by(cluster) %>%
   slice_head(n = 5)   
 
-p1 <- DO.Dotplot(sce_object = Seu_obj,
+p1 <- DO.Dotplot(sce_object = SCE_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
@@ -234,7 +248,7 @@ annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
                                 genes = c("PTPRC", "CD79A", "BANK1", "MS4A1", "CD3E", "CD4", "IL7R", "NKG7", 
                                           "KLRD1","CD68", "CD14","ITGAM", "LILRA4", "CLEC4C", "LRRC26"))
 
-p2 <- DO.Dotplot(sce_object = Seu_obj,
+p2 <- DO.Dotplot(sce_object = SCE_obj,
                  Feature = annotation_Markers,
                  group.by.x = "seurat_clusters",
                  plot.margin = c(1,1,1,1),
@@ -253,7 +267,7 @@ p2 <- DO.Dotplot(sce_object = Seu_obj,
 The manual markers for the immune cells show an agreement for the annotation therefore we can continue with it after some minor adjustments
 
 ```{r renaming}
-Seu_obj$annotation <- plyr::revalue(Seu_obj$seurat_clusters, c(`1` = "T_cells",
+SCE_obj$annotation <- plyr::revalue(SCE_obj$seurat_clusters, c(`1` = "T_cells",
                                                                `2` = "T_cells",
                                                                `3` = "NK",
                                                                `4` = "B_cells",
@@ -262,7 +276,7 @@ Seu_obj$annotation <- plyr::revalue(Seu_obj$seurat_clusters, c(`1` = "T_cells",
                                                                `7` = "T_cells",
                                                                `8` = "pDC"))
 
-DO.UMAP(Seu_obj, group.by = "annotation", legend.position = "right")
+DO.UMAP(SCE_obj, group.by = "annotation", legend.position = "right")
 
 ```
 
@@ -271,7 +285,7 @@ DO.UMAP(Seu_obj, group.by = "annotation", legend.position = "right")
 After the identification of the celltype populations, we can also evaluate if there are significant changes in these populations in the healthy and diseased condition using a wrapper function around the python tool `r pypkg("scanpro")`.
 
 ```{r cell populations, warning=FALSE}
-DO.CellComposition(Seu_obj,
+DO.CellComposition(SCE_obj,
                    assay_normalized = "RNA",
                    cluster_column = "annotation",
                    sample_column = "orig.ident",
@@ -286,13 +300,11 @@ DO.CellComposition(Seu_obj,
 Subpopulations can be tricky to find, therefore it is always a good practice to perform a reclustering of a given cell populations, if we are interested in a specific set of cells in a population. Here for example in the T cells. We will identify the subpopulations and then markers defining them.
 
 ```{r Recluster, warning=FALSE}
-Seu_obj <- DO.FullRecluster(Seu_obj, over_clustering = "annotation")
-DO.UMAP(Seu_obj, group.by = "annotation_recluster")
-T_cells <- DO.Subset(Seu_obj,
+SCE_obj <- DO.FullRecluster(SCE_obj, over_clustering = "annotation")
+DO.UMAP(SCE_obj, group.by = "annotation_recluster")
+T_cells <- DO.Subset(SCE_obj,
                      ident = "annotation_recluster",
                      ident_name = grep("T_cells", unique(Seu_obj$annotation_recluster), value = TRUE))
-
-T_markers <- FindAllMarkers(T_cells, group.by = "annotation_recluster")
 
 T_cells <- DO.CellTypist(T_cells,
                          modelName = "Healthy_COVID19_PBMC.pkl",
@@ -310,12 +322,12 @@ T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster, c(`T_cells_1` 
 Now that we identified the marker genes describing the different T cell populations. We can re-annotate them based on their expression profile and a new prediciton from Celltypist. After this we, can easily transfer the labels in the subset to the original object.
 
 ```{r re-annotate}
-Seu_obj <- DO.TransferLabel(Seu_obj,
+SCE_obj <- DO.TransferLabel(SCE_obj,
                             Subset_obj = T_cells,
                             annotation_column = "annotation",
                             subset_annotation = "annotation")
 
-DO.UMAP(Seu_obj, group.by = "annotation", legend.position = "right")
+DO.UMAP(SCE_obj, group.by = "annotation", legend.position = "right")
 ```
 
 ## Gene ontology analysis
@@ -326,8 +338,8 @@ To explore which biological processes are enriched in a specific cell type acros
 ```{r GO analysis, warning=FALSE}
 # this data set contains only one sample per condition we introduce replicates for showing the pseudo bulk approach
 set.seed(123)
-Seu_obj$orig.ident2 <- sample(rep(c("A", "B", "C", "D", "E", "F"), length.out = ncol(Seu_obj)))
-CD4T_cells <- DO.Subset(Seu_obj, ident = "annotation", ident_name = "CD4_T_cells")
+SCE_obj$orig.ident2 <- sample(rep(c("A", "B", "C", "D", "E", "F"), length.out = ncol(SCE_obj)))
+CD4T_cells <- DO.Subset(SCE_obj, ident = "annotation", ident_name = "CD4_T_cells")
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
                           sample_col = "orig.ident2",
