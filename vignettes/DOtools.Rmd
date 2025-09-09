@@ -371,7 +371,7 @@ DO.UMAP(SCE_obj, group.by = "annotation_recluster")
 T_cells <- DO.Subset(SCE_obj,
                      ident = "annotation_recluster",
                      ident_name = grep("T_cells",
-                                       unique(Seu_obj$annotation_recluster),
+                                       unique(SCE_obj$annotation_recluster),
                                        value = TRUE))
 
 T_cells <- DO.CellTypist(T_cells,

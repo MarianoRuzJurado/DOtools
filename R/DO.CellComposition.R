@@ -319,7 +319,7 @@ DO.CellComposition <- function(sce_object,
                                                                order = 1))
 
   p3 <- p3 + guides.layer
-  legend_only <- cowplot::get_legend(p3)
+  legend_only <- suppressWarnings(cowplot::get_legend(p3))
 
 
   plot_p <- cowplot::ggdraw() +

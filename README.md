@@ -21,8 +21,8 @@ DOtools is currently available through github.
 To install the package, start R and run:
 
 ``` ruby
-install.packages("devtools") # if not installed already
-devtools::install_github("MarianoRuzJurado/DOtools")
+install.packages("BiocManager")
+BiocManager::install("DOtools")
 ```
 
 We highly recommend having [conda](https://www.anaconda.com/docs/getting-started/miniconda/main) installed for python environments.

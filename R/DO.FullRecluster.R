@@ -40,7 +40,7 @@ DO.FullRecluster <- function(sce_object,
 
   #TODO add an argument for a new shared nearest neighbor call so you can use this function with other integration methods in the object otherwise it will use the latest calculated shared nearest neighbors and you need to do it outside of the function
   if (is.null(sce_object@meta.data[[over_clustering]])) {
-    stop("No clusters defined, please run e.g. FindClusters before Reclustering, or fill the slot with a clustering")
+    stop("No clusters defined, please run a cluster algorithm before reclustering and save it to the object")
   }
   Idents(sce_object) <- over_clustering
 
@@ -56,11 +56,11 @@ DO.FullRecluster <- function(sce_object,
 
   for (cluster in unique(sce_object@meta.data[[over_clustering]])) {
     pb$tick()
-    sce_object <- FindSubCluster(sce_object,
+    sce_object <- suppressWarnings(FindSubCluster(sce_object,
                                  cluster = as.character(cluster),
                                  graph.name = graph.name,
                                  algorithm = algorithm,
-                                 resolution = res)
+                                 resolution = res))
 
     cluster_cells <- rownames(sce_object@meta.data)[sce_object@meta.data[[over_clustering]] == cluster]
     sce_object$annotation_recluster[cluster_cells] <- sce_object$sub.cluster[cluster_cells]
