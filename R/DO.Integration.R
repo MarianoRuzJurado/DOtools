@@ -155,11 +155,12 @@ DO.Integration <- function(sce_object,
   if (umap) {
 
     .logger("Creating UMAP")
+    options(Seurat.warn.umap.uwot = FALSE)
     sce_object <- RunUMAP(object = sce_object,
                           reduction = integration_key,
                           reduction.name = umap_key,
                           dims = umap_dim,
-                          verbose=verbose)
+                          verbose = verbose)
   }
 
   if (SCE) {

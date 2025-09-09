@@ -77,7 +77,7 @@ DO.UMAP <- function(sce_object,
             legend.text = element_text(face = "bold"))
 
     if (label==TRUE) {
-      p <-LabelClusters(p, id  = group.by, fontface="bold", box = FALSE)
+      p <- LabelClusters(p, id  = group.by, fontface="bold", box = FALSE)
     }
     return(p)
   }
