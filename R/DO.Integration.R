@@ -150,6 +150,10 @@ DO.Integration <- function(sce_object,
                                random.seed = 42,
                                cluster.name=cl_name,
                                verbose=verbose)
+    #clean up
+    if (cl_name != "seurat_clusters") {
+      sce_object$seurat_clusters <- NULL
+    }
   }
 
   if (umap) {

@@ -80,6 +80,44 @@ library(kableExtra)
 library(Seurat)
 ```
 
+## Ambient removal
+Despite advances in optimizing and standardizing droplet-based single-cell omics
+protocols like single-cell and single-nucleus RNA sequencing (sc/snRNA-seq),
+these experiments still suffer from systematic biases and background noise.
+In particular, ambient RNA in snRNA-seq can lead to an overestimation of 
+expression levels for certain genes. Computational tools such as
+`r pypkg("cellbender")` have been developed to address these biases by
+correcting for ambient RNA contamination.
+
+We have integrated a wrapper function to run CellBender within the
+`r Biocpkg("DOtools")` package. The current implementation supports processing
+samples generated with CellRanger.
+
+```{r read_example_data, eval=FALSE, warning = FALSE}
+base <- DOtools:::.example_10x()
+dir.create(file.path(base, "/cellbender"))
+
+raw_files <- list.files(base,
+                        pattern = "raw_feature_bc_matrix\\.h5$",
+                        recursive = TRUE,
+                        full.names = TRUE)
+
+DO.CellBender(cellranger_path = base,
+              output_path = file.path(base, "/cellbender"),
+              samplenames = c("disease"),
+              cuda = TRUE,
+              BarcodeRanking = FALSE,
+              cpu_threads = 48,
+              epochs = 150)
+
+```
+
+After running the analysis, several files are saved in the `output_folder`,
+including a summary report to check for any issues during CellBender execution,
+individual log files for each sample, and a `commands_Cellbender.txt` file with
+the exact command used. The corrected `.h5` files can then be used alternatively
+to the raw cellranger output for downstream analysis.
+
 ## Quality control
 `r Biocpkg("DOtools")` The `DO.Import()` function provides a streamlined 
 pipeline for performing quality control on single-cell or single-nucleus 
@@ -242,6 +280,7 @@ The semi-automatic annotation is a good estimate of the cell types in your
 object. But you should always manually validate the findings of the model. 
 You can manually define a set of marker genes for the cell population or check 
 the most preeminent genes per cluster by using scran's `findMarkers` function.
+Marker genes can also be visualised using the `DO.UMAP` function.
 
 ```{r Manual annotation, fig.width=12, fig.height=7}
 markers_list <- scran::findMarkers(
@@ -253,7 +292,7 @@ markers_list <- scran::findMarkers(
   pval.type = "any"
 )
 
-#pick top 5 per cluster, naming adjustments
+# pick top 5 per cluster, naming adjustments
 annotation_Markers <- lapply(names(markers_list), function(cluster) {
   df <- as.data.frame(markers_list[[cluster]])
   df$gene <- rownames(df)
@@ -268,7 +307,7 @@ annotation_Markers <- lapply(names(markers_list), function(cluster) {
 }) %>%
   bind_rows()
 
-#or with seurat if preferred
+# or with seurat if preferred
 Seu_obj <- as.Seurat(SCE_obj)
 annotation_Markers <- FindAllMarkers(object = Seu_obj,
                                      assay = "RNA",
@@ -284,7 +323,7 @@ annotation_Markers <- annotation_Markers %>%
 
 p1 <- DO.Dotplot(sce_object = SCE_obj,
                  Feature = annotation_Markers,
-                 group.by.x = "seurat_clusters",
+                 group.by.x = "leiden0.3",
                  plot.margin = c(1, 1, 1, 1),
                  annotation_x = TRUE,
                  point_stroke = 0.1,
@@ -296,7 +335,7 @@ p1 <- DO.Dotplot(sce_object = SCE_obj,
                  segWidth = 0.3,
                  lwd = 3)
 
-#manual set of markers
+# manual set of markers
 annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
                                               rep("B_cells", 3),
                                               rep("T_cells", 3),
@@ -310,7 +349,7 @@ annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
 
 p2 <- DO.Dotplot(sce_object = SCE_obj,
                  Feature = annotation_Markers,
-                 group.by.x = "seurat_clusters",
+                 group.by.x = "leiden0.3",
                  plot.margin = c(1, 1, 1, 1),
                  annotation_x = TRUE,
                  point_stroke = 0.1,
@@ -321,6 +360,13 @@ p2 <- DO.Dotplot(sce_object = SCE_obj,
                  textRot = 0,
                  segWidth = 0.3,
                  lwd = 3)
+
+# Visualise marker expression in UMAP
+DO.UMAP(SCE_obj,
+        FeaturePlot = TRUE,
+        features = "NKG7",
+        group.by = "leiden0.3",
+        legend.position = "right")
 
 ```
 
@@ -482,6 +528,89 @@ GSEA_plot <- list.files(path = base,
 plot(magick::image_read_svg(GSEA_plot))
 ```
 
+##Candidate gene visualisation
+
+After performing DGE and GO analyses, discovering whether specific genes are
+regulated in a particular disease state and/or cell type is a common step.
+To address this, we implemented advanced methods in our functions that
+provide summarised results and incorporate statistical testing to answer these
+questions efficiently.
+
+The `DO.Dotplot` function covers the expression over three variables at the same
+time along with statistical testing. For example, we can visualise the 
+expression of a gene across cell types and conditions:
+
+```{r dotplot, fig.width=5, fig.height=5}
+DO.Dotplot(sce_object = sce_object,
+           group.by.x = "condition",
+           group.by.y = "annotation",
+           Feature = "NKG7",
+           stats_y = TRUE)
+```
+
+The `DO.Heatmap` function shows the expression of multiple genes in a publish 
+ready way, including statistical testing:
+
+```{r Heat map, out.width="100%", fig.align="center", fig.width=10, fig.height=8, warning = FALSE}
+path_file <- tempfile("dotools_plots_")
+dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
+
+DO.Heatmap(sce_object,
+           features = rownames(sce_object)[1:10],
+           xticks_rotation = 45,
+           path = path_file,
+           stats_x_size = 20,
+           showP = FALSE)
+
+Heatmap_plot <- list.files(path = path_file,
+                           pattern = "Heatmap*\\.svg$",
+                           full.names = TRUE,
+                           recursive = TRUE)
+
+plot(magick::image_read_svg(Heatmap_plot))
+
+```
+
+We can visualize the average expression of a gene in a cell type + condition
+or we can plot continuous metadata information across conditions with
+violinplots, barplots and boxplots. Additionally, we can test for significance.
+
+```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
+sce_object_sub <- DO.Subset(sce_object,
+                            ident = "annotation",
+                            ident_name = c("NK", "CD4_T_cells", "B_cells"))
+
+p <- DO.VlnPlot(sce_object_sub,
+                Feature = "NKG7",
+                group.by = "condition",
+                group.by.2 = "annotation",
+                ctrl.condition = "healthy")
+```
+
+```{r Bar, fig.width=5, fig.height=6, warning = FALSE}
+sce_object_NK <- DO.Subset(sce_object,
+                           ident = "annotation",
+                           ident_name = "NK")
+
+DO.BarplotWilcox(sce_object_NK,
+                 group.by = "condition",
+                 ctrl.condition = "healthy",
+                 Feature = "NKG7",
+                 x_label_rotation = 0)
+```
+
+```{r Box, fig.width=5, fig.height=6, warning = FALSE}
+set.seed(123)
+sce_object$rdm_sample <- sample(rep(c("A", "B", "C"),
+                                    length.out = ncol(sce_object)))
+DO.BoxPlot(sce_object,
+           group.by = "rdm_sample",
+           ctrl.condition = "A",
+           Feature = "nCount_RNA",
+           step_mod = 50,
+           stat_pos_mod = 1.05,
+           plot_sample = FALSE)
+```
 
 # Session information
 
