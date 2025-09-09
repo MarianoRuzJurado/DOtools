@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Convenient functions to streamline your single cell data analysis workflow
-Version: 0.99.4
+Version: 0.99.5
 Authors@R: c(
     person("Mariano", "Ruz Jurado", , "ruzjurado@med.uni-frankfurt.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-5354-5336")),
     person("David", "Rodriguez Morales", , "rodriguezmorales@med.uni-frankfurt.de", role = c("aut"), comment = c(ORCID = "0000-0002-1819-6991")),
@@ -66,6 +66,7 @@ Suggests:
         rsvg,
         scran,
         scater,
+        igraph,
         sessioninfo
 VignetteBuilder:
     knitr

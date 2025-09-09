@@ -1,6 +1,8 @@
 #' @author Mariano Ruz Jurado
 #' @title DO.Integration supporting sce experiment directly through direct conversion
-#' @description
+#' @description Integrates single-cell RNA-seq data directly from SingleCellExperiment or Seurat objects.
+#' Supports detection of variable genes, scaling, PCA, neighbor graph construction,
+#' clustering, and UMAP embedding, with multiple integration methods.
 #' @param sce_object Seurat or SCE Object
 #' @param split_key Character. Column in meta data to split the samples by, default orig.ident
 #' @param HVG Logical. Perform detection of highly variable genes

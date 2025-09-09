@@ -26,11 +26,12 @@ reference:
     contents:
       - DO.CellBender
       - DO.Import
+      - DO.Integration
+      - DO.scVI
       - DO.Correlation
   - title: Downstream processing
     desc: >
     contents:
-      - DO.scVI
       - DO.CellTypist
       - DO.FullRecluster
       - DO.TransferLabel

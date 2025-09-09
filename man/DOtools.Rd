@@ -22,6 +22,7 @@
         \item \code{\link{DO.VlnPlot}}: A function for generating violin plots with Wilcoxon test results.
         \item \code{\link{DO.CellComposition}}: A function for visualizing and statistically analyzing cell-type composition changes across conditions using the Scanpro Python package, with support for bootstrapping, proportion plots, and customizable output.
         \item \code{\link{DO.Import}}: A function for building a merged Seurat and SCE object from 10x software output, or directly from provided tables.
+        \item \code{\link{DO.Integration}}: A function for integrating SCE objects and Seurat objects with the provided method.
         \item \code{\link{DO.CellBender}}: A function for running CellBender in a virtual conda env with provided raw count h5 files.
         \item \code{\link{DO.SplitBarGSEA}}: A function for viusalizing GSEA result from a provided df from e.g. metascape
         \item \code{\link{DO.scVI}}: A function for running the scVI Integration implemented in scvi-tools.
@@ -38,7 +39,7 @@
 \seealso{
     \code{\link{DO.BoxPlot}}, \code{\link{DO.CellTypist}}, \code{\link{DO.DietSCE}}, \code{\link{DO.Dotplot}},
     \code{\link{DO.FullRecluster}}, \code{\link{DO.BarplotClustert}}, \code{\link{DO.BarplotWilcox}},
-    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.VlnPlot}}, \code{\link{DO.Import}}, \code{\link{DO.CellBender}},
+    \code{\link{DO.Subset}}, \code{\link{DO.UMAP}}, \code{\link{DO.VlnPlot}}, \code{\link{DO.Import}},\code{\link{DO.Integration}}, \code{\link{DO.CellBender}},
     \code{\link{DO.SplitBarGSEA}}, \code{\link{DO.scVI}}, \code{\link{DO.TransferLabel}},\code{\link{DO.Heatmap}}, \code{\link{DO.PyEnv}}, \code{\link{DO.Correlation}},
     \code{\link{DO.MultiDGE}},\code{\link{DO.TransferLabel}}, \code{dot-Do.BarcodeRanks}, \code{dot-QC.Vlnplot}
 }
