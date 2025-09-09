@@ -159,7 +159,8 @@ DO.Integration <- function(sce_object,
                           reduction = integration_key,
                           reduction.name = umap_key,
                           dims = umap_dim,
-                          verbose=verbose)
+                          umap.method = "uwot",
+                          verbose = verbose)
   }
 
   if (SCE) {

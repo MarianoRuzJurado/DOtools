@@ -71,7 +71,7 @@ library(DOtools)
 #Additional packages
 library(SummarizedExperiment)
 library(scran)
-library(scatter)
+library(scater)
 library(plyr)
 library(dplyr)
 library(tibble)
