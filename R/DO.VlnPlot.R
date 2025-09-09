@@ -77,6 +77,7 @@ DO.VlnPlot <- function(sce_object,
 
   #support for single cell experiment objects
   if (is(sce_object, "SingleCellExperiment")) {
+    SCE <- TRUE
     sce_object <- as.Seurat(sce_object)
   }
 
@@ -93,7 +94,7 @@ DO.VlnPlot <- function(sce_object,
     stop("Please specify the ctrl condition as string!")
   }
 
-  if (SeuV5==TRUE) {
+  if (SeuV5==TRUE && SCE==FALSE) {
     rlang::warn("SeuV5 set to TRUE, if working with Seuratv4 or below change SeuV5 to FALSE", .frequency = "once", .frequency_id = "v5Mean")
 
     if (Feature %in% rownames(sce_object)) {
@@ -341,7 +342,7 @@ DO.VlnPlot <- function(sce_object,
       )+
       scale_fill_manual(values = vector_colors)
 
-    p2 <- ggplot(vln.df, aes(x = !!sym(group.by.2), y = Feature, fill = factor(!!sym(group.by),levels = levels(vln.df$group))))+
+    p2 <- suppressWarnings(ggplot(vln.df, aes(x = !!sym(group.by.2), y = Feature, fill = factor(!!sym(group.by),levels = levels(vln.df$group))))+
       geom_boxplot(width=.1,color="grey", position = position_dodge(width = 0.9), outlier.shape = NA)+
       xlab("")+
       scale_fill_manual(values = rep("black",length(vector_colors)), name=group.by)+
@@ -363,7 +364,7 @@ DO.VlnPlot <- function(sce_object,
             legend.title = element_text(face = "bold", color = "transparent"),          # Legend title styling
             legend.text = element_text(color = "transparent"),
             # strip.text = element_blank(),
-      )
+      ))
 
     if (wilcox_test == TRUE & !is.null(group.by.2)) {
 

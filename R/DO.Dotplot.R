@@ -343,12 +343,12 @@ DO.Dotplot <- function(sce_object,
       sce_object_sub <- subset(sce_object, subset = !!sym(group.by.x) == names_x)
 
       #FindMarkers from Seurat for all genes in each cluster of group.by.x
-      stats_test <- Seurat::FindAllMarkers(sce_object_sub,
+      stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object_sub,
                                            features = unique(c(data.plot.res$gene)),
                                            min.pct = 0,
                                            logfc.threshold=0,
                                            group.by = group.by.y,
-                                           only.pos = TRUE)
+                                           only.pos = TRUE))
       if(!nrow(stats_test) == 0){
         stats_test_ren <- stats_test %>%
           rename(id = cluster)
