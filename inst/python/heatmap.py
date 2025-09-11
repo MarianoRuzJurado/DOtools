@@ -126,7 +126,7 @@ def make_grid_spec(
     width_ratios: Union[float, list] = None,
     height_ratios: Union[float, list] = None,
 ):
-    # Taken from Scanpy
+    # Taken from Scanpy -> DRM the old code thief :)
     kw = dict(wspace=wspace, hspace=hspace, width_ratios=width_ratios, height_ratios=height_ratios)
 
     if isinstance(ax_or_figsize, tuple):
@@ -213,6 +213,7 @@ def heatmap(
     adata: ad.AnnData,
     group_by: Union[str, list],
     features: Union[str, list],
+    groups_order: list = None,
     z_score: Literal['var', 'group'] = None,  # x_axis is the group_by
     path: str = None,
     filename: str = 'Heatmap.svg',
@@ -253,6 +254,7 @@ def heatmap(
     :param adata: annotated data matrix.
     :param group_by: obs column name with categorical values.
     :param features: continuous value in var_names or obs.
+    :param groups_order: order for the categories in the group_by 
     :param z_score: apply z-score transformation.
     :param path: path to save the plot
     :param filename: name of the file.
@@ -316,8 +318,9 @@ def heatmap(
     # Hierarchical clustering
     new_index = df.index[dendrogram(linkage(df.values, method=clustering_method, metric=clustering_metric),
                                     no_plot=True)['leaves']] if cluster_x_axis else list(df.index)
+    new_columns = groups_order if groups_order is not None else list(df.columns)
     new_column = df.columns[dendrogram(linkage(df.T.values, method=clustering_method, metric=clustering_metric),
-                                       no_plot=True)['leaves']] if cluster_y_axis else list(df.columns)
+                                       no_plot=True)['leaves']] if cluster_y_axis else list(new_columns)
     df = df.reindex(index=new_index, columns=new_column)
 
     # Layout
@@ -402,7 +405,7 @@ def heatmap(
     square_x_size = {} if square_x_size is None else square_x_size
     square_x_size = {'width': square_x_size.get('weight', 1),
                      'size': square_x_size.get('size', 0.8)}
-    stats_x_size = height * width if stats_x_size is None else stats_x_size
+    stats_x_size = min(width / df.shape[1], height / df.shape[1]) * 10 if stats_x_size is None else stats_x_size
 
     # Save the axis
     return_ax_dict = {}
@@ -426,7 +429,7 @@ def heatmap(
                      linewidths=linewidth,
                      cbar=False,
                      annot_kws={"color": 'black', "size": stats_x_size,
-                                "ha": 'center', "va": 'center'},
+                                "ha": 'center', "va": 'center', "fontfamily": "DejaVu Sans Mono"},
                      annot=annot_pvals,
                      fmt="s",
                      square=square,
@@ -443,7 +446,7 @@ def heatmap(
     if add_stats:
         x, y = 0, 0.5
         sig_ax.scatter(x, y, s=500, facecolors='none', edgecolors='black', marker='s')
-        sig_ax.text(x, y, '*', fontsize=18, ha='center', va='center', color='black')
+        sig_ax.text(x, y, '*', fontsize=18, ha='center', va='center', color='black', fontfamily="DejaVu Sans Mono")
         sig_ax.text(x + 0.03, y, 'FDR < 0.05', fontsize=12, va='center', fontweight='bold')
         sig_ax.set_xlim(x - 0.02, x + 0.1)
         sig_ax.set_title('Significance', fontsize='small', fontweight='bold')

@@ -146,10 +146,10 @@ DO.SplitBarGSEA <- function(df_GSEA,
       #Conversion of the data.frame
       df_GSEA_sub_pd <- reticulate::r_to_py(df_GSEA_sub)
 
-      args$title <- paste0(args$tite, celltype)
+      args$title <- paste0(title, celltype)
 
       #run python function with given arguments
-      plot <- split_bar_gsea(df = args$df_GSEA,
+      plot <- split_bar_gsea(df = df_GSEA_sub_pd,
                              term_col = args$term_col,
                              col_split = args$col_split,
                              cond_col = args$cond_col,

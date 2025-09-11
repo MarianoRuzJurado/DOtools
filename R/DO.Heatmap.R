@@ -7,6 +7,7 @@
 #' @param sce_object SCE object or Seurat with meta.data
 #' @param assay_normalized Assay with raw counts
 #' @param group_by meta data column name with categorical values
+#' @param groups_order order for the categories in the group_by
 #' @param features gene names or continuous value in meta data
 #' @param z_score apply z-score transformation
 #' @param path path to save the plot
@@ -32,7 +33,7 @@
 #' @param add_stats add statistical annotation, will add a square with an '*' in the center if the expression is significantly different in a group with respect to the others
 #' @param df_pvals dataframe with the p-values, should be gene x group or group x gene in case of swap_axes is False
 #' @param stats_x_size size of the asterisk
-#' @param square_x_size size and thickness of the square
+#' @param square_x_size size and thickness of the square percentual, vector
 #' @param test test to use for test for significance
 #' @param pval_cutoff cutoff for the p-value
 #' @param log2fc_cutoff minimum cutoff for the log2FC
@@ -93,7 +94,8 @@
 DO.Heatmap <- function(
     sce_object,
     assay_normalized = "RNA",
-    group_by="seurat_clusters",
+    group_by = "seurat_clusters",
+    groups_order = NULL,
     features,
     z_score = NULL,
     path = NULL,
@@ -173,6 +175,7 @@ DO.Heatmap <- function(
   args <- list(
     sce_object = sce_object,
     group_by = group_by,
+    groups_order = groups_order,
     features = features,
     z_score = z_score,
     path = path,
@@ -217,9 +220,16 @@ DO.Heatmap <- function(
     #Initialize matplot package
     plt <- reticulate::import("matplotlib.pyplot")
 
+    #build dicitonary out of square_x_size if specified
+    if (is.numeric(square_x_size) && length(square_x_size) == 2) {
+      args$square_x_size <- reticulate::dict(weight = square_x_size[1], size = square_x_size[2])
+    }
+
+
     heatmap(adata = AnnData_counts,
             group_by = args$group_by,
             features = args$features,
+            groups_order = args$groups_order,
             z_score = args$z_score,
             path = args$path,
             filename = args$filename,
