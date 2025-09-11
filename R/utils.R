@@ -44,7 +44,7 @@
 #' @keywords internal
 .logger <- function(message) {
   timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  cat(paste0(timestamp, " - ", message, "\n"))
+  message(paste0(timestamp, " - ", message, "\n"))
 }
 
 #' @keywords internal

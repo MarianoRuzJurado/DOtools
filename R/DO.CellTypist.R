@@ -198,7 +198,7 @@ DO.CellTypist <- function(sce_object,
                                                                order = 1))
 
   pmain <- pmain + guides.layer
-  print(pmain)
+  pmain
 
   if (returnProb==TRUE) {
     returnProb <- list(sce_object, probMatrix)

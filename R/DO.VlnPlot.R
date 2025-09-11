@@ -171,23 +171,21 @@ DO.VlnPlot <- function(sce_object,
     }
 
 
-    #create ListTest
+    # create ListTest
     ListTest <- list()
-    for (i in 1:length(group)) {
+    for (i in seq_along(group)) {
       cndtn <- as.character(group[i])
-      if(cndtn!=ctrl.condition)
-      {
-        ListTest[[i]] <- c(ctrl.condition,cndtn)
+      if (cndtn != ctrl.condition) {
+        ListTest[[length(ListTest) + 1]] <- c(ctrl.condition, cndtn)
       }
     }
   }
-
   #delete Null values, created by count index also reorder for better p-value depiction
-  ListTest <- ListTest[!sapply(ListTest, is.null)]
+  ListTest <- ListTest[!vapply(ListTest, is.null, logical(1))]
   if (!is.null(group.by.2)) {
-    indices <- sapply(ListTest, function(x) match(x[2], vln.df[[group.by.2]]))
+    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by.2]], integer(1)))
   } else{
-    indices <- sapply(ListTest, function(x) match(x[2], vln.df[[group.by]]))
+    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by]], integer(1)))
   }
   ListTest <- ListTest[order(indices)]
 
@@ -198,8 +196,11 @@ DO.VlnPlot <- function(sce_object,
       elements <- lst[[i]]
       if (all(df[df$group %in% elements, "Mean"] == 0)) {
         lst_filtered <- lst_filtered[-i]
-        warning(paste0("Removing Test ", elements[1], " vs ", elements[2], " since both values are 0"))
-      }
+        warning(sprintf(
+          "Removing Test %s vs %s since both values are 0",
+          elements[1], elements[2]
+        ))
+        }
     }
     return(lst_filtered)
   }
@@ -290,8 +291,12 @@ DO.VlnPlot <- function(sce_object,
   }
 
   if (length(unique(vln.df[[group.by]])) >  length(vector_colors)) {
-    stop(paste0("Only ", length(vector_colors)," colors provided, but ", length(unique(vln.df[[group.by]])), " needed!"))
-  }
+    stop(sprintf(
+      "Only %s colors provided, but %s needed!",
+      length(vector_colors),
+      length(unique(vln.df[[group.by]]))
+    ))
+    }
 
   #normal violin
   if(is.null(group.by.2)){
@@ -386,12 +391,12 @@ DO.VlnPlot <- function(sce_object,
 
       #if Feature not a gene than use the uncorrected p
       if (Feature %in% rownames(sce_object)) {
-        p_label="p = {p.adj}"
+        p_label <- "p = {p.adj}"
       } else{
-        p_label="p = {p}"
+        p_label <- "p = {p}"
       }
 
-      p = p + stat_pvalue_manual(stat.test_plot,
+      p <-  p + stat_pvalue_manual(stat.test_plot,
                                  label = p_label,
                                  y.position = "y.position",
                                  # x="x",
@@ -407,7 +412,7 @@ DO.VlnPlot <- function(sce_object,
                                  tip.length = 0.02,
                                  bracket.size = sign_bar)
 
-      p2 = p2 + stat_pvalue_manual(stat.test_plot,
+      p2 <-  p2 + stat_pvalue_manual(stat.test_plot,
                                    label = p_label,
                                    y.position = "y.position",
                                    # x="x",
@@ -426,7 +431,7 @@ DO.VlnPlot <- function(sce_object,
 
     }
     plot_p <- cowplot::ggdraw() + cowplot::draw_plot(p) + cowplot::draw_plot(p2)
-    print(plot_p)
+    plot_p
   }
 
 

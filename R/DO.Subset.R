@@ -111,8 +111,12 @@ DO.Subset <- function(sce_object,
     ncells_interest_prior <- nrow(Seu_obj@meta.data[Seu_obj@meta.data[[ident]] %in% ident_name, ])
     ncells_interest_after <- nrow(sce_object_sub@meta.data[sce_object_sub@meta.data[[ident]] %in% ident_name, ])
     if (ncells_interest_prior != ncells_interest_after) {
-      stop(paste0("Number of subsetted cell types is not equal in both objects! Before: ",ncells_interest_prior,"; After: ", ncells_interest_after,". Please check your metadata!"))
-    }
+      stop(sprintf(
+        "Number of subsetted cell types is not equal in both objects! Before: %s; After: %s. Please check your metadata!",
+        ncells_interest_prior,
+        ncells_interest_after
+      ))
+      }
   }
 
   return(sce_object_sub)

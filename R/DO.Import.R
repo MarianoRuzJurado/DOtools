@@ -138,7 +138,7 @@ DO.Import <- function(pathways,
     }
     flt_mitofeatures <- grep("^MT-", rownames(sce_object), value = TRUE, ignore.case = TRUE)
     if (length(flt_mitofeatures)<1) {
-      warning("Warning: Could not find MT genes")
+      warning("Could not find MT genes")
     }
     pt_mito <- Matrix::colSums(GetAssayData(sce_object, layer = 'counts')[flt_mitofeatures, ]) / Matrix::colSums(GetAssayData(sce_object, layer = 'counts'))
     sce_object$pt_mito <- pt_mito

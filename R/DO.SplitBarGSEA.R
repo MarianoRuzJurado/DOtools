@@ -105,7 +105,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
     col_split = col_split,
     cond_col = cond_col,
     pos_cond = pos_cond,
-    title = paste0(title, celltype),
+    title = title,
     cutoff = cutoff,
     log10_transform = log10_transform,
     figsize = figsize,
@@ -141,10 +141,12 @@ DO.SplitBarGSEA <- function(df_GSEA,
     #Run for each celltype the split_bar_gsea function
     for (celltype in unique(df_GSEA$celltype)) {
       df_GSEA_sub <- df_GSEA[df_GSEA$celltype == celltype,]
-      df_GSEA_sub$Term <- sapply(strsplit(df_GSEA_sub$Term, " \\(GO"), function(x)x[1])
+      df_GSEA_sub$Term <- vapply(strsplit(df_GSEA_sub[[term_col]], " \\(GO"), function(x)x[1], character(1))
 
       #Conversion of the data.frame
       df_GSEA_sub_pd <- reticulate::r_to_py(df_GSEA_sub)
+
+      args$title <- paste0(args$tite, celltype)
 
       #run python function with given arguments
       plot <- split_bar_gsea(df = args$df_GSEA,
@@ -174,6 +176,7 @@ DO.SplitBarGSEA <- function(df_GSEA,
       if (!is.null(path)) {
         #Save under provided PATH
         plt$savefig(paste0(path, celltype, "_", filename), dpi=300, bbox_inches="tight")
+        plt$close()
       }
 
     }

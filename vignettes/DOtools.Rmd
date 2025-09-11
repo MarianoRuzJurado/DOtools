@@ -93,7 +93,7 @@ We have integrated a wrapper function to run CellBender within the
 `r Biocpkg("DOtools")` package. The current implementation supports processing
 samples generated with CellRanger.
 
-```{r read_example_data, eval=FALSE, warning = FALSE}
+```{r Cellbender, eval=FALSE, warning = FALSE}
 base <- DOtools:::.example_10x()
 dir.create(file.path(base, "/cellbender"))
 
@@ -193,7 +193,7 @@ The DOtools package provides a slim object of this data set. Please feel free,
 to use the one created from DO.Import for prettier results or this slim downed 
 version. We can observe how similar the samples are through running a 
 correlation analysis.
-```{r heatmap, fig.width=6, fig.height=6}
+```{r Correlation, fig.width=6, fig.height=6}
 #Making sure we have a save folder
 base <- tempfile("my_tempdir_")
 dir.create(base)

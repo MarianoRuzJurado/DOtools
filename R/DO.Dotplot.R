@@ -140,7 +140,7 @@ DO.Dotplot <- function(sce_object,
     data.use <- geneExp[geneExp$id == ident, ]
 
     lapply(X = unique(data.use$xaxis), FUN = function(x_axis) {
-      data.cell <- data.use[data.use$xaxis == x_axis, 1:(ncol(geneExp) - 2), drop = FALSE]
+      data.cell <- data.use[data.use$xaxis == x_axis, seq_len(ncol(geneExp) - 2), drop = FALSE]
       avg.exp <- apply(X = data.cell, MARGIN = 2, FUN = function(x) {
         return(mean(x))
       })
@@ -184,8 +184,8 @@ DO.Dotplot <- function(sce_object,
 
   #create grouping column for multiple grouping variables on the y-axis
   if (!is.null(group.by.y2)) {
-    data.plot.res$group <- sapply(strsplit(as.character(data.plot.res$id),
-                                           split = "\\(|\\)"), "[", 2)
+    data.plot.res$group <- vapply(strsplit(as.character(data.plot.res$id),
+                                           split = "\\(|\\)"), "[", character(1), 2)
   }
 
   if (hide_zero==TRUE) {
@@ -675,14 +675,18 @@ DO.Dotplot <- function(sce_object,
         xmax <- xPos + segWidth/2
       }
       else {
-        groupInfo <- data %>% dplyr::select(.data[[aes_x]],
-                                            .data[[aesGroName]]) %>% unique() %>% dplyr::select(.data[[aesGroName]]) %>%
-          table() %>% data.frame()
-        start <- c(1, groupInfo$Freq[1:(length(groupInfo$Freq) -
-                                          1)]) %>% cumsum()
+        groupInfo <- data %>%
+          dplyr::select(.data[[aes_x]], .data[[aesGroName]]) %>%
+          unique() %>%
+          dplyr::select(.data[[aesGroName]]) %>%
+          table() %>%
+          data.frame()
+
+        # safer indexing
+        start <- c(1, groupInfo$Freq[seq_len(length(groupInfo$Freq) - 1)]) %>% cumsum()
         end <- cumsum(groupInfo$Freq)
-        xmin <- start - segWidth/2
-        xmax <- end + segWidth/2
+        xmin <- start - segWidth / 2
+        xmax <- end + segWidth / 2
         nPoints <- length(start)
       }
       if (is.null(yPosition)) {
@@ -721,14 +725,18 @@ DO.Dotplot <- function(sce_object,
         ymax <- yPos + segWidth/2
       }
       else {
-        groupInfo <- data %>% dplyr::select(.data[[aes_y]],
-                                            .data[[aesGroName]]) %>% unique() %>% dplyr::select(.data[[aesGroName]]) %>%
-          table() %>% data.frame()
-        start <- c(1, groupInfo$Freq[1:(length(groupInfo$Freq) -
-                                          1)]) %>% cumsum()
+        groupInfo <- data %>%
+          dplyr::select(.data[[aes_y]], .data[[aesGroName]]) %>%
+          unique() %>%
+          dplyr::select(.data[[aesGroName]]) %>%
+          table() %>%
+          data.frame()
+
+        # safer indexing with seq_len()
+        start <- c(1, groupInfo$Freq[seq_len(length(groupInfo$Freq) - 1)]) %>% cumsum()
         end <- cumsum(groupInfo$Freq)
-        ymin <- start - segWidth/2
-        ymax <- end + segWidth/2
+        ymin <- start - segWidth / 2
+        ymax <- end + segWidth / 2
         nPoints <- length(start)
       }
       if (is.null(xPosition)) {
@@ -790,23 +798,45 @@ DO.Dotplot <- function(sce_object,
   }
   if (is.null(facetName)) {
     if (annoPos %in% c("top", "botomn")) {
-      for (i in 1:nPoints) {
-        object <- object + ggplot2::annotation_custom(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol[i],
-                                                                                                fill = pCol[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                                alpha = alpha), arrow = mArrow), xmin = ggplot2::unit(xmin[i],
-                                                                                                                                                      "native"), xmax = ggplot2::unit(xmax[i], "native"),
-                                                      ymin = ggplot2::unit(ymin, "native"), ymax = ggplot2::unit(ymax,
-                                                                                                                 "native"))
+      for (i in seq_len(nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol[i],
+              fill = pCol[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = mArrow
+          ),
+          xmin = ggplot2::unit(xmin[i], "native"),
+          xmax = ggplot2::unit(xmax[i], "native"),
+          ymin = ggplot2::unit(ymin, "native"),
+          ymax = ggplot2::unit(ymax, "native")
+        )
       }
     }
     else if (annoPos %in% c("left", "right")) {
-      for (i in 1:nPoints) {
-        object <- object + ggplot2::annotation_custom(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol[i],
-                                                                                                fill = pCol[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                                alpha = alpha), arrow = mArrow), xmin = ggplot2::unit(xmin,
-                                                                                                                                                      "native"), xmax = ggplot2::unit(xmax, "native"),
-                                                      ymin = ggplot2::unit(ymin[i], "native"), ymax = ggplot2::unit(ymax[i],
-                                                                                                                    "native"))
+      for (i in seq_len(nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol[i],
+              fill = pCol[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = mArrow
+          ),
+          xmin = ggplot2::unit(xmin, "native"),
+          xmax = ggplot2::unit(xmax, "native"),
+          ymin = ggplot2::unit(ymin[i], "native"),
+          ymax = ggplot2::unit(ymax[i], "native")
+        )
       }
     }
     else {
@@ -816,20 +846,47 @@ DO.Dotplot <- function(sce_object,
     facet_data <- data.frame(myFacetGrou)
     colnames(facet_data) <- facetName
     if (annoPos %in% c("top", "botomn")) {
-      for (i in 1:nPoints) {
-        object <- object + annotation_custom2(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol[i],
-                                                                                        fill = pCol[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                        alpha = alpha), arrow = mArrow), data = facet_data,
-                                              xmin = xmin[i], xmax = xmax[i], ymin = ymin,
-                                              ymax = ymax)
+      for (i in seq_len(nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol[i],
+              fill = pCol[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = mArrow
+          ),
+          data = facet_data,
+          xmin = xmin[i],
+          xmax = xmax[i],
+          ymin = ymin,
+          ymax = ymax
+        )
       }
     }
     else if (annoPos %in% c("left", "right")) {
-      for (i in 1:nPoints) {
-        object <- object + annotation_custom2(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol[i],
-                                                                                        fill = pCol[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                        alpha = alpha), arrow = mArrow), data = facet_data,
-                                              xmin = xmin, xmax = xmax, ymin = ymin[i], ymax = ymax[i])
+      for (i in seq_len(nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol[i],
+              fill = pCol[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = mArrow
+          ),
+          data = facet_data,
+          xmin = xmin,
+          xmax = xmax,
+          ymin = ymin[i],
+          ymax = ymax[i]
+        )
       }
     }
     else {
@@ -852,23 +909,45 @@ DO.Dotplot <- function(sce_object,
   }
   if (is.null(facetName)) {
     if (addBranch == TRUE & annoPos %in% c("top", "botomn")) {
-      for (i in 1:(2 * nPoints)) {
-        object <- object + ggplot2::annotation_custom(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol2[i],
-                                                                                                fill = pCol2[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                                alpha = alpha), arrow = bArrow), xmin = ggplot2::unit(brXmin[i],
-                                                                                                                                                      "native"), xmax = ggplot2::unit(brXmax[i],
-                                                                                                                                                                                      "native"), ymin = ggplot2::unit(brYmin, "native"),
-                                                      ymax = ggplot2::unit(brYmax, "native"))
+      for (i in seq_len(2 * nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol2[i],
+              fill = pCol2[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = bArrow
+          ),
+          xmin = ggplot2::unit(brXmin[i], "native"),
+          xmax = ggplot2::unit(brXmax[i], "native"),
+          ymin = ggplot2::unit(brYmin, "native"),
+          ymax = ggplot2::unit(brYmax, "native")
+        )
       }
     }
     else if (addBranch == TRUE & annoPos %in% c("left", "right")) {
-      for (i in 1:(2 * nPoints)) {
-        object <- object + ggplot2::annotation_custom(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol2[i],
-                                                                                                fill = pCol2[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                                alpha = alpha), arrow = bArrow), xmin = ggplot2::unit(brXmin,
-                                                                                                                                                      "native"), xmax = ggplot2::unit(brXmax, "native"),
-                                                      ymin = ggplot2::unit(brYmin[i], "native"),
-                                                      ymax = ggplot2::unit(brYmax[i], "native"))
+      for (i in seq_len(2 * nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol2[i],
+              fill = pCol2[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = bArrow
+          ),
+          xmin = ggplot2::unit(brXmin, "native"),
+          xmax = ggplot2::unit(brXmax, "native"),
+          ymin = ggplot2::unit(brYmin[i], "native"),
+          ymax = ggplot2::unit(brYmax[i], "native")
+        )
       }
     }
     else {
@@ -876,21 +955,47 @@ DO.Dotplot <- function(sce_object,
   }
   else {
     if (addBranch == TRUE & annoPos %in% c("top", "botomn")) {
-      for (i in 1:(2 * nPoints)) {
-        object <- object + annotation_custom2(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol2[i],
-                                                                                        fill = pCol2[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                        alpha = alpha), arrow = bArrow), data = facet_data,
-                                              xmin = brXmin[i], xmax = brXmax[i], ymin = brYmin,
-                                              ymax = brYmax)
+      for (i in seq_len(2 * nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol2[i],
+              fill = pCol2[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = bArrow
+          ),
+          data = facet_data,
+          xmin = brXmin[i],
+          xmax = brXmax[i],
+          ymin = brYmin,
+          ymax = brYmax
+        )
       }
     }
     else if (addBranch == TRUE & annoPos %in% c("left", "right")) {
-      for (i in 1:(2 * nPoints)) {
-        object <- object + annotation_custom2(grob = grid::segmentsGrob(gp = grid::gpar(col = pCol2[i],
-                                                                                        fill = pCol2[i], lty = lty, lwd = lwd, lineend = lineend,
-                                                                                        alpha = alpha), arrow = bArrow), data = facet_data,
-                                              xmin = brXmin, xmax = brXmax, ymin = brYmin[i],
-                                              ymax = brYmax[i])
+      for (i in seq_len(2 * nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::segmentsGrob(
+            gp = grid::gpar(
+              col = pCol2[i],
+              fill = pCol2[i],
+              lty = lty,
+              lwd = lwd,
+              lineend = lineend,
+              alpha = alpha
+            ),
+            arrow = bArrow
+          ),
+          data = facet_data,
+          xmin = brXmin,
+          xmax = brXmax,
+          ymin = brYmin[i],
+          ymax = brYmax[i]
+        )
       }
     }
     else {
@@ -910,27 +1015,51 @@ DO.Dotplot <- function(sce_object,
   }
   if (is.null(facetName)) {
     if (addText == TRUE & annoPos %in% c("top", "botomn")) {
-      for (i in 1:nPoints) {
-        object <- object + ggplot2::annotation_custom(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
-                                                                                            fontsize = textSize, fontfamily = fontfamily,
-                                                                                            fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                            label = textLabel[i], check.overlap = TRUE, just = "centre",
-                                                                            rot = textRot), xmin = ggplot2::unit(xmin[i],
-                                                                                                                 "native"), xmax = ggplot2::unit(xmax[i], "native"),
-                                                      ymin = ggplot2::unit(ymin + textHVjust, "native"),
-                                                      ymax = ggplot2::unit(ymax + textHVjust, "native"))
+      for (i in seq_len(nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::textGrob(
+            gp = grid::gpar(
+              col = textCol[i],
+              fontsize = textSize,
+              fontfamily = fontfamily,
+              fontface = fontface
+            ),
+            hjust = hjust,
+            vjust = vjust,
+            label = textLabel[i],
+            check.overlap = TRUE,
+            just = "centre",
+            rot = textRot
+          ),
+          xmin = ggplot2::unit(xmin[i], "native"),
+          xmax = ggplot2::unit(xmax[i], "native"),
+          ymin = ggplot2::unit(ymin + textHVjust, "native"),
+          ymax = ggplot2::unit(ymax + textHVjust, "native")
+        )
       }
     }
     else if (addText == TRUE & annoPos %in% c("left", "right")) {
-      for (i in 1:nPoints) {
-        object <- object + ggplot2::annotation_custom(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
-                                                                                            fontsize = textSize, fontfamily = fontfamily,
-                                                                                            fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                            label = textLabel[i], check.overlap = TRUE, just = "centre",
-                                                                            rot = textRot), xmin = ggplot2::unit(xmin +
-                                                                                                                   textHVjust, "native"), xmax = ggplot2::unit(xmax +
-                                                                                                                                                                 textHVjust, "native"), ymin = ggplot2::unit(ymin[i],
-                                                                                                                                                                                                             "native"), ymax = ggplot2::unit(ymax[i], "native"))
+      for (i in seq_len(nPoints)) {
+        object <- object + ggplot2::annotation_custom(
+          grob = grid::textGrob(
+            gp = grid::gpar(
+              col = textCol[i],
+              fontsize = textSize,
+              fontfamily = fontfamily,
+              fontface = fontface
+            ),
+            hjust = hjust,
+            vjust = vjust,
+            label = textLabel[i],
+            check.overlap = TRUE,
+            just = "centre",
+            rot = textRot
+          ),
+          xmin = ggplot2::unit(xmin + textHVjust, "native"),
+          xmax = ggplot2::unit(xmax + textHVjust, "native"),
+          ymin = ggplot2::unit(ymin[i], "native"),
+          ymax = ggplot2::unit(ymax[i], "native")
+        )
       }
     }
     else {
@@ -938,29 +1067,57 @@ DO.Dotplot <- function(sce_object,
   }
   else {
     if (addText == TRUE & annoPos %in% c("top", "botomn")) {
-      for (i in 1:nPoints) {
-        object <- object + annotation_custom2(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
-                                                                                    fontsize = textSize, fontfamily = fontfamily,
-                                                                                    fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                    label = textLabel[i], check.overlap = TRUE, just = "centre",
-                                                                    rot = textRot), data = facet_data, xmin = xmin[i],
-                                              xmax = xmax[i], ymin = ymin + textHVjust, ymax = ymax +
-                                                textHVjust)
+      for (i in seq_len(nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::textGrob(
+            gp = grid::gpar(
+              col = textCol[i],
+              fontsize = textSize,
+              fontfamily = fontfamily,
+              fontface = fontface
+            ),
+            hjust = hjust,
+            vjust = vjust,
+            label = textLabel[i],
+            check.overlap = TRUE,
+            just = "centre",
+            rot = textRot
+          ),
+          data = facet_data,
+          xmin = xmin[i],
+          xmax = xmax[i],
+          ymin = ymin + textHVjust,
+          ymax = ymax + textHVjust
+        )
       }
     }
     else if (addText == TRUE & annoPos %in% c("left", "right")) {
-      for (i in 1:nPoints) {
-        object <- object + annotation_custom2(grob = grid::textGrob(gp = grid::gpar(col = textCol[i],
-                                                                                    fontsize = textSize, fontfamily = fontfamily,
-                                                                                    fontface = fontface), hjust = hjust, vjust = vjust,
-                                                                    label = textLabel[i], check.overlap = TRUE, just = "centre",
-                                                                    rot = textRot), data = facet_data, xmin = xmin +
-                                                textHVjust, xmax = xmin + textHVjust, ymin = ymin[i],
-                                              ymax = ymax[i])
+      for (i in seq_len(nPoints)) {
+        object <- object + annotation_custom2(
+          grob = grid::textGrob(
+            gp = grid::gpar(
+              col = textCol[i],
+              fontsize = textSize,
+              fontfamily = fontfamily,
+              fontface = fontface
+            ),
+            hjust = hjust,
+            vjust = vjust,
+            label = textLabel[i],
+            check.overlap = TRUE,
+            just = "centre",
+            rot = textRot
+          ),
+          data = facet_data,
+          xmin = xmin + textHVjust,
+          xmax = xmin + textHVjust,
+          ymin = ymin[i],
+          ymax = ymax[i]
+        )
       }
     }
     else {
     }
   }
-  print(object)
+  object
 }

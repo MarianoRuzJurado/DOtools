@@ -56,8 +56,12 @@ DO.MultiDGE <- function(sce_object,
   }
 
   if (!ident_ctrl %in% sce_object@meta.data[[group_by]]) {
-    stop(paste0(ident_ctrl, " was not found in meta data under the specified group_by column: ", group_by))
-  }
+    stop(sprintf(
+      "%s was not found in meta data under the specified group_by column: %s",
+      ident_ctrl,
+      group_by
+    ))
+    }
 
   DEG_stats_collector_sc <- list() #list for collecting sc method results
   DEG_stats_collector_pb <- list() #list for collecting pseudo_bulk method results

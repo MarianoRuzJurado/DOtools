@@ -52,7 +52,7 @@ DO.FullRecluster <- function(sce_object,
   )
 
   #newline prints when the function exits (to clean up console)
-  on.exit(cat("\n"))
+  on.exit(message(""))
 
   for (cluster in unique(sce_object@meta.data[[over_clustering]])) {
     pb$tick()

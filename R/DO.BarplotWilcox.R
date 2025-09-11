@@ -140,18 +140,16 @@ DO.BarplotWilcox <- function(sce_object,
                                     ,levels = c(as.character(ctrl.condition),levels(factor(df.melt.sum$condition))[!(levels(factor(df.melt.sum$condition)) %in% ctrl.condition)]))
     #create ListTest
     ListTest <- list()
-    for (i in 1:length(conditions)) {
+    for (i in seq_along(conditions)) {
       cndtn <- as.character(conditions[i])
-      if(cndtn!=ctrl.condition)
-      {
-        ListTest[[i]] <- c(ctrl.condition,cndtn)
+      if (cndtn != ctrl.condition) {
+        ListTest[[length(ListTest) + 1]] <- c(ctrl.condition, cndtn)
       }
     }
   }
-
   #delete Null values, created by count index also reorder for betetr p-value depiction
-  ListTest <- ListTest[!sapply(ListTest, is.null)]
-  indices <- sapply(ListTest, function(x) match(x[2], df.melt.sum$condition))
+  ListTest <- ListTest[!vapply(ListTest, is.null, logical(1))]
+  indices <- vapply(ListTest, function(x) match(x[2], df.melt.sum$condition), integer(1))
   ListTest <- ListTest[order(indices)]
 
   #Function to remove vectors with both elements having a mean of 0 in df.melt.sum, so the testing does not fail
@@ -161,8 +159,11 @@ DO.BarplotWilcox <- function(sce_object,
       elements <- lst[[i]]
       if (all(df[df$condition %in% elements, "Mean"] == 0)) {
         lst_filtered <- lst_filtered[-i]
-        warning(paste0("Removing Test ", elements[1], " vs ", elements[2], " since both values are 0"))
-      }
+        warning(sprintf(
+          "Removing Test %s vs %s since both values are 0",
+          elements[1], elements[2]
+        ))
+        }
     }
     return(lst_filtered)
   }
