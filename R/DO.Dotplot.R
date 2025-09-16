@@ -286,44 +286,86 @@ DO.Dotplot <- function(sce_object,
     data.plot.res$p_adj <- NA
     for (names_y in as.vector(unique(data.plot.res[[aes_var[2]]]))) {
 
-      sce_object_sub <- subset(sce_object, subset = !!sym(group.by.y) == names_y)
+      #in the case of pseudobulk specified
+      if (names_y == "Pseudobulk") {
 
-      #FindMarkers from Seurat for all genes in each cluster of group.by.x
-      stats_test <- Seurat::FindAllMarkers(sce_object_sub,
-                                           features = unique(c(data.plot.res$gene)),
-                                           min.pct = 0,
-                                           logfc.threshold=0,
-                                           group.by = group.by.x,
-                                           only.pos = TRUE)
+        stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object,
+                                                              features = unique(c(data.plot.res$gene)),
+                                                              min.pct = 0,
+                                                              logfc.threshold=0,
+                                                              group.by = group.by.x,
+                                                              only.pos = TRUE))
 
-      if(!nrow(stats_test) == 0){
-        stats_test_ren <- stats_test %>%
-          rename(xaxis = cluster)
+        if(!nrow(stats_test) == 0){
+          stats_test_ren <- stats_test %>%
+            rename(xaxis = cluster)
+        } else{
+          stats_test_ren <- data.frame(p_val=character(),
+                                       avg_log2FC=character(),
+                                       pct.1=character(),
+                                       pct.2=character(),
+                                       p_val_adj=character(),
+                                       xaxis=character(),
+                                       gene=character())
+        }
+
+        #add p-value if test fails add p-value 1
+        data.plot.res <- data.plot.res %>%
+          left_join(
+            stats_test_ren %>% select(gene, xaxis, p_val_adj),
+            by = c("gene", "xaxis")
+          ) %>%
+          mutate(
+            p_adj = case_when(
+              id == names_y & !is.na(p_val_adj) ~ p_val_adj,
+              id == names_y &  is.na(p_val_adj) ~ 1,
+              TRUE ~ p_adj
+            )
+          ) %>%
+          select(-p_val_adj)
+
       } else{
-        stats_test_ren <- data.frame(p_val=character(),
-                                     avg_log2FC=character(),
-                                     pct.1=character(),
-                                     pct.2=character(),
-                                     p_val_adj=character(),
-                                     xaxis=character(),
-                                     gene=character())
-      }
 
-      #add p-value if test fails add p-value 1
-      data.plot.res <- data.plot.res %>%
-        left_join(
-          stats_test_ren %>% select(gene, xaxis, p_val_adj),
-          by = c("gene", "xaxis")
-        ) %>%
-        mutate(
-          p_adj = case_when(
-            id == names_y & !is.na(p_val_adj) ~ p_val_adj,
-            id == names_y &  is.na(p_val_adj) ~ 1,
-            TRUE ~ p_adj
-          )
-        ) %>%
-        select(-p_val_adj)
+        sce_object_sub <- subset(sce_object, subset = !!sym(group.by.y) == names_y)
+
+        #FindMarkers from Seurat for all genes in each cluster of group.by.x
+        stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object_sub,
+                                                              features = unique(c(data.plot.res$gene)),
+                                                              min.pct = 0,
+                                                              logfc.threshold=0,
+                                                              group.by = group.by.x,
+                                                              only.pos = TRUE))
+
+        if(!nrow(stats_test) == 0){
+          stats_test_ren <- stats_test %>%
+            rename(xaxis = cluster)
+        } else{
+          stats_test_ren <- data.frame(p_val=character(),
+                                       avg_log2FC=character(),
+                                       pct.1=character(),
+                                       pct.2=character(),
+                                       p_val_adj=character(),
+                                       xaxis=character(),
+                                       gene=character())
+        }
+
+        #add p-value if test fails add p-value 1
+        data.plot.res <- data.plot.res %>%
+          left_join(
+            stats_test_ren %>% select(gene, xaxis, p_val_adj),
+            by = c("gene", "xaxis")
+          ) %>%
+          mutate(
+            p_adj = case_when(
+              id == names_y & !is.na(p_val_adj) ~ p_val_adj,
+              id == names_y &  is.na(p_val_adj) ~ 1,
+              TRUE ~ p_adj
+            )
+          ) %>%
+          select(-p_val_adj)
+      }
     }
+
     data.plot.res <- data.plot.res %>%
       mutate(
         stars = case_when(
@@ -340,44 +382,84 @@ DO.Dotplot <- function(sce_object,
     data.plot.res$p_adj <- NA
     for (names_x in as.vector(unique(data.plot.res[[aes_var[1]]]))) {
 
-      sce_object_sub <- subset(sce_object, subset = !!sym(group.by.x) == names_x)
+      #in the case of pseudobulk specified
+      if (names_x == "Pseudobulk") {
 
-      #FindMarkers from Seurat for all genes in each cluster of group.by.x
-      stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object_sub,
-                                           features = unique(c(data.plot.res$gene)),
-                                           min.pct = 0,
-                                           logfc.threshold=0,
-                                           group.by = group.by.y,
-                                           only.pos = TRUE))
-      if(!nrow(stats_test) == 0){
-        stats_test_ren <- stats_test %>%
-          rename(id = cluster)
+        stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object,
+                                                              features = unique(c(data.plot.res$gene)),
+                                                              min.pct = 0,
+                                                              logfc.threshold=0,
+                                                              group.by = group.by.y,
+                                                              only.pos = TRUE))
+
+        if(!nrow(stats_test) == 0){
+          stats_test_ren <- stats_test %>%
+            rename(id = cluster)
+        } else{
+          stats_test_ren <- data.frame(p_val=character(),
+                                       avg_log2FC=character(),
+                                       pct.1=character(),
+                                       pct.2=character(),
+                                       p_val_adj=character(),
+                                       id=character(),
+                                       gene=character())
+        }
+
+        #add p-value if test fails add p-value 1
+        data.plot.res <- data.plot.res %>%
+          left_join(
+            stats_test_ren %>% select(gene, id, p_val_adj),
+            by = c("gene", "id")
+          ) %>%
+          mutate(
+            p_adj = case_when(
+              xaxis == names_x & !is.na(as.numeric(p_val_adj)) ~ as.numeric(p_val_adj),
+              xaxis == names_x &  is.na(as.numeric(p_val_adj)) ~ 1,
+              TRUE ~ as.numeric(p_adj)
+            )
+          ) %>%
+          select(-p_val_adj)
       } else{
-        stats_test_ren <- data.frame(p_val=character(),
-                                     avg_log2FC=character(),
-                                     pct.1=character(),
-                                     pct.2=character(),
-                                     p_val_adj=character(),
-                                     id=character(),
-                                     gene=character())
+
+
+        sce_object_sub <- subset(sce_object, subset = !!sym(group.by.x) == names_x)
+
+        #FindMarkers from Seurat for all genes in each cluster of group.by.x
+        stats_test <- suppressWarnings(Seurat::FindAllMarkers(sce_object_sub,
+                                                              features = unique(c(data.plot.res$gene)),
+                                                              min.pct = 0,
+                                                              logfc.threshold=0,
+                                                              group.by = group.by.y,
+                                                              only.pos = TRUE))
+        if(!nrow(stats_test) == 0){
+          stats_test_ren <- stats_test %>%
+            rename(id = cluster)
+        } else{
+          stats_test_ren <- data.frame(p_val=character(),
+                                       avg_log2FC=character(),
+                                       pct.1=character(),
+                                       pct.2=character(),
+                                       p_val_adj=character(),
+                                       id=character(),
+                                       gene=character())
+        }
+
+        #add p-value if test fails add p-value 1
+        data.plot.res <- data.plot.res %>%
+          left_join(
+            stats_test_ren %>% select(gene, id, p_val_adj),
+            by = c("gene", "id")
+          ) %>%
+          mutate(
+            p_adj = case_when(
+              xaxis == names_x & !is.na(as.numeric(p_val_adj)) ~ as.numeric(p_val_adj),
+              xaxis == names_x &  is.na(as.numeric(p_val_adj)) ~ 1,
+              TRUE ~ as.numeric(p_adj)
+            )
+          ) %>%
+          select(-p_val_adj)
       }
-
-      #add p-value if test fails add p-value 1
-      data.plot.res <- data.plot.res %>%
-        left_join(
-          stats_test_ren %>% select(gene, id, p_val_adj),
-          by = c("gene", "id")
-        ) %>%
-        mutate(
-          p_adj = case_when(
-            xaxis == names_x & !is.na(as.numeric(p_val_adj)) ~ as.numeric(p_val_adj),
-            xaxis == names_x &  is.na(as.numeric(p_val_adj)) ~ 1,
-            TRUE ~ as.numeric(p_adj)
-          )
-        ) %>%
-        select(-p_val_adj)
     }
-
     data.plot.res <- data.plot.res %>%
       mutate(
         stars = case_when(
@@ -570,6 +652,7 @@ DO.Dotplot <- function(sce_object,
   return(pmain)
 
 }
+
 
 # AnnoSegment function conservation: the original author is no longer maintaining it on CRAN and it would be a shame to lose it
 #' @author Mariano Ruz Jurado (edited from: Jun Zhang)

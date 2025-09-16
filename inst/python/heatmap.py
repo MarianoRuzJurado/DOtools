@@ -16,8 +16,9 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
 def convert_path(
-    path: Union[Path, str]
+        path: Union[Path, str]
 ) -> Path:
     """Convert to Path format if string is provided.
 
@@ -28,9 +29,10 @@ def convert_path(
         return Path(path)
     else:
         return path
-        
+
+
 def sanitize_anndata(
-    adata: ad.AnnData
+        adata: ad.AnnData
 ) -> None:
     """Transform string metadata to categorical.
 
@@ -39,9 +41,10 @@ def sanitize_anndata(
     """
     adata._sanitize()
     return None
-    
+
+
 def _expm1_anndata(
-    adata: ad.AnnData
+        adata: ad.AnnData
 ) -> None:
     """Apply expm1 transformation for the X dt.
 
@@ -53,13 +56,14 @@ def _expm1_anndata(
         adata.X.data = np.expm1(adata.X.data)
     else:
         adata.X = np.expm1(adata.X)
-        
+
+
 def mean_expr(
-    adata: ad.AnnData,
-    group_by: str,
-    features: Union[list, str, None] = None,
-    out_format: Literal['long', 'wide'] = "long",
-    layer: Union[str, None] = None,
+        adata: ad.AnnData,
+        group_by: str,
+        features: Union[list, str, None] = None,
+        out_format: Literal['long', 'wide'] = "long",
+        layer: Union[str, None] = None,
 ) -> pd.DataFrame:
     """Calculate the average expression in an annData objects for features.
 
@@ -115,16 +119,17 @@ def mean_expr(
         if len(group_by) > 1:
             main_df.columns = main_df.columns.map("_".join)
     return main_df
-    
+
+
 def make_grid_spec(
-    ax_or_figsize,
-    *,
-    nrows: int,
-    ncols: int,
-    wspace: float = None,
-    hspace: float = None,
-    width_ratios: Union[float, list] = None,
-    height_ratios: Union[float, list] = None,
+        ax_or_figsize,
+        *,
+        nrows: int,
+        ncols: int,
+        wspace: float = None,
+        hspace: float = None,
+        width_ratios: Union[float, list] = None,
+        height_ratios: Union[float, list] = None,
 ):
     # Taken from Scanpy -> DRM the old code thief :)
     kw = dict(wspace=wspace, hspace=hspace, width_ratios=width_ratios, height_ratios=height_ratios)
@@ -142,10 +147,10 @@ def make_grid_spec(
 
 
 def check_colornorm(
-    vmin=None,
-    vmax=None,
-    vcenter=None,
-    norm=None
+        vmin=None,
+        vmax=None,
+        vcenter=None,
+        norm=None
 ):
     from matplotlib.colors import Normalize
 
@@ -168,7 +173,7 @@ def check_colornorm(
 
 
 def square_color(
-    rgba: list
+        rgba: list
 ) -> str:
     """Determine if the background is dark or clear and return black or white.
 
@@ -184,11 +189,11 @@ def square_color(
 
 
 def small_squares(
-    ax: plt.Axes,
-    pos: list,
-    color: list,
-    size: float = 1,
-    linewidth: float = 0.8
+        ax: plt.Axes,
+        pos: list,
+        color: list,
+        size: float = 1,
+        linewidth: float = 0.8
 ) -> None:
     """Add small squares.
 
@@ -210,41 +215,45 @@ def small_squares(
 
 
 def heatmap(
-    adata: ad.AnnData,
-    group_by: Union[str, list],
-    features: Union[str, list],
-    groups_order: list = None,
-    z_score: Literal['var', 'group'] = None,  # x_axis is the group_by
-    path: str = None,
-    filename: str = 'Heatmap.svg',
-    layer: str = None,
-    swap_axes: bool = True,
-    cmap: str = 'Reds',
-    title: str = None,
-    title_fontprop: dict = None,
-    clustering_method: str = 'complete',
-    clustering_metric: str = 'euclidean',
-    cluster_x_axis: bool = False,
-    cluster_y_axis: bool = False,
-    axs: Union[plt.Axes, None] = None,
-    figsize: tuple = (5, 6),
-    linewidth: float = 0.1,
-    ticks_fontdict: dict = None,
-    xticks_rotation: int = None,
-    yticks_rotation: int = None,
-    vmin: float = 0.0,
-    vcenter: float = None,
-    vmax: float = None,
-    legend_title: str = 'LogMean(nUMI)\nin group',
-    add_stats: bool = True,
-    df_pvals: pd.DataFrame = None,
-    stats_x_size: float = None,
-    square_x_size: dict = None,
-    pval_cutoff: float = 0.05,
-    square: bool = True,
-    showP: bool = True,
-    logcounts: bool = True,
-    **kargs,
+        adata: ad.AnnData,
+        group_by: Union[str, list],
+        features: Union[str, list],
+        value_plot: Literal['expr', 'fc'] = 'expr',
+        group_fc: str = None,
+        group_fc_ident_1: str = None,
+        group_fc_ident_2: str = None,
+        groups_order: list = None,
+        z_score: Literal['var', 'group'] = None,  # x_axis is the group_by
+        path: str = None,
+        filename: str = 'Heatmap.svg',
+        layer: str = None,
+        swap_axes: bool = True,
+        cmap: str = 'Reds',
+        title: str = None,
+        title_fontprop: dict = None,
+        clustering_method: str = 'complete',
+        clustering_metric: str = 'euclidean',
+        cluster_x_axis: bool = False,
+        cluster_y_axis: bool = False,
+        axs: Union[plt.Axes, None] = None,
+        figsize: tuple = (5, 6),
+        linewidth: float = 0.1,
+        ticks_fontdict: dict = None,
+        xticks_rotation: int = None,
+        yticks_rotation: int = None,
+        vmin: float = 0.0,
+        vcenter: float = None,
+        vmax: float = None,
+        legend_title: str = 'LogMean(nUMI)\nin group',
+        add_stats: bool = True,
+        df_pvals: pd.DataFrame = None,
+        stats_x_size: float = None,
+        square_x_size: dict = None,
+        pval_cutoff: float = 0.05,
+        square: bool = True,
+        showP: bool = True,
+        logcounts: bool = True,
+        **kargs,
 ) -> Union[dict, None]:
     """Heatmap of the mean expression of genes across a groups.
 
@@ -254,7 +263,11 @@ def heatmap(
     :param adata: annotated data matrix.
     :param group_by: obs column name with categorical values.
     :param features: continuous value in var_names or obs.
-    :param groups_order: order for the categories in the group_by 
+    :param value_plot: plotted values correspond to expression values or foldchanges
+    :param group_fc: if foldchanges specified than the groups must be specified that will be compared
+    :param group_fc_ident_1: Defines the first group in the test
+    :param group_fc_ident_2: Defines the second group in the test
+    :param groups_order: order for the categories in the group_by
     :param z_score: apply z-score transformation.
     :param path: path to save the plot
     :param filename: name of the file.
@@ -302,14 +315,55 @@ def heatmap(
     # Checks
     sanitize_anndata(adata)
     features = [features] if isinstance(features, str) else features
+    features = features if isinstance(features, list) else list(features)
+    missing = [g for g in features if g not in adata.var_names]
+    assert len(missing) == 0, f"{missing} features missing in the object"
 
     # Get Data for the Heatmap
     if all(item in list(adata.var_names) for item in features):
-        if logcounts:
+        if logcounts and value_plot == "expr":
             df = mean_expr(adata, group_by=group_by, features=features, layer=layer,
                            out_format='wide')  # genes x groups
-        else:
-            raise Exception('Not implemented, specified var_name value but logcounts is set to False')
+
+        if logcounts and value_plot == "fc":
+            df_expr = mean_expr(adata, group_by=[group_by, group_fc], features=features, layer=layer,
+                           out_format='wide')
+
+            # columns that belong to group_fc_ident_1 and group_fc_ident_2
+            cols_1 = [c for c in df_expr.columns if c.endswith(f"_{group_fc_ident_1}")]
+            cols_2 = [c for c in df_expr.columns if c.endswith(f"_{group_fc_ident_2}")]
+
+            """# match by cell type
+            cols_1_sorted = sorted(cols_1, key=lambda x: x.split("_")[0])
+            cols_2_sorted = sorted(cols_2, key=lambda x: x.split("_")[0])"""
+
+            celltypes = sorted({c.rsplit("_", 1)[0] for c in cols_1 + cols_2})
+
+
+            # Calculate log2FC
+            df = pd.DataFrame(index=df_expr.index)
+
+            for ct in celltypes:
+                c1 = f"{ct}_{group_fc_ident_1}"
+                c2 = f"{ct}_{group_fc_ident_2}"
+
+                if c1 in df_expr.columns:
+                    s1 = df_expr[c1].astype(float)
+                else:
+                    s1 = pd.Series(0.0, index=df_expr.index)  # fill missing with 0s
+
+                if c2 in df_expr.columns:
+                    s2 = df_expr[c2].astype(float)
+                else:
+                    s2 = pd.Series(0.0, index=df_expr.index)  # fill missing with 0s
+
+                df[ct] = np.log2((s1 + 1) / (s2 + 1))  # pseudocount = 1
+
+
+            """for c1, c2 in zip(cols_1_sorted, cols_2_sorted):
+                celltype = c1.replace(f"_{group_fc_ident_1}", "")
+                df[f"{celltype}"] = np.log2((df_expr[c1] + 1) / (df_expr[c2] + 1))"""
+
     elif all(item in list(adata.obs.columns) for item in features):
         df = adata.obs[[group_by] + features].groupby(group_by).agg('mean')
     else:
@@ -317,7 +371,7 @@ def heatmap(
 
     # Hierarchical clustering
     new_index = df.index[dendrogram(linkage(df.values, method=clustering_method, metric=clustering_metric),
-                                    no_plot=True)['leaves']] if cluster_x_axis else list(df.index)
+                                    no_plot=True)['leaves']] if cluster_x_axis else features
     new_columns = groups_order if groups_order is not None else list(df.columns)
     new_column = df.columns[dendrogram(linkage(df.T.values, method=clustering_method, metric=clustering_metric),
                                        no_plot=True)['leaves']] if cluster_y_axis else list(new_columns)
@@ -331,17 +385,19 @@ def heatmap(
     annot_pvals = None
     if add_stats:
         if df_pvals is None:
-           raise Exception('Not Implemented')
+            raise Exception('Not Implemented')
         else:
             if list(df.index)[0] in list(df_pvals.index):
                 pass
             else:
                 df_pvals = df_pvals.T
         # Replace pvals < 0.05 with an X
+        df_pvals = df_pvals.reindex(index=df.index, columns=df.columns)
         annot_pvals = df_pvals.applymap(lambda x: "*" if x < pval_cutoff else "")
 
     # Data Transformation
     if z_score is not None:
+        assert value_plot == "expr", "Cannot perform Z-score on logfoldchanges"
         if z_score == 'var':
             if features[0] in list(df.index):
                 axis = 0
@@ -361,6 +417,15 @@ def heatmap(
                 'Z-score set to True, but the cmap is Reds, setting to RdBu_r')  # Make sure to use divergent colormap
             cmap = 'RdBu_r'
         if legend_title == 'LogMean(nUMI)\nin group':
+            legend_title = 'Z-score'
+        vmin, vcenter, vmax = round(df.min().min() * 20) / 20, 0.0, None
+
+    if value_plot == "fc":
+        if cmap == 'Reds':
+            print(
+                'Z-value_plot set to fc, but the cmap is Reds, setting to RdBu_r')  # Make sure to use divergent colormap
+            cmap = 'RdBu_r'
+        if legend_title == 'Log2FC\nin group':
             legend_title = 'Z-score'
         vmin, vcenter, vmax = round(df.min().min() * 20) / 20, 0.0, None
 
@@ -496,3 +561,4 @@ def heatmap(
         return plt.show()
     else:
         return return_ax_dict
+
