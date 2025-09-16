@@ -222,6 +222,7 @@ def heatmap(
         group_fc: str = None,
         group_fc_ident_1: str = None,
         group_fc_ident_2: str = None,
+        clip_value: bool = False,
         groups_order: list = None,
         z_score: Literal['var', 'group'] = None,  # x_axis is the group_by
         path: str = None,
@@ -267,6 +268,7 @@ def heatmap(
     :param group_fc: if foldchanges specified than the groups must be specified that will be compared
     :param group_fc_ident_1: Defines the first group in the test
     :param group_fc_ident_2: Defines the second group in the test
+    :param clip_value: Clips the colourscale to the 99th percentile, useful if one gene is driving the colourscale
     :param groups_order: order for the categories in the group_by
     :param z_score: apply z-score transformation.
     :param path: path to save the plot
@@ -418,16 +420,29 @@ def heatmap(
             cmap = 'RdBu_r'
         if legend_title == 'LogMean(nUMI)\nin group':
             legend_title = 'Z-score'
-        vmin, vcenter, vmax = round(df.min().min() * 20) / 20, 0.0, None
 
     if value_plot == "fc":
         if cmap == 'Reds':
             print(
                 'Z-value_plot set to fc, but the cmap is Reds, setting to RdBu_r')  # Make sure to use divergent colormap
             cmap = 'RdBu_r'
-        if legend_title == 'Log2FC\nin group':
-            legend_title = 'Z-score'
-        vmin, vcenter, vmax = round(df.min().min() * 20) / 20, 0.0, None
+        if legend_title == 'LogMean(nUMI)\nin group':
+            legend_title = 'Log2FC\nin group'
+
+        max_abs = max(np.abs(df.min().min()), abs(df.max().max()))
+
+        (vmin,
+         vcenter,
+         vmax) = (vmin if vmin is not None else df.min().min(),
+                  0,
+                  vmax if vmax is not None else df.max().max())
+
+        if clip_value:
+            vmax = np.percentile(df.values.flatten(), 99.2)
+        if vmin >= vcenter:
+            vmin = -vmax
+
+
 
     # ------ Arguments for the layout -------------
     width, height = figsize if figsize is not None else (None, None)

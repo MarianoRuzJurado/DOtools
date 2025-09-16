@@ -15,6 +15,7 @@
 #' @param group_fc_ident_1 Defines the first group in the test
 #' @param group_fc_ident_2 Defines the second group in the test
 #' @param z_score apply z-score transformation, "group" or "var"
+#' @param clip_value Clips the colourscale to the 99th percentile, useful if one gene is driving the colourscale
 #' @param path path to save the plot
 #' @param filename name of the file
 #' @param swap_axes whether to swap the axes or not
@@ -106,6 +107,7 @@ DO.Heatmap <- function(
     group_fc = "condition",
     group_fc_ident_1 = NULL,
     group_fc_ident_2 = NULL,
+    clip_value = FALSE,
     z_score = NULL,
     path = NULL,
     filename = "Heatmap.svg",
@@ -265,6 +267,7 @@ DO.Heatmap <- function(
     group_fc_ident_1 = ident_1,
     group_fc_ident_2 = ident_2,
     group_fc = group_fc,
+    clip_value = clip_value,
     features = features,
     z_score = z_score,
     path = path,
@@ -323,6 +326,7 @@ DO.Heatmap <- function(
             group_fc_ident_1 = args$group_fc_ident_1,
             group_fc_ident_2 = args$group_fc_ident_2,
             group_fc = args$group_fc,
+            clip_value = args$clip_value,
             z_score = args$z_score,
             path = args$path,
             filename = args$filename,
