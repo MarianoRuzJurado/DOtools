@@ -52,7 +52,7 @@ DO.MultiDGE <- function(sce_object,
   #support for single cell experiment objects
   if (is(sce_object, "SingleCellExperiment")) {
     class_obj <- "SingleCellExperiment"
-    sce_object <- as.Seurat(sce_object)
+    sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
   }
 
   if (!ident_ctrl %in% sce_object@meta.data[[group_by]]) {
@@ -67,10 +67,10 @@ DO.MultiDGE <- function(sce_object,
   DEG_stats_collector_pb <- list() #list for collecting pseudo_bulk method results
 
   #Create a PseudoBulk representation of the Seurat single cell expression
-  sce_object_PB <- AggregateExpression(sce_object,
+  sce_object_PB <- .suppressDeprecationWarnings(AggregateExpression(sce_object,
                                        assays = assay,
                                        return.seurat = TRUE,
-                                       group.by = c(group_by, sample_col, annotation_col))
+                                       group.by = c(group_by, sample_col, annotation_col)))
   #internally AggregateExpression uses interaction() this replaces _ with -, check if the names changed in annotation:
   original_annots <- unique(sce_object@meta.data[[annotation_col]])
   pb_annots <- unique(sce_object_PB@meta.data[[annotation_col]])
@@ -116,7 +116,7 @@ DO.MultiDGE <- function(sce_object,
         }
 
         if (count_1_sc >= 3 && count_2_sc >= 3) {
-          DEG_stats_sc <- FindMarkers(object = Seu_celltype,
+          DEG_stats_sc <- .suppressDeprecationWarnings(FindMarkers(object = Seu_celltype,
                                       ident.1 = ident_con,
                                       ident.2 = ident_ctrl,
                                       min.pct = min_pct,
@@ -126,7 +126,7 @@ DO.MultiDGE <- function(sce_object,
                                       test.use = method_sc,
                                       min.cells.group = min_cells_group,
                                       group.by = group_by,
-                                      ...)
+                                      ...))
 
           DEG_stats_sc <- rownames_to_column(DEG_stats_sc, var="gene")
           DEG_stats_sc[["condition"]] <- ident_con
@@ -168,7 +168,7 @@ DO.MultiDGE <- function(sce_object,
 
 
         if (count_1_pb >= 3 && count_2_pb >= 3) {
-          DEG_stats_pb <- FindMarkers(object = sce_object_PB,
+          DEG_stats_pb <- .suppressDeprecationWarnings(FindMarkers(object = sce_object_PB,
                                       ident.1 = ident_1,
                                       ident.2 = ident_2,
                                       min.pct = min_pct,
@@ -178,7 +178,7 @@ DO.MultiDGE <- function(sce_object,
                                       test.use = "DESeq2",
                                       min.cells.group = min_cells_group,
                                       group.by = PB_ident,
-                                      ...)
+                                      ...))
 
           DEG_stats_pb <- rownames_to_column(DEG_stats_pb, var = "gene")
           DEG_stats_pb[["condition"]] <- ident_con

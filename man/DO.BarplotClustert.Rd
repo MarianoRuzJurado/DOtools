@@ -71,7 +71,7 @@ DO.BarplotClustert(
   Feature = "NKG7",
   ListTest = ListTest,
   ctrl.condition = "healthy",
-  group.by="condition"
+  group.by = "condition"
 )
 
 }

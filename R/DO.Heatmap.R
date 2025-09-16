@@ -2,14 +2,19 @@
 #' @title DO Heatmap of the mean expression of genes across a groups
 #' @description Wrapper around heatmap.py, which generates a heatmap of
 #' showing the average nUMI for a set of genes in different groups.
+#' Addiional an argumnt can be made to show foldchanges between two conditions.
 #' Differential gene expression analysis between the different groups can be performed.
 #'
 #' @param sce_object SCE object or Seurat with meta.data
+#' @param features gene names or continuous value in meta data
 #' @param assay_normalized Assay with raw counts
 #' @param group_by meta data column name with categorical values
 #' @param groups_order order for the categories in the group_by
-#' @param features gene names or continuous value in meta data
-#' @param z_score apply z-score transformation
+#' @param value_plot plotted values correspond to expression values or foldchanges
+#' @param group_fc if foldchanges specified than the groups must be specified that will be compared
+#' @param group_fc_ident_1 Defines the first group in the test
+#' @param group_fc_ident_2 Defines the second group in the test
+#' @param z_score apply z-score transformation, "group" or "var"
 #' @param path path to save the plot
 #' @param filename name of the file
 #' @param swap_axes whether to swap the axes or not
@@ -93,10 +98,14 @@
 #' @export
 DO.Heatmap <- function(
     sce_object,
+    features,
     assay_normalized = "RNA",
     group_by = "seurat_clusters",
     groups_order = NULL,
-    features,
+    value_plot = "expr",
+    group_fc = "condition",
+    group_fc_ident_1 = NULL,
+    group_fc_ident_2 = NULL,
     z_score = NULL,
     path = NULL,
     filename = "Heatmap.svg",
@@ -134,7 +143,7 @@ DO.Heatmap <- function(
   #support for Seurat objects
   if (is(sce_object, "Seurat")) {
     DefaultAssay(sce_object) <- assay_normalized
-    sce_object <- Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized)
+    sce_object <- .suppressDeprecationWarnings(Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized))
   }
 
   #Make Anndata object
@@ -143,15 +152,15 @@ DO.Heatmap <- function(
   }
 
   if (add_stats == TRUE) {
-    if (is.null(df_pvals)) {
-      Seu_obj <- as.Seurat(sce_object)
-      df_dge <- FindAllMarkers(Seu_obj,
+    Seu_obj <- as.Seurat(sce_object)
+    if (is.null(df_pvals) && value_plot == "expr") {
+      df_dge <- .suppressDeprecationWarnings(FindAllMarkers(Seu_obj,
                                features = features,
                                group.by = group_by,
                                min.pct = 0,
                                test.use = test,
                                logfc.threshold = log2fc_cutoff,
-                               only.pos = only_pos)
+                               only.pos = only_pos))
 
       df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(sce_object[[group_by]]))))
       rownames(df_pvals) <- features
@@ -165,8 +174,80 @@ DO.Heatmap <- function(
         df_pvals[gene, cluster] <- pval_adj
       }
     }
-  }
 
+    #just for the argument if fc is set to expr
+    ident_1 <- NULL
+    ident_2 <- NULL
+    if (is.null(df_pvals) && value_plot == "fc") {
+
+      df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(sce_object[[group_by]]))))
+      rownames(df_pvals) <- features
+      colnames(df_pvals) <- unique(sce_object[[group_by]])
+
+      if (is.null(group_fc_ident_2)) {
+        ident_2 <- grepv(pattern = paste(c("CTRL","WT","healthy"),
+                                         collapse ="|"),
+                         ignore.case = TRUE,
+                         unique(sce_object[[group_fc]]))
+
+        .logger(paste0("group_fc_ident_2 is set to NULL, using: ", ident_2))
+      }
+
+      if (is.null(group_fc_ident_1)) {
+        ident_1 <- grepv(pattern = paste(c("CTRL","WT","healthy"),
+                                         collapse ="|"),
+                         ignore.case = TRUE,
+                         invert = TRUE,
+                         unique(sce_object[[group_fc]]))[1]
+
+        .logger(paste0("group_fc_ident_1 is set to NULL, using: ", ident_1))
+      }
+
+      for (grp in unique(sce_object[[group_by]])) {
+        Seu_obj_grp <- subset(Seu_obj, !!sym(group_by) == grp)
+
+        #Check if there are groups with less than 3 cells
+        table_cells_sc <- table(Seu_obj_grp@meta.data[[group_fc]])
+
+        count_1_sc <- table_cells_sc[ident_1]
+        count_2_sc <- table_cells_sc[ident_2]
+
+        if (is.na(count_1_sc)) {
+          count_1_sc <- 0
+        }
+
+        if (is.na(count_2_sc)) {
+          count_2_sc <- 0
+        }
+
+        if (count_1_sc >= 3 && count_2_sc >= 3) {
+
+          #calculating statistics on the group_fc level
+          df_dge <- .suppressDeprecationWarnings(FindMarkers(Seu_obj_grp,
+                                features = features,
+                                group.by = group_fc,
+                                min.pct = 0,
+                                test.use = test,
+                                logfc.threshold = log2fc_cutoff,
+                                only.pos = only_pos,
+                                ident.1 = ident_1,
+                                ident.2 = ident_2))
+          df_dge <- rownames_to_column(df_dge, var = "gene")
+
+        } else{
+          df_dge <- data.frame()
+        }
+
+        # Go through each row in df_dge
+        for (i in seq_len(nrow(df_dge))) {
+          gene <- df_dge$gene[i]
+          cluster <- grp
+          pval_adj <- df_dge$p_val_adj[i]
+          df_pvals[gene, cluster] <- pval_adj
+        }
+      }
+    }
+  }
   #source PATH to python script in install folder
   path_py <- system.file("python", "heatmap.py", package = "DOtools")
 
@@ -176,6 +257,10 @@ DO.Heatmap <- function(
     sce_object = sce_object,
     group_by = group_by,
     groups_order = groups_order,
+    value_plot = value_plot,
+    group_fc_ident_1 = ident_1,
+    group_fc_ident_2 = ident_2,
+    group_fc = group_fc,
     features = features,
     z_score = z_score,
     path = path,
@@ -230,6 +315,10 @@ DO.Heatmap <- function(
             group_by = args$group_by,
             features = args$features,
             groups_order = args$groups_order,
+            value_plot = args$value_plot,
+            group_fc_ident_1 = args$group_fc_ident_1,
+            group_fc_ident_2 = args$group_fc_ident_2,
+            group_fc = args$group_fc,
             z_score = args$z_score,
             path = args$path,
             filename = args$filename,
@@ -265,3 +354,5 @@ DO.Heatmap <- function(
 
 
 }
+
+

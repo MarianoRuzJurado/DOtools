@@ -6,9 +6,14 @@
 \usage{
 DO.Heatmap(
   sce_object,
+  features,
   assay_normalized = "RNA",
   group_by = "seurat_clusters",
-  features,
+  groups_order = NULL,
+  value_plot = "expr",
+  group_fc = "condition",
+  group_fc_ident_1 = NULL,
+  group_fc_ident_2 = NULL,
   z_score = NULL,
   path = NULL,
   filename = "Heatmap.svg",
@@ -46,13 +51,23 @@ DO.Heatmap(
 \arguments{
 \item{sce_object}{SCE object or Seurat with meta.data}
 
+\item{features}{gene names or continuous value in meta data}
+
 \item{assay_normalized}{Assay with raw counts}
 
 \item{group_by}{meta data column name with categorical values}
 
-\item{features}{gene names or continuous value in meta data}
+\item{groups_order}{order for the categories in the group_by}
 
-\item{z_score}{apply z-score transformation}
+\item{value_plot}{plotted values correspond to expression values or foldchanges}
+
+\item{group_fc}{if foldchanges specified than the groups must be specified that will be compared}
+
+\item{group_fc_ident_1}{Defines the first group in the test}
+
+\item{group_fc_ident_2}{Defines the second group in the test}
+
+\item{z_score}{apply z-score transformation, "group" or "var"}
 
 \item{path}{path to save the plot}
 
@@ -100,7 +115,7 @@ DO.Heatmap(
 
 \item{stats_x_size}{size of the asterisk}
 
-\item{square_x_size}{size and thickness of the square}
+\item{square_x_size}{size and thickness of the square percentual, vector}
 
 \item{test}{test to use for test for significance}
 
@@ -122,6 +137,7 @@ Depending on \code{showP}, returns the plot if set to \code{TRUE} or a dictionar
 \description{
 Wrapper around heatmap.py, which generates a heatmap of
 showing the average nUMI for a set of genes in different groups.
+Addiional an argumnt can be made to show foldchanges between two conditions.
 Differential gene expression analysis between the different groups can be performed.
 }
 \examples{
