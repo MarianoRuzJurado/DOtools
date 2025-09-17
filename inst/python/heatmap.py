@@ -223,6 +223,7 @@ def heatmap(
         group_fc_ident_1: str = None,
         group_fc_ident_2: str = None,
         clip_value: bool = False,
+        max_fc: float = 5,
         groups_order: list = None,
         z_score: Literal['var', 'group'] = None,  # x_axis is the group_by
         path: str = None,
@@ -269,6 +270,7 @@ def heatmap(
     :param group_fc_ident_1: Defines the first group in the test
     :param group_fc_ident_2: Defines the second group in the test
     :param clip_value: Clips the colourscale to the 99th percentile, useful if one gene is driving the colourscale
+    :param max_fc: Clips super high foldchanges to this value, so changes can still be appreciated
     :param groups_order: order for the categories in the group_by
     :param z_score: apply z-score transformation.
     :param path: path to save the plot
@@ -328,9 +330,8 @@ def heatmap(
                            out_format='wide')  # genes x groups
 
         if logcounts and value_plot == "fc":
-            df_expr = mean_expr(adata, group_by=[group_by, group_fc], features=features, layer=layer,
-                           out_format='wide')
-
+            df_expr = np.expm1(mean_expr(adata, group_by=[group_by, group_fc], features=features, layer=layer,
+                           out_format='wide'))
             # columns that belong to group_fc_ident_1 and group_fc_ident_2
             cols_1 = [c for c in df_expr.columns if c.endswith(f"_{group_fc_ident_1}")]
             cols_2 = [c for c in df_expr.columns if c.endswith(f"_{group_fc_ident_2}")]
@@ -352,15 +353,13 @@ def heatmap(
                 if c1 in df_expr.columns:
                     s1 = df_expr[c1].astype(float)
                 else:
-                    s1 = pd.Series(0.0, index=df_expr.index)  # fill missing with 0s
+                    s1 = pd.Series(0.0, index=df_expr.index)  # fill missing expr with 0s
 
                 if c2 in df_expr.columns:
                     s2 = df_expr[c2].astype(float)
                 else:
-                    s2 = pd.Series(0.0, index=df_expr.index)  # fill missing with 0s
-
-                df[ct] = np.log2((s1 + 1) / (s2 + 1))  # pseudocount = 1
-
+                    s2 = pd.Series(0.0, index=df_expr.index)  # fill missing expr with 0s
+                df[ct] = np.log2((s1+1e-9) /(s2+1e-9))  # pseudocount = 1e-9
 
             """for c1, c2 in zip(cols_1_sorted, cols_2_sorted):
                 celltype = c1.replace(f"_{group_fc_ident_1}", "")
@@ -429,7 +428,6 @@ def heatmap(
         if legend_title == 'LogMean(nUMI)\nin group':
             legend_title = 'Log2FC\nin group'
 
-        max_abs = max(np.abs(df.min().min()), abs(df.max().max()))
 
         (vmin,
          vcenter,
@@ -439,9 +437,12 @@ def heatmap(
 
         if clip_value:
             vmax = np.percentile(df.values.flatten(), 99.2)
+
+        if vmax > max_fc:
+            vmax = max_fc
+
         if vmin >= vcenter:
             vmin = -vmax
-
 
 
     # ------ Arguments for the layout -------------
@@ -501,7 +502,6 @@ def heatmap(
     color_legend_ax = fig.add_subplot(legend_gs[3])
     if add_stats:
         sig_ax = fig.add_subplot(legend_gs[2])
-
     # Add Main Plot
     hm = sns.heatmap(data=df,
                      cmap=cmap,
@@ -513,6 +513,9 @@ def heatmap(
                      annot=annot_pvals,
                      fmt="s",
                      square=square,
+                     vmin=vmin,
+                     center=vcenter,
+                     vmax=vmax,
                      **kargs
                      )
 
