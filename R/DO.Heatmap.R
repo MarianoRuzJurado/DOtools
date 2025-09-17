@@ -155,6 +155,9 @@ DO.Heatmap <- function(
     stop("logcounts not found in assays of object!")
   }
 
+  #just for the argument if fc is set to expr
+  ident_1 <- NULL
+  ident_2 <- NULL
   if (add_stats == TRUE) {
     Seu_obj <- as.Seurat(sce_object)
     if (is.null(df_pvals) && value_plot == "expr") {
@@ -179,9 +182,6 @@ DO.Heatmap <- function(
       }
     }
 
-    #just for the argument if fc is set to expr
-    ident_1 <- NULL
-    ident_2 <- NULL
     if (is.null(df_pvals) && value_plot == "fc") {
 
       df_pvals <- data.frame(matrix(1, nrow = length(features), ncol = length(unique(sce_object[[group_by]]))))

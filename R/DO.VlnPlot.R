@@ -79,6 +79,8 @@ DO.VlnPlot <- function(sce_object,
   if (is(sce_object, "SingleCellExperiment")) {
     SCE <- TRUE
     sce_object <- as.Seurat(sce_object)
+  } else{
+    SCE <- FALSE
   }
 
   if (!(Feature %in% rownames(sce_object)) && !(Feature %in% names(sce_object@meta.data))) {
