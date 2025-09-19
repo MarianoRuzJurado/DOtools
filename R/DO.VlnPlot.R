@@ -185,9 +185,9 @@ DO.VlnPlot <- function(sce_object,
   #delete Null values, created by count index also reorder for better p-value depiction
   ListTest <- ListTest[!vapply(ListTest, is.null, logical(1))]
   if (!is.null(group.by.2)) {
-    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by.2]], integer(1)))
+    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by.2]]), integer(1))
   } else{
-    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by]], integer(1)))
+    indices <- vapply(ListTest, function(x) match(x[2], vln.df[[group.by]]), integer(1))
   }
   ListTest <- ListTest[order(indices)]
 
