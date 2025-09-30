@@ -667,7 +667,6 @@ test_that("DO.BarplotWilcox remove_zeros functionality works", {
   seurat_obj <- NormalizeData(seurat_obj)
 
   # Test with wilcox_test = FALSE to avoid statistical test issues
-  # The function should remove comparisons between B, C, D (all zeros)
   p <- DO.BarplotWilcox(
     sce_object = seurat_obj,
     Feature = "gene1",

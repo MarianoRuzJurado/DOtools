@@ -22,8 +22,8 @@ editor_options:
 
 ```{r chunk_setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -31,10 +31,10 @@ knitr::opts_chunk$set(
 # Track time spent on making the vignette.
 start_time <- Sys.time()
 pkg <- function(x) {
-  paste0("[*", x, "*](https://cran.r-project.org/package=", x, ")")
+    paste0("[*", x, "*](https://cran.r-project.org/package=", x, ")")
 }
 pypkg <- function(x) {
-  paste0("[*", x, "*](https://pypi.org/project/", x, "/)")
+    paste0("[*", x, "*](https://pypi.org/project/", x, "/)")
 }
 ```
 
@@ -68,7 +68,7 @@ data.
 ```{r load_library, message=FALSE}
 library(DOtools)
 
-#Additional packages
+# Additional packages
 library(SummarizedExperiment)
 library(scran)
 library(scater)
@@ -98,18 +98,20 @@ base <- DOtools:::.example_10x()
 dir.create(file.path(base, "/cellbender"))
 
 raw_files <- list.files(base,
-                        pattern = "raw_feature_bc_matrix\\.h5$",
-                        recursive = TRUE,
-                        full.names = TRUE)
+    pattern = "raw_feature_bc_matrix\\.h5$",
+    recursive = TRUE,
+    full.names = TRUE
+)
 
-DO.CellBender(cellranger_path = base,
-              output_path = file.path(base, "/cellbender"),
-              samplenames = c("disease"),
-              cuda = TRUE,
-              BarcodeRanking = FALSE,
-              cpu_threads = 48,
-              epochs = 150)
-
+DO.CellBender(
+    cellranger_path = base,
+    output_path = file.path(base, "/cellbender"),
+    samplenames = c("disease"),
+    cuda = TRUE,
+    BarcodeRanking = FALSE,
+    cpu_threads = 48,
+    epochs = 150
+)
 ```
 
 After running the analysis, several files are saved in the `output_folder`,
@@ -146,26 +148,26 @@ from 10X from human blood of healthy and donors with a malignant tumor:
 base <- DOtools:::.example_10x()
 
 paths <- c(
-  file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
-  file.path(base, "disease/outs/filtered_feature_bc_matrix.h5")
+    file.path(base, "healthy/outs/filtered_feature_bc_matrix.h5"),
+    file.path(base, "disease/outs/filtered_feature_bc_matrix.h5")
 )
 
 SCE_obj <- DO.Import(
-  pathways = paths,
-  ids = c("healthy-1", "disease-1"),
-  DeleteDoublets = TRUE,
-  cut_mt = .05,
-  min_counts = 500,
-  min_genes = 300,
-  high_quantile = .95,
-  Seurat = FALSE # Set to TRUE for Seurat object
+    pathways = paths,
+    ids = c("healthy-1", "disease-1"),
+    DeleteDoublets = TRUE,
+    cut_mt = .05,
+    min_counts = 500,
+    min_genes = 300,
+    high_quantile = .95,
+    Seurat = FALSE # Set to TRUE for Seurat object
 )
 ```
 We can now check the quality before introducing filterings:
-```{r prefilterplots, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
+```{r preflt, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
 prefilterplots <- system.file(
-  "figures", "prefilterplots-1.png",
-  package = "DOtools"
+    "figures", "prefilterplots-1.png",
+    package = "DOtools"
 )
 
 pQC1 <- magick::image_read(prefilterplots)
@@ -173,11 +175,11 @@ plot(pQC1)
 ```
 <br>
 And after:
-```{r postfilterplots, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
+```{r postflt, out.width="100%", fig.align="center", fig.width=8, fig.height=6}
 postfilterplots <- system.file(
-  "figures",
-  "postfilterplots-1.png",
-  package = "DOtools"
+    "figures",
+    "postfilterplots-1.png",
+    package = "DOtools"
 )
 
 pQC2 <- magick::image_read(postfilterplots)
@@ -194,14 +196,15 @@ to use the one created from DO.Import for prettier results or this slim downed
 version. We can observe how similar the samples are through running a 
 correlation analysis.
 ```{r Correlation, fig.width=6, fig.height=6}
-#Making sure we have a save folder
+# Making sure we have a save folder
 base <- tempfile("my_tempdir_")
 dir.create(base)
 
 SCE_obj <- readRDS(
-  system.file("extdata",
-              "sce_data.rds",
-              package = "DOtools")
+    system.file("extdata",
+        "sce_data.rds",
+        package = "DOtools"
+    )
 )
 
 DO.Correlation(SCE_obj)
@@ -218,27 +221,33 @@ integration completes, we run the Leiden algorithm to find clusters and
 generate UMAP embeddings.
 
 ```{r CCA Integration, warning = FALSE}
-SCE_obj <- DO.Integration(sce_object = SCE_obj,
-                          split_key = "orig.ident",
-                          HVG = TRUE,
-                          scale = TRUE,
-                          pca = TRUE,
-                          integration_method = "CCAIntegration")
+SCE_obj <- DO.Integration(
+    sce_object = SCE_obj,
+    split_key = "orig.ident",
+    HVG = TRUE,
+    scale = TRUE,
+    pca = TRUE,
+    integration_method = "CCAIntegration"
+)
 ```
 
 ```{r scVI Integration, warning=FALSE, eval=FALSE}
-#(Optional) Integration with scVI-Model
-SCE_obj <- DO.scVI(sce_object = SCE_obj,
-                   batch_key = "orig.ident",
-                   layer_counts = "counts",
-                   layer_logcounts = "logcounts")
+# (Optional) Integration with scVI-Model
+SCE_obj <- DO.scVI(
+    sce_object = SCE_obj,
+    batch_key = "orig.ident",
+    layer_counts = "counts",
+    layer_logcounts = "logcounts"
+)
 
 
 SNN_Graph <- scran::buildSNNGraph(SCE_obj,
-                                  use.dimred = "scVI")
+    use.dimred = "scVI"
+)
 
 clust_SCVI <- igraph::cluster_louvain(SNN_Graph,
-                                      resolution = 0.3)
+    resolution = 0.3
+)
 
 SCE_obj$leiden0.3 <- factor(igraph::membership(clust_SCVI))
 SCE_obj <- scater::runUMAP(SCE_obj, dimred = "scVI", name = "UMAP")
@@ -250,15 +259,15 @@ saved in the SCE object and can be used for cluster calculations and UMAP
 projections. In this case, we will continue with the CCA Integration method.
 
 ```{r Clustering and UMAP, warning = FALSE}
+DO.UMAP(SCE_obj,
+    group.by = "leiden0.3"
+)
 
 DO.UMAP(SCE_obj,
-        group.by = "leiden0.3")
-
-DO.UMAP(SCE_obj,
-        group.by = "condition",
-        legend.position = "right",
-        label = FALSE)
-
+    group.by = "condition",
+    legend.position = "right",
+    label = FALSE
+)
 ```
 
 
@@ -269,11 +278,11 @@ Next up, we implemented a wrapper around the semi-automatic annotation tool
 
 ```{r annotation, warning = FALSE}
 SCE_obj <- DO.CellTypist(SCE_obj,
-                         modelName = "Healthy_COVID19_PBMC.pkl",
-                         runCelltypistUpdate = TRUE,
-                         over_clustering = "leiden0.3")
+    modelName = "Healthy_COVID19_PBMC.pkl",
+    runCelltypistUpdate = TRUE,
+    over_clustering = "leiden0.3"
+)
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
-
 ```
 
 The semi-automatic annotation is a good estimate of the cell types in your 
@@ -284,107 +293,120 @@ Marker genes can also be visualised using the `DO.UMAP` function.
 
 ```{r Manual annotation, fig.width=12, fig.height=7}
 markers_list <- scran::findMarkers(
-  SCE_obj,
-  test.type = "t",
-  groups = SingleCellExperiment::colData(SCE_obj)$autoAnnot,
-  direction = "up",
-  lfc = 0.25,
-  pval.type = "any"
+    SCE_obj,
+    test.type = "t",
+    groups = SingleCellExperiment::colData(SCE_obj)$autoAnnot,
+    direction = "up",
+    lfc = 0.25,
+    pval.type = "any"
 )
 
 # pick top 5 per cluster, naming adjustments
 annotation_Markers <- lapply(names(markers_list), function(cluster) {
-  df <- as.data.frame(markers_list[[cluster]])
-  df$gene <- rownames(df)
-  df$cluster <- cluster
-  df %>%
-    rename(
-      avg_log2FC = summary.logFC,
-      p_val      = p.value,
-      p_val_adj  = FDR
-    ) %>%
-    dplyr::select(gene, cluster, avg_log2FC, p_val, p_val_adj)
+    df <- as.data.frame(markers_list[[cluster]])
+    df$gene <- rownames(df)
+    df$cluster <- cluster
+    df %>%
+        rename(
+            avg_log2FC = summary.logFC,
+            p_val      = p.value,
+            p_val_adj  = FDR
+        ) %>%
+        dplyr::select(gene, cluster, avg_log2FC, p_val, p_val_adj)
 }) %>%
-  bind_rows()
+    bind_rows()
 
 # or with seurat if preferred
 Seu_obj <- as.Seurat(SCE_obj)
-annotation_Markers <- FindAllMarkers(object = Seu_obj,
-                                     assay = "RNA",
-                                     group.by = "autoAnnot",
-                                     min.pct = 0.25,
-                                     logfc.threshold = 0.25)
+annotation_Markers <- FindAllMarkers(
+    object = Seu_obj,
+    assay = "RNA",
+    group.by = "autoAnnot",
+    min.pct = 0.25,
+    logfc.threshold = 0.25
+)
 
 annotation_Markers <- annotation_Markers %>%
-  arrange(desc(avg_log2FC)) %>%
-  distinct(gene, .keep_all = TRUE) %>%
-  group_by(cluster) %>%
-  slice_head(n = 5)
+    arrange(desc(avg_log2FC)) %>%
+    distinct(gene, .keep_all = TRUE) %>%
+    group_by(cluster) %>%
+    slice_head(n = 5)
 
-p1 <- DO.Dotplot(sce_object = SCE_obj,
-                 Feature = annotation_Markers,
-                 group.by.x = "leiden0.3",
-                 plot.margin = c(1, 1, 1, 1),
-                 annotation_x = TRUE,
-                 point_stroke = 0.1,
-                 annotation_x_rev = TRUE,
-                 textSize = 14,
-                 hjust = 0.5,
-                 vjust = 0,
-                 textRot = 0,
-                 segWidth = 0.3,
-                 lwd = 3)
+p1 <- DO.Dotplot(
+    sce_object = SCE_obj,
+    Feature = annotation_Markers,
+    group.by.x = "leiden0.3",
+    plot.margin = c(1, 1, 1, 1),
+    annotation_x = TRUE,
+    point_stroke = 0.1,
+    annotation_x_rev = TRUE,
+    textSize = 14,
+    hjust = 0.5,
+    vjust = 0,
+    textRot = 0,
+    segWidth = 0.3,
+    lwd = 3
+)
 
 # manual set of markers
-annotation_Markers <-  data.frame(cluster = c("ImmuneCells",
-                                              rep("B_cells", 3),
-                                              rep("T_cells", 3),
-                                              rep("NK", 2),
-                                              rep("Myeloid", 3),
-                                              rep("pDC", 3)),
-                                  genes = c("PTPRC", "CD79A", "BANK1", "MS4A1",
-                                            "CD3E", "CD4", "IL7R", "NKG7",
-                                            "KLRD1", "CD68", "CD14", "ITGAM",
-                                            "LILRA4", "CLEC4C", "LRRC26"))
+annotation_Markers <- data.frame(
+    cluster = c(
+        "ImmuneCells",
+        rep("B_cells", 3),
+        rep("T_cells", 3),
+        rep("NK", 2),
+        rep("Myeloid", 3),
+        rep("pDC", 3)
+    ),
+    genes = c(
+        "PTPRC", "CD79A", "BANK1", "MS4A1",
+        "CD3E", "CD4", "IL7R", "NKG7",
+        "KLRD1", "CD68", "CD14", "ITGAM",
+        "LILRA4", "CLEC4C", "LRRC26"
+    )
+)
 
-p2 <- DO.Dotplot(sce_object = SCE_obj,
-                 Feature = annotation_Markers,
-                 group.by.x = "leiden0.3",
-                 plot.margin = c(1, 1, 1, 1),
-                 annotation_x = TRUE,
-                 point_stroke = 0.1,
-                 annotation_x_rev = TRUE,
-                 textSize = 14,
-                 hjust = 0.5,
-                 vjust = 0,
-                 textRot = 0,
-                 segWidth = 0.3,
-                 lwd = 3)
+p2 <- DO.Dotplot(
+    sce_object = SCE_obj,
+    Feature = annotation_Markers,
+    group.by.x = "leiden0.3",
+    plot.margin = c(1, 1, 1, 1),
+    annotation_x = TRUE,
+    point_stroke = 0.1,
+    annotation_x_rev = TRUE,
+    textSize = 14,
+    hjust = 0.5,
+    vjust = 0,
+    textRot = 0,
+    segWidth = 0.3,
+    lwd = 3
+)
 
 # Visualise marker expression in UMAP
 DO.UMAP(SCE_obj,
-        FeaturePlot = TRUE,
-        features = "NKG7",
-        group.by = "leiden0.3",
-        legend.position = "right")
-
+    FeaturePlot = TRUE,
+    features = "NKG7",
+    group.by = "leiden0.3",
+    legend.position = "right"
+)
 ```
 
 The manual markers for the immune cells show an agreement for the annotation 
 therefore we can continue with it after some minor adjustments.
 
 ```{r renaming}
-SCE_obj$annotation <- plyr::revalue(SCE_obj$leiden0.3, c(`1` = "T_cells",
-                                                         `2` = "T_cells",
-                                                         `3` = "NK",
-                                                         `4` = "B_cells",
-                                                         `5` = "Monocytes",
-                                                         `6` = "NK",
-                                                         `7` = "T_cells",
-                                                         `8` = "pDC"))
+SCE_obj$annotation <- plyr::revalue(SCE_obj$leiden0.3, c(
+    `1` = "T_cells",
+    `2` = "T_cells",
+    `3` = "NK",
+    `4` = "B_cells",
+    `5` = "Monocytes",
+    `6` = "NK",
+    `7` = "T_cells",
+    `8` = "pDC"
+))
 
 DO.UMAP(SCE_obj, group.by = "annotation", legend.position = "right")
-
 ```
 
 ## Cell composition
@@ -395,12 +417,13 @@ condition using a wrapper function around the python tool `r pypkg("scanpro")`.
 
 ```{r cell populations, warning=FALSE}
 DO.CellComposition(SCE_obj,
-                   assay_normalized = "RNA",
-                   cluster_column = "annotation",
-                   sample_column = "orig.ident",
-                   condition_column = "condition",
-                   transform_method = "arcsin",
-                   n_reps = 3)
+    assay_normalized = "RNA",
+    cluster_column = "annotation",
+    sample_column = "orig.ident",
+    condition_column = "condition",
+    transform_method = "arcsin",
+    n_reps = 3
+)
 ```
 
 
@@ -415,23 +438,29 @@ identify the subpopulations and then markers defining them.
 SCE_obj <- DO.FullRecluster(SCE_obj, over_clustering = "annotation")
 DO.UMAP(SCE_obj, group.by = "annotation_recluster")
 T_cells <- DO.Subset(SCE_obj,
-                     ident = "annotation_recluster",
-                     ident_name = grep("T_cells",
-                                       unique(SCE_obj$annotation_recluster),
-                                       value = TRUE))
+    ident = "annotation_recluster",
+    ident_name = grep("T_cells",
+        unique(SCE_obj$annotation_recluster),
+        value = TRUE
+    )
+)
 
 T_cells <- DO.CellTypist(T_cells,
-                         modelName = "Healthy_COVID19_PBMC.pkl",
-                         runCelltypistUpdate = FALSE,
-                         over_clustering = "annotation_recluster",
-                         SeuV5 = FALSE)
+    modelName = "Healthy_COVID19_PBMC.pkl",
+    runCelltypistUpdate = FALSE,
+    over_clustering = "annotation_recluster",
+    SeuV5 = FALSE
+)
 
-T_cells$annotation <- plyr::revalue(T_cells$annotation_recluster,
-                                    c(`T_cells_1` = "CD4_T_cells",
-                                      `T_cells_2` = "CD4_T_cells",
-                                      `T_cells_3` = "CD4_T_cells",
-                                      `T_cells_4` = "CD8_T_cells"))
-
+T_cells$annotation <- plyr::revalue(
+    T_cells$annotation_recluster,
+    c(
+        `T_cells_1` = "CD4_T_cells",
+        `T_cells_2` = "CD4_T_cells",
+        `T_cells_3` = "CD4_T_cells",
+        `T_cells_4` = "CD8_T_cells"
+    )
+)
 ```
 
 Now that we identified the marker genes describing the different T cell 
@@ -441,9 +470,10 @@ in the subset to the original object.
 
 ```{r re-annotate}
 SCE_obj <- DO.TransferLabel(SCE_obj,
-                            Subset_obj = T_cells,
-                            annotation_column = "annotation",
-                            subset_annotation = "annotation")
+    Subset_obj = T_cells,
+    annotation_column = "annotation",
+    subset_annotation = "annotation"
+)
 
 DO.UMAP(SCE_obj, group.by = "annotation", legend.position = "right")
 ```
@@ -464,23 +494,27 @@ a combined dataframe.
 # we introduce replicates for showing the pseudo bulk approach
 set.seed(123)
 SCE_obj$orig.ident2 <- sample(rep(c("A", "B", "C", "D", "E", "F"),
-                                  length.out = ncol(SCE_obj)))
+    length.out = ncol(SCE_obj)
+))
 CD4T_cells <- DO.Subset(SCE_obj,
-                        ident = "annotation",
-                        ident_name = "CD4_T_cells")
+    ident = "annotation",
+    ident_name = "CD4_T_cells"
+)
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
-                          sample_col = "orig.ident2",
-                          method_sc = "wilcox",
-                          ident_ctrl = "healthy")
+    sample_col = "orig.ident2",
+    method_sc = "wilcox",
+    ident_ctrl = "healthy"
+)
 
 head(DGE_result, 10) %>%
-  kable(format = "html", table.attr = "style='width:100%;'") %>%
-  kable_styling(bootstrap_options = c("striped",
-                                      "hover",
-                                      "condensed",
-                                      "responsive"))
-
+    kable(format = "html", table.attr = "style='width:100%;'") %>%
+    kable_styling(bootstrap_options = c(
+        "striped",
+        "hover",
+        "condensed",
+        "responsive"
+    ))
 ```
 
 After inspecting the DGE analysis, we continue with `DO.enrichR` function, 
@@ -489,23 +523,27 @@ genes into up- and down-regulated sets and runs the analysis for each group
 independently.
 
 ```{r GO analysis2, warning=FALSE}
-result_GO <- DO.enrichR(df_DGE = DGE_result,
-                        gene_column = "gene",
-                        pval_column = "p_val_adj_SC_wilcox",
-                        log2fc_column = "avg_log2FC_SC_wilcox",
-                        pval_cutoff = 0.05,
-                        log2fc_cutoff = 0.25,
-                        path = NULL,
-                        filename = "",
-                        species = "Human",
-                        go_catgs = "GO_Biological_Process_2023")
+result_GO <- DO.enrichR(
+    df_DGE = DGE_result,
+    gene_column = "gene",
+    pval_column = "p_val_adj_SC_wilcox",
+    log2fc_column = "avg_log2FC_SC_wilcox",
+    pval_cutoff = 0.05,
+    log2fc_cutoff = 0.25,
+    path = NULL,
+    filename = "",
+    species = "Human",
+    go_catgs = "GO_Biological_Process_2023"
+)
 
 head(result_GO, 5) %>%
-  kable(format = "html", table.attr = "style='width:100%;'") %>%
-  kable_styling(bootstrap_options = c("striped",
-                                      "hover",
-                                      "condensed",
-                                      "responsive"))
+    kable(format = "html", table.attr = "style='width:100%;'") %>%
+    kable_styling(bootstrap_options = c(
+        "striped",
+        "hover",
+        "condensed",
+        "responsive"
+    ))
 ```
 
 The top significant results can then be visualized in a bar plot.
@@ -514,21 +552,25 @@ The top significant results can then be visualized in a bar plot.
 result_GO_sig <- result_GO[result_GO$Adjusted.P.value < 0.05, ]
 result_GO_sig$celltype <- "CD4T_cells"
 
-DO.SplitBarGSEA(df_GSEA = result_GO_sig,
-                term_col = "Term",
-                col_split = "Combined.Score",
-                cond_col = "State",
-                pos_cond = "enriched",
-                showP = FALSE,
-                path = paste0(base, "/"))
-GSEA_plot <- list.files(path = base,
-                        pattern = "SplitBar.*\\.svg$",
-                        full.names = TRUE,
-                        recursive = TRUE)
+DO.SplitBarGSEA(
+    df_GSEA = result_GO_sig,
+    term_col = "Term",
+    col_split = "Combined.Score",
+    cond_col = "State",
+    pos_cond = "enriched",
+    showP = FALSE,
+    path = paste0(base, "/")
+)
+GSEA_plot <- list.files(
+    path = base,
+    pattern = "SplitBar.*\\.svg$",
+    full.names = TRUE,
+    recursive = TRUE
+)
 plot(magick::image_read_svg(GSEA_plot))
 ```
 
-##Candidate gene visualisation
+## Candidate gene visualisation
 
 After performing DGE and GO analyses, discovering whether specific genes are
 regulated in a particular disease state and/or cell type is a common step.
@@ -541,35 +583,45 @@ time along with statistical testing. For example, we can visualise the
 expression of a gene across cell types and conditions:
 
 ```{r dotplot, fig.width=5, fig.height=5}
-DO.Dotplot(sce_object = SCE_obj,
-           group.by.x = "condition",
-           group.by.y = "annotation",
-           Feature = "NKG7",
-           stats_y = TRUE)
+DO.Dotplot(
+    sce_object = SCE_obj,
+    group.by.x = "condition",
+    group.by.y = "annotation",
+    Feature = "NKG7",
+    stats_y = TRUE
+)
 ```
 
 The `DO.Heatmap` function shows the expression of multiple genes in a publish 
 ready way, including statistical testing:
 
-```{r Heat map, out.width="100%", fig.align="center", fig.width=10, fig.height=8, warning = FALSE}
+```{r Heat map}
+#| out.width: "100%"
+#| fig.align: "center"
+#| fig.width: 10
+#| fig.height: 8
+#| warning: FALSE
+
 path_file <- tempfile("dotools_plots_")
 dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
 
 DO.Heatmap(SCE_obj,
-           group_by = "leiden0.3",
-           features = rownames(SCE_obj)[1:10],
-           xticks_rotation = 45,
-           path = path_file,
-           stats_x_size = 20,
-           showP = FALSE)
+    group_by = "leiden0.3",
+    features = rownames(SCE_obj)[1:10],
+    xticks_rotation = 45,
+    path = path_file,
+    stats_x_size = 20,
+    showP = FALSE
+)
 
-Heatmap_plot <- list.files(path = path_file,
-                           pattern = "Heatmap*\\.svg$",
-                           full.names = TRUE,
-                           recursive = TRUE)
+Heatmap_plot <- list.files(
+    path = path_file,
+    pattern = "Heatmap*\\.svg$",
+    full.names = TRUE,
+    recursive = TRUE
+)
 
 plot(magick::image_read_svg(Heatmap_plot))
-
 ```
 
 We can visualize the average expression of a gene in a cell type + condition
@@ -578,39 +630,45 @@ violinplots, barplots and boxplots. Additionally, we can test for significance.
 
 ```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
 SCE_obj_sub <- DO.Subset(SCE_obj,
-                            ident = "annotation",
-                            ident_name = c("NK", "CD4_T_cells", "B_cells"))
+    ident = "annotation",
+    ident_name = c("NK", "CD4_T_cells", "B_cells")
+)
 
-p <- DO.VlnPlot(SCE_obj_sub,
-                Feature = "NKG7",
-                group.by = "condition",
-                group.by.2 = "annotation",
-                ctrl.condition = "healthy")
+DO.VlnPlot(SCE_obj_sub,
+    Feature = "NKG7",
+    group.by = "condition",
+    group.by.2 = "annotation",
+    ctrl.condition = "healthy"
+)
 ```
 
 ```{r Bar, fig.width=5, fig.height=6, warning = FALSE}
 SCE_obj_NK <- DO.Subset(SCE_obj,
-                           ident = "annotation",
-                           ident_name = "NK")
+    ident = "annotation",
+    ident_name = "NK"
+)
 
 DO.BarplotWilcox(SCE_obj_NK,
-                 group.by = "condition",
-                 ctrl.condition = "healthy",
-                 Feature = "NKG7",
-                 x_label_rotation = 0)
+    group.by = "condition",
+    ctrl.condition = "healthy",
+    Feature = "NKG7",
+    x_label_rotation = 0
+)
 ```
 
 ```{r Box, fig.width=5, fig.height=6, warning = FALSE}
 set.seed(123)
 SCE_obj$rdm_sample <- sample(rep(c("A", "B", "C"),
-                                    length.out = ncol(SCE_obj)))
+    length.out = ncol(SCE_obj)
+))
 DO.BoxPlot(SCE_obj,
-           group.by = "rdm_sample",
-           ctrl.condition = "A",
-           Feature = "nCount_RNA",
-           step_mod = 50,
-           stat_pos_mod = 1.05,
-           plot_sample = FALSE)
+    group.by = "rdm_sample",
+    ctrl.condition = "A",
+    Feature = "nCount_RNA",
+    step_mod = 50,
+    stat_pos_mod = 1.05,
+    plot_sample = FALSE
+)
 ```
 
 # Session information

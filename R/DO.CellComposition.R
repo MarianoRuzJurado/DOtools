@@ -43,498 +43,501 @@
 #'
 #' @examples
 #' sce_data <-
-#'   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#'     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.CellComposition(
-#'   sce_object = sce_data,
-#'   cluster_column = "annotation",
-#'   condition_column = "condition",
-#'   scanpro_plots = FALSE,
-#'   n_reps = 5
+#'     sce_object = sce_data,
+#'     cluster_column = "annotation",
+#'     condition_column = "condition",
+#'     scanpro_plots = FALSE,
+#'     n_reps = 5
 #' )
 #'
 #' @export
 DO.CellComposition <- function(sce_object,
-                               assay_normalized = "RNA",
-                               cluster_column = "seurat_clusters",
-                               sample_column = "orig.ident",
-                               condition_column = "condition",
-                               transform_method = "logit",
-                               sort_x = NULL,
-                               sub_ident = NULL,
-                               sort_fill = NULL,
-                               scanpro_plots = FALSE,
-                               scanpro_group = NULL,
-                               outputFolder = NULL,
-                               return_df = FALSE,
-                               bar_colors = NULL,
-                               n_reps = NULL,
-                               legend.pos.x = 0.48,
-                               legend.pos.y = 0,
-                               cowplot_width = 0.9,
-                               cowlegend_width = 0.9,
-                               ...) {
-  if (scanpro_plots == TRUE && is.null(outputFolder)) {
-    .logger(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
-    outputFolder <- getwd()
-  }
+    assay_normalized = "RNA",
+    cluster_column = "seurat_clusters",
+    sample_column = "orig.ident",
+    condition_column = "condition",
+    transform_method = "logit",
+    sort_x = NULL,
+    sub_ident = NULL,
+    sort_fill = NULL,
+    scanpro_plots = FALSE,
+    scanpro_group = NULL,
+    outputFolder = NULL,
+    return_df = FALSE,
+    bar_colors = NULL,
+    n_reps = NULL,
+    legend.pos.x = 0.48,
+    legend.pos.y = 0,
+    cowplot_width = 0.9,
+    cowlegend_width = 0.9,
+    ...) {
+    if (scanpro_plots == TRUE && is.null(outputFolder)) {
+        .logger(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
+        outputFolder <- getwd()
+    }
 
-  if (!is.null(n_reps)) {
-    .logger(paste0(
-      "Bootstrapping method activated with ",
-      n_reps, " simulated replicates!\n."
-    ))
-  }
+    if (!is.null(n_reps)) {
+        .logger(paste0(
+            "Bootstrapping method activated with ",
+            n_reps, " simulated replicates!\n."
+        ))
+    }
 
-  # Make sure R Zellkonverter package is installed
-  zk <- system.file(package = "zellkonverter")
-  ifelse(nzchar(zk),
-    "",
-    stop("Install zellkonverter R package for Seurat tranformation!")
-  )
-
-  # Make sure R reticulate package is installed
-  rt <- system.file(package = "reticulate")
-  ifelse(nzchar(rt),
-    "",
-    stop("Install reticulate R package for Python usage in R!")
-  )
-
-  # support for Seurat objects
-  if (is(sce_object, "Seurat")) {
-    DefaultAssay(sce_object) <- assay_normalized
-    sce_object <- Seurat::as.SingleCellExperiment(sce_object,
-      assay = assay_normalized
+    # Make sure R Zellkonverter package is installed
+    zk <- system.file(package = "zellkonverter")
+    ifelse(nzchar(zk),
+        "",
+        stop("Install zellkonverter R package for Seurat tranformation!")
     )
-  }
 
-  # Make Anndata object
-  if (!"counts" %in% names(sce_object@assays)) {
-    stop("counts not found in assays of object!")
-  }
+    # Make sure R reticulate package is installed
+    rt <- system.file(package = "reticulate")
+    ifelse(nzchar(rt),
+        "",
+        stop("Install reticulate R package for Python usage in R!")
+    )
 
-  # AnnData creation
-  # AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
-
-  # basilisk implementation for scanpro
-  results <- basilisk::basiliskRun(
-    env = DOtoolsEnv,
-    fun = function(arg1,
-                   arg2,
-                   arg3,
-                   arg4,
-                   arg5,
-                   arg6,
-                   arg7) {
-      AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
-
-      sc <- reticulate::import("scanpro.scanpro")
-      plt <- reticulate::import("matplotlib.pyplot")
-      merge_funct <- reticulate::py_get_attr(
-        sc$ScanproResult,
-        "_merge_design_props"
-      )
-
-      if (is.null(n_reps)) {
-        out <- sc$scanpro(AnnData_counts,
-          clusters_col = cluster_column,
-          samples_col = sample_column,
-          conds_col = condition_column,
-          transform = transform_method
+    # support for Seurat objects
+    if (is(sce_object, "Seurat")) {
+        DefaultAssay(sce_object) <- assay_normalized
+        sce_object <- Seurat::as.SingleCellExperiment(sce_object,
+            assay = assay_normalized
         )
-      } else {
-        out <- sc$scanpro(AnnData_counts,
-          clusters_col = cluster_column,
-          conds_col = condition_column,
-          transform = transform_method,
-          n_reps = as.integer(n_reps)
-        )
-      }
+    }
 
-      if (scanpro_plots == TRUE) {
-        if (!dir.exists(paste0(outputFolder, "/scanpro"))) {
-          dir.create(paste0(outputFolder, "/scanpro"))
+    # Make Anndata object
+    if (!"counts" %in% names(sce_object@assays)) {
+        stop("counts not found in assays of object!")
+    }
+
+    # AnnData creation
+    # AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
+
+    # basilisk implementation for scanpro
+    results <- basilisk::basiliskRun(
+        env = DOtoolsEnv,
+        fun = function(arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    arg6,
+    arg7) {
+            AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
+
+            sc <- reticulate::import("scanpro.scanpro")
+            plt <- reticulate::import("matplotlib.pyplot")
+            merge_funct <- reticulate::py_get_attr(
+                sc$ScanproResult,
+                "_merge_design_props"
+            )
+
+            if (is.null(n_reps)) {
+                out <- sc$scanpro(AnnData_counts,
+                    clusters_col = cluster_column,
+                    samples_col = sample_column,
+                    conds_col = condition_column,
+                    transform = transform_method
+                )
+            } else {
+                out <- sc$scanpro(AnnData_counts,
+                    clusters_col = cluster_column,
+                    conds_col = condition_column,
+                    transform = transform_method,
+                    n_reps = as.integer(n_reps)
+                )
+            }
+
+            if (scanpro_plots == TRUE) {
+                if (!dir.exists(paste0(outputFolder, "/scanpro"))) {
+                    dir.create(paste0(outputFolder, "/scanpro"))
+                }
+            }
+
+            # Plot scanpro plots if requested
+            if (scanpro_plots == TRUE && is.null(scanpro_group)) {
+                out$plot(kind = "boxplot", ...)
+                plt$savefig(
+                    paste0(
+                        outputFolder,
+                        "/scanpro/CellComposition_complete_box_plot.svg"
+                    ),
+                    dpi = 300,
+                    bbox_inches = "tight"
+                )
+                plt$close()
+
+                out$plot(kind = "barplot", ...)
+                plt$savefig(
+                    paste0(
+                        outputFolder,
+                        "/scanpro/CellComposition_complete_bar_plot.svg"
+                    ),
+                    dpi = 300,
+                    bbox_inches = "tight"
+                )
+                plt$close()
+            }
+
+            # Plot scanpro plots if requested
+            if (scanpro_plots == TRUE && !is.null(scanpro_group)) {
+                out$plot(kind = "boxplot", clusters = scanpro_group, ...)
+                plt$savefig(
+                    paste0(
+                        outputFolder,
+                        "/scanpro/CellComposition_",
+                        scanpro_group,
+                        "_box_plot.svg"
+                    ),
+                    dpi = 300,
+                    bbox_inches = "tight"
+                )
+                plt$close()
+
+                out$plot(kind = "barplot", clusters = scanpro_group, ...)
+                plt$savefig(
+                    paste0(
+                        outputFolder,
+                        "/scanpro/CellComposition_",
+                        scanpro_group,
+                        "_bar_plot.svg"
+                    ),
+                    dpi = 300,
+                    bbox_inches = "tight"
+                )
+                plt$close()
+            }
+
+            list(
+                df_res = reticulate::py_to_r(out$results),
+                df_counts = reticulate::py_to_r(out$counts),
+                df_design = reticulate::py_to_r(out$design),
+                df_merge = reticulate::py_to_r(merge_funct(out))
+            )
+        },
+        arg1 = sce_object,
+        arg2 = cluster_column,
+        arg3 = sample_column,
+        arg4 = condition_column,
+        arg5 = transform_method,
+        arg6 = n_reps,
+        arg7 = ...
+    )
+
+    # assign results df
+    results_df <- results$df_res
+    results_counts <- results$df_counts
+    results_counts <- tibble::rownames_to_column(
+        results_counts,
+        var = "orig.ident"
+    )
+    results_counts$condition <- result_vector <- apply(
+        results$df_design,
+        1,
+        function(x) {
+            names(x)[x == 1]
         }
-      }
-
-      # Plot scanpro plots if requested
-      if (scanpro_plots == TRUE && is.null(scanpro_group)) {
-        out$plot(kind = "boxplot", ...)
-        plt$savefig(
-          paste0(
-            outputFolder,
-            "/scanpro/CellComposition_complete_box_plot.svg"
-          ),
-          dpi = 300,
-          bbox_inches = "tight"
-        )
-        plt$close()
-
-        out$plot(kind = "barplot", ...)
-        plt$savefig(
-          paste0(
-            outputFolder,
-            "/scanpro/CellComposition_complete_bar_plot.svg"
-          ),
-          dpi = 300,
-          bbox_inches = "tight"
-        )
-        plt$close()
-      }
-
-      # Plot scanpro plots if requested
-      if (scanpro_plots == TRUE && !is.null(scanpro_group)) {
-        out$plot(kind = "boxplot", clusters = scanpro_group, ...)
-        plt$savefig(
-          paste0(
-            outputFolder,
-            "/scanpro/CellComposition_",
-            scanpro_group,
-            "_box_plot.svg"
-          ),
-          dpi = 300,
-          bbox_inches = "tight"
-        )
-        plt$close()
-
-        out$plot(kind = "barplot", clusters = scanpro_group, ...)
-        plt$savefig(
-          paste0(
-            outputFolder,
-            "/scanpro/CellComposition_",
-            scanpro_group,
-            "_bar_plot.svg"
-          ),
-          dpi = 300,
-          bbox_inches = "tight"
-        )
-        plt$close()
-      }
-
-      list(
-        df_res = reticulate::py_to_r(out$results),
-        df_counts = reticulate::py_to_r(out$counts),
-        df_design = reticulate::py_to_r(out$design),
-        df_merge = reticulate::py_to_r(merge_funct(out))
-      )
-    },
-    arg1 = sce_object,
-    arg2 = cluster_column,
-    arg3 = sample_column,
-    arg4 = condition_column,
-    arg5 = transform_method,
-    arg6 = n_reps,
-    arg7 = ...
-  )
-
-  # assign results df
-  results_df <- results$df_res
-  results_counts <- results$df_counts
-  results_counts <- tibble::rownames_to_column(
-    results_counts, var = "orig.ident"
     )
-  results_counts$condition <- result_vector <- apply(
-    results$df_design,
-    1,
-    function(x) {
-      names(x)[x == 1]
+    results_counts <- reshape2::melt(results_counts)
+
+    # per sample proportions
+    prop_merge <- results$df_merge
+    prop_merge_melt <- reshape2::melt(prop_merge)
+
+    # add count numbers
+    prop_merge_melt$counts <- results_counts$value
+
+    summary_df <- prop_merge_melt %>%
+        group_by(!!sym(condition_column), variable) %>%
+        summarize(freq = sum(counts), .groups = "drop")
+
+    # convert Frequency to proportion
+    prop_df <- summary_df %>%
+        group_by(!!sym(condition_column)) %>%
+        mutate(proportion = freq / sum(freq)) %>%
+        ungroup()
+
+    # assign p-values # keep an eye out if this causes bugs
+    if (!is.null(results_df$adjusted_p_values)) {
+        prop_df$p_val <- rep(
+            results_df$adjusted_p_values,
+            length(unique(prop_df[[condition_column]]))
+        )
+    } else {
+        prop_df$p_val <- rep(
+            results_df$p_values,
+            length(unique(prop_df[[condition_column]]))
+        )
     }
-  )
-  results_counts <- reshape2::melt(results_counts)
 
-  # per sample proportions
-  prop_merge <- results$df_merge
-  prop_merge_melt <- reshape2::melt(prop_merge)
+    prop_df$p_val <- ifelse(as.numeric(prop_df$p_val) > 0.05, ">0.05", "<0.05")
 
-  # add count numbers
-  prop_merge_melt$counts <- results_counts$value
-
-  summary_df <- prop_merge_melt %>%
-    group_by(!!sym(condition_column), variable) %>%
-    summarize(freq = sum(counts), .groups = "drop")
-
-  # convert Frequency to proportion
-  prop_df <- summary_df %>%
-    group_by(!!sym(condition_column)) %>%
-    mutate(proportion = freq / sum(freq)) %>%
-    ungroup()
-
-  # assign p-values # keep an eye out if this causes bugs
-  if (!is.null(results_df$adjusted_p_values)) {
-    prop_df$p_val <- rep(
-      results_df$adjusted_p_values,
-      length(unique(prop_df[[condition_column]]))
-    )
-  } else {
-    prop_df$p_val <- rep(
-      results_df$p_values,
-      length(unique(prop_df[[condition_column]]))
-    )
-  }
-
-  prop_df$p_val <- ifelse(as.numeric(prop_df$p_val) > 0.05, ">0.05", "<0.05")
-
-  prop_df$variable <- as.vector(prop_df$variable)
+    prop_df$variable <- as.vector(prop_df$variable)
 
 
-  if (is.null(bar_colors)) {
-    bar_colors <- rep(
-      c(
-        "#1f77b4",
-        "#ff7f0e",
-        "#2ca02c",
-        "tomato2",
-        "#9467bd",
-        "chocolate3",
-        "#e377c2",
-        "#ffbb78",
-        "#bcbd22",
-        "#17becf",
-        "darkgoldenrod2",
-        "#aec7e8",
-        "#98df8a",
-        "#ff9896",
-        "#c5b0d5",
-        "#c49c94",
-        "#f7b6d2",
-        "#c7c7c7",
-        "#dbdb8d",
-        "#9edae5",
-        "sandybrown",
-        "moccasin",
-        "lightsteelblue",
-        "darkorchid",
-        "salmon2",
-        "forestgreen",
-        "bisque"
-      ),
-      5
-    )
-  } else {
-    # if bar_colors is a named vector it can be used for adjusting the colors
-    if (!is.null(names(bar_colors))) {
-      prop_df$variable <- factor(prop_df$variable, levels = names(bar_colors))
+    if (is.null(bar_colors)) {
+        bar_colors <- rep(
+            c(
+                "#1f77b4",
+                "#ff7f0e",
+                "#2ca02c",
+                "tomato2",
+                "#9467bd",
+                "chocolate3",
+                "#e377c2",
+                "#ffbb78",
+                "#bcbd22",
+                "#17becf",
+                "darkgoldenrod2",
+                "#aec7e8",
+                "#98df8a",
+                "#ff9896",
+                "#c5b0d5",
+                "#c49c94",
+                "#f7b6d2",
+                "#c7c7c7",
+                "#dbdb8d",
+                "#9edae5",
+                "sandybrown",
+                "moccasin",
+                "lightsteelblue",
+                "darkorchid",
+                "salmon2",
+                "forestgreen",
+                "bisque"
+            ),
+            5
+        )
+    } else {
+        # bar_colors is a named vector it can be used for adjusting the colors
+        if (!is.null(names(bar_colors))) {
+            prop_df$variable <- factor(
+                prop_df$variable, levels = names(bar_colors)
+                )
+        }
     }
-  }
 
-  # length(prop_df$variable)
+    # length(prop_df$variable)
 
-  if (!is.null(sort_x)) {
-    prop_df[[condition_column]] <- factor(prop_df[[condition_column]],
-      levels = sort_x
+    if (!is.null(sort_x)) {
+        prop_df[[condition_column]] <- factor(prop_df[[condition_column]],
+            levels = sort_x
+        )
+    }
+
+    # sub by sub_ident if given
+    if (!is.null(sub_ident)) {
+        prop_df <- subset(prop_df, subset = variable %in% sub_ident)
+    }
+
+    # sort fill
+    if (!is.null(sort_fill)) {
+        prop_df$variable <- factor(prop_df$variable, levels = sort_fill)
+    }
+
+    p1 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
+        geom_col(aes(fill = variable), width = 0.5, color = "black") +
+        scale_fill_manual(values = bar_colors) +
+        scale_y_continuous(expand = c(0, 0)) +
+        xlab("") +
+        theme_classic() +
+        theme(
+            plot.title = element_text(
+                face = "bold",
+                color = "black",
+                hjust = 0.5,
+                size = 14
+            ),
+            axis.title.y = element_text(
+                face = "bold",
+                color = "black",
+                size = 14,
+                family = "Helvetica"
+            ),
+            axis.text.x = element_text(
+                face = "bold",
+                color = "black",
+                angle = 0,
+                hjust = 0.5,
+                size = 14,
+                family = "Helvetica"
+            ),
+            axis.text.y = element_text(
+                face = "bold",
+                color = "black",
+                hjust = 1,
+                size = 14,
+                family = "Helvetica"
+            ),
+            legend.position = "none",
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.line = element_line(colour = "black"),
+            strip.background = element_rect(
+                fill = "lightgrey",
+                colour = "black",
+                linewidth = 1
+            ),
+            strip.text = element_text(colour = "black", size = 12)
+        )
+
+    # make just the lines in a different plot
+    p2 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
+        geom_flow(
+            aes(
+                alluvium = variable,
+                color = ifelse(p_val == "<0.05", "sig", "ns")
+            ),
+            alpha = .9,
+            lty = 2,
+            fill = "white",
+            curve_type = "linear",
+            width = .5
+        ) +
+        geom_col(aes(fill = variable),
+            width = .5,
+            color = NA,
+            fill = "transparent"
+        ) +
+        # TODO add percentage numbers to plot
+        # geom_text(aes(label = scales::percent(proportion),
+        #               color=ifelse(p_val == "<0.05", "sig", "ns")),
+        #           position = position_stack(vjust=0.5),
+        #           size = 4) +
+        # geom_text(aes(label= scales::percent(after_stat(y)),
+        #               color=ifelse(p_val == "<0.05", "sig", "ns")),
+        #           stat = "summary", fun="sum",
+        #           position = position_fill(vjust = 0.5), size = 4)+
+        scale_color_manual(values = c("sig" = "black", "ns" = "transparent")) +
+        scale_fill_manual(values = bar_colors) +
+        scale_y_continuous(expand = c(0, 0)) +
+        xlab("") +
+        theme_classic() +
+        theme(
+            plot.title = element_text(
+                face = "bold",
+                color = "transparent",
+                hjust = 0.5,
+                size = 14
+            ),
+            axis.title.y = element_text(
+                face = "bold",
+                color = "transparent",
+                size = 14
+            ),
+            axis.text.x = element_text(
+                face = "bold",
+                color = "transparent",
+                angle = 0,
+                hjust = 0.5,
+                size = 14
+            ),
+            axis.text.y = element_text(
+                face = "bold",
+                color = "transparent",
+                hjust = 1,
+                size = 14
+            ),
+            legend.position = "none",
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.line = element_blank(),
+            panel.background = element_rect(fill = "transparent", colour = NA),
+            plot.background = element_rect(fill = "transparent", colour = NA),
+            strip.background = element_rect(fill = "transparent", colour = NA),
+            axis.ticks = element_blank(),
+            legend.background = element_rect(fill = "transparent", color = NA),
+            legend.key = element_rect(fill = "transparent", color = NA),
+            legend.title = element_text(face = "bold", color = "transparent"),
+            legend.text = element_text(color = "transparent")
+        )
+
+
+    # add legend
+    p3 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
+        geom_col(aes(fill = variable), width = .5, color = "black") +
+        scale_fill_manual(values = bar_colors) +
+        scale_y_continuous(expand = c(0, 0)) +
+        xlab("") +
+        theme_classic() +
+        theme(
+            plot.title = element_text(
+                face = "bold",
+                color = "transparent",
+                hjust = 0.5,
+                size = 14
+            ),
+            axis.title.y = element_text(
+                face = "bold",
+                color = "transparent",
+                size = 14
+            ),
+            axis.text.x = element_text(
+                face = "bold",
+                color = "transparent",
+                angle = 0,
+                hjust = 0.5,
+                size = 14
+            ),
+            axis.text.y = element_text(
+                face = "bold",
+                color = "transparent",
+                hjust = 1,
+                size = 14
+            ),
+            legend.position = "right",
+            legend.title = element_text(
+                size = 10,
+                color = "black",
+                hjust = 0.5,
+                face = "bold",
+                family = "Helvetica"
+            ),
+            legend.background = element_rect(fill = "transparent", colour = NA),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.line = element_blank(),
+            panel.background = element_rect(fill = "transparent", colour = NA),
+            plot.background = element_rect(fill = "transparent", colour = NA),
+            strip.background = element_rect(fill = "transparent", colour = NA),
+            axis.ticks = element_blank()
+        )
+
+    guides.layer <- ggplot2::guides(
+        fill = ggplot2::guide_legend(
+            title = "Cell type",
+            title.position = "top",
+            title.hjust = 0.5,
+            label.position = "right",
+            keywidth = ggplot2::unit(0.2, "cm"),
+            keyheight = ggplot2::unit(0.5, "cm"),
+            order = 1
+        )
     )
-  }
 
-  # sub by sub_ident if given
-  if (!is.null(sub_ident)) {
-    prop_df <- subset(prop_df, subset = variable %in% sub_ident)
-  }
-
-  # sort fill
-  if (!is.null(sort_fill)) {
-    prop_df$variable <- factor(prop_df$variable, levels = sort_fill)
-  }
-
-  p1 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
-    geom_col(aes(fill = variable), width = 0.5, color = "black") +
-    scale_fill_manual(values = bar_colors) +
-    scale_y_continuous(expand = c(0, 0)) +
-    xlab("") +
-    theme_classic() +
-    theme(
-      plot.title = element_text(
-        face = "bold",
-        color = "black",
-        hjust = 0.5,
-        size = 14
-      ),
-      axis.title.y = element_text(
-        face = "bold",
-        color = "black",
-        size = 14,
-        family = "Helvetica"
-      ),
-      axis.text.x = element_text(
-        face = "bold",
-        color = "black",
-        angle = 0,
-        hjust = 0.5,
-        size = 14,
-        family = "Helvetica"
-      ),
-      axis.text.y = element_text(
-        face = "bold",
-        color = "black",
-        hjust = 1,
-        size = 14,
-        family = "Helvetica"
-      ),
-      legend.position = "none",
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.line = element_line(colour = "black"),
-      strip.background = element_rect(
-        fill = "lightgrey",
-        colour = "black",
-        linewidth = 1
-      ),
-      strip.text = element_text(colour = "black", size = 12)
-    )
-
-  # make just the lines in a different plot
-  p2 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
-    geom_flow(
-      aes(
-        alluvium = variable,
-        color = ifelse(p_val == "<0.05", "sig", "ns")
-      ),
-      alpha = .9,
-      lty = 2,
-      fill = "white",
-      curve_type = "linear",
-      width = .5
-    ) +
-    geom_col(aes(fill = variable),
-      width = .5,
-      color = NA,
-      fill = "transparent"
-    ) +
-    # TODO add percentage numbers to plot
-    # geom_text(aes(label = scales::percent(proportion),
-    #               color=ifelse(p_val == "<0.05", "sig", "ns")),
-    #           position = position_stack(vjust=0.5),
-    #           size = 4) +
-    # geom_text(aes(label= scales::percent(after_stat(y)),
-    #               color=ifelse(p_val == "<0.05", "sig", "ns")),
-    #           stat = "summary", fun="sum",
-    #           position = position_fill(vjust = 0.5), size = 4)+
-    scale_color_manual(values = c("sig" = "black", "ns" = "transparent")) +
-    scale_fill_manual(values = bar_colors) +
-    scale_y_continuous(expand = c(0, 0)) +
-    xlab("") +
-    theme_classic() +
-    theme(
-      plot.title = element_text(
-        face = "bold",
-        color = "transparent",
-        hjust = 0.5,
-        size = 14
-      ),
-      axis.title.y = element_text(
-        face = "bold",
-        color = "transparent",
-        size = 14
-      ),
-      axis.text.x = element_text(
-        face = "bold",
-        color = "transparent",
-        angle = 0,
-        hjust = 0.5,
-        size = 14
-      ),
-      axis.text.y = element_text(
-        face = "bold",
-        color = "transparent",
-        hjust = 1,
-        size = 14
-      ),
-      legend.position = "none",
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.line = element_blank(),
-      panel.background = element_rect(fill = "transparent", colour = NA),
-      plot.background = element_rect(fill = "transparent", colour = NA),
-      strip.background = element_rect(fill = "transparent", colour = NA),
-      axis.ticks = element_blank(),
-      legend.background = element_rect(fill = "transparent", color = NA),
-      legend.key = element_rect(fill = "transparent", color = NA),
-      legend.title = element_text(face = "bold", color = "transparent"),
-      legend.text = element_text(color = "transparent")
-    )
+    p3 <- p3 + guides.layer
+    legend_only <- suppressWarnings(cowplot::get_legend(p3))
 
 
-  # add legend
-  p3 <- ggplot(prop_df, aes(y = proportion, x = !!sym(condition_column))) +
-    geom_col(aes(fill = variable), width = .5, color = "black") +
-    scale_fill_manual(values = bar_colors) +
-    scale_y_continuous(expand = c(0, 0)) +
-    xlab("") +
-    theme_classic() +
-    theme(
-      plot.title = element_text(
-        face = "bold",
-        color = "transparent",
-        hjust = 0.5,
-        size = 14
-      ),
-      axis.title.y = element_text(
-        face = "bold",
-        color = "transparent",
-        size = 14
-      ),
-      axis.text.x = element_text(
-        face = "bold",
-        color = "transparent",
-        angle = 0,
-        hjust = 0.5,
-        size = 14
-      ),
-      axis.text.y = element_text(
-        face = "bold",
-        color = "transparent",
-        hjust = 1,
-        size = 14
-      ),
-      legend.position = "right",
-      legend.title = element_text(
-        size = 10,
-        color = "black",
-        hjust = 0.5,
-        face = "bold",
-        family = "Helvetica"
-      ),
-      legend.background = element_rect(fill = "transparent", colour = NA),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.line = element_blank(),
-      panel.background = element_rect(fill = "transparent", colour = NA),
-      plot.background = element_rect(fill = "transparent", colour = NA),
-      strip.background = element_rect(fill = "transparent", colour = NA),
-      axis.ticks = element_blank()
-    )
-
-  guides.layer <- ggplot2::guides(
-    fill = ggplot2::guide_legend(
-      title = "Cell type",
-      title.position = "top",
-      title.hjust = 0.5,
-      label.position = "right",
-      keywidth = ggplot2::unit(0.2, "cm"),
-      keyheight = ggplot2::unit(0.5, "cm"),
-      order = 1
-    )
-  )
-
-  p3 <- p3 + guides.layer
-  legend_only <- suppressWarnings(cowplot::get_legend(p3))
-
-
-  plot_p <- cowplot::ggdraw() +
-    cowplot::draw_plot(p1, width = cowplot_width) +
-    cowplot::draw_plot(p2, width = cowplot_width) +
-    cowplot::draw_plot(legend_only,
-      x = legend.pos.x,
-      y = legend.pos.y,
-      width = cowlegend_width
-    )
-  # TODO find a way to elongate the plot so that the legend automatically fits
-  plot_p
+    plot_p <- cowplot::ggdraw() +
+        cowplot::draw_plot(p1, width = cowplot_width) +
+        cowplot::draw_plot(p2, width = cowplot_width) +
+        cowplot::draw_plot(legend_only,
+            x = legend.pos.x,
+            y = legend.pos.y,
+            width = cowlegend_width
+        )
+    # TODO find a way to elongate the plot so that the legend automatically fits
+    plot_p
 
 
 
-  if (return_df == TRUE) {
-    return(list(prop_df, plot_p))
-  } else {
-    return(plot_p)
-  }
+    if (return_df == TRUE) {
+        return(list(prop_df, plot_p))
+    } else {
+        return(plot_p)
+    }
 }

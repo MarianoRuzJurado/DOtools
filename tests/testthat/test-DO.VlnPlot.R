@@ -3,7 +3,7 @@ library(DOtools)
 library(Seurat)
 library(SingleCellExperiment)
 
-# Load your SCE object
+# Load SCE object
 sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 # Convert to Seurat
@@ -25,7 +25,7 @@ if (!("cell_type" %in% colnames(sce_seurat@meta.data))) {
 # Create ListTest for comparisons
 ListTest <- list(c("healthy", "disease"))
 
-# ---- EXISTING TESTS (keeping the working ones) ----
+# ---- EXISTING TESTS ----
 
 test_that("DO.VlnPlot returns a ggplot object for a single feature", {
   p <- DO.VlnPlot(
@@ -70,9 +70,8 @@ test_that("DO.VlnPlot stops when insufficient colors are provided", {
   )
 })
 
-# ---- FIXED TESTS FOR RETURNVALUES ----
+# ---- TESTS FOR RETURNVALUES ----
 
-# First, let's diagnose what's actually happening with returnValues
 test_that("DO.VlnPlot returnValues diagnosis", {
   # Test what the function actually returns
   result <- DO.VlnPlot(
@@ -85,7 +84,6 @@ test_that("DO.VlnPlot returnValues diagnosis", {
     returnValues = TRUE
   )
 
-  # Print what we actually got for debugging
   cat("Class of result:", class(result), "\n")
   cat("Type of result:", typeof(result), "\n")
   if (is.list(result)) {
@@ -93,11 +91,10 @@ test_that("DO.VlnPlot returnValues diagnosis", {
     cat("List length:", length(result), "\n")
   }
 
-  # The test will pass regardless while we diagnose
   expect_true(TRUE)
 })
 
-# Based on the diagnosis, let's create appropriate tests
+# tests
 test_that("DO.VlnPlot basic functionality with various parameters", {
   # Test 1: Basic plot without returnValues
   p1 <- DO.VlnPlot(
@@ -223,9 +220,7 @@ test_that("DO.VlnPlot warning conditions", {
   sce_seurat[["RNA"]]@data["NKG7", ] <- original_data
 })
 
-# Remove the problematic returnValues tests and replace with simpler tests
 test_that("DO.VlnPlot returnValues behavior", {
-  # Since returnValues doesn't seem to work consistently, let's test what we can
   result <- DO.VlnPlot(
     sce_object = sce_seurat,
     SeuV5 = TRUE,
@@ -236,7 +231,6 @@ test_that("DO.VlnPlot returnValues behavior", {
     returnValues = TRUE
   )
 
-  # Accept either a list or a ggplot - the important thing is it doesn't error
   expect_true(is.list(result) || ggplot2::is.ggplot(result))
 })
 
@@ -277,9 +271,9 @@ test_that("DO.VlnPlot removes zero comparisons", {
   )
 })
 
-# Final comprehensive test that focuses on what works
+# comprehensive test
 test_that("DO.VlnPlot comprehensive functionality test", {
-  # Test multiple parameter combinations that are known to work
+  # Test multiple parameter
   test_cases <- list(
     list(SeuV5 = TRUE, wilcox_test = TRUE),
     list(SeuV5 = TRUE, wilcox_test = FALSE),

@@ -6,7 +6,7 @@ library(dplyr)
 library(ggplot2)
 
 # ------------------------------
-# Tiny SCE object
+# SCE object
 # ------------------------------
 counts <- matrix(sample(0:5, 8, replace = TRUE), nrow = 4)
 rownames(counts) <- paste0("Gene", 1:4)

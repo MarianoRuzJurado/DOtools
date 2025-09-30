@@ -156,246 +156,256 @@ DO.Heatmap <- function(
     square = TRUE,
     showP = TRUE,
     logcounts = TRUE) {
-  # support for Seurat objects
-  if (is(sce_object, "Seurat")) {
-    DefaultAssay(sce_object) <- assay_normalized
-    sce_object <- .suppressDeprecationWarnings(
-      Seurat::as.SingleCellExperiment(sce_object, assay = assay_normalized)
-    )
-  }
+    # support for Seurat objects
+    if (is(sce_object, "Seurat")) {
+        DefaultAssay(sce_object) <- assay_normalized
+        sce_object <- .suppressDeprecationWarnings(
+            Seurat::as.SingleCellExperiment(sce_object,
+                assay = assay_normalized
+            )
+        )
+    }
 
-  # Make Anndata object
-  if (!"logcounts" %in% names(sce_object@assays)) {
-    stop("logcounts not found in assays of object!")
-  }
+    # Make Anndata object
+    if (!"logcounts" %in% names(sce_object@assays)) {
+        stop("logcounts not found in assays of object!")
+    }
 
-  # just for the argument if fc is set to expr
-  ident_1 <- NULL
-  ident_2 <- NULL
-  if (add_stats == TRUE) {
-    Seu_obj <- as.Seurat(sce_object)
-    if (is.null(df_pvals) && value_plot == "expr") {
-      df_dge <- .suppressDeprecationWarnings(FindAllMarkers(Seu_obj,
+    # just for the argument if fc is set to expr
+    ident_1 <- NULL
+    ident_2 <- NULL
+    if (add_stats == TRUE) {
+        Seu_obj <- as.Seurat(sce_object)
+        if (is.null(df_pvals) && value_plot == "expr") {
+            df_dge <- .suppressDeprecationWarnings(FindAllMarkers(Seu_obj,
+                features = features,
+                group.by = group_by,
+                min.pct = 0,
+                test.use = test,
+                logfc.threshold = log2fc_cutoff,
+                only.pos = only_pos
+            ))
+
+            df_pvals <- data.frame(
+                matrix(1,
+                    nrow = length(features),
+                    ncol = length(unique(sce_object[[group_by]]))
+                )
+            )
+
+            rownames(df_pvals) <- features
+            colnames(df_pvals) <- unique(sce_object[[group_by]])
+
+            # Go through each row in df_dge
+            for (i in seq_len(nrow(df_dge))) {
+                gene <- df_dge$gene[i]
+                cluster <- as.character(df_dge$cluster[i])
+                pval_adj <- df_dge$p_val_adj[i]
+                df_pvals[gene, cluster] <- pval_adj
+            }
+        }
+
+        if (is.null(df_pvals) && value_plot == "fc") {
+            df_pvals <- data.frame(
+                matrix(1,
+                    nrow = length(features),
+                    ncol = length(unique(sce_object[[group_by]]))
+                )
+            )
+            rownames(df_pvals) <- features
+            colnames(df_pvals) <- unique(sce_object[[group_by]])
+
+            if (is.null(group_fc_ident_2)) {
+                ident_2 <- grepv(
+                    pattern = paste(c("CTRL", "Cntrl", "WT", "healthy"),
+                        collapse = "|"
+                    ),
+                    ignore.case = TRUE,
+                    unique(sce_object[[group_fc]])
+                )
+
+                .logger(paste0(
+                    "group_fc_ident_2 is set to NULL, using: ",
+                    ident_2
+                ))
+            } else {
+                ident_2 <- group_fc_ident_2
+            }
+
+            if (is.null(group_fc_ident_1)) {
+                ident_1 <- grepv(
+                    pattern = paste(c("CTRL", "Cntrl", "WT", "healthy"),
+                        collapse = "|"
+                    ),
+                    ignore.case = TRUE,
+                    invert = TRUE,
+                    unique(sce_object[[group_fc]])
+                )[1]
+
+                .logger(paste0(
+                    "group_fc_ident_1 is set to NULL, using: ",
+                    ident_1
+                ))
+            } else {
+                ident_1 <- group_fc_ident_1
+            }
+
+            for (grp in unique(sce_object[[group_by]])) {
+                Seu_obj_grp <- subset(Seu_obj, !!sym(group_by) == grp)
+
+                # Check if there are groups with less than 3 cells
+                table_cells_sc <- table(Seu_obj_grp@meta.data[[group_fc]])
+
+                count_1_sc <- table_cells_sc[ident_1]
+                count_2_sc <- table_cells_sc[ident_2]
+
+                if (is.na(count_1_sc)) {
+                    count_1_sc <- 0
+                }
+
+                if (is.na(count_2_sc)) {
+                    count_2_sc <- 0
+                }
+
+                if (count_1_sc >= 3 && count_2_sc >= 3) {
+                    # calculating statistics on the group_fc level
+                    df_dge <- .suppressDeprecationWarnings(
+                        FindMarkers(Seu_obj_grp,
+                            features = features,
+                            group.by = group_fc,
+                            min.pct = 0,
+                            test.use = test,
+                            logfc.threshold = log2fc_cutoff,
+                            only.pos = only_pos,
+                            ident.1 = ident_1,
+                            ident.2 = ident_2
+                        )
+                    )
+                    df_dge <- rownames_to_column(df_dge, var = "gene")
+                } else {
+                    df_dge <- data.frame()
+                }
+
+                # Go through each row in df_dge
+                for (i in seq_len(nrow(df_dge))) {
+                    gene <- df_dge$gene[i]
+                    cluster <- grp
+                    pval_adj <- df_dge$p_val_adj[i]
+                    df_pvals[gene, cluster] <- pval_adj
+                }
+            }
+        }
+    }
+    # source PATH to python script in install folder
+    path_py <- system.file("python", "heatmap.py", package = "DOtools")
+
+
+    # argument list passed to heatmap inside basilisk
+    args <- list(
+        sce_object = sce_object,
+        group_by = group_by,
+        groups_order = groups_order,
+        value_plot = value_plot,
+        group_fc_ident_1 = ident_1,
+        group_fc_ident_2 = ident_2,
+        group_fc = group_fc,
+        clip_value = clip_value,
+        max_fc = max_fc,
         features = features,
-        group.by = group_by,
-        min.pct = 0,
-        test.use = test,
-        logfc.threshold = log2fc_cutoff,
-        only.pos = only_pos
-      ))
-
-      df_pvals <- data.frame(
-        matrix(1,
-          nrow = length(features),
-          ncol = length(unique(sce_object[[group_by]]))
-        )
-      )
-
-      rownames(df_pvals) <- features
-      colnames(df_pvals) <- unique(sce_object[[group_by]])
-
-      # Go through each row in df_dge
-      for (i in seq_len(nrow(df_dge))) {
-        gene <- df_dge$gene[i]
-        cluster <- as.character(df_dge$cluster[i])
-        pval_adj <- df_dge$p_val_adj[i]
-        df_pvals[gene, cluster] <- pval_adj
-      }
-    }
-
-    if (is.null(df_pvals) && value_plot == "fc") {
-      df_pvals <- data.frame(
-        matrix(1,
-          nrow = length(features),
-          ncol = length(unique(sce_object[[group_by]]))
-        )
-      )
-      rownames(df_pvals) <- features
-      colnames(df_pvals) <- unique(sce_object[[group_by]])
-
-      if (is.null(group_fc_ident_2)) {
-        ident_2 <- grepv(
-          pattern = paste(c("CTRL", "Cntrl", "WT", "healthy"),
-            collapse = "|"
-          ),
-          ignore.case = TRUE,
-          unique(sce_object[[group_fc]])
-        )
-
-        .logger(paste0("group_fc_ident_2 is set to NULL, using: ", ident_2))
-      } else {
-        ident_2 <- group_fc_ident_2
-      }
-
-      if (is.null(group_fc_ident_1)) {
-        ident_1 <- grepv(
-          pattern = paste(c("CTRL", "Cntrl", "WT", "healthy"),
-            collapse = "|"
-          ),
-          ignore.case = TRUE,
-          invert = TRUE,
-          unique(sce_object[[group_fc]])
-        )[1]
-
-        .logger(paste0("group_fc_ident_1 is set to NULL, using: ", ident_1))
-      } else {
-        ident_1 <- group_fc_ident_1
-      }
-
-      for (grp in unique(sce_object[[group_by]])) {
-        Seu_obj_grp <- subset(Seu_obj, !!sym(group_by) == grp)
-
-        # Check if there are groups with less than 3 cells
-        table_cells_sc <- table(Seu_obj_grp@meta.data[[group_fc]])
-
-        count_1_sc <- table_cells_sc[ident_1]
-        count_2_sc <- table_cells_sc[ident_2]
-
-        if (is.na(count_1_sc)) {
-          count_1_sc <- 0
-        }
-
-        if (is.na(count_2_sc)) {
-          count_2_sc <- 0
-        }
-
-        if (count_1_sc >= 3 && count_2_sc >= 3) {
-          # calculating statistics on the group_fc level
-          df_dge <- .suppressDeprecationWarnings(FindMarkers(Seu_obj_grp,
-            features = features,
-            group.by = group_fc,
-            min.pct = 0,
-            test.use = test,
-            logfc.threshold = log2fc_cutoff,
-            only.pos = only_pos,
-            ident.1 = ident_1,
-            ident.2 = ident_2
-          ))
-          df_dge <- rownames_to_column(df_dge, var = "gene")
-        } else {
-          df_dge <- data.frame()
-        }
-
-        # Go through each row in df_dge
-        for (i in seq_len(nrow(df_dge))) {
-          gene <- df_dge$gene[i]
-          cluster <- grp
-          pval_adj <- df_dge$p_val_adj[i]
-          df_pvals[gene, cluster] <- pval_adj
-        }
-      }
-    }
-  }
-  # source PATH to python script in install folder
-  path_py <- system.file("python", "heatmap.py", package = "DOtools")
-
-
-  # argument list passed to heatmap inside basilisk
-  args <- list(
-    sce_object = sce_object,
-    group_by = group_by,
-    groups_order = groups_order,
-    value_plot = value_plot,
-    group_fc_ident_1 = ident_1,
-    group_fc_ident_2 = ident_2,
-    group_fc = group_fc,
-    clip_value = clip_value,
-    max_fc = max_fc,
-    features = features,
-    z_score = z_score,
-    path = path,
-    filename = filename,
-    layer = NULL,
-    swap_axes = swap_axes,
-    cmap = cmap,
-    title = title,
-    title_fontprop = title_fontprop,
-    clustering_method = clustering_method,
-    clustering_metric = clustering_metric,
-    cluster_x_axis = cluster_x_axis,
-    cluster_y_axis = cluster_y_axis,
-    axs = axs,
-    figsize = figsize,
-    linewidth = linewidth,
-    ticks_fontdict = ticks_fontdict,
-    xticks_rotation = xticks_rotation,
-    yticks_rotation = yticks_rotation,
-    vmin = vmin,
-    vcenter = vcenter,
-    vmax = vmax,
-    legend_title = legend_title,
-    add_stats = add_stats,
-    df_pvals = df_pvals,
-    stats_x_size = stats_x_size,
-    square_x_size = square_x_size,
-    pval_cutoff = pval_cutoff,
-    square = square,
-    showP = showP,
-    logcounts = logcounts
-  )
-
-
-  # basilisk implementation
-  results <- basilisk::basiliskRun(env = DOtoolsEnv, fun = function(args) {
-    AnnData_counts <- zellkonverter::SCE2AnnData(args$sce_object,
-      X_name = "logcounts"
+        z_score = z_score,
+        path = path,
+        filename = filename,
+        layer = NULL,
+        swap_axes = swap_axes,
+        cmap = cmap,
+        title = title,
+        title_fontprop = title_fontprop,
+        clustering_method = clustering_method,
+        clustering_metric = clustering_metric,
+        cluster_x_axis = cluster_x_axis,
+        cluster_y_axis = cluster_y_axis,
+        axs = axs,
+        figsize = figsize,
+        linewidth = linewidth,
+        ticks_fontdict = ticks_fontdict,
+        xticks_rotation = xticks_rotation,
+        yticks_rotation = yticks_rotation,
+        vmin = vmin,
+        vcenter = vcenter,
+        vmax = vmax,
+        legend_title = legend_title,
+        add_stats = add_stats,
+        df_pvals = df_pvals,
+        stats_x_size = stats_x_size,
+        square_x_size = square_x_size,
+        pval_cutoff = pval_cutoff,
+        square = square,
+        showP = showP,
+        logcounts = logcounts
     )
 
-    reticulate::source_python(path_py)
 
-    # Initialize matplot package
-    plt <- reticulate::import("matplotlib.pyplot")
+    # basilisk implementation
+    results <- basilisk::basiliskRun(env = DOtoolsEnv, fun = function(args) {
+        AnnData_counts <- zellkonverter::SCE2AnnData(args$sce_object,
+            X_name = "logcounts"
+        )
 
-    # build dicitonary out of square_x_size if specified
-    if (is.numeric(square_x_size) && length(square_x_size) == 2) {
-      args$square_x_size <- reticulate::dict(
-        weight = square_x_size[1],
-        size = square_x_size[2]
-      )
-    }
+        reticulate::source_python(path_py)
+
+        # Initialize matplot package
+        plt <- reticulate::import("matplotlib.pyplot")
+
+        # build dicitonary out of square_x_size if specified
+        if (is.numeric(square_x_size) && length(square_x_size) == 2) {
+            args$square_x_size <- reticulate::dict(
+                weight = square_x_size[1],
+                size = square_x_size[2]
+            )
+        }
 
 
-    heatmap(
-      adata = AnnData_counts,
-      group_by = args$group_by,
-      features = args$features,
-      groups_order = args$groups_order,
-      value_plot = args$value_plot,
-      group_fc_ident_1 = args$group_fc_ident_1,
-      group_fc_ident_2 = args$group_fc_ident_2,
-      group_fc = args$group_fc,
-      clip_value = args$clip_value,
-      max_fc = args$max_fc,
-      z_score = args$z_score,
-      path = args$path,
-      filename = args$filename,
-      layer = args$layer,
-      swap_axes = args$swap_axes,
-      cmap = args$cmap,
-      title = args$title,
-      title_fontprop = args$title_fontprop,
-      clustering_method = args$clustering_method,
-      clustering_metric = args$clustering_metric,
-      cluster_x_axis = args$cluster_x_axis,
-      cluster_y_axis = args$cluster_y_axis,
-      axs = args$axs,
-      figsize = args$figsize,
-      linewidth = args$linewidth,
-      ticks_fontdict = args$ticks_fontdict,
-      xticks_rotation = args$xticks_rotation,
-      yticks_rotation = args$yticks_rotation,
-      vmin = args$vmin,
-      vcenter = args$vcenter,
-      vmax = args$vmax,
-      legend_title = args$legend_title,
-      add_stats = args$add_stats,
-      df_pvals = args$df_pvals,
-      stats_x_size = args$stats_x_size,
-      square_x_size = args$square_x_size,
-      pval_cutoff = args$pval_cutoff,
-      square = args$square,
-      showP = args$showP,
-      logcounts = args$logcounts
-    )
-  }, args = args)
+        heatmap(
+            adata = AnnData_counts,
+            group_by = args$group_by,
+            features = args$features,
+            groups_order = args$groups_order,
+            value_plot = args$value_plot,
+            group_fc_ident_1 = args$group_fc_ident_1,
+            group_fc_ident_2 = args$group_fc_ident_2,
+            group_fc = args$group_fc,
+            clip_value = args$clip_value,
+            max_fc = args$max_fc,
+            z_score = args$z_score,
+            path = args$path,
+            filename = args$filename,
+            layer = args$layer,
+            swap_axes = args$swap_axes,
+            cmap = args$cmap,
+            title = args$title,
+            title_fontprop = args$title_fontprop,
+            clustering_method = args$clustering_method,
+            clustering_metric = args$clustering_metric,
+            cluster_x_axis = args$cluster_x_axis,
+            cluster_y_axis = args$cluster_y_axis,
+            axs = args$axs,
+            figsize = args$figsize,
+            linewidth = args$linewidth,
+            ticks_fontdict = args$ticks_fontdict,
+            xticks_rotation = args$xticks_rotation,
+            yticks_rotation = args$yticks_rotation,
+            vmin = args$vmin,
+            vcenter = args$vcenter,
+            vmax = args$vmax,
+            legend_title = args$legend_title,
+            add_stats = args$add_stats,
+            df_pvals = args$df_pvals,
+            stats_x_size = args$stats_x_size,
+            square_x_size = args$square_x_size,
+            pval_cutoff = args$pval_cutoff,
+            square = args$square,
+            showP = args$showP,
+            logcounts = args$logcounts
+        )
+    }, args = args)
 }

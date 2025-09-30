@@ -5,10 +5,10 @@ library(Seurat)
 library(ggplot2)
 
 # ------------------------------
-# Minimal SCE object for testing
+# SCE object for testing
 # ------------------------------
 counts <- matrix(
-  sample(1:5, 12, replace = TRUE), # 4 genes x 3 cells
+  sample(1:5, 12, replace = TRUE),
   nrow = 4
 )
 rownames(counts) <- paste0("Gene", 1:4)

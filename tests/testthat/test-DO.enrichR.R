@@ -27,7 +27,7 @@ test_that("DO.enrichR basic functionality with mocked enrichr", {
   # Mock enrichr during the test
   with_mock(
     `enrichR::enrichr` = dummy_enrichr,
-    `enrichR::setEnrichrSite` = function(site) NULL,  # noop
+    `enrichR::setEnrichrSite` = function(site) NULL,
     {
       result <- DO.enrichR(
         df_DGE = df_DGE,

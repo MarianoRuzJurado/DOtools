@@ -1,5 +1,5 @@
 library(testthat)
-library(mockery)  # for mocking functions
+library(mockery)
 
 test_that("DO.PyEnv sets default path when conda_path is NULL", {
   # Mock dir.exists to always return FALSE

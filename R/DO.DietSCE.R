@@ -13,40 +13,40 @@
 #'
 #' @examples
 #' sce_data <-
-#'   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#'     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' sce_data <- DO.DietSCE(sce_data, pattern = "data")
 #'
 #' @export
 DO.DietSCE <- function(sce_object,
-                       assay = "RNA",
-                       pattern = "^scale\\.data\\.") {
-  .logger(paste("pattern: ", pattern))
+    assay = "RNA",
+    pattern = "^scale\\.data\\.") {
+    .logger(paste("pattern: ", pattern))
 
-  # support for single cell experiment objects
-  if (is(sce_object, "SingleCellExperiment")) {
-    class_obj <- "SingleCellExperiment"
-    sce_object <- as.Seurat(sce_object)
-  } else {
-    class_obj <- "Seurat"
-  }
+    # support for single cell experiment objects
+    if (is(sce_object, "SingleCellExperiment")) {
+        class_obj <- "SingleCellExperiment"
+        sce_object <- as.Seurat(sce_object)
+    } else {
+        class_obj <- "Seurat"
+    }
 
-  layers_to_remove <- grep(pattern, Layers(sce_object), value = TRUE)
+    layers_to_remove <- grep(pattern, Layers(sce_object), value = TRUE)
 
-  if ("layers" %in% slotNames(sce_object@assays[[assay]])) {
-    sce_object@assays[[assay]]@layers[layers_to_remove] <- NULL
-    layerNames <- Layers(sce_object)
-    .logger(paste(layers_to_remove, "is removed."))
-  } else {
-    .logger(paste0(
-      "Object has no layers, pattern does not need to be removed from ",
-      "layers."
-    ))
-  }
+    if ("layers" %in% slotNames(sce_object@assays[[assay]])) {
+        sce_object@assays[[assay]]@layers[layers_to_remove] <- NULL
+        layerNames <- Layers(sce_object)
+        .logger(paste(layers_to_remove, "is removed."))
+    } else {
+        .logger(paste0(
+            "Object has no layers, pattern does not need to be removed from ",
+            "layers."
+        ))
+    }
 
-  if (class_obj == "SingleCellExperiment") {
-    sce_object <- as.SingleCellExperiment(sce_object)
-  }
+    if (class_obj == "SingleCellExperiment") {
+        sce_object <- as.SingleCellExperiment(sce_object)
+    }
 
-  return(sce_object)
+    return(sce_object)
 }

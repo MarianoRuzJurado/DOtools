@@ -107,7 +107,7 @@ can be imported as:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://marianoruzjurado.github.io/DOtools/">DOtools</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Additional packages</span></span>
+<span><span class="co"># Additional packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment" class="external-link">SummarizedExperiment</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MarioniLab/scran/" class="external-link">scran</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://bioconductor.org/packages/scater/" class="external-link">scater</a></span><span class="op">)</span></span>
@@ -138,17 +138,20 @@ generated with CellRanger.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/cellbender"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">raw_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">base</span>,</span>
-<span>                        pattern <span class="op">=</span> <span class="st">"raw_feature_bc_matrix\\.h5$"</span>,</span>
-<span>                        recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    pattern <span class="op">=</span> <span class="st">"raw_feature_bc_matrix\\.h5$"</span>,</span>
+<span>    recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/DO.CellBender.html">DO.CellBender</a></span><span class="op">(</span>cellranger_path <span class="op">=</span> <span class="va">base</span>,</span>
-<span>              output_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/cellbender"</span><span class="op">)</span>,</span>
-<span>              samplenames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disease"</span><span class="op">)</span>,</span>
-<span>              cuda <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>              BarcodeRanking <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>              cpu_threads <span class="op">=</span> <span class="fl">48</span>,</span>
-<span>              epochs <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/DO.CellBender.html">DO.CellBender</a></span><span class="op">(</span></span>
+<span>    cellranger_path <span class="op">=</span> <span class="va">base</span>,</span>
+<span>    output_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/cellbender"</span><span class="op">)</span>,</span>
+<span>    samplenames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disease"</span><span class="op">)</span>,</span>
+<span>    cuda <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    BarcodeRanking <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    cpu_threads <span class="op">=</span> <span class="fl">48</span>,</span>
+<span>    epochs <span class="op">=</span> <span class="fl">150</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>After running the analysis, several files are saved in the
 <code>output_folder</code>, including a summary report to check for any
 issues during CellBender execution, individual log files for each
@@ -187,40 +190,40 @@ tumor:</p>
 <code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu">DOtools</span><span class="fu">:::</span><span class="fu"><a href="../reference/dot-example_10x.html">.example_10x</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"healthy/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"disease/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"healthy/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"disease/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Import.html">DO.Import</a></span><span class="op">(</span></span>
-<span>  pathways <span class="op">=</span> <span class="va">paths</span>,</span>
-<span>  ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy-1"</span>, <span class="st">"disease-1"</span><span class="op">)</span>,</span>
-<span>  DeleteDoublets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cut_mt <span class="op">=</span> <span class="fl">.05</span>,</span>
-<span>  min_counts <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>  min_genes <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>  high_quantile <span class="op">=</span> <span class="fl">.95</span>,</span>
-<span>  Seurat <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># Set to TRUE for Seurat object</span></span>
+<span>    pathways <span class="op">=</span> <span class="va">paths</span>,</span>
+<span>    ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy-1"</span>, <span class="st">"disease-1"</span><span class="op">)</span>,</span>
+<span>    DeleteDoublets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    cut_mt <span class="op">=</span> <span class="fl">.05</span>,</span>
+<span>    min_counts <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    min_genes <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>    high_quantile <span class="op">=</span> <span class="fl">.95</span>,</span>
+<span>    Seurat <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># Set to TRUE for Seurat object</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>We can now check the quality before introducing filterings:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prefilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>  <span class="st">"figures"</span>, <span class="st">"prefilterplots-1.png"</span>,</span>
-<span>  package <span class="op">=</span> <span class="st">"DOtools"</span></span>
+<span>    <span class="st">"figures"</span>, <span class="st">"prefilterplots-1.png"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"DOtools"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pQC1</span> <span class="op">&lt;-</span> <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">prefilterplots</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pQC1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/prefilterplots-1.png" width="100%" style="display: block; margin: auto;"><br> And after:</p>
+<p><img src="DOtools_files/figure-html/preflt-1.png" width="100%" style="display: block; margin: auto;"><br> And after:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">postfilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>  <span class="st">"figures"</span>,</span>
-<span>  <span class="st">"postfilterplots-1.png"</span>,</span>
-<span>  package <span class="op">=</span> <span class="st">"DOtools"</span></span>
+<span>    <span class="st">"figures"</span>,</span>
+<span>    <span class="st">"postfilterplots-1.png"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"DOtools"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pQC2</span> <span class="op">&lt;-</span> <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">postfilterplots</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pQC2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/postfilterplots-1.png" width="100%" style="display: block; margin: auto;">
+<p><img src="DOtools_files/figure-html/postflt-1.png" width="100%" style="display: block; margin: auto;">
 We observed that most cells were removed due to increased mitochondrial
 content. Depending on the experimental design, the mitochondrial content
 threshold can be adjusted to retain a higher number of cells, if
@@ -230,14 +233,15 @@ Please feel free, to use the one created from DO.Import for prettier
 results or this slim downed version. We can observe how similar the
 samples are through running a correlation analysis.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Making sure we have a save folder</span></span>
+<code class="sourceCode R"><span><span class="co"># Making sure we have a save folder</span></span>
 <span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"my_tempdir_"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">base</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
-<span>              <span class="st">"sce_data.rds"</span>,</span>
-<span>              package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
+<span>        <span class="st">"sce_data.rds"</span>,</span>
+<span>        package <span class="op">=</span> <span class="st">"DOtools"</span></span>
+<span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.Correlation.html">DO.Correlation</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
@@ -255,33 +259,39 @@ new wrapper function for the scVI integration from the <a href="https://pypi.org
 After the integration completes, we run the Leiden algorithm to find
 clusters and generate UMAP embeddings.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Integration.html">DO.Integration</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
-<span>                          split_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
-<span>                          HVG <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                          scale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                          pca <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                          integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:11 - Splitting object for integration with CCAIntegration by orig.ident</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:11 - Calculating highly variable genes</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:12 - Scaling object</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:12 - Running pca, saved in key: PCA</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:14 - Running integration, saved in key: INTEGRATED.CCA</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:17 - Running Nearest-neighbor graph construction</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:18 - Running cluster detection</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:18 - Creating UMAP</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Integration.html">DO.Integration</a></span><span class="op">(</span></span>
+<span>    sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>    split_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
+<span>    HVG <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    scale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    pca <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:47 - Splitting object for integration with CCAIntegration by orig.ident</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:47 - Calculating highly variable genes</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:47 - Scaling object</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:48 - Running pca, saved in key: PCA</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:49 - Running integration, saved in key: INTEGRATED.CCA</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:52 - Running Nearest-neighbor graph construction</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:53 - Running cluster detection</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:08:54 - Creating UMAP</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#(Optional) Integration with scVI-Model</span></span>
-<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.scVI.html">DO.scVI</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
-<span>                   batch_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
-<span>                   layer_counts <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>                   layer_logcounts <span class="op">=</span> <span class="st">"logcounts"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># (Optional) Integration with scVI-Model</span></span>
+<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.scVI.html">DO.scVI</a></span><span class="op">(</span></span>
+<span>    sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>    batch_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
+<span>    layer_counts <span class="op">=</span> <span class="st">"counts"</span>,</span>
+<span>    layer_logcounts <span class="op">=</span> <span class="st">"logcounts"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="va">SNN_Graph</span> <span class="op">&lt;-</span> <span class="fu">scran</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scran/man/buildSNNGraph.html" class="external-link">buildSNNGraph</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                                  use.dimred <span class="op">=</span> <span class="st">"scVI"</span><span class="op">)</span></span>
+<span>    use.dimred <span class="op">=</span> <span class="st">"scVI"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">clust_SCVI</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">SNN_Graph</span>,</span>
-<span>                                      resolution <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
+<span>    resolution <span class="op">=</span> <span class="fl">0.3</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">leiden0.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/communities.html" class="external-link">membership</a></span><span class="op">(</span><span class="va">clust_SCVI</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu">scater</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scater/man/runUMAP.html" class="external-link">runUMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, dimred <span class="op">=</span> <span class="st">"scVI"</span>, name <span class="op">=</span> <span class="st">"UMAP"</span><span class="op">)</span></span></code></pre></div>
@@ -290,16 +300,17 @@ can be found saved in the SCE object and can be used for cluster
 calculations and UMAP projections. In this case, we will continue with
 the CCA Integration method.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>        group.by <span class="op">=</span> <span class="st">"leiden0.3"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>    group.by <span class="op">=</span> <span class="st">"leiden0.3"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-1.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>        group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>        legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
-<span>        label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>    group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>    label <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-2.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -311,12 +322,13 @@ will annotate the defined clusters based on the
 <code>Adult_COVID19_PBMC.pkl</code> model.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
-<span>                         runCelltypistUpdate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         over_clustering <span class="op">=</span> <span class="st">"leiden0.3"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:25 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:25 - Saving celltypist results to temporary folder: /tmp/RtmpVVgHBg/filee2f4d4226530</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:32:55 - Creating probality plot</span></span>
+<span>    modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
+<span>    runCelltypistUpdate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    over_clustering <span class="op">=</span> <span class="st">"leiden0.3"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:00 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:00 - Saving celltypist results to temporary folder: /tmp/RtmpSbFih0/filef8a1d7cb1792b</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:28 - Creating probality plot</span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <p>The semi-automatic annotation is a good estimate of the cell types in
@@ -327,36 +339,38 @@ scran’s <code>findMarkers</code> function. Marker genes can also be
 visualised using the <code>DO.UMAP</code> function.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">markers_list</span> <span class="op">&lt;-</span> <span class="fu">scran</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scran/man/findMarkers.html" class="external-link">findMarkers</a></span><span class="op">(</span></span>
-<span>  <span class="va">SCE_obj</span>,</span>
-<span>  test.type <span class="op">=</span> <span class="st">"t"</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu">SingleCellExperiment</span><span class="fu">::</span><span class="fu">colData</span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">$</span><span class="va">autoAnnot</span>,</span>
-<span>  direction <span class="op">=</span> <span class="st">"up"</span>,</span>
-<span>  lfc <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  pval.type <span class="op">=</span> <span class="st">"any"</span></span>
+<span>    <span class="va">SCE_obj</span>,</span>
+<span>    test.type <span class="op">=</span> <span class="st">"t"</span>,</span>
+<span>    groups <span class="op">=</span> <span class="fu">SingleCellExperiment</span><span class="fu">::</span><span class="fu">colData</span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">$</span><span class="va">autoAnnot</span>,</span>
+<span>    direction <span class="op">=</span> <span class="st">"up"</span>,</span>
+<span>    lfc <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>    pval.type <span class="op">=</span> <span class="st">"any"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># pick top 5 per cluster, naming adjustments</span></span>
 <span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">markers_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">markers_list</span><span class="op">[[</span><span class="va">cluster</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="va">df</span><span class="op">$</span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span>  <span class="va">df</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">cluster</span></span>
-<span>  <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
-<span>      avg_log2FC <span class="op">=</span> <span class="va">summary.logFC</span>,</span>
-<span>      p_val      <span class="op">=</span> <span class="va">p.value</span>,</span>
-<span>      p_val_adj  <span class="op">=</span> <span class="va">FDR</span></span>
-<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">cluster</span>, <span class="va">avg_log2FC</span>, <span class="va">p_val</span>, <span class="va">p_val_adj</span><span class="op">)</span></span>
+<span>    <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">markers_list</span><span class="op">[[</span><span class="va">cluster</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="va">df</span><span class="op">$</span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span>    <span class="va">df</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">cluster</span></span>
+<span>    <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>            avg_log2FC <span class="op">=</span> <span class="va">summary.logFC</span>,</span>
+<span>            p_val      <span class="op">=</span> <span class="va">p.value</span>,</span>
+<span>            p_val_adj  <span class="op">=</span> <span class="va">FDR</span></span>
+<span>        <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">cluster</span>, <span class="va">avg_log2FC</span>, <span class="va">p_val</span>, <span class="va">p_val_adj</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or with seurat if preferred</span></span>
 <span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/as.Seurat.html" class="external-link">as.Seurat</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
-<span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
-<span>                                     assay <span class="op">=</span> <span class="st">"RNA"</span>,</span>
-<span>                                     group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>,</span>
-<span>                                     min.pct <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>                                     logfc.threshold <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span>
+<span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span></span>
+<span>    object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<span>    assay <span class="op">=</span> <span class="st">"RNA"</span>,</span>
+<span>    group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>,</span>
+<span>    min.pct <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>    logfc.threshold <span class="op">=</span> <span class="fl">0.25</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculating cluster CD83_CD14_mono</span></span>
 <span><span class="co">#&gt; Calculating cluster CD4.Naive</span></span>
 <span><span class="co">#&gt; Calculating cluster CD8.Naive</span></span>
@@ -366,61 +380,72 @@ visualised using the <code>DO.UMAP</code> function.</p>
 <span><span class="co">#&gt; Calculating cluster pDC</span></span>
 <span></span>
 <span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="va">annotation_Markers</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">avg_log2FC</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">gene</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">avg_log2FC</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">gene</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
-<span>                 Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
-<span>                 group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
-<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>                 annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 textSize <span class="op">=</span> <span class="fl">14</span>,</span>
-<span>                 hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>                 vjust <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                 textRot <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                 segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
-<span>                 lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span></span>
+<span>    sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
+<span>    group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>    annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    textSize <span class="op">=</span> <span class="fl">14</span>,</span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    textRot <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>    lwd <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span>
 <span></span>
 <span><span class="co"># manual set of markers</span></span>
-<span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ImmuneCells"</span>,</span>
-<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"B_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Myeloid"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"pDC"</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                                  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PTPRC"</span>, <span class="st">"CD79A"</span>, <span class="st">"BANK1"</span>, <span class="st">"MS4A1"</span>,</span>
-<span>                                            <span class="st">"CD3E"</span>, <span class="st">"CD4"</span>, <span class="st">"IL7R"</span>, <span class="st">"NKG7"</span>,</span>
-<span>                                            <span class="st">"KLRD1"</span>, <span class="st">"CD68"</span>, <span class="st">"CD14"</span>, <span class="st">"ITGAM"</span>,</span>
-<span>                                            <span class="st">"LILRA4"</span>, <span class="st">"CLEC4C"</span>, <span class="st">"LRRC26"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"ImmuneCells"</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"B_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Myeloid"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"pDC"</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"PTPRC"</span>, <span class="st">"CD79A"</span>, <span class="st">"BANK1"</span>, <span class="st">"MS4A1"</span>,</span>
+<span>        <span class="st">"CD3E"</span>, <span class="st">"CD4"</span>, <span class="st">"IL7R"</span>, <span class="st">"NKG7"</span>,</span>
+<span>        <span class="st">"KLRD1"</span>, <span class="st">"CD68"</span>, <span class="st">"CD14"</span>, <span class="st">"ITGAM"</span>,</span>
+<span>        <span class="st">"LILRA4"</span>, <span class="st">"CLEC4C"</span>, <span class="st">"LRRC26"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
-<span>                 Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
-<span>                 group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
-<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>                 annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                 textSize <span class="op">=</span> <span class="fl">14</span>,</span>
-<span>                 hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>                 vjust <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                 textRot <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                 segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
-<span>                 lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span></span>
+<span>    sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
+<span>    group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>    annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    textSize <span class="op">=</span> <span class="fl">14</span>,</span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    textRot <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>    lwd <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span>
 <span></span>
 <span><span class="co"># Visualise marker expression in UMAP</span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>        FeaturePlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        features <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
-<span>        group.by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
-<span>        legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
+<span>    FeaturePlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    features <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>    group.by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"right"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: The `slot` argument of `FetchData()` is deprecated as of SeuratObject 5.0.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
@@ -433,14 +458,16 @@ visualised using the <code>DO.UMAP</code> function.</p>
 annotation therefore we can continue with it after some minor
 adjustments.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">leiden0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`1` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                         `2` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                         `3` <span class="op">=</span> <span class="st">"NK"</span>,</span>
-<span>                                                         `4` <span class="op">=</span> <span class="st">"B_cells"</span>,</span>
-<span>                                                         `5` <span class="op">=</span> <span class="st">"Monocytes"</span>,</span>
-<span>                                                         `6` <span class="op">=</span> <span class="st">"NK"</span>,</span>
-<span>                                                         `7` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                         `8` <span class="op">=</span> <span class="st">"pDC"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">leiden0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    `1` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>    `2` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>    `3` <span class="op">=</span> <span class="st">"NK"</span>,</span>
+<span>    `4` <span class="op">=</span> <span class="st">"B_cells"</span>,</span>
+<span>    `5` <span class="op">=</span> <span class="st">"Monocytes"</span>,</span>
+<span>    `6` <span class="op">=</span> <span class="st">"NK"</span>,</span>
+<span>    `7` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>    `8` <span class="op">=</span> <span class="st">"pDC"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/renaming-1.png" width="700"></p>
@@ -454,13 +481,14 @@ healthy and diseased condition using a wrapper function around the
 python tool <a href="https://pypi.org/project/scanpro/" class="external-link"><em>scanpro</em></a>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.CellComposition.html">DO.CellComposition</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                   assay_normalized <span class="op">=</span> <span class="st">"RNA"</span>,</span>
-<span>                   cluster_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                   sample_column <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
-<span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
-<span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:00 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span>    assay_normalized <span class="op">=</span> <span class="st">"RNA"</span>,</span>
+<span>    cluster_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    sample_column <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
+<span>    condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>    transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
+<span>    n_reps <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:32 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
@@ -485,35 +513,43 @@ markers defining them.</p>
 <p><img src="DOtools_files/figure-html/Recluster-1.png" width="700"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                     ident <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
-<span>                     ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>,</span>
-<span>                                       <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>,</span>
-<span>                                       value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:16 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span>    ident <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
+<span>    ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>,</span>
+<span>        value <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:49 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">T_cells</span>,</span>
-<span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
-<span>                         runCelltypistUpdate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                         over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
-<span>                         SeuV5 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:16 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:16 - Saving celltypist results to temporary folder: /tmp/RtmpVVgHBg/filee2f4d2e1fe2ae</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:29 - Creating probality plot</span></span>
+<span>    modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
+<span>    runCelltypistUpdate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
+<span>    SeuV5 <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:49 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:09:49 - Saving celltypist results to temporary folder: /tmp/RtmpSbFih0/filef8a1d3757bbfb</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:01 - Creating probality plot</span></span>
 <span></span>
-<span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation_recluster</span>,</span>
-<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`T_cells_1` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                      `T_cells_2` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                      `T_cells_3` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                      `T_cells_4` <span class="op">=</span> <span class="st">"CD8_T_cells"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span></span>
+<span>    <span class="va">T_cells</span><span class="op">$</span><span class="va">annotation_recluster</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        `T_cells_1` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>        `T_cells_2` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>        `T_cells_3` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>        `T_cells_4` <span class="op">=</span> <span class="st">"CD8_T_cells"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Now that we identified the marker genes describing the different T
 cell populations. We can re-annotate them based on their expression
 profile and a new prediciton from Celltypist. After this we, can easily
 transfer the labels in the subset to the original object.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.TransferLabel.html">DO.TransferLabel</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                            Subset_obj <span class="op">=</span> <span class="va">T_cells</span>,</span>
-<span>                            annotation_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                            subset_annotation <span class="op">=</span> <span class="st">"annotation"</span><span class="op">)</span></span>
+<span>    Subset_obj <span class="op">=</span> <span class="va">T_cells</span>,</span>
+<span>    annotation_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    subset_annotation <span class="op">=</span> <span class="st">"annotation"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/re-annotate-1.png" width="700"></p>
@@ -533,37 +569,42 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="co"># we introduce replicates for showing the pseudo bulk approach</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">orig.ident2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span><span class="op">)</span>,</span>
-<span>                                  length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">CD4T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                        ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                        ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">CD4T_cells</span>,</span>
-<span>                          sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
-<span>                          method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span>
-<span>                          ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
+<span>    sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
+<span>    method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span>
+<span>    ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Names of identity class contain underscores ('_'), replacing with dashes ('-')</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once every 8 hours.</span></span></span>
 <span><span class="co">#&gt; Centering and scaling data matrix</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Starting DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Comparing disease with healthy in: CD4_T_cells</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Finished DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Starting DGE pseudo bulk method analysis</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:30 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Starting DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Finished DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Starting DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:03 - Comparing disease with healthy in: CD4_T_cells</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:33:32 - Finished DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:05 - Finished DGE pseudo bulk method analysis</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>,</span>
-<span>                                      <span class="st">"hover"</span>,</span>
-<span>                                      <span class="st">"condensed"</span>,</span>
-<span>                                      <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"striped"</span>,</span>
+<span>        <span class="st">"hover"</span>,</span>
+<span>        <span class="st">"condensed"</span>,</span>
+<span>        <span class="st">"responsive"</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%; margin-left: auto; margin-right: auto;" class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:left;">
@@ -958,16 +999,18 @@ disease
 set enrichment. It separates the DE genes into up- and down-regulated
 sets and runs the analysis for each group independently.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span>df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span>
-<span>                        gene_column <span class="op">=</span> <span class="st">"gene"</span>,</span>
-<span>                        pval_column <span class="op">=</span> <span class="st">"p_val_adj_SC_wilcox"</span>,</span>
-<span>                        log2fc_column <span class="op">=</span> <span class="st">"avg_log2FC_SC_wilcox"</span>,</span>
-<span>                        pval_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>                        log2fc_cutoff <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>                        path <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                        filename <span class="op">=</span> <span class="st">""</span>,</span>
-<span>                        species <span class="op">=</span> <span class="st">"Human"</span>,</span>
-<span>                        go_catgs <span class="op">=</span> <span class="st">"GO_Biological_Process_2023"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span></span>
+<span>    df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span>
+<span>    gene_column <span class="op">=</span> <span class="st">"gene"</span>,</span>
+<span>    pval_column <span class="op">=</span> <span class="st">"p_val_adj_SC_wilcox"</span>,</span>
+<span>    log2fc_column <span class="op">=</span> <span class="st">"avg_log2FC_SC_wilcox"</span>,</span>
+<span>    pval_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>    log2fc_cutoff <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>    path <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    filename <span class="op">=</span> <span class="st">""</span>,</span>
+<span>    species <span class="op">=</span> <span class="st">"Human"</span>,</span>
+<span>    go_catgs <span class="op">=</span> <span class="st">"GO_Biological_Process_2023"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Connection changed to https://maayanlab.cloud/Enrichr/</span></span>
 <span><span class="co">#&gt; Connection is Live!</span></span>
 <span><span class="co">#&gt; Uploading data to Enrichr... Done.</span></span>
@@ -978,11 +1021,13 @@ sets and runs the analysis for each group independently.</p>
 <span><span class="co">#&gt; Parsing results... Done.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result_GO</span>, <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>,</span>
-<span>                                      <span class="st">"hover"</span>,</span>
-<span>                                      <span class="st">"condensed"</span>,</span>
-<span>                                      <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"striped"</span>,</span>
+<span>        <span class="st">"hover"</span>,</span>
+<span>        <span class="st">"condensed"</span>,</span>
+<span>        <span class="st">"responsive"</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%; margin-left: auto; margin-right: auto;" class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:left;">
@@ -1202,20 +1247,27 @@ enriched
 <code class="sourceCode R"><span><span class="va">result_GO_sig</span> <span class="op">&lt;-</span> <span class="va">result_GO</span><span class="op">[</span><span class="va">result_GO</span><span class="op">$</span><span class="va">Adjusted.P.value</span> <span class="op">&lt;</span> <span class="fl">0.05</span>, <span class="op">]</span></span>
 <span><span class="va">result_GO_sig</span><span class="op">$</span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="st">"CD4T_cells"</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/DO.SplitBarGSEA.html">DO.SplitBarGSEA</a></span><span class="op">(</span>df_GSEA <span class="op">=</span> <span class="va">result_GO_sig</span>,</span>
-<span>                term_col <span class="op">=</span> <span class="st">"Term"</span>,</span>
-<span>                col_split <span class="op">=</span> <span class="st">"Combined.Score"</span>,</span>
-<span>                cond_col <span class="op">=</span> <span class="st">"State"</span>,</span>
-<span>                pos_cond <span class="op">=</span> <span class="st">"enriched"</span>,</span>
-<span>                showP <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">GSEA_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">base</span>,</span>
-<span>                        pattern <span class="op">=</span> <span class="st">"SplitBar.*\\.svg$"</span>,</span>
-<span>                        full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/DO.SplitBarGSEA.html">DO.SplitBarGSEA</a></span><span class="op">(</span></span>
+<span>    df_GSEA <span class="op">=</span> <span class="va">result_GO_sig</span>,</span>
+<span>    term_col <span class="op">=</span> <span class="st">"Term"</span>,</span>
+<span>    col_split <span class="op">=</span> <span class="st">"Combined.Score"</span>,</span>
+<span>    cond_col <span class="op">=</span> <span class="st">"State"</span>,</span>
+<span>    pos_cond <span class="op">=</span> <span class="st">"enriched"</span>,</span>
+<span>    showP <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">GSEA_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
+<span>    path <span class="op">=</span> <span class="va">base</span>,</span>
+<span>    pattern <span class="op">=</span> <span class="st">"SplitBar.*\\.svg$"</span>,</span>
+<span>    full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    recursive <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read_svg</a></span><span class="op">(</span><span class="va">GSEA_plot</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/GO%20visualisation-1.png" width="960"></p>
-<p>##Candidate gene visualisation</p>
+</div>
+<div class="section level3">
+<h3 id="candidate-gene-visualisation">Candidate gene visualisation<a class="anchor" aria-label="anchor" href="#candidate-gene-visualisation"></a>
+</h3>
 <p>After performing DGE and GO analyses, discovering whether specific
 genes are regulated in a particular disease state and/or cell type is a
 common step. To address this, we implemented advanced methods in our
@@ -1226,11 +1278,13 @@ variables at the same time along with statistical testing. For example,
 we can visualise the expression of a gene across cell types and
 conditions:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
-<span>           group.by.x <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>           group.by.y <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>           Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
-<span>           stats_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span></span>
+<span>    sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>    group.by.x <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>    group.by.y <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>    stats_y <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculating cluster B_cells</span></span>
 <span><span class="co">#&gt; Calculating cluster CD4_T_cells</span></span>
 <span><span class="co">#&gt; Calculating cluster Monocytes</span></span>
@@ -1253,12 +1307,13 @@ genes in a publish ready way, including statistical testing:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">path_file</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.Heatmap.html">DO.Heatmap</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>           group_by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
-<span>           features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
-<span>           xticks_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
-<span>           path <span class="op">=</span> <span class="va">path_file</span>,</span>
-<span>           stats_x_size <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>           showP <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    group_by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>    features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
+<span>    xticks_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>    path <span class="op">=</span> <span class="va">path_file</span>,</span>
+<span>    stats_x_size <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    showP <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Calculating cluster 1</span></span>
 <span><span class="co">#&gt; Calculating cluster 2</span></span>
 <span><span class="co">#&gt; Calculating cluster 3</span></span>
@@ -1268,10 +1323,12 @@ genes in a publish ready way, including statistical testing:</p>
 <span><span class="co">#&gt; Calculating cluster 7</span></span>
 <span><span class="co">#&gt; Calculating cluster 8</span></span>
 <span></span>
-<span><span class="va">Heatmap_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">path_file</span>,</span>
-<span>                           pattern <span class="op">=</span> <span class="st">"Heatmap*\\.svg$"</span>,</span>
-<span>                           full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                           recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">Heatmap_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
+<span>    path <span class="op">=</span> <span class="va">path_file</span>,</span>
+<span>    pattern <span class="op">=</span> <span class="st">"Heatmap*\\.svg$"</span>,</span>
+<span>    full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    recursive <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read_svg</a></span><span class="op">(</span><span class="va">Heatmap_plot</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Heat%20map-1.png" width="100%" style="display: block; margin: auto;"></p>
@@ -1281,44 +1338,51 @@ conditions with violinplots, barplots and boxplots. Additionally, we can
 test for significance.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SCE_obj_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                            ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                            ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:34:01 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:35 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">SCE_obj_sub</span>,</span>
-<span>                Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
-<span>                group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">SCE_obj_sub</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>    group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>    group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:34:01 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-09-30 14:10:36 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SCE_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>                           ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
-<span>                           ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:34:02 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>    ident_name <span class="op">=</span> <span class="st">"NK"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:36 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">SCE_obj_NK</span>,</span>
-<span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
-<span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
-<span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>    ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>    x_label_rotation <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:34:02 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-09-30 14:10:37 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">rdm_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
-<span>                                    length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/DO.BoxPlot.html">DO.BoxPlot</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
-<span>           group.by <span class="op">=</span> <span class="st">"rdm_sample"</span>,</span>
-<span>           ctrl.condition <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span>           Feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>,</span>
-<span>           step_mod <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>           stat_pos_mod <span class="op">=</span> <span class="fl">1.05</span>,</span>
-<span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    group.by <span class="op">=</span> <span class="st">"rdm_sample"</span>,</span>
+<span>    ctrl.condition <span class="op">=</span> <span class="st">"A"</span>,</span>
+<span>    Feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>,</span>
+<span>    step_mod <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    stat_pos_mod <span class="op">=</span> <span class="fl">1.05</span>,</span>
+<span>    plot_sample <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; 2025-09-30 11:34:03 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-09-30 14:10:37 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Box-1.png" width="480"></p>
@@ -1560,7 +1624,7 @@ test for significance.</p>
 <span><span class="co">#&gt;  zip                    2.3.3    <span style="color: #555555;">2025-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  zoo                    1.8-14   <span style="color: #555555;">2025-04-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpTMOBoP/temp_libpath5094546de7a84</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpTMOBoP/temp_libpath5094566884da8</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [2] /home/mariano/R/x86_64-pc-linux-gnu-library/4.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [3] /usr/local/lib/R/site-library</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [4] /usr/lib/R/site-library</span></span></span>

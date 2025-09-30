@@ -38,7 +38,6 @@ create_test_seurat <- function() {
   counts["SGENE30",] <- rpois(n_cells, 5)  # Low expression gene
   counts["SGENE40",] <- 0  # Zero expression gene
 
-  # Suppress the matrix conversion warning
   suppressWarnings({
     seu <- CreateSeuratObject(counts = counts, assay = "RNA")
   })
@@ -55,7 +54,7 @@ PercentAbove <- function(x, threshold = 0) {
   return(length(x = x[x > threshold]) / length(x = x))
 }
 
-# ---- Tests for uncovered branches ----
+# ---- Tests for branches ----
 
 test_that("SingleCellExperiment conversion works", {
   seu <- create_test_seurat()
@@ -78,7 +77,7 @@ test_that("error handling for invalid Feature types", {
 test_that("cluster name detection in data frame works with various column names", {
   seu <- create_test_seurat()
 
-  # Test different cluster column names - only test the ones that work
+  # Test different cluster column names
   features_df_cluster <- data.frame(
     gene = c("SGENE10", "SGENE20"),
     cluster = c("C1", "C2"),
@@ -87,8 +86,7 @@ test_that("cluster name detection in data frame works with various column names"
   p1 <- safe_dotplot(seu, Feature = features_df_cluster, group.by.x = "condition")
   expect_s3_class(p1, "ggplot")
 
-  # Skip tests for column names that cause errors in the current function
-  # The function has a bug with non-"cluster" column names
+
 })
 
 test_that("gene name detection in data frame works with various column names", {
@@ -245,7 +243,7 @@ test_that("annotation_x with coord_flip scenario", {
     stringsAsFactors = FALSE
   )
 
-  # Test without expecting warning (the function might not always warn)
+  # Test without expecting warning
   p <- safe_dotplot(seu, Feature = features_df, group.by.x = "condition",
                     annotation_x = TRUE, coord_flip = TRUE)
   expect_s3_class(p, "ggplot")
@@ -337,7 +335,7 @@ test_that("pseudobulk level ordering", {
 })
 
 test_that("edge cases with proper data preparation", {
-  # Test with very small dataset but properly prepared
+  # Test with very small dataset
   set.seed(123)
   tiny_counts <- matrix(rpois(5 * 10, lambda = 1), nrow = 5, ncol = 10,
                         dimnames = list(paste0("G", 1:5), paste0("C", 1:10)))
