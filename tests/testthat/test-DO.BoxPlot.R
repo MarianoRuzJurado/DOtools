@@ -184,7 +184,6 @@ test_that("DO.BoxPlot handles SingleCellExperiment objects", {
 
   # Create a proper SingleCellExperiment object that will convert correctly
   # The function uses as.Seurat() which expects certain structure
-  # Let's create via Seurat first, then convert to SCE to ensure compatibility
   seurat_obj <- CreateSeuratObject(counts = mat)
   seurat_obj <- NormalizeData(seurat_obj, verbose = FALSE)
   seurat_obj$condition <- rep(c("CTRL", "TREAT"), each = 15)
@@ -376,7 +375,7 @@ test_that("DO.BoxPlot handles partial zero expression gracefully", {
     sample.column = "orig.ident",
     group.by = "condition",
     ctrl.condition = "CTRL",
-    wilcox_test = FALSE  # Disable statistical test to avoid potential issues
+    wilcox_test = FALSE
   )
 
   expect_s3_class(p, "ggplot")

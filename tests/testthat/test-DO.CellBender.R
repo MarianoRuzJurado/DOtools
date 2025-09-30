@@ -144,7 +144,6 @@ test_that("DO.CellBender without BarcodeRanking builds a simpler command and res
     args_chr <- as.character(rc$args)
     expect_false(any(grepl("--expected-cells", args_chr)))
     expect_false(any(grepl("--total-droplets", args_chr)))
-    # since cuda = TRUE, we should still see the flag
     expect_true(any(grepl("--cuda", args_chr)))
   }
 })

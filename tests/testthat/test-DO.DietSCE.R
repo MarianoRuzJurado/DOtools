@@ -4,7 +4,7 @@ library(SingleCellExperiment)
 library(Seurat)
 
 # ------------------------------
-# Minimal Seurat object for testing
+# Seurat object for testing
 # ------------------------------
 counts <- matrix(
   sample(1:5, 12, replace = TRUE),
@@ -36,7 +36,7 @@ seurat_obj <- CreateSeuratObject(counts = counts)
 # ------------------------------
 test_that("DO.DietSCE returns Seurat object unchanged when no layers exist", {
   obj <- DO.DietSCE(seurat_obj, assay = "RNA", pattern = "^scale\\.data\\.")
-  expect_s4_class(obj, "Seurat")  # Seurat v5+ is S4 class
+  expect_s4_class(obj, "Seurat")
 })
 
 test_that("DO.DietSCE works with SCE input and no matching layers", {

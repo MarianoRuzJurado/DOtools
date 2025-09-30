@@ -1,4 +1,3 @@
-# tests/testthat/test-DO.Heatmap-expanded.R
 library(testthat)
 library(mockery)
 library(DOtools)
@@ -171,17 +170,6 @@ test_that("DO.Heatmap validates inputs thoroughly", {
   sce <- make_sce()
   stub(DO.Heatmap, "basilisk::basiliskRun", fake_basilisk)
 
-  # Test missing group_by column - use expect_error with regex that matches actual error
-  # expect_error(
-  #   DO.Heatmap(
-  #     sce_object = sce,
-  #     features = rownames(sce)[1:2],
-  #     group_by = "not_a_column",
-  #     add_stats = FALSE  # Disable stats to avoid FindAllMarkers error
-  #   ),
-  #   "not found"
-  # )
-
   # Test missing logcounts assay
   sce_no_logcounts <- sce
   assays(sce_no_logcounts) <- assays(sce_no_logcounts)[names(assays(sce_no_logcounts)) != "logcounts"]
@@ -264,7 +252,6 @@ test_that("DO.Heatmap statistical test parameters work", {
     )
 
     expect_true(res$fake_heatmap)
-    # Note: test parameter might not be passed to Python args, so don't check it
   }
 
   # Test only_pos parameter
@@ -311,7 +298,7 @@ test_that("DO.Heatmap validates parameters correctly", {
   sce <- make_sce()
   stub(DO.Heatmap, "basilisk::basiliskRun", fake_basilisk)
 
-  # Test various parameter combinations that should work
+  # Test various parameter combinations
   expect_silent(
     DO.Heatmap(
       sce_object = sce,
@@ -554,7 +541,7 @@ test_that("DO.Heatmap handles warnings gracefully", {
   sce <- make_sce()
   stub(DO.Heatmap, "basilisk::basiliskRun", fake_basilisk)
 
-  # This should not produce warnings with our setup
+  # This should not produce warnings
   expect_silent(
     DO.Heatmap(
       sce_object = sce,

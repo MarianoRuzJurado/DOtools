@@ -59,7 +59,7 @@ mock_basilisk_run <- function(env, fun, args) {
 }
 
 # ------------------------------
-# Enhanced Tests with Real Data (FIXED)
+# Enhanced Tests with Real Data
 # ------------------------------
 
 test_that("DO.scVI works with real SCE data", {
@@ -226,7 +226,7 @@ test_that("DO.scVI converts real Seurat data correctly", {
   expect_true("scVI" %in% names(result@reductions))
 })
 
-# FIXED: Test custom layer parameters properly
+# Test custom layer parameters properly
 test_that("DO.scVI handles custom layer parameters", {
   skip_if_not(exists("SCE_obj"), "Real SCE data not available")
 
@@ -293,7 +293,7 @@ test_that("DO.scVI handles real data edge cases", {
   expect_s4_class(result, "SingleCellExperiment")
 })
 
-# FIXED: Test error conditions with real data - CORRECT APPROACH
+# Test error conditions with real data
 test_that("DO.scVI handles real data with missing counts", {
   skip_if_not(exists("SCE_obj"), "Real SCE data not available")
 
@@ -329,7 +329,7 @@ test_that("DO.scVI handles real data with missing counts", {
     basiliskRun = mock_basilisk_run,
     code = {
       mockery::stub(DO.scVI, "as.Seurat", mock_as_seurat)
-      # This should trigger the "counts not found" error in your function
+      # This should trigger the "counts not found" error in function
       expect_error(DO.scVI(sce_no_counts, batch_key = "batch"),
                    "counts not found in assays of object!")
     },
@@ -406,7 +406,7 @@ test_that("DO.scVI handles real data with specific HVG", {
   expect_equal(captured_n_genes, n_genes)
 })
 
-# Test the actual logger function in your code
+# Test the actual logger function in code
 test_that("DO.scVI logger works with real data", {
   skip_if_not(exists("SCE_obj"), "Real SCE data not available")
 
@@ -459,7 +459,7 @@ test_that("DO.scVI uses correct environment", {
 })
 
 # ------------------------------
-# Existing Tests (Keep these for baseline coverage)
+# Existing Tests
 # ------------------------------
 
 test_that("DO.scVI runs on Seurat object and adds reduction", {

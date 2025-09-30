@@ -178,7 +178,6 @@ test_that("DO.MultiDGE handles different group_by columns", {
   }
 })
 
-# NEW TESTS THAT AVOID THE PROBLEMATIC PATHS BUT STILL INCREASE COVERAGE
 
 test_that("DO.MultiDGE handles the internal .suppressDeprecationWarnings", {
   sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
@@ -328,7 +327,7 @@ test_that("DO.MultiDGE handles the comparison loop structure", {
     ident_ctrl = "healthy"
   )
 
-  # Should handle the comparison loops without error
+  # handle the comparison loops without error
   expect_s3_class(result, "data.frame")
 })
 
@@ -362,7 +361,7 @@ test_that("DO.MultiDGE handles the result collection and merging", {
   # Test the final merged result structure
   expect_s3_class(result, "data.frame")
   if (nrow(result) > 0) {
-    # Should have the key columns for the merge
+    # key columns for the merge
     expect_true(all(c("gene", "celltype", "condition") %in% colnames(result)))
   }
 })
@@ -379,7 +378,7 @@ test_that("DO.MultiDGE DESeq2 pseudo-bulk analysis completes", {
     ident_ctrl = "healthy"
   )
 
-  # The function should complete the DESeq2 pseudo-bulk pathway
+  # should complete the DESeq2 pseudo-bulk pathway
   expect_s3_class(result, "data.frame")
 })
 

@@ -1,7 +1,6 @@
 library(testthat)
 library(mockery)
 library(ggplot2)
-library(curl)
 
 test_that(".logger prints a timestamped message", {
   msg <- "Hello world"

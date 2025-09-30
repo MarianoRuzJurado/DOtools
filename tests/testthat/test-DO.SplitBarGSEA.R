@@ -307,7 +307,7 @@ test_that("DO.SplitBarGSEA handles empty dataframe after filtering", {
     stringsAsFactors = FALSE
   )
 
-  # Test with celltype that doesn't exist - should handle gracefully
+  # Test with celltype that doesn't exist
   expect_error(
     suppressMessages({
       DO.SplitBarGSEA(
@@ -370,7 +370,7 @@ test_that("DO.SplitBarGSEA handles minimal parameters with safe data", {
         col_split = "Combined.Score",
         cond_col = "State",
         pos_cond = "enriched"
-        # Using default topN=10 but we have enough data
+        # Using default topN=10
       )
     }),
     NA
@@ -415,7 +415,7 @@ test_that("DO.SplitBarGSEA handles multiple celltypes with 'all'", {
     stringsAsFactors = FALSE
   )
 
-  # Test with celltype = "all" (the only safe way to use multiple celltypes)
+  # Test with celltype = "all"
   expect_error(
     suppressMessages({
       DO.SplitBarGSEA(
@@ -430,11 +430,6 @@ test_that("DO.SplitBarGSEA handles multiple celltypes with 'all'", {
     }),
     NA
   )
-})
-
-# Skip the example test since it requires specific data that may not be available
-test_that("DO.SplitBarGSEA example test is skipped", {
-  skip("Example test requires specific data not available in test environment")
 })
 
 # Test for the specific bug with vector celltype parameter

@@ -37,157 +37,157 @@
 #'
 #' @examples
 #' sce_data <-
-#'   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#'     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.Correlation(
-#'   sce_object = sce_data,
-#'   group_by = "orig.ident",
-#'   assay = "RNA",
-#'   features = NULL,
-#'   method = "spearman",
-#'   plotdesign = "square",
-#'   plottype = "full",
-#'   auto_limits = TRUE,
-#'   outline.color = "white",
-#'   colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
-#'   lab_size = 10,
-#'   lab = TRUE,
-#'   lab_col = "white"
+#'     sce_object = sce_data,
+#'     group_by = "orig.ident",
+#'     assay = "RNA",
+#'     features = NULL,
+#'     method = "spearman",
+#'     plotdesign = "square",
+#'     plottype = "full",
+#'     auto_limits = TRUE,
+#'     outline.color = "white",
+#'     colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
+#'     lab_size = 10,
+#'     lab = TRUE,
+#'     lab_col = "white"
 #' )
 #'
 #' @export
 DO.Correlation <- function(sce_object,
-                           group_by = "orig.ident",
-                           assay = "RNA",
-                           features = NULL,
-                           method = "spearman",
-                           plotdesign = "square",
-                           plottype = "full",
-                           auto_limits = TRUE,
-                           outline.color = "white",
-                           colormap = c(
-                             "royalblue4",
-                             "lightsteelblue",
-                             "tomato",
-                             "firebrick4"
-                           ),
-                           lab_size = 10,
-                           lab = TRUE,
-                           lab_col = "white",
-                           axis_size_x = 12,
-                           axis_size_y = 12,
-                           ...) {
-  # support for single cell experiment objects
-  if (is(sce_object, "SingleCellExperiment")) {
-    sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
-  }
+    group_by = "orig.ident",
+    assay = "RNA",
+    features = NULL,
+    method = "spearman",
+    plotdesign = "square",
+    plottype = "full",
+    auto_limits = TRUE,
+    outline.color = "white",
+    colormap = c(
+        "royalblue4",
+        "lightsteelblue",
+        "tomato",
+        "firebrick4"
+    ),
+    lab_size = 10,
+    lab = TRUE,
+    lab_col = "white",
+    axis_size_x = 12,
+    axis_size_y = 12,
+    ...) {
+    # support for single cell experiment objects
+    if (is(sce_object, "SingleCellExperiment")) {
+        sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
+    }
 
-  # Aggregate Expression, creating Pseudobulk
-  corr_frame <- AggregateExpression(sce_object,
-    assays = assay,
-    features = features,
-    group.by = group_by
-  )[[assay]]
+    # Aggregate Expression, creating Pseudobulk
+    corr_frame <- AggregateExpression(sce_object,
+        assays = assay,
+        features = features,
+        group.by = group_by
+    )[[assay]]
 
-  corr_frame <- as.data.frame(corr_frame)
+    corr_frame <- as.data.frame(corr_frame)
 
-  # Calculate correlation
-  corr_df <- cor(corr_frame, method = method)
+    # Calculate correlation
+    corr_df <- cor(corr_frame, method = method)
 
 
-  # Auto color limits based on matrix
-  if (auto_limits == TRUE) {
-    min_val <- min(corr_df, na.rm = TRUE) * 0.99
-    max_val <- max(corr_df, na.rm = TRUE) * 1.01
-  } else {
-    min_val <- -1
-    max_val <- 1
-  }
+    # Auto color limits based on matrix
+    if (auto_limits == TRUE) {
+        min_val <- min(corr_df, na.rm = TRUE) * 0.99
+        max_val <- max(corr_df, na.rm = TRUE) * 1.01
+    } else {
+        min_val <- -1
+        max_val <- 1
+    }
 
-  pmain <- ggcorrplot(
-    corr_df,
-    method = plotdesign,
-    type = plottype,
-    colors = colormap,
-    outline.color = outline.color,
-    lab_col = lab_col,
-    lab_size = lab_size,
-    lab = lab,
-    ...
-  ) +
-    scale_fill_gradientn(
-      colors = colormap,
-      limits = c(min_val, max_val),
-      name = paste0(tools::toTitleCase(method), "Correlation")
+    pmain <- ggcorrplot(
+        corr_df,
+        method = plotdesign,
+        type = plottype,
+        colors = colormap,
+        outline.color = outline.color,
+        lab_col = lab_col,
+        lab_size = lab_size,
+        lab = lab,
+        ...
     ) +
-    ggplot2::theme(
-      axis.text = ggplot2::element_text(color = "black"),
-      legend.direction = "horizontal",
-      axis.text.x = element_text(
-        color = "black",
-        angle = 0,
-        hjust = 0.5,
-        size = axis_size_x,
-        family = "Helvetica"
-      ),
-      axis.text.y = element_text(
-        color = "black",
-        angle = 90, ,
-        hjust = 0.5,
-        size = axis_size_y,
-        family = "Helvetica"
-      ),
-      axis.title = element_text(
-        size = 14,
-        color = "black",
-        family = "Helvetica"
-      ),
-      plot.title = element_text(
-        size = 14,
-        hjust = 0.5,
-        face = "bold",
-        family = "Helvetica"
-      ),
-      plot.subtitle = element_text(
-        size = 14,
-        hjust = 0,
-        family = "Helvetica"
-      ),
-      strip.text.x = element_text(
-        size = 14,
-        color = "black",
-        family = "Helvetica",
-        face = "bold"
-      ),
-      legend.text = element_text(
-        size = 10,
-        color = "black",
-        family = "Helvetica"
-      ),
-      legend.title = element_text(
-        size = 10,
-        color = "black",
-        family = "Helvetica",
-        hjust = 0
-      ),
-      legend.position = "bottom"
-    )
+        scale_fill_gradientn(
+            colors = colormap,
+            limits = c(min_val, max_val),
+            name = paste0(tools::toTitleCase(method), "Correlation")
+        ) +
+        ggplot2::theme(
+            axis.text = ggplot2::element_text(color = "black"),
+            legend.direction = "horizontal",
+            axis.text.x = element_text(
+                color = "black",
+                angle = 0,
+                hjust = 0.5,
+                size = axis_size_x,
+                family = "Helvetica"
+            ),
+            axis.text.y = element_text(
+                color = "black",
+                angle = 90, ,
+                hjust = 0.5,
+                size = axis_size_y,
+                family = "Helvetica"
+            ),
+            axis.title = element_text(
+                size = 14,
+                color = "black",
+                family = "Helvetica"
+            ),
+            plot.title = element_text(
+                size = 14,
+                hjust = 0.5,
+                face = "bold",
+                family = "Helvetica"
+            ),
+            plot.subtitle = element_text(
+                size = 14,
+                hjust = 0,
+                family = "Helvetica"
+            ),
+            strip.text.x = element_text(
+                size = 14,
+                color = "black",
+                family = "Helvetica",
+                face = "bold"
+            ),
+            legend.text = element_text(
+                size = 10,
+                color = "black",
+                family = "Helvetica"
+            ),
+            legend.title = element_text(
+                size = 10,
+                color = "black",
+                family = "Helvetica",
+                hjust = 0
+            ),
+            legend.position = "bottom"
+        )
 
-  guides.layer <- ggplot2::guides(
-    fill = ggplot2::guide_colorbar(
-      title = paste0(tools::toTitleCase(method), " \nCorrelation"),
-      title.position = "top",
-      title.hjust = 0.5,
-      barwidth = unit(3.8, "cm"),
-      # changes the width of the color legend
-      barheight = unit(0.5, "cm"),
-      frame.colour = "black",
-      frame.linewidth = 0.3,
-      ticks.colour = "black",
-      order = 1
+    guides.layer <- ggplot2::guides(
+        fill = ggplot2::guide_colorbar(
+            title = paste0(tools::toTitleCase(method), " \nCorrelation"),
+            title.position = "top",
+            title.hjust = 0.5,
+            barwidth = unit(3.8, "cm"),
+            # changes the width of the color legend
+            barheight = unit(0.5, "cm"),
+            frame.colour = "black",
+            frame.linewidth = 0.3,
+            ticks.colour = "black",
+            order = 1
+        )
     )
-  )
-  pmain <- pmain + guides.layer
+    pmain <- pmain + guides.layer
 
-  return(pmain)
+    return(pmain)
 }

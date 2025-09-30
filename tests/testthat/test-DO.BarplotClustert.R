@@ -350,7 +350,6 @@ test_that("DO.BarplotClustert handles zero-mean conditions", {
   seurat_obj <- CreateSeuratObject(counts = mat_sparse, meta.data = meta)
   seurat_obj <- NormalizeData(seurat_obj)
 
-  # This should work and remove zero-mean comparisons with a warning
   expect_warning(
     p <- DO.BarplotClustert(
       sce_object = seurat_obj,

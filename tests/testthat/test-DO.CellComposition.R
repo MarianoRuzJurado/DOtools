@@ -4,12 +4,11 @@ library(dplyr)
 library(Seurat)
 library(SingleCellExperiment)
 
-# Use the actual SCE object from your package
 SCE_obj <- readRDS(
   system.file("extdata", "sce_data.rds", package = "DOtools")
 )
 
-# Create a minimal mock SCE object for testing when we don't want to use the real one
+# Create a minimal mock SCE object for testing
 create_minimal_mock_sce <- function() {
   set.seed(123)
   n_cells <- 30
@@ -21,7 +20,6 @@ create_minimal_mock_sce <- function() {
   rownames(counts) <- paste0("Gene", 1:n_genes)
   colnames(counts) <- paste0("Cell", 1:n_cells)
 
-  # Create mock colData - use the same column names as your actual SCE object
   col_data <- data.frame(
     annotation = sample(paste0("Cluster", 1:3), n_cells, replace = TRUE),
     orig.ident = sample(paste0("Sample", 1:2), n_cells, replace = TRUE),
@@ -39,7 +37,7 @@ test_that("DO.CellComposition basic functionality with SCE object", {
   skip_if_not_installed("zellkonverter")
   skip_if_not_installed("reticulate")
 
-  # Use the actual SCE object from your package
+  # Use the actual SCE object from package
   mock_sce <- SCE_obj
 
   # Create proper mock data that matches the function's expected structure
@@ -252,7 +250,7 @@ test_that("DO.CellComposition error conditions", {
   # Rename the assay to something other than "counts"
   names(assays(mock_sce_no_counts)) <- "not_counts"
 
-  # Mock basiliskRun to not be called (since we expect error before it)
+  # Mock basiliskRun to not be called
   testthat::local_mocked_bindings(
     basiliskRun = function(env, fun, ...) {
       stop("basiliskRun should not be called in this test")
@@ -368,12 +366,10 @@ test_that("DO.CellComposition with different column names", {
   expect_true(ggplot2::is.ggplot(result))
 })
 
-# Remove the problematic dependency check tests that cause pkgload recursion
-# Instead, we'll test the dependency checking more simply
+
 
 test_that("DO.CellComposition validates required packages", {
   # This test just ensures the function contains the dependency checks
-  # without actually triggering the problematic system.file calls
 
   # Check that the function source code contains the expected dependency checks
   func_source <- capture.output(DO.CellComposition)

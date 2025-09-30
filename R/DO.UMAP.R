@@ -28,128 +28,134 @@
 #'
 #' @examples
 #' sce_data <-
-#'   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+#'     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
 #' DO.UMAP(
-#'   sce_object = sce_data,
-#'   group.by = "seurat_clusters"
+#'     sce_object = sce_data,
+#'     group.by = "seurat_clusters"
 #' )
 #'
 #' DO.UMAP(
-#'   sce_object = sce_data,
-#'   FeaturePlot = TRUE,
-#'   features = c("BAG2", "CD74")
+#'     sce_object = sce_data,
+#'     FeaturePlot = TRUE,
+#'     features = c("BAG2", "CD74")
 #' )
 #'
 #' @export
 DO.UMAP <- function(sce_object,
-                    FeaturePlot = FALSE,
-                    features = NULL,
-                    group.by = "seurat_clusters",
-                    umap_colors = NULL,
-                    text_size = 14,
-                    label = TRUE,
-                    order = TRUE,
-                    plot.title = TRUE,
-                    legend.position = "none",
-                    ...) {
-  # support for single cell experiment objects
-  if (is(sce_object, "SingleCellExperiment")) {
-    sce_object <- as.Seurat(sce_object)
-  }
-
-  # Dimplot
-  if (FeaturePlot == FALSE) {
-    if (is.null(umap_colors)) {
-      umap_colors <- rep(
-        c(
-          "#1f77b4",
-          "#ff7f0e",
-          "#2ca02c",
-          "tomato2",
-          "#9467bd",
-          "chocolate3",
-          "#e377c2",
-          "#ffbb78",
-          "#bcbd22",
-          "#17becf",
-          "darkgoldenrod2",
-          "#aec7e8",
-          "#98df8a",
-          "#ff9896",
-          "#c5b0d5",
-          "#c49c94",
-          "#f7b6d2",
-          "#c7c7c7",
-          "#dbdb8d",
-          "#9edae5",
-          "sandybrown",
-          "moccasin",
-          "lightsteelblue",
-          "darkorchid",
-          "salmon2",
-          "forestgreen",
-          "bisque"
-        ),
-        5
-      )
+    FeaturePlot = FALSE,
+    features = NULL,
+    group.by = "seurat_clusters",
+    umap_colors = NULL,
+    text_size = 14,
+    label = TRUE,
+    order = TRUE,
+    plot.title = TRUE,
+    legend.position = "none",
+    ...) {
+    # support for single cell experiment objects
+    if (is(sce_object, "SingleCellExperiment")) {
+        sce_object <- as.Seurat(sce_object)
     }
 
-    p <- DimPlot(sce_object, group.by = group.by, cols = umap_colors, ...) +
-      labs(x = "UMAP1", y = "UMAP2") +
-      theme(
-        plot.title = element_blank(),
-        # text = element_text(face = "bold",size = 20),
-        axis.title.x = element_text(size = text_size, family = "Helvetica"),
-        axis.title.y = element_text(size = text_size, family = "Helvetica"),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.x = element_blank(),
-        axis.ticks.y = element_blank(),
-        legend.position = legend.position,
-        legend.text = element_text(face = "bold")
-      )
+    # Dimplot
+    if (FeaturePlot == FALSE) {
+        if (is.null(umap_colors)) {
+            umap_colors <- rep(
+                c(
+                    "#1f77b4",
+                    "#ff7f0e",
+                    "#2ca02c",
+                    "tomato2",
+                    "#9467bd",
+                    "chocolate3",
+                    "#e377c2",
+                    "#ffbb78",
+                    "#bcbd22",
+                    "#17becf",
+                    "darkgoldenrod2",
+                    "#aec7e8",
+                    "#98df8a",
+                    "#ff9896",
+                    "#c5b0d5",
+                    "#c49c94",
+                    "#f7b6d2",
+                    "#c7c7c7",
+                    "#dbdb8d",
+                    "#9edae5",
+                    "sandybrown",
+                    "moccasin",
+                    "lightsteelblue",
+                    "darkorchid",
+                    "salmon2",
+                    "forestgreen",
+                    "bisque"
+                ),
+                5
+            )
+        }
 
-    if (label == TRUE) {
-      p <- LabelClusters(p, id = group.by, fontface = "bold", box = FALSE)
+        p <- DimPlot(sce_object, group.by = group.by, cols = umap_colors, ...) +
+            labs(x = "UMAP1", y = "UMAP2") +
+            theme(
+                plot.title = element_blank(),
+                # text = element_text(face = "bold",size = 20),
+                axis.title.x = element_text(
+                    size = text_size,
+                    family = "Helvetica"
+                ),
+                axis.title.y = element_text(
+                    size = text_size,
+                    family = "Helvetica"
+                ),
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.ticks.y = element_blank(),
+                legend.position = legend.position,
+                legend.text = element_text(face = "bold")
+            )
+
+        if (label == TRUE) {
+            p <- LabelClusters(p, id = group.by, fontface = "bold", box = FALSE)
+        }
+        return(p)
     }
-    return(p)
-  }
 
-  # FeaturePlot
-  if (FeaturePlot == TRUE) {
-    if (is.null(features)) {
-      stop("Please provide any gene names if using FeaturePlot=TRUE.")
+    # FeaturePlot
+    if (FeaturePlot == TRUE) {
+        if (is.null(features)) {
+            stop("Please provide any gene names if using FeaturePlot=TRUE.")
+        }
+
+        if (is.null(umap_colors)) {
+            umap_colors <- c("lightgrey", "red2")
+        }
+
+        Idents(sce_object) <- group.by
+        p <- FeaturePlot(sce_object,
+            features = features,
+            cols = umap_colors,
+            label = label,
+            order = order,
+            ...
+        ) &
+            labs(x = "UMAP1", y = "UMAP2") &
+            theme(
+                axis.title.x = element_text(size = 14, family = "Helvetica"),
+                axis.title.y = element_text(size = 14, family = "Helvetica"),
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.ticks.y = element_blank(),
+                legend.position = legend.position,
+                legend.text = element_text(face = "bold")
+            )
+
+        if (plot.title == FALSE) {
+            p <- p & theme(plot.title = element_blank())
+        }
+
+        return(p)
     }
-
-    if (is.null(umap_colors)) {
-      umap_colors <- c("lightgrey", "red2")
-    }
-
-    Idents(sce_object) <- group.by
-    p <- FeaturePlot(sce_object,
-                     features = features,
-                     cols = umap_colors,
-                     label = label,
-                     order = order,
-                     ...
-    ) &
-      labs(x = "UMAP1", y = "UMAP2") &
-      theme(
-        axis.title.x = element_text(size = 14, family = "Helvetica"),
-        axis.title.y = element_text(size = 14, family = "Helvetica"),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.x = element_blank(),
-        axis.ticks.y = element_blank(),
-        legend.position = legend.position,
-        legend.text = element_text(face = "bold")
-      )
-
-    if (plot.title == FALSE) {
-      p <- p & theme(plot.title = element_blank())
-    }
-
-    return(p)
-  }
 }

@@ -16,7 +16,7 @@ test_that("DO.Import runs on a small synthetic dataset and returns Seurat", {
   tmpfile <- tempfile(fileext = ".csv")
   write.csv(mat, file = tmpfile, row.names = TRUE)
 
-  # Call DO.Import with reduced PCs (avoid svd.function error)
+  # Call DO.Import with reduced PCs
   obj <- DO.Import(
     pathways = c(tmpfile),
     ids = c("sample1"),

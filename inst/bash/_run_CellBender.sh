@@ -184,3 +184,4 @@ for SAMPLENAME in ${SAMPLENAMES[*]}; do
 	let i++
 
 done
+exit 0
