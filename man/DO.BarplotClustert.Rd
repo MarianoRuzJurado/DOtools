@@ -25,13 +25,17 @@ DO.BarplotClustert(
 
 \item{Feature}{gene name}
 
-\item{ListTest}{List for which conditions t-test will be performed, if NULL always against provided CTRL}
+\item{ListTest}{List with conditions t-test will be performed, if NULL
+always against provided CTRL}
 
-\item{returnValues}{return df.melt.sum data frame containing means and SEM for the set group}
+\item{returnValues}{return df.melt.sum data frame containing means and SEM
+for the set group}
 
-\item{ctrl.condition}{set your ctrl condition, relevant if running with empty comparison List}
+\item{ctrl.condition}{set your ctrl condition, relevant if running with
+empty comparison List}
 
-\item{group.by}{select the seurat object slot where your conditions can be found, default conditon}
+\item{group.by}{select the seurat object slot where your conditions can be
+found, default conditon}
 
 \item{returnPlot}{IF TRUE returns ggplot}
 
@@ -51,16 +55,19 @@ DO.BarplotClustert(
 a ggplot or a dataframe
 }
 \description{
-Perform SEM-based graphs with t-test on cluster level for Seurat objects.
-Calculates mean expression values and SEM for selected features, and visualizes them.
-Performs pairwise t-tests comparing conditions, with optional custom control condition and clustering.
+Perform SEM-based graphs with t-test on cluster level for SCE objects.
+Calculates mean expression values and SEM for selected features
+and visualizes them. Performs pairwise t-tests comparing conditions,
+with optional custom control condition and clustering.
 Optionally returns a summary data frame.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 set.seed(123)
-sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
+sce_data$orig.ident <-
+  sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")

@@ -14,6 +14,8 @@ DO.Heatmap(
   group_fc = "condition",
   group_fc_ident_1 = NULL,
   group_fc_ident_2 = NULL,
+  clip_value = FALSE,
+  max_fc = 5,
   z_score = NULL,
   path = NULL,
   filename = "Heatmap.svg",
@@ -66,6 +68,10 @@ DO.Heatmap(
 \item{group_fc_ident_1}{Defines the first group in the test}
 
 \item{group_fc_ident_2}{Defines the second group in the test}
+
+\item{clip_value}{Clips the colourscale to the 99th percentile, useful if one gene is driving the colourscale}
+
+\item{max_fc}{Clips super high foldchanges to this value, so changes can still be appreciated}
 
 \item{z_score}{apply z-score transformation, "group" or "var"}
 

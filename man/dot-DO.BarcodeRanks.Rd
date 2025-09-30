@@ -13,8 +13,9 @@
 A named numeric vector: `c(xpc_cells = ..., total_cells = ...)
 }
 \description{
-Given a raw count matrix (e.g. from a CellRanger HDF5 file), estimate the number of expected cells and droplets
-using the knee and inflection points from barcodeRanks.
+Given a raw count matrix (e.g. from a CellRanger HDF5 file),
+estimate the number of expected cells and droplets using the knee and
+inflection points from barcodeRanks.
 }
 \author{
 Mariano Ruz Jurado

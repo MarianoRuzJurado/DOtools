@@ -35,7 +35,8 @@ DO.BoxPlot(
 
 \item{sample.column}{meta data column containing sample IDs}
 
-\item{ListTest}{List for which conditions wilcox will be performed, if NULL always CTRL group against everything}
+\item{ListTest}{List for which conditions wilcox will be performed, if NULL
+always CTRL group against everything}
 
 \item{group.by}{group name to look for in meta data}
 
@@ -49,11 +50,14 @@ DO.BoxPlot(
 
 \item{vector_colors}{get the colours for the plot}
 
-\item{wilcox_test}{If you want to have wilcoxon performed, boolean default TRUE}
+\item{wilcox_test}{If you want to have wilcoxon performed, boolean default
+TRUE}
 
-\item{stat_pos_mod}{modificator for where the p-value is plotted increase for higher}
+\item{stat_pos_mod}{modificator for where the p-value is plotted increase
+for higher}
 
-\item{step_mod}{value for defining the space between one test and the next one}
+\item{step_mod}{value for defining the space between one test and the
+next one}
 
 \item{hjust.wilcox}{value for adjusting height of the text}
 
@@ -61,7 +65,8 @@ DO.BoxPlot(
 
 \item{size.wilcox}{value for size of text of statistical test}
 
-\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2 specified}
+\item{hjust.wilcox.2}{value for adjusting height of the text, with
+group.by.2 specified}
 
 \item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
 
@@ -73,16 +78,19 @@ DO.BoxPlot(
 a ggplot
 }
 \description{
-Creates a box plot using a pseudo-bulk approach and performs a Wilcoxon test on single-cell level.
-Allows customization of outlier removal, statistical labels, and color schemes.
-Supports comparison of conditions with optional second grouping.
-Useful for visualizing gene expression and statistical differences.
+Creates a box plot using a pseudo-bulk approach and performs a
+Wilcoxon test on single-cell level. Allows customization of outlier removal,
+statistical labels, and color schemes. Supports comparison of conditions
+with optional second grouping. Useful for visualizing gene expression and
+statistical differences.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 set.seed(123)
-sce_data$orig.ident <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
+sce_data$orig.ident <-
+  sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")

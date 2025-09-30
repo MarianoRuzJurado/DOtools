@@ -24,7 +24,8 @@ DO.CellBender(
 
 \item{output_path}{Output directory for CellBender results.}
 
-\item{samplenames}{Optional vector of sample names. If NULL, will autodetect folders in \code{cellranger_path}.}
+\item{samplenames}{Optional vector of sample names. If NULL, will
+autodetect folders in \code{cellranger_path}.}
 
 \item{cuda}{Logical, whether to use GPU (CUDA).}
 
@@ -34,13 +35,14 @@ DO.CellBender(
 
 \item{lr}{Learning rate.}
 
-\item{estimator_multiple_cpu}{Use estimator with multiple CPU threads (experimental).}
+\item{estimator_multiple_cpu}{Use estimator with multiple CPU threads.}
 
 \item{log}{Whether to enable logging.}
 
 \item{conda_path}{Optional path to the conda environment.}
 
-\item{BarcodeRanking}{Optional Calculation of estimated cells in samples through DropletUtils implementation}
+\item{BarcodeRanking}{Optional Calculation of estimated cells in samples
+through DropletUtils implementation}
 
 \item{bash_script}{Path to the bash script that runs CellBender.}
 }
@@ -48,9 +50,11 @@ DO.CellBender(
 None
 }
 \description{
-It is supposed to make something similar than the no longer working DietSeurat function, by removing no longer needed layers from th object.
-This function wraps a system call to a bash script for running CellBender on CellRanger outputs.
-It ensures required inputs are available and optionally installs CellBender in a conda env.
+It is supposed to make something similar than the no longer
+working DietSeurat function, by removing no longer needed layers from the
+object. This function wraps a system call to a bash script for running
+CellBender on CellRanger outputs. It ensures required inputs are available
+and optionally installs CellBender in a conda env.
 }
 \examples{
 \dontrun{
@@ -62,15 +66,17 @@ output_path <- "/mnt/data/cellbender_outputs"
 samplenames <- c("Sample_1", "Sample_2")
 
 # Run CellBender (uses GPU by default)
-DO.CellBender(cellranger_path = cellranger_path,
-              output_path = output_path,
-              samplenames = samplenames,
-              cuda = TRUE,
-              cpu_threads = 8,
-              epochs = 100,
-              lr = 0.00001,
-              estimator_multiple_cpu = FALSE,
-              log = TRUE)
+DO.CellBender(
+  cellranger_path = cellranger_path,
+  output_path = output_path,
+  samplenames = samplenames,
+  cuda = TRUE,
+  cpu_threads = 8,
+  epochs = 100,
+  lr = 0.00001,
+  estimator_multiple_cpu = FALSE,
+  log = TRUE
+)
 }
 
 }

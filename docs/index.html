@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,13 +40,6 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/DOtools.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/adfct.html">Usage of functions</a></li>
-    <li><a class="dropdown-item" href="articles/cb.html">Remove ambient RNA with CellBender</a></li>
-  </ul>
-</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -89,8 +82,8 @@
 </h1>
 <p>DOtools is currently available through github. To install the package, start R and run:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># if not installed already</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MarianoRuzJurado/DOtools"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"DOtools"</span><span class="op">)</span></span></code></pre></div>
 <p>We highly recommend having <a href="https://www.anaconda.com/docs/getting-started/miniconda/main" class="external-link">conda</a> installed for python environments. Some functions in this package depend on Python packages or scripts. These functions use <a href="https://www.bioconductor.org/packages/release/bioc/html/basilisk.html" class="external-link">basilisk</a> to create isolated environments, which are built using conda. As a result, a working conda installation is required.</p>
 <div class="section level2">
 <h2 id="id_-python-package-">
@@ -142,6 +135,8 @@
 <li>Mariano Ruz Jurado <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-5354-5336" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>David Rodriguez Morales <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1819-6991" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>David John <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3217-5449" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>DFG SFB 1366, Project B04 <br><small class="roles"> Funder </small>   </li>
+<li>DFG SFB 1531, Project 456687919 <br><small class="roles"> Funder </small>   </li>
 </ul>
 </div>
 
@@ -152,7 +147,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John.</p>
+  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John, DFG SFB 1366, Project B04, DFG SFB 1531, Project 456687919.</p>
 </div>
 
 <div class="pkgdown-footer-right">

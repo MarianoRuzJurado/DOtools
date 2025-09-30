@@ -25,7 +25,7 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,11 +35,6 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/DOtools.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfct.html">Usage of functions</a></li>
-    <li><a class="dropdown-item" href="../articles/cb.html">Remove ambient RNA with CellBender</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -59,7 +54,7 @@ Pre-filter of the dataframe to contain significant Terms is recommended"><script
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Bar plot for GSEA df result</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.SplitBarGSEA.R" class="external-link"><code>R/DO.SplitBarGSEA.R</code></a></small>
       <div class="d-none name"><code>DO.SplitBarGSEA.Rd</code></div>
     </div>
 
@@ -207,32 +202,32 @@ you can control the maximum number of characters per line.</p>
 <span class="r-in"><span>                         annotation_col <span class="op">=</span> <span class="st">"annotation"</span>,</span></span>
 <span class="r-in"><span>                         ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Starting DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Finished DGE single cell method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Starting DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: B_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: NK</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping NK since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: pDC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping pDC since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - Finished DGE pseudo bulk method analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2025-07-26 09:22:41 - DGE pseudo bulk result is empty...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Starting DGE single cell method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: NK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: B_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: pDC</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Finished DGE single cell method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Starting DGE pseudo bulk method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: B_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: NK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping NK since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: pDC</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping pDC since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - Finished DGE pseudo bulk method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 11:31:43 - DGE pseudo bulk result is empty...</span>
 <span class="r-in"><span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="va">DGE_result</span><span class="op">[</span><span class="va">DGE_result</span><span class="op">$</span><span class="va">celltype</span> <span class="op">==</span> <span class="st">"CD4_T_cells"</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span>df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span></span>
@@ -283,7 +278,7 @@ you can control the maximum number of characters per line.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John.</p>
+  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John, DFG SFB 1366, Project B04, DFG SFB 1531, Project 456687919.</p>
 </div>
 
 <div class="pkgdown-footer-right">

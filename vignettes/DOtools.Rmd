@@ -541,7 +541,7 @@ time along with statistical testing. For example, we can visualise the
 expression of a gene across cell types and conditions:
 
 ```{r dotplot, fig.width=5, fig.height=5}
-DO.Dotplot(sce_object = sce_object,
+DO.Dotplot(sce_object = SCE_obj,
            group.by.x = "condition",
            group.by.y = "annotation",
            Feature = "NKG7",
@@ -555,8 +555,9 @@ ready way, including statistical testing:
 path_file <- tempfile("dotools_plots_")
 dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
 
-DO.Heatmap(sce_object,
-           features = rownames(sce_object)[1:10],
+DO.Heatmap(SCE_obj,
+           group_by = "leiden0.3",
+           features = rownames(SCE_obj)[1:10],
            xticks_rotation = 45,
            path = path_file,
            stats_x_size = 20,
@@ -576,11 +577,11 @@ or we can plot continuous metadata information across conditions with
 violinplots, barplots and boxplots. Additionally, we can test for significance.
 
 ```{r Violin, fig.width=8, fig.height=5.5, warning = FALSE}
-sce_object_sub <- DO.Subset(sce_object,
+SCE_obj_sub <- DO.Subset(SCE_obj,
                             ident = "annotation",
                             ident_name = c("NK", "CD4_T_cells", "B_cells"))
 
-p <- DO.VlnPlot(sce_object_sub,
+p <- DO.VlnPlot(SCE_obj_sub,
                 Feature = "NKG7",
                 group.by = "condition",
                 group.by.2 = "annotation",
@@ -588,11 +589,11 @@ p <- DO.VlnPlot(sce_object_sub,
 ```
 
 ```{r Bar, fig.width=5, fig.height=6, warning = FALSE}
-sce_object_NK <- DO.Subset(sce_object,
+SCE_obj_NK <- DO.Subset(SCE_obj,
                            ident = "annotation",
                            ident_name = "NK")
 
-DO.BarplotWilcox(sce_object_NK,
+DO.BarplotWilcox(SCE_obj_NK,
                  group.by = "condition",
                  ctrl.condition = "healthy",
                  Feature = "NKG7",
@@ -601,9 +602,9 @@ DO.BarplotWilcox(sce_object_NK,
 
 ```{r Box, fig.width=5, fig.height=6, warning = FALSE}
 set.seed(123)
-sce_object$rdm_sample <- sample(rep(c("A", "B", "C"),
-                                    length.out = ncol(sce_object)))
-DO.BoxPlot(sce_object,
+SCE_obj$rdm_sample <- sample(rep(c("A", "B", "C"),
+                                    length.out = ncol(SCE_obj)))
+DO.BoxPlot(SCE_obj,
            group.by = "rdm_sample",
            ctrl.condition = "A",
            Feature = "nCount_RNA",

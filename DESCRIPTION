@@ -71,23 +71,27 @@ Imports:
         S4Vectors (>= 0.46.0),
         basilisk (>= 1.20.0)
 Suggests:
-        knitr,
-        kableExtra,
-        pkgdown,
-        RefManageR,
-        BiocStyle,
-        roxygen2,
-        httr,
-        magick,
-        rmarkdown,
-        assertthat,
-        plyr,
-        rsvg,
-        scran,
-        scater,
-        igraph,
-        sessioninfo
+    SummarizedExperiment,
+    knitr,
+    kableExtra,
+    pkgdown,
+    RefManageR,
+    BiocStyle,
+    roxygen2,
+    httr,
+    magick,
+    rmarkdown,
+    assertthat,
+    plyr,
+    rsvg,
+    scran,
+    scater,
+    igraph,
+    sessioninfo,
+    testthat (>= 3.0.0),
+    mockery
 VignetteBuilder:
     knitr
 URL: https://marianoruzjurado.github.io/DOtools/
 StagedInstall: no
+Config/testthat/edition: 3

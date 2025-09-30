@@ -1,6 +1,15 @@
-# DOtools 0.99.0
+# DOtools 0.99.5
 
 All notable changes to DOtools will be documented in this file.
+
+---
+
+## [0.99.5] - 2025-09-30
+
+### Changed
+* Major coding adjustments for preparing BioConductor release
+
+---
 
 ---
 

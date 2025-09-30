@@ -11,20 +11,22 @@ DO.DietSCE(sce_object, assay = "RNA", pattern = "^scale\\\\.data\\\\.")
 
 \item{assay}{Name of the assay from where to remove layers from}
 
-\item{pattern}{regular expression pattern to match layer names. Default "^scale\\.data\\."}
+\item{pattern}{regular expression pattern to match layer names. Default
+"^scale\\.data\\."}
 }
 \value{
 Seurat or SCE object with specified layers removed.
 }
 \description{
-This function removes layers from a Seurat or SCE object's RNA assay based on a specified regular expression pattern.
-It is supposed to remove no longer needed layers from th object.
+This function removes layers from a Seurat or SCE object's RNA
+assay based on a specified regular expression pattern. It is supposed to
+remove no longer needed layers from th object.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 sce_data <- DO.DietSCE(sce_data, pattern = "data")
-
 
 }
 \author{

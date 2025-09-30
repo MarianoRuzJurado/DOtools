@@ -26,7 +26,8 @@ DO.Correlation(
 \arguments{
 \item{sce_object}{Seurat or SCE Object}
 
-\item{group_by}{Column to aggregate the expression over it, default "orig.ident"}
+\item{group_by}{Column to aggregate the expression over it, default
+"orig.ident"}
 
 \item{assay}{Assay in object to use, default "RNA"}
 
@@ -38,17 +39,22 @@ DO.Correlation(
 
 \item{plottype}{Show the full plot or only half of it, default "full"}
 
-\item{auto_limits}{Automatically rescales the colour bar based on the values in the correlation matrix, default "TRUE"}
+\item{auto_limits}{Automatically rescales the colour bar based on the values
+in the correlation matrix, default "TRUE"}
 
-\item{outline.color}{the outline color of square or circle. Default value is "white".}
+\item{outline.color}{the outline color of square or circle. Default value is
+"white".}
 
-\item{colormap}{Defines the colormap used in the plot, default c("royalblue4", "royalblue2","firebrick","firebrick4")}
+\item{colormap}{Defines the colormap used in the plot, default
+c("royalblue4", "royalblue2","firebrick","firebrick4")}
 
-\item{lab_size}{Size to be used for the correlation coefficient labels. used when lab = TRUE.}
+\item{lab_size}{Size to be used for the correlation coefficient labels. used
+when lab = TRUE.}
 
 \item{lab}{logical value. If TRUE, add correlation coefficient on the plot.}
 
-\item{lab_col}{color to be used for the correlation coefficient labels. used when lab = TRUE.}
+\item{lab_col}{color to be used for the correlation coefficient labels. used
+when lab = TRUE.}
 
 \item{axis_size_x}{Controls x labels size}
 
@@ -60,12 +66,15 @@ DO.Correlation(
 ggplot2
 }
 \description{
-Generates a correlation heatmap from expression data to visualize similarity across sample groups.
-Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
-Ideal for comparing transcriptional profiles between conditions or clusters.
+Generates a correlation heatmap from expression data to
+visualize similarity across sample groups. Allows customization of plot type,
+correlation method, and color scaling using the ggcorrplot2 and ggplot2
+architectures. Ideal for comparing transcriptional profiles between
+conditions or clusters.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Correlation(
   sce_object = sce_data,
@@ -77,7 +86,7 @@ DO.Correlation(
   plottype = "full",
   auto_limits = TRUE,
   outline.color = "white",
-  colormap = c("royalblue4", "lightsteelblue", "tomato","firebrick4"),
+  colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
   lab_size = 10,
   lab = TRUE,
   lab_col = "white"

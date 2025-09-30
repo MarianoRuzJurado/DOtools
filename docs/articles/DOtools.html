@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,13 +38,6 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/DOtools.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/adfct.html">Usage of functions</a></li>
-    <li><a class="dropdown-item" href="../articles/cb.html">Remove ambient RNA with CellBender</a></li>
-  </ul>
-</li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -96,8 +89,7 @@ install the package, start R and enter:</p>
 <p>Alternatively, you can instead install the latest development version
 from <a href="https://github.com/" class="external-link"><em>GitHub</em></a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MarianoRuzJurado/DOtools"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"MarianoRuzJurado/DOtools"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -116,12 +108,53 @@ can be imported as:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://marianoruzjurado.github.io/DOtools/">DOtools</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Additional packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment" class="external-link">SummarizedExperiment</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MarioniLab/scran/" class="external-link">scran</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://bioconductor.org/packages/scater/" class="external-link">scater</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://had.co.nz/plyr" class="external-link">plyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">enrichR</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="ambient-removal">Ambient removal<a class="anchor" aria-label="anchor" href="#ambient-removal"></a>
+</h3>
+<p>Despite advances in optimizing and standardizing droplet-based
+single-cell omics protocols like single-cell and single-nucleus RNA
+sequencing (sc/snRNA-seq), these experiments still suffer from
+systematic biases and background noise. In particular, ambient RNA in
+snRNA-seq can lead to an overestimation of expression levels for certain
+genes. Computational tools such as <a href="https://pypi.org/project/cellbender/" class="external-link"><em>cellbender</em></a> have
+been developed to address these biases by correcting for ambient RNA
+contamination.</p>
+<p>We have integrated a wrapper function to run CellBender within the
+<em><a href="https://bioconductor.org/packages/3.21/DOtools" class="external-link">DOtools</a></em>
+package. The current implementation supports processing samples
+generated with CellRanger.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu">DOtools</span><span class="fu">:::</span><span class="fu"><a href="../reference/dot-example_10x.html">.example_10x</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/cellbender"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">raw_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">base</span>,</span>
+<span>                        pattern <span class="op">=</span> <span class="st">"raw_feature_bc_matrix\\.h5$"</span>,</span>
+<span>                        recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/DO.CellBender.html">DO.CellBender</a></span><span class="op">(</span>cellranger_path <span class="op">=</span> <span class="va">base</span>,</span>
+<span>              output_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/cellbender"</span><span class="op">)</span>,</span>
+<span>              samplenames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disease"</span><span class="op">)</span>,</span>
+<span>              cuda <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>              BarcodeRanking <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>              cpu_threads <span class="op">=</span> <span class="fl">48</span>,</span>
+<span>              epochs <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span></code></pre></div>
+<p>After running the analysis, several files are saved in the
+<code>output_folder</code>, including a summary report to check for any
+issues during CellBender execution, individual log files for each
+sample, and a <code>commands_Cellbender.txt</code> file with the exact
+command used. The corrected <code>.h5</code> files can then be used
+alternatively to the raw cellranger output for downstream analysis.</p>
 </div>
 <div class="section level3">
 <h3 id="quality-control">Quality control<a class="anchor" aria-label="anchor" href="#quality-control"></a>
@@ -140,8 +173,8 @@ function supports doublet detection using <em><a href="https://bioconductor.org/
 Thresholds for mitochondrial content (e.g., 5% for scRNA-seq and 3% for
 snRNA-seq), gene counts, and UMI counts can be defined to tailor the
 filtering.</p>
-<p>After filtering, samples are merged into one <a href="https://cran.r-project.org/package=Seurat" class="external-link"><em>Seurat</em></a> or
-<a href="https://cran.r-project.org/package=SingleCellExperiment" class="external-link"><em>SingleCellExperiment</em></a>
+<p>After filtering, samples are merged into one <a href="https://cran.r-project.org/package=SingleCellExperiment" class="external-link"><em>SingleCellExperiment</em></a>
+or <a href="https://cran.r-project.org/package=Seurat" class="external-link"><em>Seurat</em></a>
 object, followed by log-normalisation, scaling, and the identification
 of highly variable genes. To help assess the effect of quality control,
 violin plots showing distributions of key metrics before and after
@@ -150,28 +183,41 @@ files. A summary of removed genes and cells is also recorded.</p>
 <p>To show how the quality control works, we are going to use a public
 dataset from 10X from human blood of healthy and donors with a malignant
 tumor:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu">DOtools</span><span class="fu">:::</span><span class="fu"><a href="../reference/dot-example_10x.html">.example_10x</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">paths</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"healthy/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"disease/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"healthy/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"disease/outs/filtered_feature_bc_matrix.h5"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Import.html">DO.Import</a></span><span class="op">(</span>pathways <span class="op">=</span> <span class="va">paths</span>,</span>
-<span>                     ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy-1"</span>, <span class="st">"disease-1"</span><span class="op">)</span>,</span>
-<span>                     DeleteDoublets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     cut_mt <span class="op">=</span> <span class="fl">.05</span>,</span>
-<span>                     min_counts <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>                     min_genes <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>                     high_quantile <span class="op">=</span> <span class="fl">.95</span>,</span>
-<span>                     Seurat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="co"># Set to TRUE for Seurat object</span></span></code></pre></div>
+<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Import.html">DO.Import</a></span><span class="op">(</span></span>
+<span>  pathways <span class="op">=</span> <span class="va">paths</span>,</span>
+<span>  ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy-1"</span>, <span class="st">"disease-1"</span><span class="op">)</span>,</span>
+<span>  DeleteDoublets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cut_mt <span class="op">=</span> <span class="fl">.05</span>,</span>
+<span>  min_counts <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  min_genes <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  high_quantile <span class="op">=</span> <span class="fl">.95</span>,</span>
+<span>  Seurat <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># Set to TRUE for Seurat object</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>We can now check the quality before introducing filterings:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prefilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"figures"</span>, <span class="st">"prefilterplots-1.png"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prefilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>  <span class="st">"figures"</span>, <span class="st">"prefilterplots-1.png"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"DOtools"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">pQC1</span> <span class="op">&lt;-</span> <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">prefilterplots</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pQC1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/prefilterplots-1.png" width="100%" style="display: block; margin: auto;"><br> And after:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">postfilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"figures"</span>, <span class="st">"postfilterplots-1.png"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">postfilterplots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>  <span class="st">"figures"</span>,</span>
+<span>  <span class="st">"postfilterplots-1.png"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"DOtools"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">pQC2</span> <span class="op">&lt;-</span> <span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">postfilterplots</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pQC2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/postfilterplots-1.png" width="100%" style="display: block; margin: auto;">
@@ -183,114 +229,77 @@ minimizing cell loss is of relevance.</p>
 Please feel free, to use the one created from DO.Import for prettier
 results or this slim downed version. We can observe how similar the
 samples are through running a correlation analysis.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Making sure we have a save folder</span></span>
 <span><span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"my_tempdir_"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">base</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
+<span>              <span class="st">"sce_data.rds"</span>,</span>
+<span>              package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/DO.Correlation.html">DO.Correlation</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: `PackageCheck()` was deprecated in SeuratObject 5.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `rlang::check_installed()` instead.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: The `slot` argument of `SetAssayData()` is deprecated as of SeuratObject 5.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/heatmap-1.png" width="576"></p>
+<p><img src="DOtools_files/figure-html/Correlation-1.png" width="576"></p>
 </div>
 <div class="section level3">
 <h3 id="data-integration">Data integration<a class="anchor" aria-label="anchor" href="#data-integration"></a>
 </h3>
-<p>After quality control the prefered integration method can be chosen
-within Seurat’s <code>IntegrateLayers</code> function. Additionally, we
-implemented a new wrapper function for the scVI integration from the <a href="https://pypi.org/project/scvi-tools/" class="external-link">scvi-tools</a> package.
+<p>After quality control the preferred integration method can be chosen,
+we support every integration method within Seurat’s
+<code>IntegrateLayers</code> function. Additionally, we implemented a
+new wrapper function for the scVI integration from the <a href="https://pypi.org/project/scvi-tools/" class="external-link">scvi-tools</a> package.
 After the integration completes, we run the Leiden algorithm to find
 clusters and generate UMAP embeddings.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">### ADDITIONAL STEPS FOR SCE OBJECTS, THESE STEPS WILL BE PERFORMED AUTOMATICALLY FOR SEURAT OBJECTS IN DO.IMPORT</span></span>
-<span><span class="co">### SKIP IF YOU USE SEURAT OBJECT FROM DO.IMPORT() </span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/as.Seurat.html" class="external-link">as.Seurat</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">Seu_obj</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Finding variable features for layer counts.healthy-1</span></span>
-<span><span class="co">#&gt; Finding variable features for layer counts.disease-1</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Centering and scaling data matrix</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">Seu_obj</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, reduction.name <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SplitLayers.html" class="external-link">JoinLayers</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">Seu_obj</span><span class="op">$</span><span class="va">orig.ident</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.</span></span>
-<span><span class="co">#####</span></span>
-<span></span>
-<span><span class="co">#Integration through Seurat</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/IntegrateLayers.html" class="external-link">IntegrateLayers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
-<span>                           method <span class="op">=</span> <span class="va">CCAIntegration</span>,</span>
-<span>                           orig.reduction <span class="op">=</span> <span class="st">"PCA"</span>,</span>
-<span>                           new.reduction <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>,</span>
-<span>                           verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Finding all pairwise anchors</span></span>
-<span><span class="co">#&gt; Running CCA</span></span>
-<span><span class="co">#&gt; Merging objects</span></span>
-<span><span class="co">#&gt; Finding neighborhoods</span></span>
-<span><span class="co">#&gt; Finding anchors</span></span>
-<span><span class="co">#&gt;  Found 2607 anchors</span></span>
-<span><span class="co">#&gt; Merging dataset 2 into 1</span></span>
-<span><span class="co">#&gt; Extracting anchors for merged samples</span></span>
-<span><span class="co">#&gt; Finding integration vectors</span></span>
-<span><span class="co">#&gt; Finding integration vector weights</span></span>
-<span><span class="co">#&gt; Integrating data</span></span>
-<span></span>
-<span><span class="co">#After Integration we join the layers </span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/SplitLayers.html" class="external-link">JoinLayers</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#(Optional) convert back to SCE object if you prefer that data class</span></span>
-<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/as.SingleCellExperiment.html" class="external-link">as.SingleCellExperiment</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#(Optional) Integration with scVI-Model</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.scVI.html">DO.scVI</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
-<span>                   batch_key <span class="op">=</span><span class="st">"orig.ident"</span>,</span>
-<span>                   layer_counts <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>                   layer_logcounts <span class="op">=</span> <span class="st">"logcounts"</span><span class="op">)</span></span></code></pre></div>
-<p>After the integration finished, both corrected expression matrices
-can be found saved in the Seurat object and can be used for cluster
-calculations and UMAP projections. In this case, we will continue with
-Seuratv5 CCA Integration method.</p>
+<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Integration.html">DO.Integration</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>                          split_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
+<span>                          HVG <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          scale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          pca <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:11 - Splitting object for integration with CCAIntegration by orig.ident</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:11 - Calculating highly variable genes</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:12 - Scaling object</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:12 - Running pca, saved in key: PCA</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:14 - Running integration, saved in key: INTEGRATED.CCA</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:17 - Running Nearest-neighbor graph construction</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:18 - Running cluster detection</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:18 - Creating UMAP</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>, reduction <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">)</span> <span class="co">#change dims accordingly</span></span>
-<span><span class="co">#&gt; Computing nearest neighbor graph</span></span>
-<span><span class="co">#&gt; Computing SNN</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">Seu_obj</span>, resolution <span class="op">=</span> <span class="fl">0.3</span>, algorithm <span class="op">=</span> <span class="fl">4</span>, random.seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>, reduction <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>, reduction.name <span class="op">=</span> <span class="st">"UMAP"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 09:25:09 UMAP embedding parameters a = 0.9922 b = 1.112</span></span>
-<span><span class="co">#&gt; 09:25:09 Read 2807 rows and found 50 numeric columns</span></span>
-<span><span class="co">#&gt; 09:25:09 Using Annoy for neighbor search, n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 09:25:09 Building Annoy index with metric = cosine, n_trees = 50</span></span>
-<span><span class="co">#&gt; 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
-<span><span class="co">#&gt; [----|----|----|----|----|----|----|----|----|----|</span></span>
-<span><span class="co">#&gt; **************************************************|</span></span>
-<span><span class="co">#&gt; 09:25:09 Writing NN index file to temp file /tmp/RtmpPZHS4j/file1bb22659b45e3</span></span>
-<span><span class="co">#&gt; 09:25:09 Searching Annoy index using 1 thread, search_k = 3000</span></span>
-<span><span class="co">#&gt; 09:25:10 Annoy recall = 100%</span></span>
-<span><span class="co">#&gt; 09:25:10 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30</span></span>
-<span><span class="co">#&gt; 09:25:11 Initializing from normalized Laplacian + noise (using RSpectra)</span></span>
-<span><span class="co">#&gt; 09:25:11 Commencing optimization for 500 epochs, with 130642 positive edges</span></span>
-<span><span class="co">#&gt; 09:25:11 Using rng type: pcg</span></span>
-<span><span class="co">#&gt; 09:25:14 Optimization finished</span></span>
+<code class="sourceCode R"><span><span class="co">#(Optional) Integration with scVI-Model</span></span>
+<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.scVI.html">DO.scVI</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>                   batch_key <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
+<span>                   layer_counts <span class="op">=</span> <span class="st">"counts"</span>,</span>
+<span>                   layer_logcounts <span class="op">=</span> <span class="st">"logcounts"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-1.png" width="700"></p>
+<span></span>
+<span><span class="va">SNN_Graph</span> <span class="op">&lt;-</span> <span class="fu">scran</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scran/man/buildSNNGraph.html" class="external-link">buildSNNGraph</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>                                  use.dimred <span class="op">=</span> <span class="st">"scVI"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">clust_SCVI</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">SNN_Graph</span>,</span>
+<span>                                      resolution <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">leiden0.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/communities.html" class="external-link">membership</a></span><span class="op">(</span><span class="va">clust_SCVI</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu">scater</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scater/man/runUMAP.html" class="external-link">runUMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, dimred <span class="op">=</span> <span class="st">"scVI"</span>, name <span class="op">=</span> <span class="st">"UMAP"</span><span class="op">)</span></span></code></pre></div>
+<p>After the integration finished, both corrected expression matrices
+can be found saved in the SCE object and can be used for cluster
+calculations and UMAP projections. In this case, we will continue with
+the CCA Integration method.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"condition"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span>, label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>        group.by <span class="op">=</span> <span class="st">"leiden0.3"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-1.png" width="700"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>        group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>        legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>        label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Clustering%20and%20UMAP-2.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -300,25 +309,49 @@ Seuratv5 CCA Integration method.</p>
 annotation tool <a href="https://pypi.org/project/celltypist/" class="external-link"><em>celltypist</em></a>. It
 will annotate the defined clusters based on the
 <code>Adult_COVID19_PBMC.pkl</code> model.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
-<span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>, </span>
-<span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                         over_clustering <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:25:15 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:25:15 - Saving celltypist results to temporary folder: /tmp/RtmpPZHS4j/file1bb227d358eee</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:25:44 - Creating probality plot</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/annotation-2.png" width="700"></p>
+<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
+<span>                         runCelltypistUpdate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                         over_clustering <span class="op">=</span> <span class="st">"leiden0.3"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:25 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:25 - Saving celltypist results to temporary folder: /tmp/RtmpVVgHBg/filee2f4d4226530</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:32:55 - Creating probality plot</span></span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <p>The semi-automatic annotation is a good estimate of the cell types in
 your object. But you should always manually validate the findings of the
 model. You can manually define a set of marker genes for the cell
 population or check the most preeminent genes per cluster by using
-Seurat’s <code>FindAllMarkers</code> function.</p>
+scran’s <code>findMarkers</code> function. Marker genes can also be
+visualised using the <code>DO.UMAP</code> function.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#pick top 5 per cluster</span></span>
+<code class="sourceCode R"><span><span class="va">markers_list</span> <span class="op">&lt;-</span> <span class="fu">scran</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scran/man/findMarkers.html" class="external-link">findMarkers</a></span><span class="op">(</span></span>
+<span>  <span class="va">SCE_obj</span>,</span>
+<span>  test.type <span class="op">=</span> <span class="st">"t"</span>,</span>
+<span>  groups <span class="op">=</span> <span class="fu">SingleCellExperiment</span><span class="fu">::</span><span class="fu">colData</span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">$</span><span class="va">autoAnnot</span>,</span>
+<span>  direction <span class="op">=</span> <span class="st">"up"</span>,</span>
+<span>  lfc <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  pval.type <span class="op">=</span> <span class="st">"any"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># pick top 5 per cluster, naming adjustments</span></span>
+<span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">markers_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">markers_list</span><span class="op">[[</span><span class="va">cluster</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">df</span><span class="op">$</span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span>  <span class="va">df</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">cluster</span></span>
+<span>  <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>      avg_log2FC <span class="op">=</span> <span class="va">summary.logFC</span>,</span>
+<span>      p_val      <span class="op">=</span> <span class="va">p.value</span>,</span>
+<span>      p_val_adj  <span class="op">=</span> <span class="va">FDR</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">cluster</span>, <span class="va">avg_log2FC</span>, <span class="va">p_val</span>, <span class="va">p_val_adj</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># or with seurat if preferred</span></span>
+<span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/as.Seurat.html" class="external-link">as.Seurat</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span></span>
 <span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
 <span>                                     assay <span class="op">=</span> <span class="st">"RNA"</span>,</span>
 <span>                                     group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>,</span>
@@ -333,15 +366,15 @@ Seurat’s <code>FindAllMarkers</code> function.</p>
 <span><span class="co">#&gt; Calculating cluster pDC</span></span>
 <span></span>
 <span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span> <span class="va">annotation_Markers</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">avg_log2FC</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>              </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">gene</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>       </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/plyr/man/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">avg_log2FC</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">gene</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>   </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
-<span>                 group.by.x <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
-<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,</span>
+<span>                 group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                 annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                 point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>                 annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -352,24 +385,24 @@ Seurat’s <code>FindAllMarkers</code> function.</p>
 <span>                 segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>                 lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/Manual%20annotation-1.png" width="1152"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co">#manual set of markers</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span>
+<span></span>
+<span><span class="co"># manual set of markers</span></span>
 <span><span class="va">annotation_Markers</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ImmuneCells"</span>,</span>
-<span>                                            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"B_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"T_cells"</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>                                            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Myeloid"</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>                                            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"pDC"</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                                genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PTPRC"</span>, <span class="st">"CD79A"</span>, <span class="st">"BANK1"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD3E"</span>, <span class="st">"CD4"</span>, <span class="st">"IL7R"</span>, <span class="st">"NKG7"</span>, </span>
-<span>                                          <span class="st">"KLRD1"</span>,<span class="st">"CD68"</span>, <span class="st">"CD14"</span>,<span class="st">"ITGAM"</span>, <span class="st">"LILRA4"</span>, <span class="st">"CLEC4C"</span>, <span class="st">"LRRC26"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"B_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Myeloid"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                                              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"pDC"</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PTPRC"</span>, <span class="st">"CD79A"</span>, <span class="st">"BANK1"</span>, <span class="st">"MS4A1"</span>,</span>
+<span>                                            <span class="st">"CD3E"</span>, <span class="st">"CD4"</span>, <span class="st">"IL7R"</span>, <span class="st">"NKG7"</span>,</span>
+<span>                                            <span class="st">"KLRD1"</span>, <span class="st">"CD68"</span>, <span class="st">"CD14"</span>, <span class="st">"ITGAM"</span>,</span>
+<span>                                            <span class="st">"LILRA4"</span>, <span class="st">"CLEC4C"</span>, <span class="st">"LRRC26"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">Seu_obj</span>,</span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
 <span>                 Feature <span class="op">=</span> <span class="va">annotation_Markers</span>,</span>
-<span>                 group.by.x <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
-<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,</span>
+<span>                 group.by.x <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>                 plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                 annotation_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                 point_stroke <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>                 annotation_x_rev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -380,22 +413,36 @@ Seurat’s <code>FindAllMarkers</code> function.</p>
 <span>                 segWidth <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>                 lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/Manual%20annotation-2.png" width="1152"></p>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span>
+<span></span>
+<span><span class="co"># Visualise marker expression in UMAP</span></span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>        FeaturePlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        features <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>        group.by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>        legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: The `slot` argument of `FetchData()` is deprecated as of SeuratObject 5.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Manual%20annotation-1.png" width="1152"></p>
 <p>The manual markers for the immune cells show an agreement for the
 annotation therefore we can continue with it after some minor
-adjustments</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">seurat_clusters</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`1` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                               `2` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                               `3` <span class="op">=</span> <span class="st">"NK"</span>,</span>
-<span>                                                               `4` <span class="op">=</span> <span class="st">"B_cells"</span>,</span>
-<span>                                                               `5` <span class="op">=</span> <span class="st">"Monocytes"</span>,</span>
-<span>                                                               `6` <span class="op">=</span> <span class="st">"NK"</span>,</span>
-<span>                                                               `7` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
-<span>                                                               `8` <span class="op">=</span> <span class="st">"pDC"</span><span class="op">)</span><span class="op">)</span></span>
+adjustments.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">leiden0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`1` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>                                                         `2` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>                                                         `3` <span class="op">=</span> <span class="st">"NK"</span>,</span>
+<span>                                                         `4` <span class="op">=</span> <span class="st">"B_cells"</span>,</span>
+<span>                                                         `5` <span class="op">=</span> <span class="st">"Monocytes"</span>,</span>
+<span>                                                         `6` <span class="op">=</span> <span class="st">"NK"</span>,</span>
+<span>                                                         `7` <span class="op">=</span> <span class="st">"T_cells"</span>,</span>
+<span>                                                         `8` <span class="op">=</span> <span class="st">"pDC"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/renaming-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -405,15 +452,15 @@ adjustments</p>
 evaluate if there are significant changes in these populations in the
 healthy and diseased condition using a wrapper function around the
 python tool <a href="https://pypi.org/project/scanpro/" class="external-link"><em>scanpro</em></a>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.CellComposition.html">DO.CellComposition</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.CellComposition.html">DO.CellComposition</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
 <span>                   assay_normalized <span class="op">=</span> <span class="st">"RNA"</span>,</span>
 <span>                   cluster_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                   sample_column <span class="op">=</span> <span class="st">"orig.ident"</span>,</span>
 <span>                   condition_column <span class="op">=</span> <span class="st">"condition"</span>,</span>
 <span>                   transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>                   n_reps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:25:48 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:00 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
@@ -427,48 +474,48 @@ practice to perform a reclustering of a given cell populations, if we
 are interested in a specific set of cells in a population. Here for
 example in the T cells. We will identify the subpopulations and then
 markers defining them.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.FullRecluster.html">DO.FullRecluster</a></span><span class="op">(</span><span class="va">Seu_obj</span>, over_clustering <span class="op">=</span> <span class="st">"annotation"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.FullRecluster.html">DO.FullRecluster</a></span><span class="op">(</span><span class="va">SCE_obj</span>, over_clustering <span class="op">=</span> <span class="st">"annotation"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Computing nearest neighbor graph</span></span>
+<span><span class="co">#&gt; Computing SNN</span></span>
+<span><span class="co">#&gt; 1 singletons identified. 2 final clusters.</span></span>
+<span><span class="co">#&gt; 1 singletons identified. 3 final clusters.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Recluster-1.png" width="700"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
 <span>                     ident <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
-<span>                     ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:04 - Specified 'ident_name': expecting a categorical variable.</span></span>
-<span></span>
-<span><span class="va">T_markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html" class="external-link">FindAllMarkers</a></span><span class="op">(</span><span class="va">T_cells</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Calculating cluster T_cells_1</span></span>
-<span><span class="co">#&gt; Calculating cluster T_cells_3</span></span>
-<span><span class="co">#&gt; Calculating cluster T_cells_2</span></span>
+<span>                     ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"T_cells"</span>,</span>
+<span>                                       <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">annotation_recluster</span><span class="op">)</span>,</span>
+<span>                                       value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:16 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">T_cells</span>,</span>
 <span>                         modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
-<span>                         runCelltypistUpdate<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>                         runCelltypistUpdate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                         over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>                         SeuV5 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:05 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:05 - Saving celltypist results to temporary folder: /tmp/RtmpPZHS4j/file1bb227e62b879</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:17 - Creating probality plot</span></span></code></pre></div>
-<p><img src="DOtools_files/figure-html/Recluster-2.png" width="700"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation_recluster</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`T_cells_1` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                                                    `T_cells_2` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                                                    `T_cells_3` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
-<span>                                                                    `T_cells_4` <span class="op">=</span> <span class="st">"CD8_T_cells"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; The following `from` values were not present in `x`: T_cells_4</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-09-30 11:33:16 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:16 - Saving celltypist results to temporary folder: /tmp/RtmpVVgHBg/filee2f4d2e1fe2ae</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:29 - Creating probality plot</span></span>
+<span></span>
+<span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation_recluster</span>,</span>
+<span>                                    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`T_cells_1` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>                                      `T_cells_2` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>                                      `T_cells_3` <span class="op">=</span> <span class="st">"CD4_T_cells"</span>,</span>
+<span>                                      `T_cells_4` <span class="op">=</span> <span class="st">"CD8_T_cells"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now that we identified the marker genes describing the different T
 cell populations. We can re-annotate them based on their expression
 profile and a new prediciton from Celltypist. After this we, can easily
 transfer the labels in the subset to the original object.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Seu_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.TransferLabel.html">DO.TransferLabel</a></span><span class="op">(</span><span class="va">Seu_obj</span>,</span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.TransferLabel.html">DO.TransferLabel</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
 <span>                            Subset_obj <span class="op">=</span> <span class="va">T_cells</span>,</span>
 <span>                            annotation_column <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>                            subset_annotation <span class="op">=</span> <span class="st">"annotation"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">Seu_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/re-annotate-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -481,36 +528,42 @@ cells. For differential gene expression analysis, we introduced a new
 function, which combines DGE analysis using a single cell approach,
 e.g. the popular Wilcoxon test and a pseudobulk testing using DESeq2. We
 can then observe the results in a combined dataframe.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># this data set contains only one sample per condition we introduce replicates for showing the pseudo bulk approach</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># this data set contains only one sample per condition</span></span>
+<span><span class="co"># we introduce replicates for showing the pseudo bulk approach</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">Seu_obj</span><span class="op">$</span><span class="va">orig.ident2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Seu_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">CD4T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">Seu_obj</span>, ident <span class="op">=</span> <span class="st">"annotation"</span>, ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:18 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">orig.ident2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span><span class="op">)</span>,</span>
+<span>                                  length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">CD4T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>                        ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>                        ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">CD4T_cells</span>,</span>
 <span>                          sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
 <span>                          method_sc <span class="op">=</span> <span class="st">"wilcox"</span>,</span>
 <span>                          ident_ctrl <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Names of identity class contain underscores ('_'), replacing with dashes ('-')</span></span>
-<span><span class="co">#&gt; Centering and scaling data matrix</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Starting DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Comparing disease with healthy in: CD4_T_cells</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Finished DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Starting DGE pseudo bulk method analysis</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:19 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; Centering and scaling data matrix</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Starting DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Finished DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Starting DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:30 - Comparing disease with healthy in: CD4_T_cells</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; 2025-07-26 09:26:20 - Finished DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:33:32 - Finished DGE pseudo bulk method analysis</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>,<span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>,</span>
+<span>                                      <span class="st">"hover"</span>,</span>
+<span>                                      <span class="st">"condensed"</span>,</span>
+<span>                                      <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%; margin-left: auto; margin-right: auto;" class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:left;">
@@ -553,10 +606,10 @@ p_val_SC_wilcox
 RGS1
 </td>
 <td style="text-align:right;">
-0.847
+0.823
 </td>
 <td style="text-align:right;">
-0.053
+0.056
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -565,10 +618,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-5.725615
+5.403102
 </td>
 <td style="text-align:right;">
-6.390029
+5.985999
 </td>
 <td style="text-align:right;">
 0
@@ -588,10 +641,10 @@ disease
 SRGN
 </td>
 <td style="text-align:right;">
-0.985
+0.977
 </td>
 <td style="text-align:right;">
-0.481
+0.489
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -600,10 +653,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-3.713146
+3.465517
 </td>
 <td style="text-align:right;">
-4.318726
+4.036209
 </td>
 <td style="text-align:right;">
 0
@@ -623,10 +676,10 @@ disease
 ZFP36
 </td>
 <td style="text-align:right;">
-0.908
+0.935
 </td>
 <td style="text-align:right;">
-0.419
+0.418
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -635,45 +688,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-2.921135
+3.211243
 </td>
 <td style="text-align:right;">
-3.460342
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KLF6
-</td>
-<td style="text-align:right;">
-0.913
-</td>
-<td style="text-align:right;">
-0.415
-</td>
-<td style="text-align:left;">
-CD4_T_cells
-</td>
-<td style="text-align:left;">
-disease
-</td>
-<td style="text-align:right;">
-2.163426
-</td>
-<td style="text-align:right;">
-2.734643
+3.690157
 </td>
 <td style="text-align:right;">
 0
@@ -693,10 +711,10 @@ disease
 FOS
 </td>
 <td style="text-align:right;">
-0.939
+0.962
 </td>
 <td style="text-align:right;">
-0.583
+0.587
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -705,10 +723,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-2.338456
+2.683427
 </td>
 <td style="text-align:right;">
-2.944901
+3.234824
 </td>
 <td style="text-align:right;">
 0
@@ -728,10 +746,10 @@ disease
 RGCC
 </td>
 <td style="text-align:right;">
-0.810
+0.862
 </td>
 <td style="text-align:right;">
-0.326
+0.321
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -740,80 +758,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-2.686536
+3.017829
 </td>
 <td style="text-align:right;">
-3.148416
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DUSP2
-</td>
-<td style="text-align:right;">
-0.767
-</td>
-<td style="text-align:right;">
-0.235
-</td>
-<td style="text-align:left;">
-CD4_T_cells
-</td>
-<td style="text-align:left;">
-disease
-</td>
-<td style="text-align:right;">
-2.895376
-</td>
-<td style="text-align:right;">
-3.457257
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DUSP1
-</td>
-<td style="text-align:right;">
-0.937
-</td>
-<td style="text-align:right;">
-0.595
-</td>
-<td style="text-align:left;">
-CD4_T_cells
-</td>
-<td style="text-align:left;">
-disease
-</td>
-<td style="text-align:right;">
-1.560897
-</td>
-<td style="text-align:right;">
-2.150082
+3.416695
 </td>
 <td style="text-align:right;">
 0
@@ -833,10 +781,10 @@ disease
 ACTB
 </td>
 <td style="text-align:right;">
-0.985
+0.977
 </td>
 <td style="text-align:right;">
-0.999
+0.998
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -845,10 +793,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
--1.948105
+-2.511950
 </td>
 <td style="text-align:right;">
--1.475069
+-1.930151
 </td>
 <td style="text-align:right;">
 0
@@ -865,13 +813,13 @@ disease
 </tr>
 <tr>
 <td style="text-align:left;">
-LMNA
+NR4A2
 </td>
 <td style="text-align:right;">
-0.497
+0.565
 </td>
 <td style="text-align:right;">
-0.049
+0.072
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -880,10 +828,115 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-3.789865
+3.337651
 </td>
 <td style="text-align:right;">
-4.570318
+3.896930
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KLF6
+</td>
+<td style="text-align:right;">
+0.904
+</td>
+<td style="text-align:right;">
+0.426
+</td>
+<td style="text-align:left;">
+CD4_T_cells
+</td>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+2.169921
+</td>
+<td style="text-align:right;">
+2.707374
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AREG
+</td>
+<td style="text-align:right;">
+0.446
+</td>
+<td style="text-align:right;">
+0.031
+</td>
+<td style="text-align:left;">
+CD4_T_cells
+</td>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+4.239660
+</td>
+<td style="text-align:right;">
+4.782775
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ATF3
+</td>
+<td style="text-align:right;">
+0.323
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:left;">
+CD4_T_cells
+</td>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+6.284469
+</td>
+<td style="text-align:right;">
+8.336005
 </td>
 <td style="text-align:right;">
 0
@@ -903,8 +956,8 @@ disease
 <p>After inspecting the DGE analysis, we continue with
 <code>DO.enrichR</code> function, which uses the enrichR API to run gene
 set enrichment. It separates the DE genes into up- and down-regulated
-sets and runs the analysis for each group independently</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+sets and runs the analysis for each group independently.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result_GO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.enrichR.html">DO.enrichR</a></span><span class="op">(</span>df_DGE <span class="op">=</span> <span class="va">DGE_result</span>,</span>
 <span>                        gene_column <span class="op">=</span> <span class="st">"gene"</span>,</span>
 <span>                        pval_column <span class="op">=</span> <span class="st">"p_val_adj_SC_wilcox"</span>,</span>
@@ -924,9 +977,12 @@ sets and runs the analysis for each group independently</p>
 <span><span class="co">#&gt;   Querying GO_Biological_Process_2023... Done.</span></span>
 <span><span class="co">#&gt; Parsing results... Done.</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result_GO</span>,<span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result_GO</span>, <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>bootstrap_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"striped"</span>,</span>
+<span>                                      <span class="st">"hover"</span>,</span>
+<span>                                      <span class="st">"condensed"</span>,</span>
+<span>                                      <span class="st">"responsive"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%; margin-left: auto; margin-right: auto;" class="table table table-striped table-hover table-condensed table-responsive">
 <thead><tr>
 <th style="text-align:left;">
@@ -966,51 +1022,16 @@ State
 <tbody>
 <tr>
 <td style="text-align:left;">
-Positive Regulation Of Cytokine Production (<a href="GO:0001819" class="uri">GO:0001819</a>)
+Regulation Of Apoptotic Process (<a href="GO:0042981" class="uri">GO:0042981</a>)
 </td>
 <td style="text-align:left;">
-23/320
+23/705
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-0e+00
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-9.103525
-</td>
-<td style="text-align:right;">
-279.79161
-</td>
-<td style="text-align:left;">
-EGR1;CD74;CEBPB;ANXA1;F2R;TWIST1;RORA;ISG15;TNF;SLC7A5;RGCC;PTPRC;IFNG;IRF4;NLRP3;CCR7;IL6ST;TIGIT;GAPDH;CD200;HSPA1B;HLA-DPA1;HSPA1A
-</td>
-<td style="text-align:left;">
-GO_Biological_Process_2023
-</td>
-<td style="text-align:left;">
-enriched
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Negative Regulation Of Transcription By RNA Polymerase II (<a href="GO:0000122" class="uri">GO:0000122</a>)
-</td>
-<td style="text-align:left;">
-29/763
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2e-07
+2.0e-07
 </td>
 <td style="text-align:right;">
 0
@@ -1019,13 +1040,13 @@ Negative Regulation Of Transcription By RNA Polymerase II (<a href="GO:0000122" 
 0
 </td>
 <td style="text-align:right;">
-4.710771
+6.105060
 </td>
 <td style="text-align:right;">
-106.17869
+138.78136
 </td>
 <td style="text-align:left;">
-CEBPA;CEBPB;CITED2;HMGB2;TWIST1;PRDM1;TNF;ZFP36;TRPS1;KLF10;JUN;CAV1;IRF2BP2;KLF4;SAP30;NR4A2;ETV7;ZEB2;MAF;NR4A3;BCL6;IFNG;ID2;ID1;BHLHE40;ID3;FOSB;ATF3;HSPA1A
+TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;IGFBP3;PLAUR;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1039,13 +1060,13 @@ enriched
 Regulation Of Transcription By RNA Polymerase II (<a href="GO:0006357" class="uri">GO:0006357</a>)
 </td>
 <td style="text-align:left;">
-49/2028
+37/2028
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-3e-07
+2.2e-06
 </td>
 <td style="text-align:right;">
 0
@@ -1054,13 +1075,13 @@ Regulation Of Transcription By RNA Polymerase II (<a href="GO:0006357" class="ur
 0
 </td>
 <td style="text-align:right;">
-3.153714
+3.611687
 </td>
 <td style="text-align:right;">
-67.92806
+70.82183
 </td>
 <td style="text-align:left;">
-CITED2;HMGB2;RORA;PRDM1;IKZF2;TNF;ZFP36;TRPS1;NAMPT;KDM6B;KLF10;TET2;FOS;ETV3;SAP30;ETV7;TOX2;ZEB2;MAF;IFNG;IRF4;ATF3;CEBPA;CEBPB;TWIST1;RBBP8;NLRP3;HES4;EGR1;JUN;EGR3;CAV1;IRF2BP2;KLF4;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;RGCC;NR4A3;BCL6;ID2;ID1;BHLHE40;REL;ID3;FOSB;HSPA1A
+CEBPB;CITED2;RORA;PRDM1;TNF;ZFP36;NAMPT;RBBP8;NLRP3;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;ETV3;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1071,16 +1092,16 @@ enriched
 </tr>
 <tr>
 <td style="text-align:left;">
-Regulation Of DNA-templated Transcription (<a href="GO:0006355" class="uri">GO:0006355</a>)
+Positive Regulation Of Programmed Cell Death (<a href="GO:0043068" class="uri">GO:0043068</a>)
 </td>
 <td style="text-align:left;">
-47/1922
+13/245
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-4e-07
+3.3e-06
 </td>
 <td style="text-align:right;">
 0
@@ -1089,13 +1110,13 @@ Regulation Of DNA-templated Transcription (<a href="GO:0006355" class="uri">GO:0
 0
 </td>
 <td style="text-align:right;">
-3.166167
+9.486735
 </td>
 <td style="text-align:right;">
-66.49666
+178.39945
 </td>
 <td style="text-align:left;">
-CDKN1C;CEBPA;CEBPB;CITED2;HMGB2;TWIST1;RORA;PRDM1;IKZF2;TNF;ZFP36L2;BASP1;TRPS1;RBBP8;TNFRSF4;HES4;KLF10;EGR1;CD74;JUN;EGR3;F2R;IRF2BP2;FOS;ETV3;KLF4;SAP30;FOSL2;NR4A2;ETV7;NR4A1;TOX2;ZEB2;KLF6;MAF;NR4A3;BCL6;IFNG;IRF4;ID2;ID1;BHLHE40;REL;ID3;FOSB;ATF3;HLA-DRB1
+TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1106,16 +1127,16 @@ enriched
 </tr>
 <tr>
 <td style="text-align:left;">
-Negative Regulation Of DNA-templated Transcription (<a href="GO:0045892" class="uri">GO:0045892</a>)
+Response To Glucocorticoid (<a href="GO:0051384" class="uri">GO:0051384</a>)
 </td>
 <td style="text-align:left;">
-32/1025
+6/26
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-9e-07
+4.8e-06
 </td>
 <td style="text-align:right;">
 0
@@ -1124,13 +1145,48 @@ Negative Regulation Of DNA-templated Transcription (<a href="GO:0045892" class="
 0
 </td>
 <td style="text-align:right;">
-3.862554
+48.417073
 </td>
 <td style="text-align:right;">
-76.86009
+878.20166
 </td>
 <td style="text-align:left;">
-CDKN1C;CEBPA;CEBPB;CITED2;HMGB2;TWIST1;PRDM1;TNF;ZFP36;BASP1;TRPS1;TNFRSF4;KLF10;JUN;CAV1;IRF2BP2;KLF4;SAP30;NR4A2;ETV7;ZEB2;MAF;NR4A3;BCL6;IFNG;ID2;ID1;BHLHE40;ID3;FOSB;ATF3;HSPA1A
+ZFP36;BCL2L11;ANXA1;TNF;ZFP36L2;ZFP36L1
+</td>
+<td style="text-align:left;">
+GO_Biological_Process_2023
+</td>
+<td style="text-align:left;">
+enriched
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Positive Regulation Of Apoptotic Process (<a href="GO:0043065" class="uri">GO:0043065</a>)
+</td>
+<td style="text-align:left;">
+13/270
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6.3e-06
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8.552999
+</td>
+<td style="text-align:right;">
+150.93612
+</td>
+<td style="text-align:left;">
+TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1142,8 +1198,8 @@ enriched
 </tbody>
 </table>
 <p>The top significant results can then be visualized in a bar plot.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result_GO_sig</span> <span class="op">&lt;-</span> <span class="va">result_GO</span><span class="op">[</span><span class="va">result_GO</span><span class="op">$</span><span class="va">Adjusted.P.value</span> <span class="op">&lt;</span> <span class="fl">0.05</span>, <span class="op">]</span> </span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result_GO_sig</span> <span class="op">&lt;-</span> <span class="va">result_GO</span><span class="op">[</span><span class="va">result_GO</span><span class="op">$</span><span class="va">Adjusted.P.value</span> <span class="op">&lt;</span> <span class="fl">0.05</span>, <span class="op">]</span></span>
 <span><span class="va">result_GO_sig</span><span class="op">$</span><span class="va">celltype</span> <span class="op">&lt;-</span> <span class="st">"CD4T_cells"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.SplitBarGSEA.html">DO.SplitBarGSEA</a></span><span class="op">(</span>df_GSEA <span class="op">=</span> <span class="va">result_GO_sig</span>,</span>
@@ -1153,9 +1209,119 @@ enriched
 <span>                pos_cond <span class="op">=</span> <span class="st">"enriched"</span>,</span>
 <span>                showP <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">GSEA_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">base</span>, pattern <span class="op">=</span> <span class="st">"SplitBar.*\\.svg$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">GSEA_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">base</span>,</span>
+<span>                        pattern <span class="op">=</span> <span class="st">"SplitBar.*\\.svg$"</span>,</span>
+<span>                        full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read_svg</a></span><span class="op">(</span><span class="va">GSEA_plot</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/GO%20visualisation-1.png" width="960"></p>
+<p>##Candidate gene visualisation</p>
+<p>After performing DGE and GO analyses, discovering whether specific
+genes are regulated in a particular disease state and/or cell type is a
+common step. To address this, we implemented advanced methods in our
+functions that provide summarised results and incorporate statistical
+testing to answer these questions efficiently.</p>
+<p>The <code>DO.Dotplot</code> function covers the expression over three
+variables at the same time along with statistical testing. For example,
+we can visualise the expression of a gene across cell types and
+conditions:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/DO.Dotplot.html">DO.Dotplot</a></span><span class="op">(</span>sce_object <span class="op">=</span> <span class="va">SCE_obj</span>,</span>
+<span>           group.by.x <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>           group.by.y <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>           Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>           stats_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Calculating cluster B_cells</span></span>
+<span><span class="co">#&gt; Calculating cluster CD4_T_cells</span></span>
+<span><span class="co">#&gt; Calculating cluster Monocytes</span></span>
+<span><span class="co">#&gt; Calculating cluster NK</span></span>
+<span><span class="co">#&gt; Calculating cluster pDC</span></span>
+<span><span class="co">#&gt; Calculating cluster T_cells_5</span></span>
+<span><span class="co">#&gt; Calculating cluster B_cells</span></span>
+<span><span class="co">#&gt; Calculating cluster CD4_T_cells</span></span>
+<span><span class="co">#&gt; Calculating cluster CD8_T_cells</span></span>
+<span><span class="co">#&gt; Calculating cluster Monocytes</span></span>
+<span><span class="co">#&gt; Calculating cluster NK</span></span>
+<span><span class="co">#&gt; Calculating cluster pDC</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">size</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/dotplot-1.png" width="480"></p>
+<p>The <code>DO.Heatmap</code> function shows the expression of multiple
+genes in a publish ready way, including statistical testing:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dotools_plots_"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">path_file</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/DO.Heatmap.html">DO.Heatmap</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>           group_by <span class="op">=</span> <span class="st">"leiden0.3"</span>,</span>
+<span>           features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
+<span>           xticks_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>           path <span class="op">=</span> <span class="va">path_file</span>,</span>
+<span>           stats_x_size <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>           showP <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Calculating cluster 1</span></span>
+<span><span class="co">#&gt; Calculating cluster 2</span></span>
+<span><span class="co">#&gt; Calculating cluster 3</span></span>
+<span><span class="co">#&gt; Calculating cluster 4</span></span>
+<span><span class="co">#&gt; Calculating cluster 5</span></span>
+<span><span class="co">#&gt; Calculating cluster 6</span></span>
+<span><span class="co">#&gt; Calculating cluster 7</span></span>
+<span><span class="co">#&gt; Calculating cluster 8</span></span>
+<span></span>
+<span><span class="va">Heatmap_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">path_file</span>,</span>
+<span>                           pattern <span class="op">=</span> <span class="st">"Heatmap*\\.svg$"</span>,</span>
+<span>                           full.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read_svg</a></span><span class="op">(</span><span class="va">Heatmap_plot</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Heat%20map-1.png" width="100%" style="display: block; margin: auto;"></p>
+<p>We can visualize the average expression of a gene in a cell type +
+condition or we can plot continuous metadata information across
+conditions with violinplots, barplots and boxplots. Additionally, we can
+test for significance.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">SCE_obj_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>                            ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>                            ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:34:01 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">SCE_obj_sub</span>,</span>
+<span>                Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>                group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>                group.by.2 <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>                ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:34:01 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">SCE_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>                           ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
+<span>                           ident_name <span class="op">=</span> <span class="st">"NK"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:34:02 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">SCE_obj_NK</span>,</span>
+<span>                 group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
+<span>                 ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span>
+<span>                 Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
+<span>                 x_label_rotation <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:34:02 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Bar-1.png" width="480"></p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">SCE_obj</span><span class="op">$</span><span class="va">rdm_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
+<span>                                    length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">SCE_obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/DO.BoxPlot.html">DO.BoxPlot</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
+<span>           group.by <span class="op">=</span> <span class="st">"rdm_sample"</span>,</span>
+<span>           ctrl.condition <span class="op">=</span> <span class="st">"A"</span>,</span>
+<span>           Feature <span class="op">=</span> <span class="st">"nCount_RNA"</span>,</span>
+<span>           step_mod <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>           stat_pos_mod <span class="op">=</span> <span class="fl">1.05</span>,</span>
+<span>           plot_sample <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using group, cluster as id variables</span></span>
+<span><span class="co">#&gt; 2025-09-30 11:34:03 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
+<p><img src="DOtools_files/figure-html/Box-1.png" width="480"></p>
 </div>
 </div>
 <div class="section level2">
@@ -1164,29 +1330,34 @@ enriched
 <pre><code><span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
 <span><span class="co">#&gt;  version  R version 4.5.1 (2025-06-13)</span></span>
-<span><span class="co">#&gt;  os       Ubuntu 24.04.2 LTS</span></span>
+<span><span class="co">#&gt;  os       Ubuntu 24.04.3 LTS</span></span>
 <span><span class="co">#&gt;  system   x86_64, linux-gnu</span></span>
 <span><span class="co">#&gt;  ui       X11</span></span>
 <span><span class="co">#&gt;  language en</span></span>
 <span><span class="co">#&gt;  collate  en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       Europe/Berlin</span></span>
-<span><span class="co">#&gt;  date     2025-07-26</span></span>
+<span><span class="co">#&gt;  date     2025-09-30</span></span>
 <span><span class="co">#&gt;  pandoc   3.4 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/ (via rmarkdown)</span></span>
 <span><span class="co">#&gt;  quarto   1.6.42 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/quarto</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">package             </span> <span style="color: #555555; font-style: italic;">*</span> <span style="color: #555555; font-style: italic;">version </span> <span style="color: #555555; font-style: italic;">date (UTC)</span> <span style="color: #555555; font-style: italic;">lib</span> <span style="color: #555555; font-style: italic;">source</span></span></span>
 <span><span class="co">#&gt;  abind                  1.4-8    <span style="color: #555555;">2024-09-12</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  assertthat             0.2.1    <span style="color: #555555;">2019-03-21</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  backports              1.5.0    <span style="color: #555555;">2024-05-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  basilisk               1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  basilisk.utils         1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  beachmat               2.24.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  Biobase                2.68.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  BiocGenerics           0.54.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  beeswarm               0.4.0    <span style="color: #555555;">2021-06-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  Biobase              * 2.68.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  BiocGenerics         * 0.54.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  BiocManager            1.30.26  <span style="color: #555555;">2025-06-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  BiocNeighbors          2.2.0    <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  BiocParallel           1.42.1   <span style="color: #555555;">2025-06-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  BiocSingular           1.24.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  BiocStyle            * 2.36.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  bluster                1.18.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  bookdown               0.43     <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  broom                  1.0.8    <span style="color: #555555;">2025-03-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  bslib                  0.9.0    <span style="color: #555555;">2025-01-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1196,6 +1367,7 @@ enriched
 <span><span class="co">#&gt;  cli                    3.6.5    <span style="color: #555555;">2025-04-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  cluster                2.1.8.1  <span style="color: #555555;">2025-03-12</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.3)</span></span></span>
 <span><span class="co">#&gt;  codetools              0.2-20   <span style="color: #555555;">2024-03-31</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.0)</span></span></span>
+<span><span class="co">#&gt;  colorspace             2.1-1    <span style="color: #555555;">2024-07-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  cowplot                1.1.3    <span style="color: #555555;">2024-01-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  crayon                 1.5.3    <span style="color: #555555;">2024-06-20</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  curl                   6.3.0    <span style="color: #555555;">2025-06-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1208,7 +1380,7 @@ enriched
 <span><span class="co">#&gt;  digest                 0.6.37   <span style="color: #555555;">2024-08-19</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dir.expiry             1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dotCall64              1.2      <span style="color: #555555;">2024-10-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  DOtools              * 0.99.0   <span style="color: #555555;">2025-07-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
+<span><span class="co">#&gt;  DOtools              * 0.99.5   <span style="color: #555555;">2025-09-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
 <span><span class="co">#&gt;  dplyr                * 1.1.4    <span style="color: #555555;">2023-11-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  dqrng                  0.4.1    <span style="color: #555555;">2024-05-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  DropletUtils           1.28.0   <span style="color: #555555;">2025-04-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
@@ -1220,19 +1392,21 @@ enriched
 <span><span class="co">#&gt;  fastmap                1.2.0    <span style="color: #555555;">2024-05-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  filelock               1.0.3    <span style="color: #555555;">2023-12-11</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  fitdistrplus           1.2-2    <span style="color: #555555;">2025-01-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  forcats                1.0.0    <span style="color: #555555;">2023-01-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  Formula                1.2-5    <span style="color: #555555;">2023-02-24</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  fs                     1.6.6    <span style="color: #555555;">2025-04-12</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  future               * 1.58.0   <span style="color: #555555;">2025-06-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  future.apply           1.20.0   <span style="color: #555555;">2025-06-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  generics               0.1.4    <span style="color: #555555;">2025-05-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  GenomeInfoDb           1.44.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  generics             * 0.1.4    <span style="color: #555555;">2025-05-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  GenomeInfoDb         * 1.44.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  GenomeInfoDbData       1.2.14   <span style="color: #555555;">2025-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor</span></span></span>
-<span><span class="co">#&gt;  GenomicRanges          1.60.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  GenomicRanges        * 1.60.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggalluvial             0.12.5   <span style="color: #555555;">2023-02-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  ggbeeswarm             0.7.2    <span style="color: #555555;">2023-04-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggcorrplot             0.1.4.1  <span style="color: #555555;">2023-09-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  ggiraph                0.8.13   <span style="color: #555555;">2025-03-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggiraphExtra           0.3.0    <span style="color: #555555;">2020-10-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  ggplot2                3.5.2    <span style="color: #555555;">2025-04-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  ggplot2              * 3.5.2    <span style="color: #555555;">2025-04-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggpubr                 0.6.0    <span style="color: #555555;">2023-02-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggrepel                0.9.6    <span style="color: #555555;">2024-09-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ggridges               0.5.6    <span style="color: #555555;">2024-01-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1253,8 +1427,8 @@ enriched
 <span><span class="co">#&gt;  httr                   1.4.7    <span style="color: #555555;">2023-08-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  ica                    1.0-3    <span style="color: #555555;">2022-07-08</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  igraph                 2.1.4    <span style="color: #555555;">2025-01-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  insight                1.3.0    <span style="color: #555555;">2025-05-20</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  IRanges                2.42.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  insight                1.3.1    <span style="color: #555555;">2025-06-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
+<span><span class="co">#&gt;  IRanges              * 2.42.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  irlba                  2.3.5.1  <span style="color: #555555;">2022-10-03</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  jquerylib              0.1.4    <span style="color: #555555;">2021-04-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  jsonlite               2.0.0    <span style="color: #555555;">2025-03-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1274,9 +1448,10 @@ enriched
 <span><span class="co">#&gt;  magick                 2.8.7    <span style="color: #555555;">2025-06-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  magrittr               2.0.3    <span style="color: #555555;">2022-03-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  MASS                   7.3-65   <span style="color: #555555;">2025-02-28</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.3)</span></span></span>
-<span><span class="co">#&gt;  Matrix                 1.7-3    <span style="color: #555555;">2025-03-11</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.3)</span></span></span>
-<span><span class="co">#&gt;  MatrixGenerics         1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  matrixStats            1.5.0    <span style="color: #555555;">2025-01-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  Matrix                 1.7-4    <span style="color: #555555;">2025-08-28</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
+<span><span class="co">#&gt;  MatrixGenerics       * 1.20.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  matrixStats          * 1.5.0    <span style="color: #555555;">2025-01-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  metapod                1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  mgcv                   1.9-1    <span style="color: #555555;">2023-12-21</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.3.2)</span></span></span>
 <span><span class="co">#&gt;  mime                   0.13     <span style="color: #555555;">2025-03-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  miniUI                 0.1.2    <span style="color: #555555;">2025-04-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1322,20 +1497,25 @@ enriched
 <span><span class="co">#&gt;  RSpectra               0.16-2   <span style="color: #555555;">2024-07-18</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rstatix                0.7.2    <span style="color: #555555;">2023-02-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rstudioapi             0.17.1   <span style="color: #555555;">2024-10-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  rsvd                   1.0.5    <span style="color: #555555;">2021-04-16</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  rsvg                   2.6.2    <span style="color: #555555;">2025-03-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  Rtsne                  0.17     <span style="color: #555555;">2023-12-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  S4Arrays               1.8.1    <span style="color: #555555;">2025-06-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  S4Vectors              0.46.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  S4Vectors            * 0.46.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sass                   0.4.10   <span style="color: #555555;">2025-04-11</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  ScaledMatrix           1.16.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  scales                 1.4.0    <span style="color: #555555;">2025-04-24</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  scater               * 1.36.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  scattermore            1.2      <span style="color: #555555;">2023-06-12</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  SCpubr                 2.0.2    <span style="color: #555555;">2023-10-11</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  scran                * 1.36.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sctransform            0.4.2    <span style="color: #555555;">2025-04-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  scuttle                1.18.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  scuttle              * 1.18.0   <span style="color: #555555;">2025-04-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sessioninfo            1.2.3    <span style="color: #555555;">2025-02-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  Seurat               * 5.3.0    <span style="color: #555555;">2025-04-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  SeuratObject         * 5.1.0    <span style="color: #555555;">2025-04-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  shiny                  1.10.0   <span style="color: #555555;">2024-12-14</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  SingleCellExperiment   1.30.1   <span style="color: #555555;">2025-05-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  SingleCellExperiment * 1.30.1   <span style="color: #555555;">2025-05-07</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sjlabelled             1.2.0    <span style="color: #555555;">2022-04-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sjmisc                 2.8.10   <span style="color: #555555;">2024-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  sp                   * 2.2-0    <span style="color: #555555;">2025-02-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1352,7 +1532,7 @@ enriched
 <span><span class="co">#&gt;  statmod                1.5.0    <span style="color: #555555;">2023-01-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  stringi                1.8.7    <span style="color: #555555;">2025-03-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  stringr                1.5.1    <span style="color: #555555;">2023-11-14</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
-<span><span class="co">#&gt;  SummarizedExperiment   1.38.1   <span style="color: #555555;">2025-04-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  SummarizedExperiment * 1.38.1   <span style="color: #555555;">2025-04-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">Bioconductor 3.21 (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  survival               3.8-3    <span style="color: #555555;">2024-12-17</span> <span style="color: #555555;">[5]</span> <span style="color: #555555;">CRAN (R 4.4.2)</span></span></span>
 <span><span class="co">#&gt;  svglite                2.2.1    <span style="color: #555555;">2025-05-12</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  systemfonts            1.2.3    <span style="color: #555555;">2025-04-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1366,6 +1546,8 @@ enriched
 <span><span class="co">#&gt;  uuid                   1.2-1    <span style="color: #555555;">2024-07-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  uwot                   0.2.3    <span style="color: #555555;">2025-02-24</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  vctrs                  0.6.5    <span style="color: #555555;">2023-12-01</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  vipor                  0.4.7    <span style="color: #555555;">2023-12-18</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
+<span><span class="co">#&gt;  viridis                0.6.5    <span style="color: #555555;">2024-01-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  viridisLite            0.4.2    <span style="color: #555555;">2023-05-02</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  withr                  3.0.2    <span style="color: #555555;">2024-10-28</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  WriteXLS               6.8.0    <span style="color: #555555;">2025-05-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
@@ -1378,7 +1560,7 @@ enriched
 <span><span class="co">#&gt;  zip                    2.3.3    <span style="color: #555555;">2025-05-13</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt;  zoo                    1.8-14   <span style="color: #555555;">2025-04-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.5.0)</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmprTfcJ4/temp_libpath154da34875cff</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;"> [1] /tmp/RtmpTMOBoP/temp_libpath5094546de7a84</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [2] /home/mariano/R/x86_64-pc-linux-gnu-library/4.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [3] /usr/local/lib/R/site-library</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [4] /usr/lib/R/site-library</span></span></span>
@@ -1404,7 +1586,7 @@ enriched
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John.</p>
+  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John, DFG SFB 1366, Project B04, DFG SFB 1531, Project 456687919.</p>
 </div>
 
 <div class="pkgdown-footer-right">

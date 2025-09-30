@@ -5,13 +5,15 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Box Graph with wilcox test on single cell level — DO.BoxPlot"><meta name="description" content="Creates a box plot using a pseudo-bulk approach and performs a Wilcoxon test on single-cell level.
-Allows customization of outlier removal, statistical labels, and color schemes.
-Supports comparison of conditions with optional second grouping.
-Useful for visualizing gene expression and statistical differences."><meta property="og:description" content="Creates a box plot using a pseudo-bulk approach and performs a Wilcoxon test on single-cell level.
-Allows customization of outlier removal, statistical labels, and color schemes.
-Supports comparison of conditions with optional second grouping.
-Useful for visualizing gene expression and statistical differences."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Box Graph with wilcox test on single cell level — DO.BoxPlot"><meta name="description" content="Creates a box plot using a pseudo-bulk approach and performs a
+Wilcoxon test on single-cell level. Allows customization of outlier removal,
+statistical labels, and color schemes. Supports comparison of conditions
+with optional second grouping. Useful for visualizing gene expression and
+statistical differences."><meta property="og:description" content="Creates a box plot using a pseudo-bulk approach and performs a
+Wilcoxon test on single-cell level. Allows customization of outlier removal,
+statistical labels, and color schemes. Supports comparison of conditions
+with optional second grouping. Useful for visualizing gene expression and
+statistical differences."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +21,7 @@ Useful for visualizing gene expression and statistical differences."><script def
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +31,6 @@ Useful for visualizing gene expression and statistical differences."><script def
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/DOtools.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfct.html">Usage of functions</a></li>
-    <li><a class="dropdown-item" href="../articles/cb.html">Remove ambient RNA with CellBender</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -53,15 +50,16 @@ Useful for visualizing gene expression and statistical differences."><script def
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Box Graph with wilcox test on single cell level</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.BoxPlot.R" class="external-link"><code>R/DO.BoxPlot.R</code></a></small>
       <div class="d-none name"><code>DO.BoxPlot.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>Creates a box plot using a pseudo-bulk approach and performs a Wilcoxon test on single-cell level.
-Allows customization of outlier removal, statistical labels, and color schemes.
-Supports comparison of conditions with optional second grouping.
-Useful for visualizing gene expression and statistical differences.</p>
+    <p>Creates a box plot using a pseudo-bulk approach and performs a
+Wilcoxon test on single-cell level. Allows customization of outlier removal,
+statistical labels, and color schemes. Supports comparison of conditions
+with optional second grouping. Useful for visualizing gene expression and
+statistical differences.</p>
     </div>
 
     <div class="section level2">
@@ -108,7 +106,8 @@ Useful for visualizing gene expression and statistical differences.</p>
 
 
 <dt id="arg-listtest">ListTest<a class="anchor" aria-label="anchor" href="#arg-listtest"></a></dt>
-<dd><p>List for which conditions wilcox will be performed, if NULL always CTRL group against everything</p></dd>
+<dd><p>List for which conditions wilcox will be performed, if NULL
+always CTRL group against everything</p></dd>
 
 
 <dt id="arg-group-by">group.by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
@@ -136,15 +135,18 @@ Useful for visualizing gene expression and statistical differences.</p>
 
 
 <dt id="arg-wilcox-test">wilcox_test<a class="anchor" aria-label="anchor" href="#arg-wilcox-test"></a></dt>
-<dd><p>If you want to have wilcoxon performed, boolean default TRUE</p></dd>
+<dd><p>If you want to have wilcoxon performed, boolean default
+TRUE</p></dd>
 
 
 <dt id="arg-stat-pos-mod">stat_pos_mod<a class="anchor" aria-label="anchor" href="#arg-stat-pos-mod"></a></dt>
-<dd><p>modificator for where the p-value is plotted increase for higher</p></dd>
+<dd><p>modificator for where the p-value is plotted increase
+for higher</p></dd>
 
 
 <dt id="arg-step-mod">step_mod<a class="anchor" aria-label="anchor" href="#arg-step-mod"></a></dt>
-<dd><p>value for defining the space between one test and the next one</p></dd>
+<dd><p>value for defining the space between one test and the
+next one</p></dd>
 
 
 <dt id="arg-hjust-wilcox">hjust.wilcox<a class="anchor" aria-label="anchor" href="#arg-hjust-wilcox"></a></dt>
@@ -160,7 +162,8 @@ Useful for visualizing gene expression and statistical differences.</p>
 
 
 <dt id="arg-hjust-wilcox-">hjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-hjust-wilcox-"></a></dt>
-<dd><p>value for adjusting height of the text, with group.by.2 specified</p></dd>
+<dd><p>value for adjusting height of the text, with
+group.by.2 specified</p></dd>
 
 
 <dt id="arg-vjust-wilcox-">vjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-vjust-wilcox-"></a></dt>
@@ -186,10 +189,12 @@ Useful for visualizing gene expression and statistical differences.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">sce_data</span><span class="op">$</span><span class="va">orig.ident</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">sce_data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sce_data</span><span class="op">$</span><span class="va">orig.ident</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">sce_data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ListTest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ListTest</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy"</span>, <span class="st">"disease"</span><span class="op">)</span></span></span>
@@ -214,7 +219,7 @@ Useful for visualizing gene expression and statistical differences.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John.</p>
+  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John, DFG SFB 1366, Project B04, DFG SFB 1531, Project 456687919.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -5,11 +5,15 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO Correlation Plot for visualizing similarity between categories — DO.Correlation"><meta name="description" content="' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
-Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
-Ideal for comparing transcriptional profiles between conditions or clusters."><meta property="og:description" content="' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
-Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
-Ideal for comparing transcriptional profiles between conditions or clusters."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO Correlation Plot for visualizing similarity between categories — DO.Correlation"><meta name="description" content="Generates a correlation heatmap from expression data to
+visualize similarity across sample groups. Allows customization of plot type,
+correlation method, and color scaling using the ggcorrplot2 and ggplot2
+architectures. Ideal for comparing transcriptional profiles between
+conditions or clusters."><meta property="og:description" content="Generates a correlation heatmap from expression data to
+visualize similarity across sample groups. Allows customization of plot type,
+correlation method, and color scaling using the ggcorrplot2 and ggplot2
+architectures. Ideal for comparing transcriptional profiles between
+conditions or clusters."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -17,7 +21,7 @@ Ideal for comparing transcriptional profiles between conditions or clusters."><s
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,11 +31,6 @@ Ideal for comparing transcriptional profiles between conditions or clusters."><s
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/DOtools.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfct.html">Usage of functions</a></li>
-    <li><a class="dropdown-item" href="../articles/cb.html">Remove ambient RNA with CellBender</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -51,14 +50,16 @@ Ideal for comparing transcriptional profiles between conditions or clusters."><s
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Correlation Plot for visualizing similarity between categories</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/plotting_functions.R" class="external-link"><code>R/plotting_functions.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.Correlation.R" class="external-link"><code>R/DO.Correlation.R</code></a></small>
       <div class="d-none name"><code>DO.Correlation.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>' Generates a correlation heatmap from expression data to visualize similarity across sample groups.
-Allows customization of plot type, correlation method, and color scaling using the ggcorrplot2 and ggplot2 architectures.
-Ideal for comparing transcriptional profiles between conditions or clusters.</p>
+    <p>Generates a correlation heatmap from expression data to
+visualize similarity across sample groups. Allows customization of plot type,
+correlation method, and color scaling using the ggcorrplot2 and ggplot2
+architectures. Ideal for comparing transcriptional profiles between
+conditions or clusters.</p>
     </div>
 
     <div class="section level2">
@@ -92,7 +93,8 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 
 
 <dt id="arg-group-by">group_by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
-<dd><p>Column to aggregate the expression over it, default "orig.ident"</p></dd>
+<dd><p>Column to aggregate the expression over it, default
+"orig.ident"</p></dd>
 
 
 <dt id="arg-assay">assay<a class="anchor" aria-label="anchor" href="#arg-assay"></a></dt>
@@ -116,19 +118,23 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 
 
 <dt id="arg-auto-limits">auto_limits<a class="anchor" aria-label="anchor" href="#arg-auto-limits"></a></dt>
-<dd><p>Automatically rescales the colour bar based on the values in the correlation matrix, default "TRUE"</p></dd>
+<dd><p>Automatically rescales the colour bar based on the values
+in the correlation matrix, default "TRUE"</p></dd>
 
 
 <dt id="arg-outline-color">outline.color<a class="anchor" aria-label="anchor" href="#arg-outline-color"></a></dt>
-<dd><p>the outline color of square or circle. Default value is "white".</p></dd>
+<dd><p>the outline color of square or circle. Default value is
+"white".</p></dd>
 
 
 <dt id="arg-colormap">colormap<a class="anchor" aria-label="anchor" href="#arg-colormap"></a></dt>
-<dd><p>Defines the colormap used in the plot, default c("royalblue4", "royalblue2","firebrick","firebrick4")</p></dd>
+<dd><p>Defines the colormap used in the plot, default
+c("royalblue4", "royalblue2","firebrick","firebrick4")</p></dd>
 
 
 <dt id="arg-lab-size">lab_size<a class="anchor" aria-label="anchor" href="#arg-lab-size"></a></dt>
-<dd><p>Size to be used for the correlation coefficient labels. used when lab = TRUE.</p></dd>
+<dd><p>Size to be used for the correlation coefficient labels. used
+when lab = TRUE.</p></dd>
 
 
 <dt id="arg-lab">lab<a class="anchor" aria-label="anchor" href="#arg-lab"></a></dt>
@@ -136,7 +142,8 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 
 
 <dt id="arg-lab-col">lab_col<a class="anchor" aria-label="anchor" href="#arg-lab-col"></a></dt>
-<dd><p>color to be used for the correlation coefficient labels. used when lab = TRUE.</p></dd>
+<dd><p>color to be used for the correlation coefficient labels. used
+when lab = TRUE.</p></dd>
 
 
 <dt id="arg-axis-size-x">axis_size_x<a class="anchor" aria-label="anchor" href="#arg-axis-size-x"></a></dt>
@@ -162,7 +169,8 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.Correlation</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
@@ -174,7 +182,7 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 <span class="r-in"><span>  plottype <span class="op">=</span> <span class="st">"full"</span>,</span></span>
 <span class="r-in"><span>  auto_limits <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  outline.color <span class="op">=</span> <span class="st">"white"</span>,</span></span>
-<span class="r-in"><span>  colormap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"royalblue4"</span>, <span class="st">"lightsteelblue"</span>, <span class="st">"tomato"</span>,<span class="st">"firebrick4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  colormap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"royalblue4"</span>, <span class="st">"lightsteelblue"</span>, <span class="st">"tomato"</span>, <span class="st">"firebrick4"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  lab_size <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  lab <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  lab_col <span class="op">=</span> <span class="st">"white"</span></span></span>
@@ -190,7 +198,7 @@ Ideal for comparing transcriptional profiles between conditions or clusters.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John.</p>
+  <p>Developed by Mariano Ruz Jurado, David Rodriguez Morales, David John, DFG SFB 1366, Project B04, DFG SFB 1531, Project 456687919.</p>
 </div>
 
 <div class="pkgdown-footer-right">

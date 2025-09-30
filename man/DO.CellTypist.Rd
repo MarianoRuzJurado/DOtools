@@ -20,15 +20,21 @@ DO.CellTypist(
 
 \item{modelName}{Specify the model you want to use for celltypist}
 
-\item{minCellsToRun}{If the input seurat or SCE object has fewer than this many cells, NAs will be added for all expected columns and celltypist will not be run.}
+\item{minCellsToRun}{If the input seurat or SCE object has fewer than this
+many cells, NAs will be added for all expected columns and celltypist will
+not be run.}
 
-\item{runCelltypistUpdate}{If true, --update-models will be run for celltypist prior to scoring cells.}
+\item{runCelltypistUpdate}{If true, --update-models will be run for
+celltypist prior to scoring cells.}
 
-\item{over_clustering}{Column in metadata in object with clustering assignments for cells, default seurat_clusters}
+\item{over_clustering}{Column in metadata in object with clustering
+assignments for cells, default seurat_clusters}
 
 \item{assay_normalized}{Assay with log1p normalized expressions}
 
-\item{returnProb}{will additionally return the probability matrix, return will give a list with the first element beeing the object and second prob matrix}
+\item{returnProb}{will additionally return the probability matrix, return
+will give a list with the first element beeing the object and second prob
+matrix}
 
 \item{SeuV5}{Specify if the Seurat object is made with Seuratv5}
 }
@@ -36,13 +42,15 @@ DO.CellTypist(
 a seurat or sce object
 }
 \description{
-Runs the CellTypist model on a Seurat or SCE object to predict cell type labels, storing the results as metadata.
-If the number of cells is less than the specified threshold, it returns NAs for the labels.
-Optionally updates the CellTypist models and returns the probability matrix.
-Useful for annotating cell types in single-cell RNA sequencing datasets.
+Runs the CellTypist model on a Seurat or SCE object to predict
+cell type labels, storing the results as metadata. If the number of cells is
+less than the specified threshold, it returns NAs for the labels. Optionally
+updates the CellTypist models and returns the probability matrix. Useful for
+annotating cell types in single-cell RNA sequencing datasets.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 
 sce_data <- DO.CellTypist(
@@ -50,8 +58,8 @@ sce_data <- DO.CellTypist(
   modelName = "Healthy_Adult_Heart.pkl",
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",
-  minCellsToRun=5,
-  SeuV5=TRUE
+  minCellsToRun = 5,
+  SeuV5 = TRUE
 )
 
 }
