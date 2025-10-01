@@ -122,7 +122,7 @@ DO.VlnPlot <- function(sce_object,
     }
 
     if (SeuV5 == TRUE) {
-        rlang::warn(
+        rlang::inform(
             "SeuV5 TRUE, if object Seuratv4 or below change SeuV5 to FALSE",
             .frequency = "once",
             .frequency_id = "v5Mean"

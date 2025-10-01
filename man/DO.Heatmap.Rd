@@ -61,17 +61,21 @@ DO.Heatmap(
 
 \item{groups_order}{order for the categories in the group_by}
 
-\item{value_plot}{plotted values correspond to expression values or foldchanges}
+\item{value_plot}{plotted values correspond to expression values or
+foldchanges}
 
-\item{group_fc}{if foldchanges specified than the groups must be specified that will be compared}
+\item{group_fc}{if foldchanges specified than the groups must be specified
+that will be compared}
 
 \item{group_fc_ident_1}{Defines the first group in the test}
 
 \item{group_fc_ident_2}{Defines the second group in the test}
 
-\item{clip_value}{Clips the colourscale to the 99th percentile, useful if one gene is driving the colourscale}
+\item{clip_value}{Clips the colourscale to the 99th percentile, useful if
+one gene is driving the colourscale}
 
-\item{max_fc}{Clips super high foldchanges to this value, so changes can still be appreciated}
+\item{max_fc}{Clips super high foldchanges to this value, so changes can
+still be appreciated}
 
 \item{z_score}{apply z-score transformation, "group" or "var"}
 
@@ -85,11 +89,14 @@ DO.Heatmap(
 
 \item{title}{title for the main plot}
 
-\item{title_fontprop}{font properties for the title (e.g., 'weight' and 'size')}
+\item{title_fontprop}{font properties for the title
+(e.g., 'weight' and 'size')}
 
-\item{clustering_method}{clustering method to use when hierarchically clustering the x and y-axis}
+\item{clustering_method}{clustering method to use when hierarchically
+clustering the x and y-axis}
 
-\item{clustering_metric}{metric to use when hierarchically clustering the x and y-axis}
+\item{clustering_metric}{metric to use when hierarchically clustering the x-
+and y-axis}
 
 \item{cluster_x_axis}{hierarchically clustering the x-axis}
 
@@ -101,7 +108,8 @@ DO.Heatmap(
 
 \item{linewidth}{line width for the border of cells}
 
-\item{ticks_fontdict}{font properties for the x and y ticks (e.g.,  'weight' and 'size')}
+\item{ticks_fontdict}{font properties for the x and y ticks
+(e.g.,  'weight' and 'size')}
 
 \item{xticks_rotation}{rotation of the x-ticks}
 
@@ -115,9 +123,12 @@ DO.Heatmap(
 
 \item{legend_title}{title for the color bar}
 
-\item{add_stats}{add statistical annotation, will add a square with an '*' in the center if the expression is significantly different in a group with respect to the others}
+\item{add_stats}{add statistical annotation, will add a square with an '*'
+in the center if the expression is significantly different in a group with
+respect to the others}
 
-\item{df_pvals}{dataframe with the p-values, should be gene x group or group x gene in case of swap_axes is False}
+\item{df_pvals}{dataframe with the p-values, should be gene x group or group
+x gene in case of swap_axes is False}
 
 \item{stats_x_size}{size of the asterisk}
 
@@ -138,17 +149,20 @@ DO.Heatmap(
 \item{logcounts}{whether the input is logcounts or not}
 }
 \value{
-Depending on \code{showP}, returns the plot if set to \code{TRUE} or a dictionary with the axes.
+Depending on \code{showP}, returns the plot if set to \code{TRUE} or a
+dictionary with the axes.
 }
 \description{
 Wrapper around heatmap.py, which generates a heatmap of
 showing the average nUMI for a set of genes in different groups.
 Addiional an argumnt can be made to show foldchanges between two conditions.
-Differential gene expression analysis between the different groups can be performed.
+Differential gene expression analysis between the different groups can be
+performed.
 }
 \examples{
 #'
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Heatmap(
 sce_object = sce_data,

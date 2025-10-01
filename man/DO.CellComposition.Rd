@@ -71,7 +71,8 @@ be sued to factorize the segments}
 \item{cowplot_width}{Changes the width on the plotting device for plot}
 
 \item{cowlegend_width}{Changes the width on the plotting device for legend,
-useful for adjusting the legend position in combination with legend.pos.x and y}
+useful for adjusting the legend position in combination with legend.pos.x
+and y}
 
 \item{...}{Further arguments passed to scanpro plotting functions}
 }
@@ -87,14 +88,14 @@ a list containing plot data and visualisation.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.CellComposition(
-  sce_object = sce_data,
-  cluster_column = "annotation",
-  condition_column = "condition",
-  scanpro_plots = FALSE,
-  n_reps = 5
+    sce_object = sce_data,
+    cluster_column = "annotation",
+    condition_column = "condition",
+    scanpro_plots = FALSE,
+    n_reps = 5
 )
 
 }

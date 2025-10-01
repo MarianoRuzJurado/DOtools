@@ -90,7 +90,7 @@ DO.Dotplot <- function(sce_object,
     ...) {
     # support for single cell experiment objects
     if (is(sce_object, "SingleCellExperiment")) {
-        sce_object <- as.Seurat(sce_object)
+        sce_object <- .suppressAllWarnings(as.Seurat(sce_object))
     }
 
     if (!is.vector(Feature) && !is.data.frame(Feature)) {

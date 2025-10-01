@@ -36,7 +36,7 @@ DO.FullRecluster <- function(sce_object,
     # support for single cell experiment objects
     if (is(sce_object, "SingleCellExperiment")) {
         class_obj <- "SingleCellExperiment"
-        sce_object <- as.Seurat(sce_object)
+        sce_object <- .suppressAllWarnings(as.Seurat(sce_object))
         sce_object <- FindNeighbors(sce_object, reduction = "PCA")
     } else {
         class_obj <- "Seurat"

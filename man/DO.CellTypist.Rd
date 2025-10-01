@@ -50,16 +50,16 @@ annotating cell types in single-cell RNA sequencing datasets.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 
 sce_data <- DO.CellTypist(
-  sce_object = sce_data,
-  modelName = "Healthy_Adult_Heart.pkl",
-  runCelltypistUpdate = TRUE,
-  over_clustering = "seurat_clusters",
-  minCellsToRun = 5,
-  SeuV5 = TRUE
+    sce_object = sce_data,
+    modelName = "Healthy_Adult_Heart.pkl",
+    runCelltypistUpdate = TRUE,
+    over_clustering = "seurat_clusters",
+    minCellsToRun = 5,
+    SeuV5 = TRUE
 )
 
 }

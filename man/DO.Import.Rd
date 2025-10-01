@@ -23,59 +23,75 @@ DO.Import(
 )
 }
 \arguments{
-\item{pathways}{A character vector of paths to directories or files containing raw expression matrices.}
+\item{pathways}{A character vector of paths to directories or files
+containing raw expression matrices.}
 
-\item{ids}{A character vector of sample identifiers, matching the order of \code{pathways}.}
+\item{ids}{A character vector of sample identifiers, matching the order
+of \code{pathways}.}
 
-\item{minCellGenes}{Integer. Minimum number of cells a gene must be expressed in to be retained. Default is 5.}
+\item{minCellGenes}{Integer. Minimum number of cells a gene must be expressed
+in to be retained. Default is 5.}
 
-\item{FilterCells}{Logical. If \code{TRUE}, applies QC filtering on cells based on mitochondrial content, counts, and feature thresholds. Default is \code{TRUE}.}
+\item{FilterCells}{Logical. If \code{TRUE}, applies QC filtering on cells based on
+mitochondrial content, counts, and feature thresholds. Default is \code{TRUE}.}
 
-\item{cut_mt}{Numeric. Maximum allowed mitochondrial gene proportion per cell. Default is 0.05.}
+\item{cut_mt}{Numeric. Maximum allowed mitochondrial gene proportion per
+cell. Default is 0.05.}
 
-\item{min_counts}{Numeric. Minimum UMI count threshold (optional, used only if \code{low_quantile} is \code{NULL}).}
+\item{min_counts}{Numeric. Minimum UMI count threshold
+(optional, used only if \code{low_quantile} is \code{NULL}).}
 
-\item{max_counts}{Numeric. Maximum UMI count threshold (optional, used only if \code{high_quantile} is \code{NULL}).}
+\item{max_counts}{Numeric. Maximum UMI count threshold
+(optional, used only if \code{high_quantile} is \code{NULL}).}
 
-\item{min_genes}{Numeric. Minimum number of genes detected per cell to retain. Optional.}
+\item{min_genes}{Numeric. Minimum number of genes detected per cell to
+retain. Optional.}
 
-\item{max_genes}{Numeric. Maximum number of genes detected per cell to retain. Optional.}
+\item{max_genes}{Numeric. Maximum number of genes detected per cell to
+retain. Optional.}
 
-\item{low_quantile}{Numeric. Quantile threshold (0 to 1) to filter low UMI cells (used if \code{min_counts} is \code{NULL}).}
+\item{low_quantile}{Numeric. Quantile threshold (0 to 1) to filter low UMI
+cells (used if \code{min_counts} is \code{NULL}).}
 
-\item{high_quantile}{Numeric. Quantile threshold (0 to 1) to filter high UMI cells (used if \code{max_counts} is \code{NULL}).}
+\item{high_quantile}{Numeric. Quantile threshold (0 to 1) to filter high UMI
+cells (used if \code{max_counts} is \code{NULL}).}
 
-\item{DeleteDoublets}{Logical. If \code{TRUE}, doublets are detected and removed using \code{scDblFinder}. Default is \code{TRUE}.}
+\item{DeleteDoublets}{Logical. If \code{TRUE}, doublets are detected and removed
+using \code{scDblFinder}. Default is \code{TRUE}.}
 
-\item{include_rbs}{Logical. If \code{TRUE}, calculates ribosomal gene content in addition to mitochondrial content. Default is \code{TRUE}.}
+\item{include_rbs}{Logical. If \code{TRUE}, calculates ribosomal gene content in
+addition to mitochondrial content. Default is \code{TRUE}.}
 
 \item{Seurat}{Logical. If \code{TRUE}, returns Seurat object otherwise SCE object.}
 
 \item{...}{Additional arguments passed to \code{RunPCA()}.}
 }
 \value{
-A merged Seurat or SCE object containing all samples, with normalization, QC, scaling, PCA, and optional doublet removal applied.
+A merged Seurat or SCE object containing all samples, with
+normalization, QC, scaling, PCA, and optional doublet removal applied.
 }
 \description{
-Imports and processes single-cell RNA-seq data from various formats (10x Genomics, CellBender, or CSV),
-performs quality control (QC), filtering, normalization, variable gene selection, and optionally detects doublets.
-Returns a merged and processed Seurat or SCE object ready for downstream analysis.
+Imports and processes single-cell RNA-seq data from various formats
+(10x Genomics, CellBender, or CSV), performs quality control (QC), filtering
+, normalization, variable gene selection, and optionally detects doublets.
+Returns a merged and processed Seurat or SCE object ready for downstream
+analysis.
 }
 \examples{
 \dontrun{
 merged_obj <- DO.Import(
-  pathways = c("path/to/sample1", "path/to/sample2"),
-  ids = c("sample1", "sample2"),
-  TenX = TRUE,
-  CellBender = FALSE,
-  minCellGenes = 5,
-  FilterCells = TRUE,
-  cut_mt = 0.05,
-  min_counts = 1000,
-  max_counts = 20000,
-  min_genes = 200,
-  max_genes = 6000,
-  DeleteDoublets = TRUE
+    pathways = c("path/to/sample1", "path/to/sample2"),
+    ids = c("sample1", "sample2"),
+    TenX = TRUE,
+    CellBender = FALSE,
+    minCellGenes = 5,
+    FilterCells = TRUE,
+    cut_mt = 0.05,
+    min_counts = 1000,
+    max_counts = 20000,
+    min_genes = 200,
+    max_genes = 6000,
+    DeleteDoublets = TRUE
 )
 }
 

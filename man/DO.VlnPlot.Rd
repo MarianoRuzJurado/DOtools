@@ -35,23 +35,32 @@ DO.VlnPlot(
 
 \item{Feature}{name of the feature}
 
-\item{ListTest}{List for which conditions wilcox will be performed, if NULL always CTRL group against everything}
+\item{ListTest}{List for which conditions wilcox will be performed, if NULL
+always CTRL group against everything}
 
-\item{returnValues}{return df.melt.sum data frame containing means and SEM for the set group}
+\item{returnValues}{return df.melt.sum data frame containing means and SEM
+for the set group}
 
-\item{ctrl.condition}{set your ctrl condition, relevant if running with empty comparison List}
+\item{ctrl.condition}{set your ctrl condition, relevant if running with empty
+comparison List}
 
-\item{group.by}{select the seurat sce_object slot where your conditions can be found, default conditon}
+\item{group.by}{select the seurat sce_object slot where your conditions can
+be found, default conditon}
 
-\item{group.by.2}{relevant for multiple group testing, e.g. for each cell type the test between each of them in two conditions provided}
+\item{group.by.2}{relevant for multiple group testing, e.g. for each
+cell type the test between each of them in two conditions provided}
 
-\item{geom_jitter_args}{vector for dots visualisation in vlnplot: size, width, alpha value}
+\item{geom_jitter_args}{vector for dots visualisation in vlnplot:
+size, width, alpha value}
 
-\item{geom_jitter_args_group_by2}{controls the jittering of points if group.by.2 is specified}
+\item{geom_jitter_args_group_by2}{controls the jittering of points if
+group.by.2 is specified}
 
-\item{vector_colors}{specify a minimum number of colours as you have entries in your condition, default 2}
+\item{vector_colors}{specify a minimum number of colours as you have entries
+in your condition, default 2}
 
-\item{wilcox_test}{Bolean if TRUE a bonferoni wilcoxon test will be carried out between ctrl.condition and the rest}
+\item{wilcox_test}{Bolean if TRUE a bonferoni wilcoxon test will be carried
+out between ctrl.condition and the rest}
 
 \item{stat_pos_mod}{value for modifiyng statistics height}
 
@@ -61,9 +70,11 @@ DO.VlnPlot(
 
 \item{size.wilcox}{value for size of text of statistical test}
 
-\item{step_mod}{value for defining the space between one test and the next one}
+\item{step_mod}{value for defining the space between one test and the next
+one}
 
-\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2 specified}
+\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2
+specified}
 
 \item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
 
@@ -73,24 +84,28 @@ DO.VlnPlot(
 a ggplot or a list used data frames
 }
 \description{
-Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
-It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
-The plot can be customized with options for data transformation, jitter display, and significance annotations.
-The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.
+Creates a violin plot to compare gene expression across
+different conditions or groups within a Seurat object. It incorporates
+Wilcoxon rank-sum tests to evaluate statistical differences between
+conditions. The plot can be customized with options for data transformation,
+jitter display, and significance annotations. The function also supports
+multiple conditions and allows for visualisation of statistical results from
+wilcoxon test.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.VlnPlot(
-  sce_object = sce_data,
-  SeuV5=TRUE,
-  Feature = "NKG7",
-  ListTest = ListTest,
-  ctrl.condition = "healthy",
-  group.by="condition"
+    sce_object = sce_data,
+    SeuV5 = TRUE,
+    Feature = "NKG7",
+    ListTest = ListTest,
+    ctrl.condition = "healthy",
+    group.by = "condition"
 )
 
 }

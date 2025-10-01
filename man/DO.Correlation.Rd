@@ -74,22 +74,22 @@ conditions or clusters.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Correlation(
-  sce_object = sce_data,
-  group_by = "orig.ident",
-  assay = "RNA",
-  features = NULL,
-  method = "spearman",
-  plotdesign = "square",
-  plottype = "full",
-  auto_limits = TRUE,
-  outline.color = "white",
-  colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
-  lab_size = 10,
-  lab = TRUE,
-  lab_col = "white"
+    sce_object = sce_data,
+    group_by = "orig.ident",
+    assay = "RNA",
+    features = NULL,
+    method = "spearman",
+    plotdesign = "square",
+    plottype = "full",
+    auto_limits = TRUE,
+    outline.color = "white",
+    colormap = c("royalblue4", "lightsteelblue", "tomato", "firebrick4"),
+    lab_size = 10,
+    lab = TRUE,
+    lab_col = "white"
 )
 
 }

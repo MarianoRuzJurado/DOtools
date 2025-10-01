@@ -27,46 +27,58 @@ DO.enrichR(
 
 \item{log2fc_column}{column name in \code{df} with log2 fold changes.}
 
-\item{pval_cutoff}{adjusted p-value threshold for significance (default = 0.05).}
+\item{pval_cutoff}{adjusted p-value threshold for significance
+(default = 0.05).}
 
-\item{log2fc_cutoff}{log2 fold change threshold for up/down regulation (default = 0.25).}
+\item{log2fc_cutoff}{log2 fold change threshold for up/down regulation
+(default = 0.25).}
 
-\item{path}{folder path where the output Excel file will be saved. A subfolder "GSA_Tables" will be created.}
+\item{path}{folder path where the output Excel file will be saved. A
+subfolder "GSA_Tables" will be created.}
 
-\item{filename}{suffix used in the Excel filename (e.g., "GSA_CellType_MyAnalysis.xlsx").}
+\item{filename}{suffix used in the Excel filename
+(e.g., "GSA_CellType_MyAnalysis.xlsx").}
 
-\item{species}{species name for enrichment analysis. Options include "Human", "Mouse", "Yeast", etc. (default = "Mouse").}
+\item{species}{species name for enrichment analysis. Options include "Human",
+"Mouse", "Yeast", etc. (default = "Mouse").}
 
-\item{go_catgs}{GO databases to use. Defaults to c("GO_Molecular_Function_2023", "GO_Cellular_Component_2023", "GO_Biological_Process_2023").}
+\item{go_catgs}{GO databases to use.
+Defaults to c(GO_Biological_Process_2023").}
 }
 \value{
-data.frame with GO enrichment results if \code{path} is NULL, otherwise writes an Excel file.
+data.frame with GO enrichment results if \code{path} is NULL, otherwise
+writes an Excel file.
 }
 \description{
-Performs Gene Ontology enrichment analysis on differentially expressed genes using the EnrichR API.
-Separately analyzes upregulated and downregulated genes and returns results.
+Performs Gene Ontology enrichment analysis on differentially expressed genes
+using the EnrichR API. Separately analyzes upregulated and downregulated
+genes and returns results.
 }
 \examples{
 library(enrichR)
 
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 DGE_result <- DO.MultiDGE(sce_data,
-                         sample_col = "orig.ident",
-                         method_sc = "wilcox",
-                         annotation_col = "annotation",
-                         ident_ctrl = "healthy")
+    sample_col = "orig.ident",
+    method_sc = "wilcox",
+    annotation_col = "annotation",
+    ident_ctrl = "healthy"
+)
 
-DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells", ]
 
-result_GO <- DO.enrichR(df_DGE = DGE_result,
-                       gene_column = "gene",
-                       pval_column = "p_val_SC_wilcox",
-                       log2fc_column = "avg_log2FC_SC_wilcox",
-                       pval_cutoff = 0.05,
-                       log2fc_cutoff = 0.25,
-                       path = NULL,
-                       filename = "",
-                       species = "Human",
-                       go_catgs = "GO_Biological_Process_2023")
+result_GO <- DO.enrichR(
+    df_DGE = DGE_result,
+    gene_column = "gene",
+    pval_column = "p_val_SC_wilcox",
+    log2fc_column = "avg_log2FC_SC_wilcox",
+    pval_cutoff = 0.05,
+    log2fc_cutoff = 0.25,
+    path = NULL,
+    filename = "",
+    species = "Human",
+    go_catgs = "GO_Biological_Process_2023"
+)
 
 }

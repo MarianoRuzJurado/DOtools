@@ -24,7 +24,7 @@ remove no longer needed layers from th object.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 sce_data <- DO.DietSCE(sce_data, pattern = "data")
 

@@ -50,9 +50,7 @@ through DropletUtils implementation}
 None
 }
 \description{
-It is supposed to make something similar than the no longer
-working DietSeurat function, by removing no longer needed layers from the
-object. This function wraps a system call to a bash script for running
+This function wraps a system call to a bash script for running
 CellBender on CellRanger outputs. It ensures required inputs are available
 and optionally installs CellBender in a conda env.
 }
@@ -67,15 +65,15 @@ samplenames <- c("Sample_1", "Sample_2")
 
 # Run CellBender (uses GPU by default)
 DO.CellBender(
-  cellranger_path = cellranger_path,
-  output_path = output_path,
-  samplenames = samplenames,
-  cuda = TRUE,
-  cpu_threads = 8,
-  epochs = 100,
-  lr = 0.00001,
-  estimator_multiple_cpu = FALSE,
-  log = TRUE
+    cellranger_path = cellranger_path,
+    output_path = output_path,
+    samplenames = samplenames,
+    cuda = TRUE,
+    cpu_threads = 8,
+    epochs = 100,
+    lr = 0.00001,
+    estimator_multiple_cpu = FALSE,
+    log = TRUE
 )
 }
 

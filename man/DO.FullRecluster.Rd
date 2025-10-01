@@ -15,11 +15,13 @@ DO.FullRecluster(
 \arguments{
 \item{sce_object}{The seurat or SCE object}
 
-\item{over_clustering}{Column in metadata in object with clustering assignments for cells, default seurat_clusters}
+\item{over_clustering}{Column in metadata in object with clustering
+assignments for cells, default seurat_clusters}
 
 \item{res}{Resolution for the new clusters, default 0.5}
 
-\item{algorithm}{Set one of the available algorithms found in FindSubCLuster function, default = 4: leiden}
+\item{algorithm}{Set one of the available algorithms found in FindSubCLuster
+function, default = 4: leiden}
 
 \item{graph.name}{A builded neirest neighbor graph}
 }
@@ -27,16 +29,19 @@ DO.FullRecluster(
 a Seurat or SCE Object with new clustering named annotation_recluster
 }
 \description{
-Performs iterative reclustering on each major cluster found by FindClusters in a Seurat or SCE object.
-It refines the clusters using the FindSubCluster function for better resolution and fine-tuned annotation.
-The new clustering results are stored in a metadata column called \code{annotation_recluster}.
-Suitable for improving cluster precision and granularity after initial clustering.
+Performs iterative reclustering on each major cluster found by
+FindClusters in a Seurat or SCE object. It refines the clusters using the
+FindSubCluster function for better resolution and fine-tuned annotation. The
+new clustering results are stored in a metadata column called
+\code{annotation_recluster}. Suitable for improving cluster precision and
+granularity after initial clustering.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 sce_data <- DO.FullRecluster(
-  sce_object = sce_data
+    sce_object = sce_data
 )
 
 }

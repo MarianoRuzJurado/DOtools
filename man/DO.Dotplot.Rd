@@ -37,7 +37,8 @@ DO.Dotplot(
 \arguments{
 \item{sce_object}{The SCE object or Seurat}
 
-\item{Feature}{Genes or DF of interest, Data frame should have columns with gene and annotation information, e.g. output of FindAllMarkers}
+\item{Feature}{Genes or DF of interest, Data frame should have columns with
+gene and annotation information, e.g. output of FindAllMarkers}
 
 \item{group.by.x}{group name to plot on x-axis}
 
@@ -45,9 +46,11 @@ DO.Dotplot(
 
 \item{group.by.y2}{second group name to look for in meta data}
 
-\item{across.group.by.x}{calculate a pseudobulk expression approach for the x-axis categories}
+\item{across.group.by.x}{calculate a pseudobulk expression approach for the
+x-axis categories}
 
-\item{across.group.by.y}{calculate a pseudobulk expression approach for the y-axis categories, if group.by.y2 is specified Pseudobulk will be splitted by it}
+\item{across.group.by.y}{calculate a pseudobulk expression approach for the
+y-axis categories}
 
 \item{sort_x}{Vector sorting the xaxis}
 
@@ -57,7 +60,8 @@ DO.Dotplot(
 
 \item{midpoint}{midpoint in color gradient}
 
-\item{scale_gene}{IF True calculates the Z-score of the average expression per gene}
+\item{scale_gene}{If True calculates the Z-score of the average expression
+per gene}
 
 \item{returnValue}{return the dataframe behind the plot}
 
@@ -87,26 +91,29 @@ DO.Dotplot(
 
 \item{nudge_y}{Control the position of the star on y axis}
 
-\item{...}{Further arguments passed to annoSegment function if annotation_x == TRUE}
+\item{...}{Further arguments passed to annoSegment function if
+annotation_x == TRUE}
 }
 \value{
 a ggplot
 }
 \description{
-This function generates a dot plot for multiple genes, comparing expression levels across one or two specified groups.
-It supports both individual and pseudobulk expression calculations.
-Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
-The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.
+This function generates a dot plot for multiple genes, comparing
+expression levels across one or two specified groups. It supports both
+individual and pseudobulk expression calculations. Highly variable
+customization options allow control over dot size, color scaling,
+annotations, and axis orientation. The function integrates seamlessly with
+SCE objects for single-cell RNA-seq analysis.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 DO.Dotplot(
-  sce_object = sce_data,
-  Feature = c("NKG7","IL6","MALAT1"),
-  group.by.x="condition"
+    sce_object = sce_data,
+    Feature = c("NKG7", "IL6", "MALAT1"),
+    group.by.x = "condition"
 )
-
 
 }
 \author{

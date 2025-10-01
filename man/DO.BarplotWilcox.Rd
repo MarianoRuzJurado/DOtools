@@ -68,17 +68,17 @@ generated plot.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.BarplotWilcox(
-  sce_object = sce_data,
-  Feature = "NKG7",
-  ListTest = ListTest,
-  ctrl.condition = "healthy",
-  group.by = "condition"
+    sce_object = sce_data,
+    Feature = "NKG7",
+    ListTest = ListTest,
+    ctrl.condition = "healthy",
+    group.by = "condition"
 )
 
 }

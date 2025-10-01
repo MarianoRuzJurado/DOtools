@@ -86,22 +86,22 @@ statistical differences.
 }
 \examples{
 sce_data <-
-  readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 set.seed(123)
 sce_data$orig.ident <-
-  sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
+    sample(rep(c("A", "B", "C"), length.out = ncol(sce_data)))
 
 ListTest <- list()
 ListTest[[1]] <- c("healthy", "disease")
 
 DO.BoxPlot(
-  sce_object = sce_data,
-  Feature = "NKG7",
-  sample.column="orig.ident",
-  ListTest = ListTest,
-  group.by="condition",
-  ctrl.condition = "healthy",
+    sce_object = sce_data,
+    Feature = "NKG7",
+    sample.column = "orig.ident",
+    ListTest = ListTest,
+    group.by = "condition",
+    ctrl.condition = "healthy",
 )
 
 }

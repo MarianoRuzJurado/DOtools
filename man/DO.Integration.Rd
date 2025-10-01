@@ -2,7 +2,7 @@
 % Please edit documentation in R/DO.Integration.R
 \name{DO.Integration}
 \alias{DO.Integration}
-\title{DO.Integration supporting sce experiment directly through direct conversion}
+\title{DO.Integration SCE object integration directly}
 \usage{
 DO.Integration(
   sce_object,
@@ -34,7 +34,8 @@ DO.Integration(
 \arguments{
 \item{sce_object}{Seurat or SCE Object}
 
-\item{split_key}{Character. Column in meta data to split the samples by, default orig.ident}
+\item{split_key}{Character. Column in meta data to split the samples by,
+default orig.ident}
 
 \item{HVG}{Logical. Perform detection of highly variable genes}
 
@@ -48,9 +49,12 @@ DO.Integration(
 
 \item{clusters}{Logical. Perform clustering of cells}
 
-\item{clusters_res}{Numeric. Value of the resolution parameter, use a value above (below) 1.0 if you want to obtain a larger (smaller) number of communities.}
+\item{clusters_res}{Numeric. Value of the resolution parameter, use a value
+above (below) 1.0 if you want to obtain a larger (smaller) number of
+communities.}
 
-\item{clusters_algorithm}{Numeric. Define the algorithm for clustering, default 4 for "Leiden"}
+\item{clusters_algorithm}{Numeric. Define the algorithm for clustering,
+default 4 for "Leiden"}
 
 \item{umap}{Logical. Runs the Uniform Manifold Approximation and Projection}
 
@@ -58,19 +62,27 @@ DO.Integration(
 
 \item{umap_dim}{Numeric range. Which dimensions to use as input features}
 
-\item{integration_method}{Character. Define the integration method, please check what versions are supported in Seurat::IntegrateLayers function}
+\item{integration_method}{Character. Define the integration method, please
+check what versions are supported in Seurat::IntegrateLayers function}
 
-\item{selection_method}{Character. Default "vst". Options: "mean.var.plot", "dispersion"}
+\item{selection_method}{Character. Default "vst". Options: "mean.var.plot",
+"dispersion"}
 
-\item{loess_span}{Numeric. Loess span parameter used when fitting the variance-mean relationship}
+\item{loess_span}{Numeric. Loess span parameter used when fitting the
+variance-mean relationship}
 
-\item{clip_max}{Character. After standardization values larger than clip.max will be set to clip.max; default is 'auto' which sets this value to the square root of the number of cells}
+\item{clip_max}{Character. After standardization values larger than clip.max
+will be set to clip.max; default is 'auto' which sets this value to the
+square root of the number of cells}
 
-\item{num_bin}{Numeric. Total number of bins to use in the scaled analysis (default is 20)}
+\item{num_bin}{Numeric. Total number of bins to use in the scaled analysis
+(default is 20)}
 
-\item{binning_method}{Character. “equal_width”: each bin is of equal width along the x-axis (default). Options: “equal_frequency”:}
+\item{binning_method}{Character. “equal_width”: each bin is of equal width
+along the x-axis (default). Options: “equal_frequency”:}
 
-\item{scale_max}{Numeric.     Max value to return for scaled data. The default is 10.}
+\item{scale_max}{Numeric. Max value to return for scaled data. The default
+is 10.}
 
 \item{pca_key}{Character. Key name to save the pca result in}
 
@@ -84,19 +96,23 @@ DO.Integration(
 integrated sce/seurat object
 }
 \description{
-Integrates single-cell RNA-seq data directly from SingleCellExperiment or Seurat objects.
-Supports detection of variable genes, scaling, PCA, neighbor graph construction,
-clustering, and UMAP embedding, with multiple integration methods.
+Integrates single-cell RNA-seq data directly from
+SingleCellExperiment or Seurat objects. Supports detection of variable genes
+, scaling, PCA, neighbor graph construction, clustering, and UMAP embedding,
+with multiple integration methods.
 }
 \examples{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
-DO.Integration(sce_object = sce_data,
-split_key="orig.ident",
-HVG = TRUE,
-scale = TRUE,
-pca = TRUE,
-integration_method = "CCAIntegration")
+DO.Integration(
+    sce_object = sce_data,
+    split_key = "orig.ident",
+    HVG = TRUE,
+    scale = TRUE,
+    pca = TRUE,
+    integration_method = "CCAIntegration"
+)
 
 }
 \author{

@@ -42,9 +42,11 @@
 \arguments{
 \item{object}{ggplot list. Default(NULL).}
 
-\item{relSideDist}{The relative distance ratio to the y axis range. Default(0.1).}
+\item{relSideDist}{The relative distance ratio to the y axis range.
+Default(0.1).}
 
-\item{aesGroup}{Whether use your group column to add rect annotation. Default("FALSE").}
+\item{aesGroup}{Whether use your group column to add rect annotation.
+Default("FALSE").}
 
 \item{aesGroName}{The mapping column name. Default(NULL).}
 
@@ -66,7 +68,8 @@
 
 \item{lineend}{The segment line end. Default("square").}
 
-\item{annoManual}{Whether annotate by yourself by supplying with x and y coordinates. Default(FALSE).}
+\item{annoManual}{Whether annotate by yourself by supplying with x and y
+coordinates. Default(FALSE).}
 
 \item{mArrow}{Whether add segment arrow. Default(FALSE).}
 
@@ -98,11 +101,14 @@
 
 \item{vjust}{The text vjust. Default(NULL).}
 
-\item{myFacetGrou}{Your facet group name to be added with annotation when object is a faceted object. Default(NULL).}
+\item{myFacetGrou}{Your facet group name to be added with annotation when
+object is a faceted object. Default(NULL).}
 
-\item{aes_x}{= NULL You should supply the plot X mapping name when annotate a facetd plot. Default(NULL).}
+\item{aes_x}{= NULL You should supply the plot X mapping name when annotate
+a facetd plot. Default(NULL).}
 
-\item{aes_y}{= NULL You should supply the plot Y mapping name when annotate a facetd plot. Default(NULL).}
+\item{aes_y}{= NULL You should supply the plot Y mapping name when annotate
+a facetd plot. Default(NULL).}
 }
 \value{
 ggplot

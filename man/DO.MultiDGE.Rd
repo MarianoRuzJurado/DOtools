@@ -24,42 +24,56 @@ DO.MultiDGE(
 
 \item{assay}{Specified assay in Seurat or SCE object, default "RNA"}
 
-\item{method_sc}{method to use for single cell DEG analysis, see FindMarkers from Seurat for options, default "wilcox"}
+\item{method_sc}{method to use for single cell DEG analysis, see FindMarkers
+from Seurat for options, default "wilcox"}
 
-\item{group_by}{Column in meta data containing groups used for testing, default "condition"}
+\item{group_by}{Column in meta data containing groups used for testing,
+default "condition"}
 
-\item{annotation_col}{Column in meta data containing information of cell type annotation}
+\item{annotation_col}{Column in meta data containing information of cell type
+annotation}
 
-\item{sample_col}{Column in meta data containing information of sample annotation, default "orig.ident"}
+\item{sample_col}{Column in meta data containing information of sample
+annotation, default "orig.ident"}
 
-\item{ident_ctrl}{Name of the condition in group_by to test against as ctrl, default "ctrl"}
+\item{ident_ctrl}{Name of the condition in group_by to test against as ctrl,
+default "ctrl"}
 
-\item{min_pct}{only test genes that are detected in a minimum fraction of min.pct cells in either of the two populations, default is 0}
+\item{min_pct}{only test genes that are detected in a minimum fraction of
+min.pct cells in either of the two populations, default is 0}
 
-\item{logfc_threshold}{Limit testing to genes which show, on average, at least X-fold difference (log-scale) between the two groups of cells, default is 0.}
+\item{logfc_threshold}{Limit testing to genes which show, on average, at
+least X-fold difference (log-scale) between the two groups of cells, default
+is 0.}
 
 \item{only_pos}{Only return positive markers, default FALSE}
 
-\item{min_cells_group}{Minimum number of cells in one of the groups, default 3}
+\item{min_cells_group}{Minimum number of cells in one of the groups,
+default 3}
 
 \item{...}{Additional arguments passed to FindMarkers function}
 }
 \value{
-Dataframe containing statistics for each gene from the single cell and the Pseudobulk DGE approach.
+Dataframe containing statistics for each gene from the single cell
+and the Pseudobulk DGE approach.
 }
 \description{
-Performs differential gene expression analysis using both single-cell and pseudo-bulk approaches across all annotated cell types.
-The single-cell method uses Seurat's \code{FindMarkers}, while pseudo-bulk testing uses \code{DESeq2} on aggregated expression profiles.
-Outputs a merged data frame with DGE statistics from both methods per condition and cell type.
+Performs differential gene expression analysis using both single-cell and
+pseudo-bulk approaches across all annotated cell types. The single-cell
+method uses Seurat's \code{FindMarkers}, while pseudo-bulk testing uses \code{DESeq2}
+on aggregated expression profiles. Outputs a merged data frame with DGE
+statistics from both methods per condition and cell type.
 }
 \examples{
 
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 DGE_result <- DO.MultiDGE(sce_data,
-                         sample_col = "orig.ident",
-                         method_sc = "wilcox",
-                         annotation_col = "annotation",
-                         ident_ctrl = "healthy")
+    sample_col = "orig.ident",
+    method_sc = "wilcox",
+    annotation_col = "annotation",
+    ident_ctrl = "healthy"
+)
 
 }
 \author{

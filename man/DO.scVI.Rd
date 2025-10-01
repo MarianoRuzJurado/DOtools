@@ -26,11 +26,14 @@ DO.scVI(
 
 \item{layer_counts}{layer with counts. Raw counts are required.}
 
-\item{layer_logcounts}{layer with log-counts. Log-counts required for calculation of HVG.}
+\item{layer_logcounts}{layer with log-counts. Log-counts required for
+calculation of HVG.}
 
-\item{categorical_covariates}{meta data column names with categorical covariates for scVI inference.}
+\item{categorical_covariates}{meta data column names with categorical
+covariates for scVI inference.}
 
-\item{continuos_covariates}{meta data  column names with continuous covariates for scVI inference.}
+\item{continuos_covariates}{meta data  column names with continuous
+covariates for scVI inference.}
 
 \item{n_hidden}{number of hidden layers.}
 
@@ -48,16 +51,18 @@ DO.scVI(
 Seurat or SCE Object with dimensionality reduction from scVI
 }
 \description{
-This function will run the scVI Integration from the scVI python package. It includes all parameters from the actual python package
-and runs it by using an internal python script. The usage of a gpu is incorporated and highly recommended.
+This function will run the scVI Integration from the scVI python
+package. It includes all parameters from the actual python package and runs
+it by using an internal python script. The usage of a gpu is incorporated
+and highly recommended.
 }
 \examples{
 \dontrun{
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 # Run scVI using the 'orig.ident' column as the batch key
 sce_data <- DO.scVI(sce_data, batch_key = "orig.ident")
-
 }
 
 }

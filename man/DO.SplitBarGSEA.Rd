@@ -30,27 +30,32 @@ DO.SplitBarGSEA(
 
 \item{term_col}{column in the dataframe that contains the terms}
 
-\item{col_split}{column in the dataframe that will be used to sort and split the plot}
+\item{col_split}{column in the dataframe that will be used to sort and split
+the plot}
 
-\item{cond_col}{column in the dataframe that contains the condition information}
+\item{cond_col}{column in the dataframe that contains the condition
+information}
 
 \item{pos_cond}{condition that will be shown in the positive side of the plot}
 
 \item{cutoff}{maximum number of characters per line}
 
-\item{log10_transform}{if col_split contains values between 0 and 1, assume they are pvals and apply a -log10 transformation}
+\item{log10_transform}{if col_split contains values between 0 and 1, assume
+they are pvals and apply a -log10 transformation}
 
 \item{figsize}{figure size}
 
 \item{topN}{how many terms are shown}
 
-\item{colors_pairs}{colors for each condition (1st color --> negative axis; 2nd color --> positive axis)}
+\item{colors_pairs}{colors for each condition
+(1st color --> negative axis; 2nd color --> positive axis)}
 
 \item{alpha_colors}{alpha value for the colors of the bars}
 
 \item{path}{path to save the plot}
 
-\item{spacing}{space to add between bars and origin. It is a percentage value, indicating that the bars start at 5 \% of the maximum X axis value.}
+\item{spacing}{space to add between bars and origin. It is a percentage value
+, indicating that the bars start at 5 \% of the maximum X axis value.}
 
 \item{txt_size}{size of the go terms text}
 
@@ -60,65 +65,73 @@ DO.SplitBarGSEA(
 
 \item{showP}{if False, the axis is return}
 
-\item{celltype}{vector with cell types you want to subset for, use "all" for all celltypes contained in the dataframe column "celltype"}
+\item{celltype}{vector with cell types you want to subset for, use "all" for
+all celltypes contained in the dataframe column "celltype"}
 }
 \value{
 : None or the axis
 }
 \description{
-This function generates a split barplot. This is a plot where the top 10 Go terms
-are shown, sorted based on a column ('col_split'). Two conditions are shown at the same
-time. One condition is shown in the positive axis, while the other in the negative one.
-The condition to be shown as positive is set with 'pos_col'.
+This function generates a split barplot. This is a plot where
+the top 10 Go terms are shown, sorted based on a column ('col_split'). Two
+conditions are shown at the same time. One condition is shown in the positive
+axis, while the other in the negative one. The condition to be shown as
+positive is set with 'pos_col'.
 
-The GO terms will be shown inside the bars, if the term is too long, using 'cutoff',
-you can control the maximum number of characters per line.
+The GO terms will be shown inside the bars, if the term is too long, using
+'cutoff', you can control the maximum number of characters per line.
 
 Pre-filter of the dataframe to contain significant Terms is recommended
 }
 \examples{
 library(enrichR)
 
-sce_data <- readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 DGE_result <- DO.MultiDGE(sce_data,
-                         sample_col = "orig.ident",
-                         method_sc = "wilcox",
-                         annotation_col = "annotation",
-                         ident_ctrl = "healthy")
-DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells",]
+    sample_col = "orig.ident",
+    method_sc = "wilcox",
+    annotation_col = "annotation",
+    ident_ctrl = "healthy"
+)
+DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells", ]
 
-result_GO <- DO.enrichR(df_DGE = DGE_result,
-                       gene_column = "gene",
-                       pval_column = "p_val_SC_wilcox",
-                       log2fc_column = "avg_log2FC_SC_wilcox",
-                       pval_cutoff = 0.05,
-                       log2fc_cutoff = 0.25,
-                       path = NULL,
-                       filename = "",
-                       species = "Human",
-                       go_catgs = "GO_Biological_Process_2023")
+result_GO <- DO.enrichR(
+    df_DGE = DGE_result,
+    gene_column = "gene",
+    pval_column = "p_val_SC_wilcox",
+    log2fc_column = "avg_log2FC_SC_wilcox",
+    pval_cutoff = 0.05,
+    log2fc_cutoff = 0.25,
+    path = NULL,
+    filename = "",
+    species = "Human",
+    go_catgs = "GO_Biological_Process_2023"
+)
 
 result_GO$celltype <- "CM1"
 
-#Run SplitBarGSEA visualisation
-DO.SplitBarGSEA(df_GSEA = result_GO,
-                term_col = "Term",
-                col_split = "Combined.Score",
-                cond_col = "State",
-                pos_cond = "enriched",
-                cutoff = 40,
-                log10_transform = TRUE,
-                figsize = c(12, 8),
-                topN = 10,
-                colors_pairs = c("sandybrown", "royalblue"),
-                alpha_colors = 0.3,
-                path = NULL,
-                spacing = 5,
-                txt_size = 12,
-                filename = "SplitBar.svg",
-                title = "Top 10 GO Terms in each Condition: ",
-                showP = FALSE,
-                celltype = "all")
+# Run SplitBarGSEA visualisation
+DO.SplitBarGSEA(
+    df_GSEA = result_GO,
+    term_col = "Term",
+    col_split = "Combined.Score",
+    cond_col = "State",
+    pos_cond = "enriched",
+    cutoff = 40,
+    log10_transform = TRUE,
+    figsize = c(12, 8),
+    topN = 10,
+    colors_pairs = c("sandybrown", "royalblue"),
+    alpha_colors = 0.3,
+    path = NULL,
+    spacing = 5,
+    txt_size = 12,
+    filename = "SplitBar.svg",
+    title = "Top 10 GO Terms in each Condition: ",
+    showP = FALSE,
+    celltype = "all"
+)
 
 }
 \author{
