@@ -275,15 +275,15 @@ clusters and generate UMAP embeddings.</p>
 <span>    pca <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:47 - Splitting object for integration with CCAIntegration by orig.ident</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:47 - Calculating highly variable genes</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:48 - Scaling object</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:48 - Running pca, saved in key: PCA</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:43 - Splitting object for integration with CCAIntegration by orig.ident</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:44 - Calculating highly variable genes</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:44 - Scaling object</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:45 - Running pca, saved in key: PCA</span></span>
 <span><span class="co">#&gt; Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:50 - Running integration, saved in key: INTEGRATED.CCA</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:54 - Running Nearest-neighbor graph construction</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:55 - Running cluster detection</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:25:56 - Creating UMAP</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-10-02 12:40:46 - Running integration, saved in key: INTEGRATED.CCA</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:50 - Running Nearest-neighbor graph construction</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:51 - Running cluster detection</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:40:52 - Creating UMAP</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># (Optional) Integration with scVI-Model</span></span>
 <span><span class="va">SCE_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.scVI.html">DO.scVI</a></span><span class="op">(</span></span>
@@ -335,9 +335,9 @@ will annotate the defined clusters based on the
 <span>    runCelltypistUpdate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    over_clustering <span class="op">=</span> <span class="st">"leiden0.3"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:26:04 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:26:04 - Saving celltypist results to temporary folder: /tmp/RtmpjDEpwE/file26b0695d64e3</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:27:25 - Creating probality plot</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:41:00 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:41:00 - Saving celltypist results to temporary folder: /tmp/RtmpM4YVn5/file26f2d363c38</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:42:18 - Creating probality plot</span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"autoAnnot"</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/annotation-1.png" width="700"></p>
 <p>The semi-automatic annotation is a good estimate of the cell types in
@@ -499,7 +499,7 @@ python tool <a href="https://pypi.org/project/scanpro/" class="external-link"><e
 <span>    transform_method <span class="op">=</span> <span class="st">"arcsin"</span>,</span>
 <span>    n_reps <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:27:37 - Bootstrapping method activated with 3 simulated replicates!</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:42:29 - Bootstrapping method activated with 3 simulated replicates!</span></span>
 <span><span class="co">#&gt; .</span></span>
 <span><span class="co">#&gt; Using orig.ident, condition as id variables</span></span>
 <span><span class="co">#&gt; Using condition as id variables</span></span></code></pre></div>
@@ -518,6 +518,7 @@ markers defining them.</p>
 <span><span class="co">#&gt; Computing nearest neighbor graph</span></span>
 <span><span class="co">#&gt; Computing SNN</span></span>
 <span><span class="co">#&gt; 1 singletons identified. 2 final clusters.</span></span>
+<span><span class="co">#&gt; 1 singletons identified. 3 final clusters.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="fu"><a href="../reference/DO.UMAP.html">DO.UMAP</a></span><span class="op">(</span><span class="va">SCE_obj</span>, group.by <span class="op">=</span> <span class="st">"annotation_recluster"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Recluster-1.png" width="700"></p>
@@ -529,7 +530,7 @@ markers defining them.</p>
 <span>        value <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:27:57 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:42:50 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">T_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.CellTypist.html">DO.CellTypist</a></span><span class="op">(</span><span class="va">T_cells</span>,</span>
 <span>    modelName <span class="op">=</span> <span class="st">"Healthy_COVID19_PBMC.pkl"</span>,</span>
@@ -537,9 +538,9 @@ markers defining them.</p>
 <span>    over_clustering <span class="op">=</span> <span class="st">"annotation_recluster"</span>,</span>
 <span>    SeuV5 <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:27:57 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:27:57 - Saving celltypist results to temporary folder: /tmp/RtmpjDEpwE/file26b06d63ea20</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:13 - Creating probality plot</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:42:50 - Running celltypist using model: Healthy_COVID19_PBMC.pkl</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:42:50 - Saving celltypist results to temporary folder: /tmp/RtmpM4YVn5/file26f2670085b4</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:04 - Creating probality plot</span></span>
 <span></span>
 <span><span class="va">T_cells</span><span class="op">$</span><span class="va">annotation</span> <span class="op">&lt;-</span> <span class="fu">plyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plyr/man/revalue.html" class="external-link">revalue</a></span><span class="op">(</span></span>
 <span>    <span class="va">T_cells</span><span class="op">$</span><span class="va">annotation_recluster</span>,</span>
@@ -585,7 +586,7 @@ can then observe the results in a combined dataframe.</p>
 <span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>    ident_name <span class="op">=</span> <span class="st">"CD4_T_cells"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:15 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:06 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="va">DGE_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.MultiDGE.html">DO.MultiDGE</a></span><span class="op">(</span><span class="va">CD4T_cells</span>,</span>
 <span>    sample_col <span class="op">=</span> <span class="st">"orig.ident2"</span>,</span>
@@ -595,17 +596,17 @@ can then observe the results in a combined dataframe.</p>
 <span><span class="co">#&gt; Names of identity class contain underscores ('_'), replacing with dashes ('-')</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once every 8 hours.</span></span></span>
 <span><span class="co">#&gt; Centering and scaling data matrix</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:15 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:15 - Starting DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:15 - Comparing disease with healthy in: CD4_T_cells</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:16 - Finished DGE single cell method analysis</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:16 - Starting DGE pseudo bulk method analysis</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:16 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:07 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:07 - Starting DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:07 - Comparing disease with healthy in: CD4_T_cells</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:08 - Finished DGE single cell method analysis</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:08 - Starting DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:08 - Comparing disease with healthy in: CD4_T_cells</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:18 - Finished DGE pseudo bulk method analysis</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:10 - Finished DGE pseudo bulk method analysis</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DGE_result</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, table.attr <span class="op">=</span> <span class="st">"style='width:100%;'"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -657,7 +658,7 @@ p_val_SC_wilcox
 RGS1
 </td>
 <td style="text-align:right;">
-0.842
+0.823
 </td>
 <td style="text-align:right;">
 0.056
@@ -669,10 +670,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-5.533589
+5.403102
 </td>
 <td style="text-align:right;">
-6.151546
+5.985999
 </td>
 <td style="text-align:right;">
 0
@@ -692,7 +693,7 @@ disease
 SRGN
 </td>
 <td style="text-align:right;">
-0.982
+0.977
 </td>
 <td style="text-align:right;">
 0.489
@@ -704,10 +705,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-3.525225
+3.465517
 </td>
 <td style="text-align:right;">
-4.102434
+4.036209
 </td>
 <td style="text-align:right;">
 0
@@ -727,7 +728,7 @@ disease
 ZFP36
 </td>
 <td style="text-align:right;">
-0.919
+0.935
 </td>
 <td style="text-align:right;">
 0.418
@@ -739,10 +740,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-3.109840
+3.211243
 </td>
 <td style="text-align:right;">
-3.593822
+3.690157
 </td>
 <td style="text-align:right;">
 0
@@ -762,7 +763,7 @@ disease
 FOS
 </td>
 <td style="text-align:right;">
-0.946
+0.962
 </td>
 <td style="text-align:right;">
 0.587
@@ -774,10 +775,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-2.524148
+2.683427
 </td>
 <td style="text-align:right;">
-3.072799
+3.234824
 </td>
 <td style="text-align:right;">
 0
@@ -797,7 +798,7 @@ disease
 RGCC
 </td>
 <td style="text-align:right;">
-0.842
+0.862
 </td>
 <td style="text-align:right;">
 0.321
@@ -809,45 +810,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-2.889576
+3.017829
 </td>
 <td style="text-align:right;">
-3.276652
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KLF6
-</td>
-<td style="text-align:right;">
-0.910
-</td>
-<td style="text-align:right;">
-0.426
-</td>
-<td style="text-align:left;">
-CD4_T_cells
-</td>
-<td style="text-align:left;">
-disease
-</td>
-<td style="text-align:right;">
-2.175010
-</td>
-<td style="text-align:right;">
-2.720788
+3.416695
 </td>
 <td style="text-align:right;">
 0
@@ -867,7 +833,7 @@ disease
 ACTB
 </td>
 <td style="text-align:right;">
-0.979
+0.977
 </td>
 <td style="text-align:right;">
 0.998
@@ -879,45 +845,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
--2.323961
+-2.511950
 </td>
 <td style="text-align:right;">
--1.771189
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DUSP1
-</td>
-<td style="text-align:right;">
-0.949
-</td>
-<td style="text-align:right;">
-0.592
-</td>
-<td style="text-align:left;">
-CD4_T_cells
-</td>
-<td style="text-align:left;">
-disease
-</td>
-<td style="text-align:right;">
-1.722000
-</td>
-<td style="text-align:right;">
-2.264606
+-1.930151
 </td>
 <td style="text-align:right;">
 0
@@ -934,13 +865,13 @@ disease
 </tr>
 <tr>
 <td style="text-align:left;">
-FTH1
+NR4A2
 </td>
 <td style="text-align:right;">
-0.997
+0.565
 </td>
 <td style="text-align:right;">
-0.989
+0.072
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -949,10 +880,10 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-1.703221
+3.337651
 </td>
 <td style="text-align:right;">
-2.134547
+3.896930
 </td>
 <td style="text-align:right;">
 0
@@ -969,13 +900,13 @@ disease
 </tr>
 <tr>
 <td style="text-align:left;">
-LMNA
+KLF6
 </td>
 <td style="text-align:right;">
-0.501
+0.904
 </td>
 <td style="text-align:right;">
-0.052
+0.426
 </td>
 <td style="text-align:left;">
 CD4_T_cells
@@ -984,10 +915,80 @@ CD4_T_cells
 disease
 </td>
 <td style="text-align:right;">
-3.847694
+2.169921
 </td>
 <td style="text-align:right;">
-4.574473
+2.707374
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AREG
+</td>
+<td style="text-align:right;">
+0.446
+</td>
+<td style="text-align:right;">
+0.031
+</td>
+<td style="text-align:left;">
+CD4_T_cells
+</td>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+4.239660
+</td>
+<td style="text-align:right;">
+4.782775
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ATF3
+</td>
+<td style="text-align:right;">
+0.323
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:left;">
+CD4_T_cells
+</td>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+6.284469
+</td>
+<td style="text-align:right;">
+8.336005
 </td>
 <td style="text-align:right;">
 0
@@ -1077,51 +1078,16 @@ State
 <tbody>
 <tr>
 <td style="text-align:left;">
-Positive Regulation Of Cytokine Production (<a href="GO:0001819" class="uri">GO:0001819</a>)
+Regulation Of Apoptotic Process (<a href="GO:0042981" class="uri">GO:0042981</a>)
 </td>
 <td style="text-align:left;">
-16/320
+23/705
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-4.70e-06
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-7.563467
-</td>
-<td style="text-align:right;">
-148.28842
-</td>
-<td style="text-align:left;">
-EGR1;CEBPB;ANXA1;F2R;RORA;ISG15;SLC7A5;RGCC;IFNG;IRF4;NLRP3;CCR7;TIGIT;HSPA1B;HLA-DPA1;HSPA1A
-</td>
-<td style="text-align:left;">
-GO_Biological_Process_2023
-</td>
-<td style="text-align:left;">
-enriched
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Response To Fibroblast Growth Factor (<a href="GO:0071774" class="uri">GO:0071774</a>)
-</td>
-<td style="text-align:left;">
-6/20
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-4.80e-06
+2.0e-07
 </td>
 <td style="text-align:right;">
 0
@@ -1130,13 +1096,13 @@ Response To Fibroblast Growth Factor (<a href="GO:0071774" class="uri">GO:007177
 0
 </td>
 <td style="text-align:right;">
-58.221135
+6.105060
 </td>
 <td style="text-align:right;">
-1100.36008
+138.78136
 </td>
 <td style="text-align:left;">
-NR4A1;ZFP36;EGR3;ZFP36L2;IER2;ZFP36L1
+TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;IGFBP3;PLAUR;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1150,48 +1116,13 @@ enriched
 Regulation Of Transcription By RNA Polymerase II (<a href="GO:0006357" class="uri">GO:0006357</a>)
 </td>
 <td style="text-align:left;">
-40/2028
+37/2028
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-5.60e-06
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3.208537
-</td>
-<td style="text-align:right;">
-58.82634
-</td>
-<td style="text-align:left;">
-CEBPB;CITED2;HMGB2;RORA;PRDM1;IKZF2;ZFP36;TRPS1;NAMPT;RBBP8;NLRP3;IER2;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IFNG;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A
-</td>
-<td style="text-align:left;">
-GO_Biological_Process_2023
-</td>
-<td style="text-align:left;">
-enriched
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Regulation Of Apoptotic Process (<a href="GO:0042981" class="uri">GO:0042981</a>)
-</td>
-<td style="text-align:left;">
-22/705
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-7.40e-06
+2.2e-06
 </td>
 <td style="text-align:right;">
 0
@@ -1200,13 +1131,13 @@ Regulation Of Apoptotic Process (<a href="GO:0042981" class="uri">GO:0042981</a>
 0
 </td>
 <td style="text-align:right;">
-4.748620
+3.611687
 </td>
 <td style="text-align:right;">
-84.40179
+70.82183
 </td>
 <td style="text-align:left;">
-TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;PLAUR;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;CTLA4;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A
+CEBPB;CITED2;RORA;PRDM1;TNF;ZFP36;NAMPT;RBBP8;NLRP3;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;ETV3;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1226,7 +1157,7 @@ Positive Regulation Of Programmed Cell Death (<a href="GO:0043068" class="uri">G
 0
 </td>
 <td style="text-align:right;">
-1.53e-05
+3.3e-06
 </td>
 <td style="text-align:right;">
 0
@@ -1235,13 +1166,83 @@ Positive Regulation Of Programmed Cell Death (<a href="GO:0043068" class="uri">G
 0
 </td>
 <td style="text-align:right;">
-7.907715
+9.486735
 </td>
 <td style="text-align:right;">
-133.03669
+178.39945
 </td>
 <td style="text-align:left;">
-TOP2A;JUN;GADD45B;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;IFNG;PMAIP1;CTLA4;PHLDA1;MCL1
+TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1
+</td>
+<td style="text-align:left;">
+GO_Biological_Process_2023
+</td>
+<td style="text-align:left;">
+enriched
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Response To Glucocorticoid (<a href="GO:0051384" class="uri">GO:0051384</a>)
+</td>
+<td style="text-align:left;">
+6/26
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4.8e-06
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+48.417073
+</td>
+<td style="text-align:right;">
+878.20166
+</td>
+<td style="text-align:left;">
+ZFP36;BCL2L11;ANXA1;TNF;ZFP36L2;ZFP36L1
+</td>
+<td style="text-align:left;">
+GO_Biological_Process_2023
+</td>
+<td style="text-align:left;">
+enriched
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Positive Regulation Of Apoptotic Process (<a href="GO:0043065" class="uri">GO:0043065</a>)
+</td>
+<td style="text-align:left;">
+13/270
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6.3e-06
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8.552999
+</td>
+<td style="text-align:right;">
+150.93612
+</td>
+<td style="text-align:left;">
+TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1
 </td>
 <td style="text-align:left;">
 GO_Biological_Process_2023
@@ -1351,7 +1352,7 @@ test for significance.</p>
 <span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>    ident_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NK"</span>, <span class="st">"CD4_T_cells"</span>, <span class="st">"B_cells"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:54 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:43 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.VlnPlot.html">DO.VlnPlot</a></span><span class="op">(</span><span class="va">SCE_obj_sub</span>,</span>
 <span>    Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span>
@@ -1362,14 +1363,14 @@ test for significance.</p>
 <span><span class="co">#&gt; SeuV5 TRUE, if object Seuratv4 or below change SeuV5 to FALSE</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">This message is displayed once per session.</span></span></span>
 <span><span class="co">#&gt; Using group, orig.ident, annotation as id variables</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:54 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-10-02 12:43:43 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Violin-1.png" width="768"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SCE_obj_NK</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DO.Subset.html">DO.Subset</a></span><span class="op">(</span><span class="va">SCE_obj</span>,</span>
 <span>    ident <span class="op">=</span> <span class="st">"annotation"</span>,</span>
 <span>    ident_name <span class="op">=</span> <span class="st">"NK"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:55 - Specified 'ident_name': expecting a categorical variable.</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:45 - Specified 'ident_name': expecting a categorical variable.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DO.BarplotWilcox.html">DO.BarplotWilcox</a></span><span class="op">(</span><span class="va">SCE_obj_NK</span>,</span>
 <span>    group.by <span class="op">=</span> <span class="st">"condition"</span>,</span>
@@ -1378,7 +1379,7 @@ test for significance.</p>
 <span>    x_label_rotation <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using condition, orig.ident as id variables</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:56 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
+<span><span class="co">#&gt; 2025-10-02 12:43:45 - ListTest empty, comparing every sample with each other</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Bar-1.png" width="480"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -1394,7 +1395,7 @@ test for significance.</p>
 <span>    plot_sample <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using group, cluster as id variables</span></span>
-<span><span class="co">#&gt; 2025-10-02 12:28:56 - ListTest empty, comparing every sample with each other</span></span>
+<span><span class="co">#&gt; 2025-10-02 12:43:46 - ListTest empty, comparing every sample with each other</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">fill</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="DOtools_files/figure-html/Box-1.png" width="480"></p>
@@ -1611,7 +1612,7 @@ test for significance.</p>
 <span><span class="co">#&gt;  SummarizedExperiment * 1.38.1   <span style="color: #555555;">2025-04-30</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">Bioconduc~</span></span></span>
 <span><span class="co">#&gt;  survival               3.8-3    <span style="color: #555555;">2024-12-17</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.5.1)</span></span></span>
 <span><span class="co">#&gt;  svglite                2.2.1    <span style="color: #555555;">2025-05-12</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
-<span><span class="co">#&gt;  systemfonts            1.3.0    <span style="color: #555555;">2025-09-30</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  systemfonts            1.3.1    <span style="color: #555555;">2025-10-01</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  tensor                 1.5.1    <span style="color: #555555;">2025-06-17</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  textshaping            1.0.3    <span style="color: #555555;">2025-09-02</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  tibble               * 3.3.0    <span style="color: #555555;">2025-06-08</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
