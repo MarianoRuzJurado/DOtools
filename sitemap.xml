@@ -3,8 +3,6 @@
 <url><loc>https://marianoruzjurado.github.io/DOtools/LICENSE-text.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/LICENSE.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/articles/DOtools.html</loc></url>
-<url><loc>https://marianoruzjurado.github.io/DOtools/articles/adfct.html</loc></url>
-<url><loc>https://marianoruzjurado.github.io/DOtools/articles/cb.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/articles/index.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/authors.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/index.html</loc></url>
@@ -21,6 +19,7 @@
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.FullRecluster.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.Heatmap.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.Import.html</loc></url>
+<url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.Integration.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.MultiDGE.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.PyEnv.html</loc></url>
 <url><loc>https://marianoruzjurado.github.io/DOtools/reference/DO.SplitBarGSEA.html</loc></url>
