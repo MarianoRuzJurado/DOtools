@@ -133,7 +133,7 @@ DO.UMAP <- function(sce_object,
         }
 
         Idents(sce_object) <- group.by
-        p <- FeaturePlot(sce_object,
+        p <- .suppressDeprecationWarnings(FeaturePlot(sce_object,
             features = features,
             cols = umap_colors,
             label = label,
@@ -150,7 +150,7 @@ DO.UMAP <- function(sce_object,
                 axis.ticks.y = element_blank(),
                 legend.position = legend.position,
                 legend.text = element_text(face = "bold")
-            )
+            ))
 
         if (plot.title == FALSE) {
             p <- p & theme(plot.title = element_blank())

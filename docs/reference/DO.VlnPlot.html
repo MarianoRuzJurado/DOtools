@@ -5,13 +5,19 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Violin Graph with wilcox test on single cell level — DO.VlnPlot"><meta name="description" content="Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
-It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
-The plot can be customized with options for data transformation, jitter display, and significance annotations.
-The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test."><meta property="og:description" content="Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
-It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
-The plot can be customized with options for data transformation, jitter display, and significance annotations.
-The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Violin Graph with wilcox test on single cell level — DO.VlnPlot"><meta name="description" content="Creates a violin plot to compare gene expression across
+different conditions or groups within a Seurat object. It incorporates
+Wilcoxon rank-sum tests to evaluate statistical differences between
+conditions. The plot can be customized with options for data transformation,
+jitter display, and significance annotations. The function also supports
+multiple conditions and allows for visualisation of statistical results from
+wilcoxon test."><meta property="og:description" content="Creates a violin plot to compare gene expression across
+different conditions or groups within a Seurat object. It incorporates
+Wilcoxon rank-sum tests to evaluate statistical differences between
+conditions. The plot can be customized with options for data transformation,
+jitter display, and significance annotations. The function also supports
+multiple conditions and allows for visualisation of statistical results from
+wilcoxon test."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +25,7 @@ The function also supports multiple conditions and allows for visualisation of s
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,10 +59,13 @@ The function also supports multiple conditions and allows for visualisation of s
     </div>
 
     <div class="ref-description section level2">
-    <p>Creates a violin plot to compare gene expression across different conditions or groups within a Seurat object.
-It incorporates Wilcoxon rank-sum tests to evaluate statistical differences between conditions.
-The plot can be customized with options for data transformation, jitter display, and significance annotations.
-The function also supports multiple conditions and allows for visualisation of statistical results from wilcoxon test.</p>
+    <p>Creates a violin plot to compare gene expression across
+different conditions or groups within a Seurat object. It incorporates
+Wilcoxon rank-sum tests to evaluate statistical differences between
+conditions. The plot can be customized with options for data transformation,
+jitter display, and significance annotations. The function also supports
+multiple conditions and allows for visualisation of statistical results from
+wilcoxon test.</p>
     </div>
 
     <div class="section level2">
@@ -103,39 +112,48 @@ The function also supports multiple conditions and allows for visualisation of s
 
 
 <dt id="arg-listtest">ListTest<a class="anchor" aria-label="anchor" href="#arg-listtest"></a></dt>
-<dd><p>List for which conditions wilcox will be performed, if NULL always CTRL group against everything</p></dd>
+<dd><p>List for which conditions wilcox will be performed, if NULL
+always CTRL group against everything</p></dd>
 
 
 <dt id="arg-returnvalues">returnValues<a class="anchor" aria-label="anchor" href="#arg-returnvalues"></a></dt>
-<dd><p>return df.melt.sum data frame containing means and SEM for the set group</p></dd>
+<dd><p>return df.melt.sum data frame containing means and SEM
+for the set group</p></dd>
 
 
 <dt id="arg-ctrl-condition">ctrl.condition<a class="anchor" aria-label="anchor" href="#arg-ctrl-condition"></a></dt>
-<dd><p>set your ctrl condition, relevant if running with empty comparison List</p></dd>
+<dd><p>set your ctrl condition, relevant if running with empty
+comparison List</p></dd>
 
 
 <dt id="arg-group-by">group.by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
-<dd><p>select the seurat sce_object slot where your conditions can be found, default conditon</p></dd>
+<dd><p>select the seurat sce_object slot where your conditions can
+be found, default conditon</p></dd>
 
 
 <dt id="arg-group-by-">group.by.2<a class="anchor" aria-label="anchor" href="#arg-group-by-"></a></dt>
-<dd><p>relevant for multiple group testing, e.g. for each cell type the test between each of them in two conditions provided</p></dd>
+<dd><p>relevant for multiple group testing, e.g. for each
+cell type the test between each of them in two conditions provided</p></dd>
 
 
 <dt id="arg-geom-jitter-args">geom_jitter_args<a class="anchor" aria-label="anchor" href="#arg-geom-jitter-args"></a></dt>
-<dd><p>vector for dots visualisation in vlnplot: size, width, alpha value</p></dd>
+<dd><p>vector for dots visualisation in vlnplot:
+size, width, alpha value</p></dd>
 
 
 <dt id="arg-geom-jitter-args-group-by-">geom_jitter_args_group_by2<a class="anchor" aria-label="anchor" href="#arg-geom-jitter-args-group-by-"></a></dt>
-<dd><p>controls the jittering of points if group.by.2 is specified</p></dd>
+<dd><p>controls the jittering of points if
+group.by.2 is specified</p></dd>
 
 
 <dt id="arg-vector-colors">vector_colors<a class="anchor" aria-label="anchor" href="#arg-vector-colors"></a></dt>
-<dd><p>specify a minimum number of colours as you have entries in your condition, default 2</p></dd>
+<dd><p>specify a minimum number of colours as you have entries
+in your condition, default 2</p></dd>
 
 
 <dt id="arg-wilcox-test">wilcox_test<a class="anchor" aria-label="anchor" href="#arg-wilcox-test"></a></dt>
-<dd><p>Bolean if TRUE a bonferoni wilcoxon test will be carried out between ctrl.condition and the rest</p></dd>
+<dd><p>Bolean if TRUE a bonferoni wilcoxon test will be carried
+out between ctrl.condition and the rest</p></dd>
 
 
 <dt id="arg-stat-pos-mod">stat_pos_mod<a class="anchor" aria-label="anchor" href="#arg-stat-pos-mod"></a></dt>
@@ -155,11 +173,13 @@ The function also supports multiple conditions and allows for visualisation of s
 
 
 <dt id="arg-step-mod">step_mod<a class="anchor" aria-label="anchor" href="#arg-step-mod"></a></dt>
-<dd><p>value for defining the space between one test and the next one</p></dd>
+<dd><p>value for defining the space between one test and the next
+one</p></dd>
 
 
 <dt id="arg-hjust-wilcox-">hjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-hjust-wilcox-"></a></dt>
-<dd><p>value for adjusting height of the text, with group.by.2 specified</p></dd>
+<dd><p>value for adjusting height of the text, with group.by.2
+specified</p></dd>
 
 
 <dt id="arg-vjust-wilcox-">vjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-vjust-wilcox-"></a></dt>
@@ -181,21 +201,22 @@ The function also supports multiple conditions and allows for visualisation of s
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ListTest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ListTest</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"healthy"</span>, <span class="st">"disease"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.VlnPlot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
-<span class="r-in"><span>  SeuV5<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span></span>
-<span class="r-in"><span>  ListTest <span class="op">=</span> <span class="va">ListTest</span>,</span></span>
-<span class="r-in"><span>  ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span></span>
-<span class="r-in"><span>  group.by<span class="op">=</span><span class="st">"condition"</span></span></span>
+<span class="r-in"><span>    sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
+<span class="r-in"><span>    SeuV5 <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    Feature <span class="op">=</span> <span class="st">"NKG7"</span>,</span></span>
+<span class="r-in"><span>    ListTest <span class="op">=</span> <span class="va">ListTest</span>,</span></span>
+<span class="r-in"><span>    ctrl.condition <span class="op">=</span> <span class="st">"healthy"</span>,</span></span>
+<span class="r-in"><span>    group.by <span class="op">=</span> <span class="st">"condition"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>SeuV5 TRUE, if object Seuratv4 or below change SeuV5 to FALSE</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> SeuV5 TRUE, if object Seuratv4 or below change SeuV5 to FALSE</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once per session.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using group, orig.ident as id variables</span>
 <span class="r-plt img"><img src="DO.VlnPlot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
