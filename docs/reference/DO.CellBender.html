@@ -5,13 +5,9 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.CellBender — DO.CellBender"><meta name="description" content="It is supposed to make something similar than the no longer
-working DietSeurat function, by removing no longer needed layers from the
-object. This function wraps a system call to a bash script for running
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.CellBender — DO.CellBender"><meta name="description" content="This function wraps a system call to a bash script for running
 CellBender on CellRanger outputs. It ensures required inputs are available
-and optionally installs CellBender in a conda env."><meta property="og:description" content="It is supposed to make something similar than the no longer
-working DietSeurat function, by removing no longer needed layers from the
-object. This function wraps a system call to a bash script for running
+and optionally installs CellBender in a conda env."><meta property="og:description" content="This function wraps a system call to a bash script for running
 CellBender on CellRanger outputs. It ensures required inputs are available
 and optionally installs CellBender in a conda env."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -21,7 +17,7 @@ and optionally installs CellBender in a conda env."><script defer data-domain="p
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,9 +51,7 @@ and optionally installs CellBender in a conda env."><script defer data-domain="p
     </div>
 
     <div class="ref-description section level2">
-    <p>It is supposed to make something similar than the no longer
-working DietSeurat function, by removing no longer needed layers from the
-object. This function wraps a system call to a bash script for running
+    <p>This function wraps a system call to a bash script for running
 CellBender on CellRanger outputs. It ensures required inputs are available
 and optionally installs CellBender in a conda env.</p>
     </div>
@@ -151,15 +145,15 @@ through DropletUtils implementation</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run CellBender (uses GPU by default)</span></span></span>
 <span class="r-in"><span><span class="fu">DO.CellBender</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  cellranger_path <span class="op">=</span> <span class="va">cellranger_path</span>,</span></span>
-<span class="r-in"><span>  output_path <span class="op">=</span> <span class="va">output_path</span>,</span></span>
-<span class="r-in"><span>  samplenames <span class="op">=</span> <span class="va">samplenames</span>,</span></span>
-<span class="r-in"><span>  cuda <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  cpu_threads <span class="op">=</span> <span class="fl">8</span>,</span></span>
-<span class="r-in"><span>  epochs <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>  lr <span class="op">=</span> <span class="fl">0.00001</span>,</span></span>
-<span class="r-in"><span>  estimator_multiple_cpu <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>  log <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>    cellranger_path <span class="op">=</span> <span class="va">cellranger_path</span>,</span></span>
+<span class="r-in"><span>    output_path <span class="op">=</span> <span class="va">output_path</span>,</span></span>
+<span class="r-in"><span>    samplenames <span class="op">=</span> <span class="va">samplenames</span>,</span></span>
+<span class="r-in"><span>    cuda <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    cpu_threads <span class="op">=</span> <span class="fl">8</span>,</span></span>
+<span class="r-in"><span>    epochs <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    lr <span class="op">=</span> <span class="fl">0.00001</span>,</span></span>
+<span class="r-in"><span>    estimator_multiple_cpu <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>    log <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

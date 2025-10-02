@@ -1,57 +1,53 @@
 url: https://marianoruzjurado.github.io/DOtools/
 destination: docs
-
 template:
   bootstrap: 5
   math-rendering: mathjax
-  light-switch: true
+  light-switch: yes
   bslib:
-    primary: "#0054AD"
+    primary: '#0054AD'
     border-radius: 0.5rem
     btn-border-radius: 0.25rem
-    danger: "#A6081A"
+    danger: '#A6081A'
   includes:
-    in_header:
-      <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
-
+    in_header: <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
 development:
   mode: auto
-
 reference:
-  - title: Package overview
-    contents:
-     - DOtools
-  - title: Preprocessing
-    desc: >
-    contents:
-      - DO.CellBender
-      - DO.Import
-      - DO.Integration
-      - DO.scVI
-      - DO.Correlation
-  - title: Downstream processing
-    desc: >
-    contents:
-      - DO.CellTypist
-      - DO.FullRecluster
-      - DO.TransferLabel
-      - DO.enrichR
-      - DO.MultiDGE
-  - title: scRNA plotting
-    desc: >
-    contents:
-      - DO.BarplotClustert
-      - DO.BarplotWilcox
-      - DO.VlnPlot
-      - DO.BoxPlot
-      - DO.Dotplot
-      - DO.CellComposition
-      - DO.SplitBarGSEA
-      - DO.Heatmap
-  - title: Utils
-    desc: >
-    contents:
-      - DO.UMAP
-      - DO.Subset
-      - DO.DietSCE
-      - DO.PyEnv
+- title: Package overview
+  contents: DOtools
+- title: Preprocessing
+  desc: ~
+  contents:
+  - DO.CellBender
+  - DO.Import
+  - DO.Integration
+  - DO.scVI
+  - DO.Correlation
+- title: Downstream processing
+  desc: ~
+  contents:
+  - DO.CellTypist
+  - DO.FullRecluster
+  - DO.TransferLabel
+  - DO.enrichR
+  - DO.MultiDGE
+- title: scRNA plotting
+  desc: ~
+  contents:
+  - DO.BarplotClustert
+  - DO.BarplotWilcox
+  - DO.VlnPlot
+  - DO.BoxPlot
+  - DO.Dotplot
+  - DO.CellComposition
+  - DO.SplitBarGSEA
+  - DO.Heatmap
+- title: Utils
+  desc: ~
+  contents:
+  - DO.UMAP
+  - DO.Subset
+  - DO.DietSCE
+  - DO.PyEnv
+

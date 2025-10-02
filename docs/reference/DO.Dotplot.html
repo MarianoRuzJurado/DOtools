@@ -5,13 +5,17 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO Dot plot — DO.Dotplot"><meta name="description" content="This function generates a dot plot for multiple genes, comparing expression levels across one or two specified groups.
-It supports both individual and pseudobulk expression calculations.
-Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
-The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis."><meta property="og:description" content="This function generates a dot plot for multiple genes, comparing expression levels across one or two specified groups.
-It supports both individual and pseudobulk expression calculations.
-Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
-The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO Dot plot — DO.Dotplot"><meta name="description" content="This function generates a dot plot for multiple genes, comparing
+expression levels across one or two specified groups. It supports both
+individual and pseudobulk expression calculations. Highly variable
+customization options allow control over dot size, color scaling,
+annotations, and axis orientation. The function integrates seamlessly with
+SCE objects for single-cell RNA-seq analysis."><meta property="og:description" content="This function generates a dot plot for multiple genes, comparing
+expression levels across one or two specified groups. It supports both
+individual and pseudobulk expression calculations. Highly variable
+customization options allow control over dot size, color scaling,
+annotations, and axis orientation. The function integrates seamlessly with
+SCE objects for single-cell RNA-seq analysis."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -19,7 +23,7 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,10 +57,12 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
     </div>
 
     <div class="ref-description section level2">
-    <p>This function generates a dot plot for multiple genes, comparing expression levels across one or two specified groups.
-It supports both individual and pseudobulk expression calculations.
-Highly variable customization options allow control over dot size, color scaling, annotations, and axis orientation.
-The function integrates seamlessly with Seurat objects for single-cell RNA-seq analysis.</p>
+    <p>This function generates a dot plot for multiple genes, comparing
+expression levels across one or two specified groups. It supports both
+individual and pseudobulk expression calculations. Highly variable
+customization options allow control over dot size, color scaling,
+annotations, and axis orientation. The function integrates seamlessly with
+SCE objects for single-cell RNA-seq analysis.</p>
     </div>
 
     <div class="section level2">
@@ -101,7 +107,8 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
 
 <dt id="arg-feature">Feature<a class="anchor" aria-label="anchor" href="#arg-feature"></a></dt>
-<dd><p>Genes or DF of interest, Data frame should have columns with gene and annotation information, e.g. output of FindAllMarkers</p></dd>
+<dd><p>Genes or DF of interest, Data frame should have columns with
+gene and annotation information, e.g. output of FindAllMarkers</p></dd>
 
 
 <dt id="arg-group-by-x">group.by.x<a class="anchor" aria-label="anchor" href="#arg-group-by-x"></a></dt>
@@ -117,11 +124,13 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
 
 <dt id="arg-across-group-by-x">across.group.by.x<a class="anchor" aria-label="anchor" href="#arg-across-group-by-x"></a></dt>
-<dd><p>calculate a pseudobulk expression approach for the x-axis categories</p></dd>
+<dd><p>calculate a pseudobulk expression approach for the
+x-axis categories</p></dd>
 
 
 <dt id="arg-across-group-by-y">across.group.by.y<a class="anchor" aria-label="anchor" href="#arg-across-group-by-y"></a></dt>
-<dd><p>calculate a pseudobulk expression approach for the y-axis categories, if group.by.y2 is specified Pseudobulk will be splitted by it</p></dd>
+<dd><p>calculate a pseudobulk expression approach for the
+y-axis categories</p></dd>
 
 
 <dt id="arg-sort-x">sort_x<a class="anchor" aria-label="anchor" href="#arg-sort-x"></a></dt>
@@ -141,7 +150,8 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
 
 <dt id="arg-scale-gene">scale_gene<a class="anchor" aria-label="anchor" href="#arg-scale-gene"></a></dt>
-<dd><p>IF True calculates the Z-score of the average expression per gene</p></dd>
+<dd><p>If True calculates the Z-score of the average expression
+per gene</p></dd>
 
 
 <dt id="arg-returnvalue">returnValue<a class="anchor" aria-label="anchor" href="#arg-returnvalue"></a></dt>
@@ -201,7 +211,8 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments passed to annoSegment function if annotation_x == TRUE</p></dd>
+<dd><p>Further arguments passed to annoSegment function if
+annotation_x == TRUE</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -215,18 +226,18 @@ The function integrates seamlessly with Seurat objects for single-cell RNA-seq a
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">DO.Dotplot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
-<span class="r-in"><span>  Feature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NKG7"</span>,<span class="st">"IL6"</span>,<span class="st">"MALAT1"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  group.by.x<span class="op">=</span><span class="st">"condition"</span></span></span>
+<span class="r-in"><span>    sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
+<span class="r-in"><span>    Feature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NKG7"</span>, <span class="st">"IL6"</span>, <span class="st">"MALAT1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    group.by.x <span class="op">=</span> <span class="st">"condition"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following requested variables were not found: IL6, MALAT1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Scale for <span style="color: #00BB00;">size</span> is already present.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding another scale for <span style="color: #00BB00;">size</span>, which will replace the existing scale.</span>
 <span class="r-plt img"><img src="DO.Dotplot-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

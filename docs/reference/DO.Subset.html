@@ -5,15 +5,21 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.Subset — DO.Subset"><meta name="description" content="Creates a subset of a Seurat or SCE object based on either categorical or numeric thresholds in metadata.
-Allows for subsetting by specifying the ident column, group name, or threshold criteria.
-Ideal for extracting specific cell populations or clusters based on custom conditions.
-Returns a new Seurat or SCE object containing only the subsetted cells and does not come with the Seuratv5 subset issue
-Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions."><meta property="og:description" content="Creates a subset of a Seurat or SCE object based on either categorical or numeric thresholds in metadata.
-Allows for subsetting by specifying the ident column, group name, or threshold criteria.
-Ideal for extracting specific cell populations or clusters based on custom conditions.
-Returns a new Seurat or SCE object containing only the subsetted cells and does not come with the Seuratv5 subset issue
-Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.Subset — DO.Subset"><meta name="description" content="Creates a subset of a Seurat or SCE object based on either
+categorical or numeric thresholds in metadata. Allows for subsetting by
+specifying the ident column, group name, or threshold criteria. Ideal for
+extracting specific cell populations or clusters based on custom conditions.
+Returns a new Seurat or SCE object containing only the subsetted cells and
+does not come with the Seuratv5 subset issue. Please be aware that right now,
+after using this function the subset might be treated with Seuv5=False in
+other functions."><meta property="og:description" content="Creates a subset of a Seurat or SCE object based on either
+categorical or numeric thresholds in metadata. Allows for subsetting by
+specifying the ident column, group name, or threshold criteria. Ideal for
+extracting specific cell populations or clusters based on custom conditions.
+Returns a new Seurat or SCE object containing only the subsetted cells and
+does not come with the Seuratv5 subset issue. Please be aware that right now,
+after using this function the subset might be treated with Seuv5=False in
+other functions."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -21,7 +27,7 @@ Please be aware that right now, after using this function the subset might be tr
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,11 +61,14 @@ Please be aware that right now, after using this function the subset might be tr
     </div>
 
     <div class="ref-description section level2">
-    <p>Creates a subset of a Seurat or SCE object based on either categorical or numeric thresholds in metadata.
-Allows for subsetting by specifying the ident column, group name, or threshold criteria.
-Ideal for extracting specific cell populations or clusters based on custom conditions.
-Returns a new Seurat or SCE object containing only the subsetted cells and does not come with the Seuratv5 subset issue
-Please be aware that right now, after using this function the subset might be treated with Seuv5=False in other functions.</p>
+    <p>Creates a subset of a Seurat or SCE object based on either
+categorical or numeric thresholds in metadata. Allows for subsetting by
+specifying the ident column, group name, or threshold criteria. Ideal for
+extracting specific cell populations or clusters based on custom conditions.
+Returns a new Seurat or SCE object containing only the subsetted cells and
+does not come with the Seuratv5 subset issue. Please be aware that right now,
+after using this function the subset might be treated with Seuv5=False in
+other functions.</p>
     </div>
 
     <div class="section level2">
@@ -94,7 +103,8 @@ Please be aware that right now, after using this function the subset might be tr
 
 
 <dt id="arg-ident-thresh">ident_thresh<a class="anchor" aria-label="anchor" href="#arg-ident-thresh"></a></dt>
-<dd><p>numeric thresholds as character, e.g "&gt;5" or c("&gt;5", "&lt;200"), to subset barcodes in ident for</p></dd>
+<dd><p>numeric thresholds as character,
+e.g "&gt;5" or c("&gt;5", "&lt;200"), to subset barcodes in ident</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -108,16 +118,15 @@ Please be aware that right now, after using this function the subset might be tr
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sce_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sce_data.rds"</span>, package <span class="op">=</span> <span class="st">"DOtools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sce_data_sub</span> <span class="op">&lt;-</span> <span class="fu">DO.Subset</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
-<span class="r-in"><span>  ident<span class="op">=</span><span class="st">"condition"</span>,</span></span>
-<span class="r-in"><span>  ident_name<span class="op">=</span><span class="st">"healthy"</span></span></span>
+<span class="r-in"><span>    sce_object <span class="op">=</span> <span class="va">sce_data</span>,</span></span>
+<span class="r-in"><span>    ident <span class="op">=</span> <span class="st">"condition"</span>,</span></span>
+<span class="r-in"><span>    ident_name <span class="op">=</span> <span class="st">"healthy"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-09-30 14:08:23 - Specified 'ident_name': expecting a categorical variable.</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2025-10-02 12:45:09 - Specified 'ident_name': expecting a categorical variable.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
