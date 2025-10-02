@@ -5,22 +5,50 @@ library(SingleCellExperiment)
 library(S4Vectors)
 
 # ---- Test .DO.BarcodeRanks using a real barcodeRanks-friendly SCE ----
+library(testthat)
+library(Matrix)
+library(SingleCellExperiment)
+
 test_that(".DO.BarcodeRanks returns correct names and numeric values", {
-  # Create SCE with column sums that are distinct so barcodeRanks can compute knee/inflection
-  # Use 1 gene (row) with different counts per column (cell)
-  counts <- matrix(c(1000, 900, 800, 50, 20, 5), nrow = 1)
-  sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts = counts))
+  set.seed(101)
+
+  nrow <- 20     # small number of features
+  ncol <- 250    # enough barcodes for barcodeRanks to work
+  # baseline decreasing totals (unique), plus small jitter
+  col_totals <- round(seq(from = 2000, to = 5, length.out = ncol)) + rpois(ncol, lambda = 3)
+  col_totals[col_totals < 1] <- 1
+
+  # Build a sparse counts matrix by splitting each column total across some rows
+  i_list <- integer()
+  j_list <- integer()
+  x_list <- numeric()
+  idx <- 1L
+  for (j in seq_len(ncol)) {
+    # pick a few rows to hold counts for this column
+    k <- sample(1:nrow, size = max(1, round(nrow * 0.15)))
+    # split the total across those rows
+    parts <- as.integer(rmultinom(1, size = col_totals[j], prob = rep(1, length(k))))
+    nz <- which(parts != 0)
+    if (length(nz) > 0) {
+      i_list <- c(i_list, k[nz])
+      j_list <- c(j_list, rep(j, length(nz)))
+      x_list <- c(x_list, parts[nz])
+    }
+  }
+
+  counts_sp <- sparseMatrix(i = i_list, j = j_list, x = x_list,
+                            dims = c(nrow, ncol), giveCsparse = TRUE)
+  sce <- SingleCellExperiment::SingleCellExperiment(assays = list(counts = counts_sp))
 
   res <- DOtools:::.DO.BarcodeRanks(sce)
 
   expect_named(res, c("xpc_cells", "total_cells"))
-  # Accept integer or double (both are numeric in R)
   expect_true(is.numeric(res["xpc_cells"]))
   expect_true(is.numeric(res["total_cells"]))
-  # Values should be non-negative
   expect_true(as.numeric(res["xpc_cells"]) >= 0)
   expect_true(as.numeric(res["total_cells"]) >= 0)
 })
+
 
 # ---- Test DO.CellBender behavior for missing paths ----
 test_that("DO.CellBender errors if paths missing (stopifnot)", {

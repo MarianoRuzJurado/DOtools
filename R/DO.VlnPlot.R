@@ -512,12 +512,12 @@ DO.VlnPlot <- function(sce_object,
             ggplot(vln.df, aes(
                 x = !!sym(group.by.2),
                 y = Feature,
-                fill = factor(!!sym(group.by), levels = levels(vln.df$group))
+                fill = factor(!!sym(group.by), levels = levels(group))
             )) +
                 geom_boxplot(
                     width = .1,
                     color = "grey",
-                    position = position_dodge(width = 0.9),
+                    position = position_dodge(width = 0.895),
                     outlier.shape = NA
                 ) +
                 xlab("") +
