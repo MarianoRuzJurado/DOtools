@@ -120,13 +120,28 @@ DO.CellTypist <- function(sce_object,
     # basilisk implementation
     results <- basilisk::basiliskRun(env = DOtoolsEnv, fun = function(args) {
         # Ensure models present:
+        # if (runCelltypistUpdate) {
+        #     system2(
+        #     reticulate::py_exe(),
+        #     c("-m", "celltypist.command_line", "--update-models", "--quiet")
+        #     )
+        # }
         if (runCelltypistUpdate) {
-            system2(
-                reticulate::py_exe(),
-                c("-m", "celltypist.command_line", "--update-models", "--quiet")
-            )
-        }
+            ct <- reticulate::import("celltypist")
 
+            models_path <- ct$models$models_path
+            model_file <- file.path(models_path, modelName)
+
+            if (!file.exists(model_file)) {
+                .logger(paste0("Downloading CellTypist model: ", modelName))
+                # download only the specific model
+                ct$models$download_models(
+                    model = modelName, force_update = FALSE
+                )
+            } else {
+                .logger(paste0("Model already present: ", model_file))
+                }
+            }
         .logger("Running Celltypist")
 
         # Run celltypist:
