@@ -24,6 +24,6 @@ DOtools. If no environment path is provided, it will create one at
 DO.PyEnv()
 
 # Use an existing conda environment at a custom location
-DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")
+# DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")
 
 }

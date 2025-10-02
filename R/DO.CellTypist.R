@@ -308,7 +308,7 @@ DO.CellTypist <- function(sce_object,
             label.position = "bottom",
             override.aes = list(color = "grey40", fill = "grey50"),
             keywidth = ggplot2::unit(0.5, "cm"),
-            # changes the width of the precentage dots in legend
+            # changes the width of the percentage dots in legend
             order = 1
         )
     )
