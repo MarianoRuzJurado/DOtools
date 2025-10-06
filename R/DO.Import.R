@@ -131,7 +131,7 @@ DO.Import <- function(pathways,
                         )
                         tryCatch(
                             {
-                                read.csv(
+                                utils::read.csv(
                                     file_path,
                                     header = TRUE,
                                     row.names = 1,
@@ -302,7 +302,7 @@ DO.Import <- function(pathways,
                     summarise(
                         UMI = list(
                             tibble::enframe(
-                                quantile(UMI, probs = low_quantile)
+                                stats::quantile(UMI, probs = low_quantile)
                             )
                         )
                     ) %>%
@@ -333,7 +333,7 @@ DO.Import <- function(pathways,
                     summarise(
                         UMI = list(
                             tibble::enframe(
-                                quantile(UMI, probs = high_quantile)
+                                stats::quantile(UMI, probs = high_quantile)
                             )
                         )
                     ) %>%

@@ -157,7 +157,7 @@ DO.Heatmap <- function(
     showP = TRUE,
     logcounts = TRUE) {
     # support for Seurat objects
-    if (is(sce_object, "Seurat")) {
+    if (methods::is(sce_object, "Seurat")) {
         DefaultAssay(sce_object) <- assay_normalized
         sce_object <- .suppressDeprecationWarnings(
             Seurat::as.SingleCellExperiment(sce_object,

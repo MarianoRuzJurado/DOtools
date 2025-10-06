@@ -37,7 +37,7 @@ DO.Subset <- function(sce_object,
     ident_name = NULL,
     ident_thresh = NULL) {
     # support for Seurat objects
-    if (is(sce_object, "Seurat")) {
+    if (methods::is(sce_object, "Seurat")) {
         Seu_obj <- sce_object
         class_obj <- "Seurat"
         reduction_names <- names(sce_object@reductions)
@@ -138,7 +138,7 @@ DO.Subset <- function(sce_object,
     # Seurat support
     if (class_obj == "Seurat") {
         sce_object_sub <- as.Seurat(sce_object_sub)
-        sce_object_sub[[assay]] <- as(
+        sce_object_sub[[assay]] <- methods::as(
             object = sce_object_sub[[assay]], Class = "Assay5"
         )
 

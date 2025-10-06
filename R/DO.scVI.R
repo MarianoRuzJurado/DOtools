@@ -50,7 +50,7 @@ DO.scVI <- function(sce_object,
     gene_likelihood = "zinb",
     get_model = FALSE) {
     # support for Seurat objects
-    if (is(sce_object, "Seurat")) {
+    if (methods::is(sce_object, "Seurat")) {
         class_obj <- "Seurat"
         HVG <- VariableFeatures(sce_object)
         # check if Variable Features are defined in the object

@@ -86,7 +86,7 @@ DO.Integration <- function(sce_object,
     npcs = 50,
     verbose = FALSE) {
     # Cover SCE and Seurat
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         SCE <- TRUE
         sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
     } else {

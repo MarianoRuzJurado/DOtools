@@ -97,7 +97,7 @@ DO.VlnPlot <- function(sce_object,
     vjust.wilcox.2 = 0,
     sign_bar = 0.8) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         SCE <- TRUE
         sce_object <- as.Seurat(sce_object)
     } else {
@@ -142,7 +142,7 @@ DO.VlnPlot <- function(sce_object,
 
 
         df <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),
@@ -177,7 +177,7 @@ DO.VlnPlot <- function(sce_object,
         }
 
         df <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),

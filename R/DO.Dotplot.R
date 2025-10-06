@@ -89,7 +89,7 @@ DO.Dotplot <- function(sce_object,
     nudge_y = 0.2,
     ...) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- .suppressAllWarnings(as.Seurat(sce_object))
     }
 
@@ -271,7 +271,9 @@ DO.Dotplot <- function(sce_object,
             data.plot.res$pct.exp
         )
         # remove empty lines
-        data.plot.res <- data.plot.res[complete.cases(data.plot.res$pct.exp), ]
+        data.plot.res <- data.plot.res[stats::complete.cases(
+            data.plot.res$pct.exp
+            ), ]
     }
 
     # create bulk expression for group.by.x
@@ -346,7 +348,7 @@ DO.Dotplot <- function(sce_object,
             dplyr::group_by(gene) %>%
             dplyr::mutate(
                 z_avg_exp = (avg.exp - mean(avg.exp, na.rm = TRUE)) /
-                    sd(avg.exp, na.rm = TRUE)
+                    stats::sd(avg.exp, na.rm = TRUE)
             ) %>%
             ungroup()
         exp.title <- "Z-score expression \n per gene"
@@ -777,7 +779,7 @@ DO.Dotplot <- function(sce_object,
             ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
             ggplot2::scale_size_continuous(
                 breaks = pretty(round(as.vector(
-                    quantile(data.plot.res$pct.exp)
+                    stats::quantile(data.plot.res$pct.exp)
                 )), n = 10)[seq(1, 10, by = 2)],
                 limits = c(
                     min(data.plot.res$pct.exp) * 1.05,
@@ -820,7 +822,7 @@ DO.Dotplot <- function(sce_object,
             ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
             ggplot2::scale_size_continuous(
                 breaks = pretty(round(as.vector(
-                    quantile(data.plot.res$pct.exp)
+                    stats::quantile(data.plot.res$pct.exp)
                 )), n = 10)[seq(1, 10, by = 2)],
                 limits = c(
                     min(data.plot.res$pct.exp) * 1.05,
@@ -865,10 +867,10 @@ DO.Dotplot <- function(sce_object,
             ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
             ggplot2::scale_size_continuous(
                 breaks = pretty(round(as.vector(
-                    quantile(data.plot.res$pct.exp)
+                    stats::quantile(data.plot.res$pct.exp)
                 )), n = 10)[seq(1, 10, by = 2)],
                 limits = c(min(pretty(
-                    round(as.vector(quantile(
+                    round(as.vector(stats::quantile(
                         data.plot.res$pct.exp
                     ))),
                     n = 10
@@ -932,10 +934,10 @@ DO.Dotplot <- function(sce_object,
             ggplot2::scale_size(range = c(dot.size[1], dot.size[2])) +
             ggplot2::scale_size_continuous(
                 breaks = pretty(round(as.vector(
-                    quantile(data.plot.res$pct.exp)
+                    stats::quantile(data.plot.res$pct.exp)
                 )), n = 10)[seq(1, 10, by = 2)],
                 limits = c(min(pretty(
-                    round(as.vector(quantile(
+                    round(as.vector(stats::quantile(
                         data.plot.res$pct.exp
                     ))),
                     n = 10

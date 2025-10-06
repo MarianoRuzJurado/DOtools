@@ -87,11 +87,12 @@ DO.CellTypist <- function(sce_object,
     # zellkonverter h5ad
 
     # support for Seurat objects
-    if (is(sce_object, "Seurat")) {
+    if (methods::is(sce_object, "Seurat")) {
         DefaultAssay(sce_object) <- assay_normalized
         if (SeuV5 == TRUE) {
             tmp.assay <- sce_object
-            tmp.assay[["RNA"]] <- as(tmp.assay[["RNA"]], Class = "Assay")
+            tmp.assay[["RNA"]] <- methods::as(tmp.assay[["RNA"]],
+                Class = "Assay")
             tmp.sce <- Seurat::as.SingleCellExperiment(tmp.assay,
                 assay = assay_normalized
             )

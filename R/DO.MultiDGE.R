@@ -62,7 +62,7 @@ DO.MultiDGE <- function(sce_object,
     min_cells_group = 3,
     ...) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         class_obj <- "SingleCellExperiment"
         sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
     }
