@@ -71,7 +71,7 @@ DO.BarplotClustert <- function(sce_object,
     y_limits = NULL,
     log1p_nUMI = TRUE) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- as.Seurat(sce_object)
     }
 
@@ -82,11 +82,11 @@ DO.BarplotClustert <- function(sce_object,
 
     # SEM function defintion
     SEM <- function(x) {
-        sqrt(var(x) / length(x))
+        sqrt(stats::var(x) / length(x))
     }
     # create data frame with conditions from provided sce_object
     df <- data.frame(
-        condition = setNames(
+        condition = stats::setNames(
             sce_object[[group.by]][, group.by],
             rownames(sce_object[[group.by]])
         ),

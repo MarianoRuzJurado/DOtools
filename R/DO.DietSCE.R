@@ -24,7 +24,7 @@ DO.DietSCE <- function(sce_object,
     .logger(paste("pattern: ", pattern))
 
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         class_obj <- "SingleCellExperiment"
         sce_object <- as.Seurat(sce_object)
     } else {
@@ -33,7 +33,7 @@ DO.DietSCE <- function(sce_object,
 
     layers_to_remove <- grep(pattern, Layers(sce_object), value = TRUE)
 
-    if ("layers" %in% slotNames(sce_object@assays[[assay]])) {
+    if ("layers" %in% methods::slotNames(sce_object@assays[[assay]])) {
         sce_object@assays[[assay]]@layers[layers_to_remove] <- NULL
         layerNames <- Layers(sce_object)
         .logger(paste(layers_to_remove, "is removed."))

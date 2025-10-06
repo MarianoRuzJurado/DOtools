@@ -78,7 +78,7 @@ DO.Correlation <- function(sce_object,
     axis_size_y = 12,
     ...) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
     }
 
@@ -92,7 +92,7 @@ DO.Correlation <- function(sce_object,
     corr_frame <- as.data.frame(corr_frame)
 
     # Calculate correlation
-    corr_df <- cor(corr_frame, method = method)
+    corr_df <- stats::cor(corr_frame, method = method)
 
 
     # Auto color limits based on matrix

@@ -101,7 +101,7 @@ DO.CellComposition <- function(sce_object,
     )
 
     # support for Seurat objects
-    if (is(sce_object, "Seurat")) {
+    if (methods::is(sce_object, "Seurat")) {
         DefaultAssay(sce_object) <- assay_normalized
         sce_object <- Seurat::as.SingleCellExperiment(sce_object,
             assay = assay_normalized

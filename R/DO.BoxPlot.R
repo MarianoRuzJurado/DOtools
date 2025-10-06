@@ -92,7 +92,7 @@ DO.BoxPlot <- function(sce_object,
     sign_bar = 0.8,
     orderAxis = NULL) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- as.Seurat(sce_object)
     }
 
@@ -142,7 +142,7 @@ DO.BoxPlot <- function(sce_object,
 
     if (Feature %in% rownames(sce_object)) {
         df_Feature <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),
@@ -152,7 +152,7 @@ DO.BoxPlot <- function(sce_object,
         df_Feature[, Feature] <- expm1(sce_object@assays$RNA$data[Feature, ])
     } else {
         df_Feature <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),
@@ -256,7 +256,7 @@ DO.BoxPlot <- function(sce_object,
     } else {
         df_Feature[, {
             group.by.2
-        }] <- setNames(
+        }] <- stats::setNames(
             sce_object[[group.by.2]][, group.by.2],
             rownames(sce_object[[group.by.2]])
         )
@@ -458,7 +458,7 @@ DO.BoxPlot <- function(sce_object,
             data_matrix <- pseudo_Seu@assays$RNA$data[Feature, ]
         } else {
             data_matrix <- pseudo_Seu[[Feature]]
-            data_matrix <- setNames(
+            data_matrix <- stats::setNames(
                 data_matrix[[Feature]], rownames(data_matrix)
                 )
         }
@@ -469,8 +469,8 @@ DO.BoxPlot <- function(sce_object,
                     pseudo_Seu@meta.data[[group.by]] == grp
                 subset_mat <- data_matrix[group_cells]
 
-                Q1 <- quantile(subset_mat, 0.25)
-                Q3 <- quantile(subset_mat, 0.75)
+                Q1 <- stats::quantile(subset_mat, 0.25)
+                Q3 <- stats::quantile(subset_mat, 0.75)
                 IQR <- Q3 - Q1 # interquartile range calculation
 
                 lower_bound <- Q1 - 1.5 * IQR

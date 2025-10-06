@@ -54,7 +54,7 @@ DO.UMAP <- function(sce_object,
     legend.position = "none",
     ...) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- .suppressAllWarnings(as.Seurat(sce_object))
     }
 

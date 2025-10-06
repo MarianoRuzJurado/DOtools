@@ -97,9 +97,9 @@ DO.VlnPlot <- function(sce_object,
     vjust.wilcox.2 = 0,
     sign_bar = 0.8) {
     # support for single cell experiment objects
-    if (is(sce_object, "SingleCellExperiment")) {
+    if (methods::is(sce_object, "SingleCellExperiment")) {
         SCE <- TRUE
-        sce_object <- as.Seurat(sce_object)
+        sce_object <- .suppressDeprecationWarnings(as.Seurat(sce_object))
     } else {
         SCE <- FALSE
     }
@@ -142,7 +142,7 @@ DO.VlnPlot <- function(sce_object,
 
 
         df <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),
@@ -177,7 +177,7 @@ DO.VlnPlot <- function(sce_object,
         }
 
         df <- data.frame(
-            group = setNames(
+            group = stats::setNames(
                 sce_object[[group.by]][, group.by],
                 rownames(sce_object[[group.by]])
             ),
@@ -454,13 +454,27 @@ DO.VlnPlot <- function(sce_object,
 
 
     if (!is.null(group.by.2)) {
-        # plot
+        # better boxplot alignment
         p <- ggplot(vln.df, aes(
             x = !!sym(group.by.2),
             y = Feature,
             fill = !!sym(group.by)
         )) +
-            geom_violin(aes(fill = group), trim = TRUE, scale = "width") +
+            geom_violin(
+                aes(fill = !!sym(group.by)),
+                trim = TRUE,
+                scale = "width",
+                position = position_dodge(0.9)
+            ) +
+            geom_boxplot(
+                aes(group = interaction(!!sym(group.by.2), !!sym(group.by))),
+                fill = "black",
+                color = "grey",
+                width = 0.1,
+                alpha = 0.7,
+                position = position_dodge(0.9),
+                outlier.shape = NA
+            ) +
             labs(title = Feature, y = "log(nUMI)") +
             xlab("") +
             theme_classic() +
@@ -508,85 +522,7 @@ DO.VlnPlot <- function(sce_object,
             ) +
             scale_fill_manual(values = vector_colors)
 
-        p2 <- .suppressAllWarnings(
-            ggplot(vln.df, aes(
-                x = !!sym(group.by.2),
-                y = Feature,
-                fill = factor(!!sym(group.by), levels = levels(group))
-            )) +
-                geom_boxplot(
-                    width = .1,
-                    color = "grey",
-                    position = position_dodge(width = 0.895),
-                    outlier.shape = NA
-                ) +
-                xlab("") +
-                scale_fill_manual(
-                    values = rep("black", length(vector_colors)), name =
-                        group.by
-                ) +
-                theme_classic() +
-                theme(
-                    plot.title = element_text(
-                        face = "bold",
-                        color = "transparent",
-                        hjust = 0.5,
-                        size = 14
-                    ),
-                    axis.title.y = element_text(
-                        face = "bold",
-                        color = "transparent",
-                        size = 14
-                    ),
-                    axis.text.x = element_text(
-                        face = "bold",
-                        color = "transparent",
-                        angle = 45,
-                        hjust = 1,
-                        size = 14
-                    ),
-                    axis.text.y = element_text(
-                        face = "bold",
-                        color = "transparent",
-                        hjust = 1,
-                        size = 14
-                    ),
-                    legend.position = "bottom",
-                    panel.grid.major = element_blank(),
-                    panel.grid.minor = element_blank(),
-                    axis.line = element_blank(),
-                    panel.background = element_rect(
-                        fill = "transparent",
-                        colour = NA
-                    ),
-                    plot.background = element_rect(
-                        fill = "transparent",
-                        colour = NA
-                    ),
-                    strip.background = element_rect(
-                        fill = "transparent",
-                        colour = NA
-                    ),
-                    axis.ticks = element_blank(),
-                    legend.background = element_rect(
-                        fill = "transparent",
-                        color = NA
-                    ),
-                    # Transparent legend background
-                    legend.key = element_rect(
-                        fill = "transparent",
-                        color = NA
-                    ),
-                    # Transparent legend keys
-                    legend.title = element_text(
-                        face = "bold",
-                        color = "transparent"
-                    ),
-                    # Legend title styling
-                    legend.text = element_text(color = "transparent"),
-                    # strip.text = element_blank(),
-                )
-        )
+        # Changes: now integrated into the main plot
 
         if (wilcox_test == TRUE & !is.null(group.by.2)) {
             if (Feature %in% rownames(sce_object)) {
@@ -659,9 +595,6 @@ DO.VlnPlot <- function(sce_object,
                     )
             }
 
-            # dplyr::select(x.axis, y.position, p.adj)
-
-            # if Feature not a gene than use the uncorrected p
             if (Feature %in% rownames(sce_object)) {
                 p_label <- "p = {p.adj}"
             } else {
@@ -671,11 +604,8 @@ DO.VlnPlot <- function(sce_object,
             p <- p + stat_pvalue_manual(stat.test_plot,
                 label = p_label,
                 y.position = "y.position",
-                # x="x",
                 xmin = "xmin",
                 xmax = "xmax",
-                # xend="xend",
-                # step.increase = 0.2,
                 inherit.aes = FALSE,
                 size = size.wilcox,
                 angle = 0,
@@ -684,32 +614,10 @@ DO.VlnPlot <- function(sce_object,
                 tip.length = 0.02,
                 bracket.size = sign_bar
             )
-
-            p2 <- p2 + stat_pvalue_manual(stat.test_plot,
-                label = p_label,
-                y.position = "y.position",
-                # x="x",
-                xmin = "xmin",
-                xmax = "xmax",
-                # xend="xend",
-                # step.increase = 0.2,
-                inherit.aes = FALSE,
-                size = size.wilcox,
-                angle = 0,
-                hjust = hjust.wilcox.2,
-                vjust = vjust.wilcox.2,
-                tip.length = 0.02,
-                bracket.size = sign_bar,
-                color = "transparent"
-            )
         }
-        plot_p <- cowplot::ggdraw() +
-            cowplot::draw_plot(p) +
-            cowplot::draw_plot(p2)
-        plot_p
+
+        plot_p <- p
     }
-
-
 
     if (returnValues == TRUE) {
         returnList <- list(vln.df, df.melt, stat.test)
