@@ -14,6 +14,7 @@
 #' @param across.group.by.x calculate a pseudobulk expression approach for the
 #' x-axis categories
 #' @param sort_x Vector sorting the xaxis
+#' @param sort_y Vector to sort the yaxis
 #' @param across.group.by.y calculate a pseudobulk expression approach for the
 #' y-axis categories
 #' @param dot.size Vector of dot size
@@ -69,6 +70,7 @@ DO.Dotplot <- function(sce_object,
     across.group.by.x = FALSE,
     across.group.by.y = FALSE,
     sort_x = NULL,
+    sort_y = NULL,
     dot.size = c(1, 6),
     plot.margin = c(1, 1, 1, 1),
     midpoint = 0.5,
@@ -252,6 +254,13 @@ DO.Dotplot <- function(sce_object,
         data.plot.res$gene <- factor(data.plot.res$gene,
             levels = sort_x
         )
+    }
+
+    # sort y by provided y-axis
+    if (!is.null(sort_y) && !is.null(group.by.y)) {
+      data.plot.res$id <- factor(data.plot.res$id,
+        levels = sort_y
+      )
     }
 
     # create grouping column for multiple grouping variables on the y-axis
@@ -1022,6 +1031,8 @@ DO.Dotplot <- function(sce_object,
 #' a facetd plot. Default(NULL).
 #' @param aes_y = NULL You should supply the plot Y mapping name when annotate
 #' a facetd plot. Default(NULL).
+#' @param segment_gap = 0.9 define the gap between segmentation brackets
+#'
 #'
 #' @return ggplot
 #'
@@ -1036,7 +1047,7 @@ DO.Dotplot <- function(sce_object,
     pCol = NULL,
     segWidth = 1,
     lty = NULL,
-    lwd = 10,
+    lwd = 2, # updated from 10
     alpha = NULL,
     lineend = "square",
     annoManual = FALSE,
@@ -1051,13 +1062,14 @@ DO.Dotplot <- function(sce_object,
     fontfamily = NULL,
     fontface = NULL,
     textLabel = NULL,
-    textRot = 0,
+    textRot = 45, # updated from 0
     textHVjust = 0.2,
-    hjust = NULL,
-    vjust = NULL,
+    hjust = 0.1, # updated from NULL
+    vjust = -0.5, # updated from NULL
     myFacetGrou = NULL,
     aes_x = NULL,
-    aes_y = NULL) {
+    aes_y = NULL,
+    segment_gap = 0.9) {
     facetName <- names(object$facet$params$facets)
     if (is.null(myFacetGrou) & !is.null(facetName)) {
         myFacetGrou <- unique(data[, facetName])[1]
@@ -1202,6 +1214,12 @@ DO.Dotplot <- function(sce_object,
             )
         )
     }
+
+    #add segmentation gaps
+    gap <- segment_gap
+    xmin <- xmin + gap/2
+    xmax <- xmax - gap/2
+
     if (is.null(pCol)) {
         pCol <- useMyCol("stallion", n = nPoints)
     } else {
@@ -1222,10 +1240,10 @@ DO.Dotplot <- function(sce_object,
                         ),
                         arrow = mArrow
                     ),
-                    xmin = ggplot2::unit(xmin[i], "native"),
-                    xmax = ggplot2::unit(xmax[i], "native"),
-                    ymin = ggplot2::unit(ymin, "native"),
-                    ymax = ggplot2::unit(ymax, "native")
+                    xmin = xmin[i],
+                    xmax = xmax[i],
+                    ymin = ymin,
+                    ymax = ymax
                 )
             }
         } else if (annoPos %in% c("left", "right")) {
@@ -1242,10 +1260,10 @@ DO.Dotplot <- function(sce_object,
                         ),
                         arrow = mArrow
                     ),
-                    xmin = ggplot2::unit(xmin, "native"),
-                    xmax = ggplot2::unit(xmax, "native"),
-                    ymin = ggplot2::unit(ymin[i], "native"),
-                    ymax = ggplot2::unit(ymax[i], "native")
+                    xmin = xmin,
+                    xmax = xmax,
+                    ymin = ymin[i],
+                    ymax = ymax[i]
                 )
             }
         } else {
@@ -1327,10 +1345,10 @@ DO.Dotplot <- function(sce_object,
                         ),
                         arrow = bArrow
                     ),
-                    xmin = ggplot2::unit(brXmin[i], "native"),
-                    xmax = ggplot2::unit(brXmax[i], "native"),
-                    ymin = ggplot2::unit(brYmin, "native"),
-                    ymax = ggplot2::unit(brYmax, "native")
+                    xmin = brXmin[i],
+                    xmax = brXmax[i],
+                    ymin = brYmin,
+                    ymax = brYmax
                 )
             }
         } else if (addBranch == TRUE & annoPos %in% c("left", "right")) {
@@ -1347,10 +1365,10 @@ DO.Dotplot <- function(sce_object,
                         ),
                         arrow = bArrow
                     ),
-                    xmin = ggplot2::unit(brXmin, "native"),
-                    xmax = ggplot2::unit(brXmax, "native"),
-                    ymin = ggplot2::unit(brYmin[i], "native"),
-                    ymax = ggplot2::unit(brYmax[i], "native")
+                    xmin = brXmin,
+                    xmax = brXmax,
+                    ymin = brYmin[i],
+                    ymax = brYmax[i]
                 )
             }
         } else {
@@ -1429,10 +1447,10 @@ DO.Dotplot <- function(sce_object,
                         just = "centre",
                         rot = textRot
                     ),
-                    xmin = ggplot2::unit(xmin[i], "native"),
-                    xmax = ggplot2::unit(xmax[i], "native"),
-                    ymin = ggplot2::unit(ymin + textHVjust, "native"),
-                    ymax = ggplot2::unit(ymax + textHVjust, "native")
+                    xmin = xmin[i],
+                    xmax = xmax[i],
+                    ymin = ymin + textHVjust,
+                    ymax = ymax + textHVjust
                 )
             }
         } else if (addText == TRUE & annoPos %in% c("left", "right")) {
@@ -1452,10 +1470,10 @@ DO.Dotplot <- function(sce_object,
                         just = "centre",
                         rot = textRot
                     ),
-                    xmin = ggplot2::unit(xmin + textHVjust, "native"),
-                    xmax = ggplot2::unit(xmax + textHVjust, "native"),
-                    ymin = ggplot2::unit(ymin[i], "native"),
-                    ymax = ggplot2::unit(ymax[i], "native")
+                    xmin = xmin + textHVjust,
+                    xmax = xmax + textHVjust,
+                    ymin = ymin[i],
+                    ymax = ymax[i]
                 )
             }
         } else {

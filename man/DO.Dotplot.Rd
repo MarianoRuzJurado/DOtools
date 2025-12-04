@@ -13,6 +13,7 @@ DO.Dotplot(
   across.group.by.x = FALSE,
   across.group.by.y = FALSE,
   sort_x = NULL,
+  sort_y = NULL,
   dot.size = c(1, 6),
   plot.margin = c(1, 1, 1, 1),
   midpoint = 0.5,
@@ -53,6 +54,8 @@ x-axis categories}
 y-axis categories}
 
 \item{sort_x}{Vector sorting the xaxis}
+
+\item{sort_y}{Vector to sort the yaxis}
 
 \item{dot.size}{Vector of dot size}
 

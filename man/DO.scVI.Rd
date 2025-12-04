@@ -29,10 +29,10 @@ DO.scVI(
 \item{layer_logcounts}{layer with log-counts. Log-counts required for
 calculation of HVG.}
 
-\item{categorical_covariates}{meta data column names with categorical
+\item{categorical_covariates}{list of meta data column names with categorical
 covariates for scVI inference.}
 
-\item{continuos_covariates}{meta data  column names with continuous
+\item{continuos_covariates}{list of meta data  column names with continuous
 covariates for scVI inference.}
 
 \item{n_hidden}{number of hidden layers.}

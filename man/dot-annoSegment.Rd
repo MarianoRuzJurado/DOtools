@@ -15,7 +15,7 @@
   pCol = NULL,
   segWidth = 1,
   lty = NULL,
-  lwd = 10,
+  lwd = 2,
   alpha = NULL,
   lineend = "square",
   annoManual = FALSE,
@@ -30,13 +30,14 @@
   fontfamily = NULL,
   fontface = NULL,
   textLabel = NULL,
-  textRot = 0,
+  textRot = 45,
   textHVjust = 0.2,
-  hjust = NULL,
-  vjust = NULL,
+  hjust = 0.1,
+  vjust = -0.5,
   myFacetGrou = NULL,
   aes_x = NULL,
-  aes_y = NULL
+  aes_y = NULL,
+  segment_gap = 0.9
 )
 }
 \arguments{
@@ -109,6 +110,8 @@ a facetd plot. Default(NULL).}
 
 \item{aes_y}{= NULL You should supply the plot Y mapping name when annotate
 a facetd plot. Default(NULL).}
+
+\item{segment_gap}{= 0.9 define the gap between segmentation brackets}
 }
 \value{
 ggplot

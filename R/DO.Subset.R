@@ -137,7 +137,9 @@ DO.Subset <- function(sce_object,
 
     # Seurat support
     if (class_obj == "Seurat") {
-        sce_object_sub <- as.Seurat(sce_object_sub)
+        sce_object_sub <- .suppressDeprecationWarnings(
+            as.Seurat(sce_object_sub)
+        )
         sce_object_sub[[assay]] <- methods::as(
             object = sce_object_sub[[assay]], Class = "Assay5"
         )

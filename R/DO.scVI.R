@@ -9,9 +9,9 @@
 #' @param layer_counts layer with counts. Raw counts are required.
 #' @param layer_logcounts layer with log-counts. Log-counts required for
 #' calculation of HVG.
-#' @param categorical_covariates meta data column names with categorical
+#' @param categorical_covariates list of meta data column names with categorical
 #' covariates for scVI inference.
-#' @param continuos_covariates meta data  column names with continuous
+#' @param continuos_covariates list of meta data  column names with continuous
 #' covariates for scVI inference.
 #' @param n_hidden number of hidden layers.
 #' @param n_latent dimensions of the latent space.
