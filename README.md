@@ -17,7 +17,7 @@ It provides high-level wrappers and visualisation utilities to help efficiently 
 
 # <b> Installation </b>
 
-DOtools is currently available through github.
+DOtools is currently available through Bioconductor.
 To install the package, start R and run:
 
 ``` ruby

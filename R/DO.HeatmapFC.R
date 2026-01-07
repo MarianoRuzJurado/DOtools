@@ -152,7 +152,7 @@ DO.HeatmapFC <- function(
     # IO
     path = NULL,
     filename = "Heatmap.svg",
-    show = TRUE,
+    showP = TRUE,
 
     # Statistics
     add_stats = FALSE,
@@ -274,14 +274,15 @@ DO.HeatmapFC <- function(
         c(group_by, condition_key,
         setdiff(colnames(df_pvals_collector), c(group_by, condition_key)))
     ]
-    }
-
     df_long <- df_pvals_collector %>%
         pivot_longer(
             cols = -c(!!sym(group_by), !!sym(condition_key)),
             names_to = "genes",
             values_to = "value"
         )
+    }
+
+
 
     # source PATH to python script in install folder
     path_py <- system.file("python", "heatmap_fc.py", package = "DOtools")
@@ -320,7 +321,7 @@ DO.HeatmapFC <- function(
         # IO
         path = path,
         filename = filename,
-        show = show,
+        showP = showP,
 
         # Statistics
         add_stats = add_stats,
@@ -386,7 +387,7 @@ DO.HeatmapFC <- function(
         group_legend_ncols = args$group_legend_ncols,
         path = args$path,
         filename = args$filename,
-        show = args$show,
+        show = args$showP,
         add_stats = args$add_stats,
         test = args$test,
         correction_method = args$correction_method,

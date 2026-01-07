@@ -624,6 +624,41 @@ Heatmap_plot <- list.files(
 plot(magick::image_read_svg(Heatmap_plot))
 ```
 
+The `DO.HeatmapFC` function shows the foldchange of expressions of multiple 
+genes in defined groups in a publication ready way and still keeping
+statistical testing for an all-in-one presentation:
+
+```{r Heat map FC}
+#| out.width: "100%"
+#| fig.align: "center"
+#| fig.width: 10
+#| fig.height: 8
+#| warning: FALSE
+
+path_file <- tempfile("dotools_plots_")
+dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
+
+DO.HeatmapFC(SCE_obj,
+    group_by = "leiden0.3",
+    features = rownames(SCE_obj)[1:10],
+    reference = "healthy",
+    condition_key = "condition",
+    xticks_rotation = 45,
+    path = path_file,
+    stats_x_size = 20,
+    showP = FALSE
+)
+
+Heatmap_plot2 <- list.files(
+    path = path_file,
+    pattern = "Heatmap*\\.svg$",
+    full.names = TRUE,
+    recursive = TRUE
+)
+
+plot(magick::image_read_svg(Heatmap_plot2))
+```
+
 We can visualize the average expression of a gene in a cell type + condition
 or we can plot continuous metadata information across conditions with
 violinplots, barplots and boxplots. Additionally, we can test for significance.
@@ -648,10 +683,12 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident_name = "NK"
 )
 
-DO.BarplotWilcox(SCE_obj_NK,
+DO.Barplot(SCE_obj_NK,
     group.by = "condition",
     ctrl.condition = "healthy",
     Feature = "NKG7",
+    test_use = "wilcox",
+    corection_method = "fdr",
     x_label_rotation = 0
 )
 ```
