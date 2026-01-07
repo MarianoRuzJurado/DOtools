@@ -67,7 +67,7 @@
 #' @import Seurat
 #' @importFrom basilisk basiliskRun
 #'
-#' @examples#'
+#' @examples
 #' sce_data <-
 #'   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 #'
@@ -206,6 +206,8 @@ DO.Heatmap <- function(
         }
 
         if (is.null(df_pvals) && value_plot == "fc") {
+            warning(sprintf("value_plot fc is deprecated,",
+                "please consider using DO.HeatmapFC!"))
             df_pvals <- data.frame(
                 matrix(1,
                     nrow = length(features),

@@ -41,7 +41,12 @@ DO.Subset <- function(sce_object,
         Seu_obj <- sce_object
         class_obj <- "Seurat"
         reduction_names <- names(sce_object@reductions)
-        sce_object <- as.SingleCellExperiment(sce_object)
+        sce_object <- .suppressPatternWarning(
+            as.SingleCellExperiment(sce_object),
+            patterns = c(
+                "Layer 'scale.data' is empty"
+            )
+        )
     } else {
         class_obj <- "SingleCellExperiment"
     }
@@ -140,10 +145,12 @@ DO.Subset <- function(sce_object,
         sce_object_sub <- .suppressDeprecationWarnings(
             as.Seurat(sce_object_sub)
         )
-        sce_object_sub[[assay]] <- methods::as(
-            object = sce_object_sub[[assay]], Class = "Assay5"
+        .suppressPatternWarning(sce_object_sub[[assay]] <-
+            methods::as(
+                object = sce_object_sub[[assay]], Class = "Assay5"
+            ),
+            patterns = c("Assay RNA changing from Assay to Assay5")
         )
-
         names(sce_object_sub@reductions) <- reduction_names
         sce_object_sub$ident <- NULL
         # some checks

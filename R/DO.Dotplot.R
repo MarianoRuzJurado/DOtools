@@ -258,9 +258,9 @@ DO.Dotplot <- function(sce_object,
 
     # sort y by provided y-axis
     if (!is.null(sort_y) && !is.null(group.by.y)) {
-      data.plot.res$id <- factor(data.plot.res$id,
+        data.plot.res$id <- factor(data.plot.res$id,
         levels = sort_y
-      )
+        )
     }
 
     # create grouping column for multiple grouping variables on the y-axis

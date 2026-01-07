@@ -94,6 +94,20 @@
         )
     }
 
+#
+
+#' @keywords internal
+.suppressPatternWarning <- function(expr, patterns) {
+    withCallingHandlers(
+    expr,
+    warning = function(w) {
+        # If warning message matches ANY supplied pattern → suppress it
+        if (any(vapply(patterns, grepl, logical(1), x = conditionMessage(w)))) {
+            invokeRestart("muffleWarning")
+            }
+        }
+    )
+}
 
 theme_box <- function() {
     theme_bw() +

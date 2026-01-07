@@ -18,14 +18,19 @@
 #' @param group.by select the seurat object slot where your conditions can
 #' be found, default conditon
 #' @param bar_colours colour vector
-#' @param plotPvalue plot the non adjusted p-value without correcting for
+#' @param plot_raw_pvalue plot the non adjusted p-value without correcting for
 #' multiple tests
 #' @param stat_pos_mod Defines the distance to the graphs of the statistic
 #' @param step_mod Defines the distance between each statistics bracket
 #' @param x_label_rotation Rotation of x-labels
 #' @param log1p_nUMI If nUMIs should be log1p transformed
 #' @param y_limits set limits for y-axis
-#' @param wilcox_test perform wilcox test. boolean default TRUE
+#' @param test_use perform one of c(
+#' "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+#' "poisson", "LR", "MAST", "DESeq2", "none"
+#' ). default "wilcox"
+#' @param correction_method correction for p-value calculation. One of
+#' c("BH", "bonferroni", "holm", "BY", "fdr", "none")
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -44,29 +49,35 @@
 #' ListTest <- list()
 #' ListTest[[1]] <- c("healthy", "disease")
 #'
-#' DO.BarplotWilcox(
+#' DO.Barplot(
 #'     sce_object = sce_data,
 #'     Feature = "NKG7",
+#'     test_use = "wilcox",
+#'     correction_method="fdr",
 #'     ListTest = ListTest,
 #'     ctrl.condition = "healthy",
 #'     group.by = "condition"
 #' )
 #'
 #' @export
-DO.BarplotWilcox <- function(sce_object,
+DO.Barplot <- function(
+    sce_object,
     Feature,
     ListTest = NULL,
     returnValues = FALSE,
     ctrl.condition = NULL,
     group.by = "condition",
-    wilcox_test = TRUE,
+    test_use = "wilcox",
+    correction_method = "fdr",
+    p_values = NULL,
     bar_colours = NULL,
     stat_pos_mod = 1.15,
     step_mod = 0.2,
     x_label_rotation = 45,
-    plotPvalue = FALSE,
+    plot_raw_pvalue = FALSE,
     y_limits = NULL,
-    log1p_nUMI = TRUE) {
+    log1p_nUMI = TRUE
+) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- as.Seurat(sce_object)
@@ -77,12 +88,15 @@ DO.BarplotWilcox <- function(sce_object,
         stop("Feature not found in SCE Object!")
     }
 
-    if (wilcox_test == TRUE) {
-        rstat <- system.file(package = "rstatix") # package is installed
-        ifelse(nzchar(rstat), "",
-            stop("Install rstatix R package for wilcox statistic!")
+    test <- match.arg(
+        test_use, c(
+            "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+            "poisson", "LR", "MAST", "DESeq2", "none"
         )
-    }
+    )
+    p_method <- match.arg(
+        correction_method, c("BH", "bonferroni", "holm", "BY", "fdr", "none")
+    )
 
     # SEM function defintion
     SEM <- function(x) sqrt(stats::var(x) / length(x))
@@ -94,24 +108,12 @@ DO.BarplotWilcox <- function(sce_object,
         ),
         orig.ident = sce_object$orig.ident
     )
-    # get expression values for genes from individual cells, add to df
-    # if (SeuV5==FALSE) {
-    #  for(i in Feature){
-    #    df[,i] <- expm1(sce_object@assays$RNA@data[i,])
-    #
-    #  }
-    # }
-    # For Seuratv5 where everything is a layer now
-    # if (SeuV5==TRUE) {
+
     if (Feature %in% rownames(sce_object)) {
         df[, Feature] <- expm1(FetchData(sce_object, vars = Feature))
     } else {
         df[, Feature] <- FetchData(sce_object, vars = Feature)
     }
-    # }
-
-    # stat.df$condition <- factor(stat.df$condition)
-    # stat.df$variable <- factor(stat.df$variable)
 
 
     # melt results
@@ -177,6 +179,7 @@ DO.BarplotWilcox <- function(sce_object,
             }
         }
     }
+
     # delete Null values
     ListTest <- ListTest[!vapply(ListTest, is.null, logical(1))]
     indices <- vapply(ListTest, function(x) {
@@ -203,31 +206,82 @@ DO.BarplotWilcox <- function(sce_object,
     # Remove vectors with both elements having a mean of 0
     ListTest <- remove_zeros(ListTest, df.melt.sum)
 
+    ### new test, useable with all methods implemented in FindMarkers
+    ### and with multiple correction methods
+    ### does also take manual p-values as input
+    if (test_use != "none") {
+        stat.test <- data.frame()
+        for (grp in ListTest) {
+            degs <- FindMarkers(sce_object,
+                test.use = test_use,
+                ident.1 = grp[2],
+                ident.2 = grp[1],
+                logfc.threshold = 0,
+                min.pct = 0,
+                min.diff.pct = -Inf,
+                group.by = group.by
+            )
+            degs_old <- degs
+            degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+            degs <- degs[rownames(degs) %in% Feature, ]
 
-    # do statistix with rstatix + stats package
-    if (wilcox_test == TRUE) {
-        stat.test <- df.melt %>%
-            ungroup() %>%
-            rstatix::wilcox_test(value ~ condition,
-                comparisons = ListTest,
-                p.adjust.method = "none"
-            ) %>%
-            rstatix::add_significance()
-        stat.test$p.adj <- stats::p.adjust(stat.test$p,
-            method = "bonferroni",
-            n = length(rownames(sce_object))
-        )
-        stat.test$p.adj <- ifelse(stat.test$p.adj == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p.adj)
-        )
+            group_dis <- grp[2]
+            group_ctrl <- grp[1]
+
+            test_df <- degs %>%
+                rownames_to_column(var = ".y.") %>%
+                mutate(
+                    group1 = group_dis,
+                    group2 = group_ctrl,
+                    n1 = sum(sce_object[[group.by]][, group.by] == group1),
+                    n2 = sum(sce_object[[group.by]][, group.by] == group2),
+                    statistic = NA_real_, # keep this column for consistency
+                    p = p_val,
+                    p.adj = p_val_adj
+                ) %>%
+                rstatix::add_significance() %>%
+                select(
+                    .y., group1, group2, n1, n2,
+                    statistic, p, p.adj, p.adj.signif
+                )
+
+            if (!is.null(p_values)) {
+                # Check for equal numbers of provided p-values and comparisons
+                if (length(p_values) != length(ListTest)) {
+                    stop(sprintf(
+                        "Number of provided p-values: %s, does",
+                        "not match number of comparisons: %s",
+                        length(p_values), length(ListTest)
+                    ))
+                }
+                # Assign new p-values and add significance
+                test_df$p.adj <- p_values
+                test_df <- test_df %>% rstatix::add_significance()
+            }
+
+            # add lowest number to replace 0s and apply scientifc writing
+            test_df$p.adj <- ifelse(
+                test_df$p.adj == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p.adj)
+            )
+            test_df$p <- ifelse(
+                test_df$p == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p)
+            )
+            stat.test <- rbind(stat.test, test_df)
+        }
     }
+
+    ####
+
     # add SEM calculated over sample means
     df.melt.sum$SEM <- NA
     for (condition in df.melt.sum$condition) {
         df.melt.orig.con <- df.melt.orig[
             df.melt.orig$condition %in% condition,
-            ]
+        ]
         for (gene in Feature) {
             df.melt.orig.con.gen <-
                 df.melt.orig.con[df.melt.orig.con$variable %in% gene, ]
@@ -272,7 +326,6 @@ DO.BarplotWilcox <- function(sce_object,
         scale_x_discrete(limits = c(as.character(ctrl.condition), levels(factor(
             df.melt.sum$condition
         ))[!(levels(factor(df.melt.sum$condition)) %in% ctrl.condition)])) +
-        # t-test, always vs control, using means from orig sample identifier
         facet_wrap(~variable, ncol = 9, scales = "free") +
         scale_fill_manual(
             values = bar_colours,
@@ -298,13 +351,13 @@ DO.BarplotWilcox <- function(sce_object,
     if (!is.null(y_limits)) {
         p <- p + ylim(y_limits)
     }
-    if (wilcox_test == TRUE) {
+    if (test_use != "none") {
         # Adjustments when ylim is changed manually
         y_pos_test <- max(df.melt.orig$Mean) * stat_pos_mod
         if (!is.null(y_limits) && y_pos_test > max(y_limits)) {
             y_pos_test <- max(y_limits) * stat_pos_mod - 0.1 * diff(y_limits)
         }
-        if (plotPvalue == TRUE) {
+        if (plot_raw_pvalue == TRUE) {
             p <- p + stat_pvalue_manual(
                 stat.test,
                 label = "p = {p}",

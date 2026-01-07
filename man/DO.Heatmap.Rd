@@ -160,7 +160,6 @@ Differential gene expression analysis between the different groups can be
 performed.
 }
 \examples{
-#'
 sce_data <-
   readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 

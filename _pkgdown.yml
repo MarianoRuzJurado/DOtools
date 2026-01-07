@@ -36,13 +36,14 @@ reference:
   desc: ~
   contents:
   - DO.BarplotClustert
-  - DO.BarplotWilcox
+  - DO.Barplot
   - DO.VlnPlot
   - DO.BoxPlot
   - DO.Dotplot
   - DO.CellComposition
   - DO.SplitBarGSEA
   - DO.Heatmap
+  - DO.HeatmapFC
 - title: Utils
   desc: ~
   contents:
