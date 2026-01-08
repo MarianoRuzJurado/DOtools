@@ -221,7 +221,7 @@ DO.Barplot <- function(
                 min.diff.pct = -Inf,
                 group.by = group.by
             )
-            degs_old <- degs
+
             degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
             degs <- degs[rownames(degs) %in% Feature, ]
 

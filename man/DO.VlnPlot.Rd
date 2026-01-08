@@ -6,7 +6,6 @@
 \usage{
 DO.VlnPlot(
   sce_object,
-  SeuV5 = TRUE,
   Feature,
   ListTest = NULL,
   returnValues = FALSE,
@@ -17,21 +16,22 @@ DO.VlnPlot(
   geom_jitter_args_group_by2 = c(0.1, 0.1, 1),
   vector_colors = c("#1f77b4", "#ea7e1eff", "royalblue4", "tomato2", "darkgoldenrod",
     "palegreen4", "maroon", "thistle3"),
-  wilcox_test = TRUE,
+  test_use = "wilcox",
+  correction_method = "fdr",
+  p_values = NULL,
+  y_title = "log(nUMI)",
   stat_pos_mod = 1.15,
-  hjust.wilcox = 0.8,
-  vjust.wilcox = 2,
-  size.wilcox = 3.33,
+  hjust_test = 0.8,
+  vjust_test = 2,
+  size_test = 3.33,
   step_mod = 0,
-  hjust.wilcox.2 = 0.5,
-  vjust.wilcox.2 = 0,
+  hjust_test_2 = 0.5,
+  vjust_test_2 = 0,
   sign_bar = 0.8
 )
 }
 \arguments{
 \item{sce_object}{combined SCE object or Seurat}
-
-\item{SeuV5}{Seuratv5 object? (TRUE or FALSE)}
 
 \item{Feature}{name of the feature}
 
@@ -59,24 +59,31 @@ group.by.2 is specified}
 \item{vector_colors}{specify a minimum number of colours as you have entries
 in your condition, default 2}
 
-\item{wilcox_test}{Bolean if TRUE a bonferoni wilcoxon test will be carried
-out between ctrl.condition and the rest}
+\item{test_use}{perform one of c(
+"wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+"poisson", "LR", "MAST", "DESeq2", "none"
+). default "wilcox"}
+
+\item{correction_method}{correction for p-value calculation. One of
+c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"}
+
+\item{y_title}{specify title on the y axis. default "log(nUMI)"}
 
 \item{stat_pos_mod}{value for modifiyng statistics height}
 
-\item{hjust.wilcox}{value for adjusting height of the text}
+\item{hjust_test}{value for adjusting height of the text}
 
-\item{vjust.wilcox}{value for vertical of text}
+\item{vjust_test}{value for vertical of text}
 
-\item{size.wilcox}{value for size of text of statistical test}
+\item{size_test}{value for size of text of statistical test}
 
 \item{step_mod}{value for defining the space between one test and the next
 one}
 
-\item{hjust.wilcox.2}{value for adjusting height of the text, with group.by.2
+\item{hjust_test_2}{value for adjusting height of the text, with group.by.2
 specified}
 
-\item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
+\item{vjust_test_2}{value for vertical of text, with group.by.2 specified}
 
 \item{sign_bar}{adjusts the sign_bar with group.by.2 specified}
 }
@@ -86,11 +93,11 @@ a ggplot or a list used data frames
 \description{
 Creates a violin plot to compare gene expression across
 different conditions or groups within a Seurat object. It incorporates
-Wilcoxon rank-sum tests to evaluate statistical differences between
+different tests to evaluate statistical differences between
 conditions. The plot can be customized with options for data transformation,
 jitter display, and significance annotations. The function also supports
 multiple conditions and allows for visualisation of statistical results from
-wilcoxon test.
+different test.
 }
 \examples{
 sce_data <-

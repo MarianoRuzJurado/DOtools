@@ -3,11 +3,11 @@
 #' @title Violin Graph with wilcox test on single cell level
 #' @description Creates a violin plot to compare gene expression across
 #' different conditions or groups within a Seurat object. It incorporates
-#' Wilcoxon rank-sum tests to evaluate statistical differences between
+#' different tests to evaluate statistical differences between
 #' conditions. The plot can be customized with options for data transformation,
 #' jitter display, and significance annotations. The function also supports
 #' multiple conditions and allows for visualisation of statistical results from
-#' wilcoxon test.
+#' different test.
 #' @param sce_object combined SCE object or Seurat
 #' @param Feature name of the feature
 #' @param ListTest List for which conditions wilcox will be performed, if NULL
@@ -24,21 +24,25 @@
 #' size, width, alpha value
 #' @param vector_colors specify a minimum number of colours as you have entries
 #' in your condition, default 2
-#' @param wilcox_test Bolean if TRUE a bonferoni wilcoxon test will be carried
-#' out between ctrl.condition and the rest
+#' @param test_use perform one of c(
+#' "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+#' "poisson", "LR", "MAST", "DESeq2", "none"
+#' ). default "wilcox"
+#' @param correction_method correction for p-value calculation. One of
+#' c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"
 #' @param stat_pos_mod value for modifiyng statistics height
-#' @param hjust.wilcox value for adjusting height of the text
-#' @param vjust.wilcox value for vertical of text
-#' @param hjust.wilcox.2 value for adjusting height of the text, with group.by.2
+#' @param hjust_test value for adjusting height of the text
+#' @param vjust_test value for vertical of text
+#' @param hjust_test_2 value for adjusting height of the text, with group.by.2
 #'  specified
-#' @param vjust.wilcox.2 value for vertical of text, with group.by.2 specified
+#' @param vjust_test_2 value for vertical of text, with group.by.2 specified
 #' @param sign_bar adjusts the sign_bar with group.by.2 specified
-#' @param size.wilcox value for size of text of statistical test
+#' @param size_test value for size of text of statistical test
 #' @param step_mod value for defining the space between one test and the next
 #' one
 #' @param geom_jitter_args_group_by2 controls the jittering of points if
 #' group.by.2 is specified
-#' @param SeuV5 Seuratv5 object? (TRUE or FALSE)
+#' @param y_title specify title on the y axis. default "log(nUMI)"
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -59,7 +63,6 @@
 #'
 #' DO.VlnPlot(
 #'     sce_object = sce_data,
-#'     SeuV5 = TRUE,
 #'     Feature = "NKG7",
 #'     ListTest = ListTest,
 #'     ctrl.condition = "healthy",
@@ -67,8 +70,8 @@
 #' )
 #'
 #' @export
-DO.VlnPlot <- function(sce_object,
-    SeuV5 = TRUE,
+DO.VlnPlot <- function(
+    sce_object,
     Feature,
     ListTest = NULL,
     returnValues = FALSE,
@@ -87,15 +90,19 @@ DO.VlnPlot <- function(sce_object,
         "maroon",
         "thistle3"
     ),
-    wilcox_test = TRUE,
+    test_use = "wilcox",
+    correction_method = "fdr",
+    p_values = NULL,
+    y_title = "log(nUMI)",
     stat_pos_mod = 1.15,
-    hjust.wilcox = 0.8,
-    vjust.wilcox = 2.0,
-    size.wilcox = 3.33,
+    hjust_test = 0.8,
+    vjust_test = 2.0,
+    size_test = 3.33,
     step_mod = 0,
-    hjust.wilcox.2 = 0.5,
-    vjust.wilcox.2 = 0,
-    sign_bar = 0.8) {
+    hjust_test_2 = 0.5,
+    vjust_test_2 = 0,
+    sign_bar = 0.8
+) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
         SCE <- TRUE
@@ -106,109 +113,59 @@ DO.VlnPlot <- function(sce_object,
 
     if (!(Feature %in% rownames(sce_object)) &&
         !(Feature %in% names(sce_object@meta.data))) {
-        stop("Feature not found in Seurat Object!")
+        stop("Feature not found in SCE Object!")
     }
-
-    if (wilcox_test == TRUE) {
-        rstat <- system.file(package = "rstatix") # package is installed
-        ifelse(nzchar(rstat),
-            "",
-            stop("Install rstatix R package for wilcox statistic!")
+    ## add test and correction methods
+    test <- match.arg(
+        test_use, c(
+            "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+            "poisson", "LR", "MAST", "DESeq2", "none"
         )
-    }
+    )
+    p_method <- match.arg(
+        correction_method, c("BH", "bonferroni", "holm", "BY", "fdr", "none")
+    )
+    ##
 
-    if (is.null(ctrl.condition)) {
+    if (test != "none" & is.null(ctrl.condition)) {
         stop("Please specify the ctrl condition as string!")
     }
 
-    if (SeuV5 == TRUE) {
-        rlang::inform(
-            "SeuV5 TRUE, if object Seuratv4 or below change SeuV5 to FALSE",
-            .frequency = "once",
-            .frequency_id = "v5Mean"
-        )
-        if (Feature %in% rownames(sce_object)) {
-            vln.df <- data.frame(
-                Feature = sce_object[["RNA"]]$data[Feature, ],
-                cluster = sce_object[[group.by]]
-            )
-        } else {
-            vln.df <- data.frame(
-                Feature = FetchData(sce_object, vars = Feature)[, 1],
-                cluster = sce_object[[group.by]]
-            )
-        }
+    ## add similar df expression extraction as in DO.Barplot.R
 
+    # create data frame with conditions from provided sce_object
+    vln_df <- data.frame(
+        condition = stats::setNames(
+            sce_object[[group.by]][, group.by],
+            rownames(sce_object[[group.by]])
+        ),
+        orig.ident = sce_object$orig.ident
+    )
 
+    # add values: extracts log1p values or metadata values
+    vln_df[, Feature] <- FetchData(sce_object, vars = Feature)
 
-        df <- data.frame(
-            group = stats::setNames(
-                sce_object[[group.by]][, group.by],
-                rownames(sce_object[[group.by]])
-            ),
-            orig.ident = sce_object$orig.ident
-        )
-
-        # add second group for individual splitting and testing in the wilcoxon
-        if (!is.null(group.by.2)) {
-            vln.df[group.by.2] <- sce_object[[group.by.2]]
-            df[group.by.2] <- sce_object[[group.by.2]]
-        }
-
-        # get expression values for genes from individual cells, add to df
-        if (Feature %in% rownames(sce_object)) {
-            df[, Feature] <- sce_object@assays$RNA$data[Feature, ]
-        } else {
-            df[, Feature] <- FetchData(sce_object, vars = Feature)[, 1]
-        }
-    }
-
-    if (SeuV5 == FALSE) {
-        if (Feature %in% rownames(sce_object)) {
-            vln.df <- data.frame(
-                Feature = sce_object[["RNA"]]@data[Feature, ],
-                cluster = sce_object[[group.by]]
-            )
-        } else {
-            vln.df <- data.frame(
-                Feature = FetchData(sce_object, vars = Feature)[, 1],
-                cluster = sce_object[[group.by]]
-            )
-        }
-
-        df <- data.frame(
-            group = stats::setNames(
-                sce_object[[group.by]][, group.by],
-                rownames(sce_object[[group.by]])
-            ),
-            orig.ident = sce_object$orig.ident
-        )
-        # add second group for individual splitting and testing in the wilcoxon
-        if (!is.null(group.by.2)) {
-            vln.df[group.by.2] <- sce_object[[group.by.2]]
-            df[group.by.2] <- sce_object[[group.by.2]]
-        }
-
-        # get expression values for genes from individual cells, add to df
-        if (Feature %in% rownames(sce_object)) {
-            df[, Feature] <- sce_object@assays$RNA@data[Feature, ]
-        } else {
-            df[, Feature] <- FetchData(sce_object, vars = Feature)[, 1]
-        }
+    # add second group for individual splitting and testing in the wilcoxon
+    if (!is.null(group.by.2)) {
+        vln_df[group.by.2] <- sce_object[[group.by.2]]
+        # df[group.by.2] <- sce_object[[group.by.2]]
     }
 
 
-    df.melt <- melt(df)
+    vln_df_melt <- melt(vln_df)
 
-    vln.df$group <- factor(
-        vln.df[[group.by]],
+
+    vln_df$group <- factor(
+        vln_df[[group.by]],
         levels = c(
             as.character(ctrl.condition),
-            levels(factor(vln.df[[group.by]]))[
-                !(levels(factor(vln.df[[group.by]])) %in% ctrl.condition)
+            levels(factor(vln_df[[group.by]]))[
+                !(levels(factor(vln_df[[group.by]])) %in% ctrl.condition)
             ]
         )
     )
+
+
     # create comparison list for wilcox, always against control
     # ,alternative add your own list as argument
     if (is.null(ListTest)) {
@@ -243,11 +200,11 @@ DO.VlnPlot <- function(sce_object,
     ListTest <- ListTest[!vapply(ListTest, is.null, logical(1))]
     if (!is.null(group.by.2)) {
         indices <- vapply(ListTest, function(x) {
-            match(x[2], vln.df[[group.by.2]])
+            match(x[2], vln_df[[group.by.2]])
         }, integer(1))
     } else {
         indices <- vapply(ListTest, function(x) {
-            match(x[2], vln.df[[group.by]])
+            match(x[2], vln_df[[group.by]])
         }, integer(1))
     }
     ListTest <- ListTest[order(indices)]
@@ -256,7 +213,7 @@ DO.VlnPlot <- function(sce_object,
         lst_filtered <- lst
         for (i in seq_along(lst)) {
             elements <- lst[[i]]
-            if (all(df[df$group %in% elements, "Mean"] == 0)) {
+            if (all(df[df$condition %in% elements, "Mean"] == 0)) {
                 lst_filtered <- lst_filtered[-i]
                 warning(sprintf(
                     "Removing Test %s vs %s since both values are 0",
@@ -269,24 +226,25 @@ DO.VlnPlot <- function(sce_object,
 
     # group results and summarize
     if (is.null(group.by.2)) {
-        df.melt.sum <- df.melt %>%
-            dplyr::group_by(group, variable) %>%
+        vln_df_sum <- vln_df_melt %>%
+            dplyr::group_by(condition, variable) %>%
             dplyr::summarise(Mean = mean(value))
     } else {
-        df.melt.sum <- df.melt %>%
-            dplyr::group_by(group, !!sym(group.by.2), variable) %>%
+        vln_df_sum <- vln_df_melt %>%
+            dplyr::group_by(condition, !!sym(group.by.2), variable) %>%
             dplyr::summarise(Mean = mean(value))
     }
 
 
     # Remove vectors with both elements having a mean of 0
-    ListTest <- remove_zeros(ListTest, df.melt.sum)
+    ListTest <- remove_zeros(ListTest, vln_df_sum)
+
 
     # check there are groups in the data which contain only 0 values
     # and therefore let the test fail
     if (is.null(group.by.2)) {
-        group_of_zero <- df.melt %>%
-            dplyr::group_by(group) %>%
+        group_of_zero <- vln_df_melt %>%
+            dplyr::group_by(condition) %>%
             summarise(all_zeros = all(value == 0), .groups = "drop") %>%
             filter(all_zeros)
 
@@ -295,8 +253,8 @@ DO.VlnPlot <- function(sce_object,
                 "Some comparisons have no expression in both groups, setting ",
                 "expression to minimum value to ensure test does not fail!"
             )
-            df.melt <- df.melt %>%
-                dplyr::group_by(group) %>%
+            vln_df_melt <- vln_df_melt %>%
+                dplyr::group_by(condition) %>%
                 dplyr::mutate(
                     value = if_else(
                         row_number() == 1 & all(value == 0),
@@ -307,15 +265,15 @@ DO.VlnPlot <- function(sce_object,
                 ungroup()
         }
     } else {
-        group_of_zero <- df.melt %>%
-            dplyr::group_by(group, !!sym(group.by.2)) %>%
+        group_of_zero <- vln_df_melt %>%
+            dplyr::group_by(condition, !!sym(group.by.2)) %>%
             summarise(all_zeros = all(value == 0), .groups = "drop") %>%
             filter(all_zeros)
 
         # check now the result for multiple entries in group.by.2
         groupby2_check <- group_of_zero %>%
             dplyr::group_by(!!sym(group.by.2)) %>%
-            summarise(group_count = n_distinct(group), .groups = "drop") %>%
+            summarise(group_count = n_distinct(condition), .groups = "drop") %>%
             filter(group_count > 1)
 
         if (nrow(groupby2_check) > 0) {
@@ -323,8 +281,8 @@ DO.VlnPlot <- function(sce_object,
                 "Some comparisons have no expression in both groups, setting ",
                 "expression to minimum value to ensure test does not fail!"
             )
-            df.melt <- df.melt %>%
-                dplyr::group_by(group, !!sym(group.by.2)) %>%
+            vln_df_melt <- vln_df_melt %>%
+                dplyr::group_by(condition, !!sym(group.by.2)) %>%
                 dplyr::mutate(
                     value = if_else(
                         row_number() == 1 & all(value == 0),
@@ -335,76 +293,169 @@ DO.VlnPlot <- function(sce_object,
                 ungroup()
         }
     }
+    ### new test, useable with all methods implemented in FindMarkers
+    ### and with multiple correction methods
+    ### does also take manual p-values as input
+    if (test_use != "none" & is.null(group.by.2)) {
+        stat.test <- data.frame()
+        for (grp in ListTest) {
+            degs <- FindMarkers(sce_object,
+                test.use = test_use,
+                ident.1 = grp[2],
+                ident.2 = grp[1],
+                logfc.threshold = 0,
+                min.pct = 0,
+                min.diff.pct = -Inf,
+                group.by = group.by
+            )
+            degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+            degs <- degs[rownames(degs) %in% Feature, ]
 
-    # do statistix with rstatix + stats package
-    if (wilcox_test == TRUE & is.null(group.by.2)) {
-        stat.test <- df.melt %>%
-            ungroup() %>%
-            rstatix::wilcox_test(value ~ group,
-                comparisons = ListTest,
-                p.adjust.method = "none"
-            ) %>%
-            rstatix::add_significance()
-        stat.test$p.adj <- stats::p.adjust(stat.test$p,
-            method = "bonferroni",
-            n = length(rownames(sce_object))
-        )
-        stat.test$p.adj <- ifelse(
-            stat.test$p.adj == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p.adj)
-        )
-        stat.test$p <- ifelse(
-            stat.test$p == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p)
-        )
+            group_dis <- grp[2]
+            group_ctrl <- grp[1]
+
+            test_df <- degs %>%
+                rownames_to_column(var = ".y.") %>%
+                mutate(
+                    group1 = group_dis,
+                    group2 = group_ctrl,
+                    n1 = sum(sce_object[[group.by]][, group.by] == group1),
+                    n2 = sum(sce_object[[group.by]][, group.by] == group2),
+                    statistic = NA_real_, # keep this column for consistency
+                    p = p_val,
+                    p.adj = p_val_adj
+                ) %>%
+                rstatix::add_significance() %>%
+                select(
+                    .y., group1, group2, n1, n2,
+                    statistic, p, p.adj, p.adj.signif
+                )
+
+            if (!is.null(p_values)) {
+                # Check for equal numbers of provided p-values and comparisons
+                if (length(p_values) != length(ListTest)) {
+                    stop(sprintf(
+                        "Number of provided p-values: %s, does",
+                        "not match number of comparisons: %s",
+                        length(p_values), length(ListTest)
+                    ))
+                }
+                # Assign new p-values and add significance
+                test_df$p.adj <- p_values
+                test_df <- test_df %>% rstatix::add_significance()
+            }
+
+            # add lowest number to replace 0s and apply scientifc writing
+            test_df$p.adj <- ifelse(
+                test_df$p.adj == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p.adj)
+            )
+            test_df$p <- ifelse(
+                test_df$p == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p)
+            )
+            stat.test <- rbind(stat.test, test_df)
+        }
     }
 
-    if (wilcox_test == TRUE & !is.null(group.by.2)) {
-        stat.test <- df.melt %>%
-            dplyr::group_by(!!sym(group.by.2)) %>%
-            rstatix::wilcox_test(value ~ group,
-                comparisons = ListTest,
-                p.adjust.method = "none"
-            ) %>%
-            rstatix::add_significance()
-        stat.test$p.adj <- stats::p.adjust(stat.test$p,
-            method = "bonferroni",
-            n = length(rownames(sce_object))
-        )
-        stat.test$p.adj <- ifelse(
-            stat.test$p.adj == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p.adj)
-        )
-        stat.test$p <- ifelse(
-            stat.test$p == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p)
-        )
-    }
+    ## for multiple group argument set
+    if (test_use != "none" & !is.null(group.by.2)) {
+        stat.test <- data.frame()
 
-    if (length(unique(vln.df[[group.by]])) > length(vector_colors)) {
+        for (grp2 in sort(unique(vln_df_melt[[group.by.2]]))) {
+            sce_object_sub <- subset(sce_object, !!sym(group.by.2) == grp2)
+
+            for (grp in ListTest) {
+                degs <- FindMarkers(sce_object_sub,
+                    test.use = test_use,
+                    ident.1 = grp[2],
+                    ident.2 = grp[1],
+                    logfc.threshold = 0,
+                    min.pct = 0,
+                    min.diff.pct = -Inf,
+                    group.by = group.by
+                )
+                degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+                degs <- degs[rownames(degs) %in% Feature, ]
+
+                group_dis <- grp[2]
+                group_ctrl <- grp[1]
+
+                test_df <- degs %>%
+                    rownames_to_column(var = ".y.") %>%
+                    mutate(
+                        group1 = group_dis,
+                        group2 = group_ctrl,
+                        n1 = sum(sce_object[[group.by]][, group.by] == group1),
+                        n2 = sum(sce_object[[group.by]][, group.by] == group2),
+                        statistic = NA_real_, # keep this column for consistency
+                        p = p_val,
+                        p.adj = p_val_adj
+                    ) %>%
+                    rstatix::add_significance() %>%
+                    select(
+                        .y., group1, group2, n1, n2,
+                        statistic, p, p.adj, p.adj.signif
+                    )
+
+                # add lowest number to replace 0s and apply scientifc writing
+                test_df$p.adj <- ifelse(
+                    test_df$p.adj == 0,
+                    sprintf("%.2e", .Machine$double.xmin),
+                    sprintf("%.2e", test_df$p.adj)
+                )
+                test_df$p <- ifelse(
+                    test_df$p == 0,
+                    sprintf("%.2e", .Machine$double.xmin),
+                    sprintf("%.2e", test_df$p)
+                )
+
+                # Add information of group.by.2 to test df
+                test_df <- cbind(
+                    setNames(data.frame(grp2), group.by.2),
+                    test_df
+                )
+
+                stat.test <- rbind(stat.test, test_df)
+            }
+        }
+
+        if (!is.null(p_values)) {
+            # Check for equal numbers of provided p-values and comparisons
+            if (length(p_values) != length(ListTest)) {
+                stop(sprintf(
+                    "Number of provided p-values: %s, does",
+                    "not match number of comparisons: %s",
+                    length(p_values), length(ListTest)
+                ))
+            }
+            # Assign new p-values and add significance
+            test_df$p.adj <- p_values
+            test_df <- test_df %>% rstatix::add_significance()
+        }
+    }
+    if (length(unique(vln_df[[group.by]])) > length(vector_colors)) {
         stop(sprintf(
             "Only %s colors provided, but %s needed!",
             length(vector_colors),
-            length(unique(vln.df[[group.by]]))
+            length(unique(vln_df[[group.by]]))
         ))
     }
 
     # normal violin
     if (is.null(group.by.2)) {
-        p <- ggplot(vln.df, aes(x = group, y = Feature)) +
-            geom_violin(aes(fill = group), trim = TRUE, scale = "width", ) +
+        p <- ggplot(vln_df, aes(x = condition, y = !!sym(Feature))) +
+            geom_violin(aes(fill = condition), trim = TRUE, scale = "width", ) +
             geom_jitter(
                 size = geom_jitter_args[1],
                 width = geom_jitter_args[2],
                 alpha = geom_jitter_args[3]
             ) +
-            labs(title = Feature, y = "Expression Level") +
+            labs(title = Feature, y = y_title) +
             xlab("") +
-            ylab("") +
+            # ylab("") +
             theme_classic() +
             theme(
                 plot.title = element_text(
@@ -441,23 +492,22 @@ DO.VlnPlot <- function(sce_object,
             p_label <- "p = {p}"
         }
 
-        if (wilcox_test == TRUE) {
+        if (test_use != "none") {
             p <- p + stat_pvalue_manual(
                 stat.test,
                 label = p_label,
-                y.position = max(vln.df$Feature) * 1.15,
+                y.position = max(vln_df[[Feature]]) * 1.15,
                 step.increase = 0.2
             )
         }
-        return(p)
     }
 
 
     if (!is.null(group.by.2)) {
         # better boxplot alignment
-        p <- ggplot(vln.df, aes(
+        p <- ggplot(vln_df, aes(
             x = !!sym(group.by.2),
-            y = Feature,
+            y = !!sym(Feature),
             fill = !!sym(group.by)
         )) +
             geom_violin(
@@ -475,7 +525,7 @@ DO.VlnPlot <- function(sce_object,
                 position = position_dodge(0.9),
                 outlier.shape = NA
             ) +
-            labs(title = Feature, y = "log(nUMI)") +
+            labs(title = Feature, y = y_title) +
             xlab("") +
             theme_classic() +
             theme(
@@ -524,7 +574,7 @@ DO.VlnPlot <- function(sce_object,
 
         # Changes: now integrated into the main plot
 
-        if (wilcox_test == TRUE & !is.null(group.by.2)) {
+        if (test_use != "none" & !is.null(group.by.2)) {
             if (Feature %in% rownames(sce_object)) {
                 stat.test_plot <- stat.test %>%
                     mutate(
@@ -607,10 +657,10 @@ DO.VlnPlot <- function(sce_object,
                 xmin = "xmin",
                 xmax = "xmax",
                 inherit.aes = FALSE,
-                size = size.wilcox,
+                size = size_test,
                 angle = 0,
-                hjust = hjust.wilcox.2,
-                vjust = vjust.wilcox.2,
+                hjust = hjust_test_2,
+                vjust = vjust_test_2,
                 tip.length = 0.02,
                 bracket.size = sign_bar
             )
@@ -620,10 +670,10 @@ DO.VlnPlot <- function(sce_object,
     }
 
     if (returnValues == TRUE) {
-        returnList <- list(vln.df, df.melt, stat.test)
-        names(returnList) <- c("vln.df", "df.melt", "stat.test")
+        returnList <- list(vln_df, vln_df_melt, stat.test)
+        names(returnList) <- c("vln_df", "vln_df_melt", "stat.test")
         return(returnList)
     }
 
-    return(plot_p)
+    return(p)
 }

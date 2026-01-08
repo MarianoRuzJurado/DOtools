@@ -32,8 +32,8 @@ DO.HeatmapFC(
   group_legend_ncols = 1,
   path = NULL,
   filename = "Heatmap.svg",
-  show = TRUE,
-  add_stats = FALSE,
+  showP = TRUE,
+  add_stats = TRUE,
   test = c("wilcox"),
   correction_method = c("bonferroni"),
   df_pvals = NULL,
@@ -110,8 +110,6 @@ tick labels.}
 
 \item{filename}{Name of the output file.}
 
-\item{show}{Logical; whether to display the plot.}
-
 \item{add_stats}{Logical; whether to add statistical annotations.}
 
 \item{test}{Statistical test to use (currently "wilcox").}
@@ -133,6 +131,8 @@ tick labels.}
 \item{linewidth}{Line width of heatmap cell borders.}
 
 \item{color_axis_ratio}{Relative size of the color bar axis.}
+
+\item{show}{Logical; whether to display the plot.}
 }
 \value{
 Depending on \code{showP}, returns the plot if set to \code{TRUE} or a
