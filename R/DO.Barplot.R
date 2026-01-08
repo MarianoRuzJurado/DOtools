@@ -212,18 +212,36 @@ DO.Barplot <- function(
     if (test_use != "none") {
         stat.test <- data.frame()
         for (grp in ListTest) {
-            degs <- FindMarkers(sce_object,
+            #If feature is a gene
+            if (Feature %in% rownames(sce_object)) {
+                degs <- FindMarkers(sce_object,
+                    test.use = test_use,
+                    ident.1 = grp[2],
+                    ident.2 = grp[1],
+                    logfc.threshold = 0,
+                    min.pct = 0,
+                    min.diff.pct = -Inf,
+                    group.by = group.by
+                )
+
+                degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+                degs <- degs[rownames(degs) %in% Feature, ]
+            }
+
+            #If feature is a meta data column
+            if (!Feature %in% rownames(sce_object)) {
+              mat_Feature <- t(as.matrix(sce_object@meta.data[Feature]))
+              .suppressAllWarnings(
+                  sce_object[[Feature]] <- CreateAssayObject(
+                    data = mat_Feature
+                  )
+              )
+              degs <- FindMarkers(sce_object,
+                assay = Feature,
                 test.use = test_use,
-                ident.1 = grp[2],
-                ident.2 = grp[1],
-                logfc.threshold = 0,
-                min.pct = 0,
-                min.diff.pct = -Inf,
-                group.by = group.by
-            )
-            degs_old <- degs
-            degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
-            degs <- degs[rownames(degs) %in% Feature, ]
+                ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
+                min.pct = 0, min.diff.pct = -Inf, group.by = group.by)
+            }
 
             group_dis <- grp[2]
             group_ctrl <- grp[1]

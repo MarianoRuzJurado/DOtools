@@ -155,7 +155,7 @@ DO.HeatmapFC <- function(
     showP = TRUE,
 
     # Statistics
-    add_stats = FALSE,
+    add_stats = TRUE,
     test = c("wilcox"),
     correction_method = c("bonferroni"),
     df_pvals = NULL,
@@ -184,7 +184,7 @@ DO.HeatmapFC <- function(
     }
 
     # for the case of adding statistics
-    ident_2 <- NULL
+    ident_2 <- reference
     if (add_stats == TRUE) {
         Seu_obj <- as.Seurat(sce_object)
 
@@ -280,6 +280,8 @@ DO.HeatmapFC <- function(
             names_to = "genes",
             values_to = "value"
         )
+    } else{
+        df_long <- NULL
     }
 
 
