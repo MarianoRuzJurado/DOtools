@@ -456,9 +456,11 @@ DO.Dotplot <- function(sce_object,
                     ) %>%
                     mutate(
                         p_adj = case_when(
-                            id == names_y & !is.na(p_val_adj) ~ p_val_adj,
-                            id == names_y & is.na(p_val_adj) ~ 1,
-                            TRUE ~ p_adj
+                            id == names_y & !is.na(
+                                as.numeric(p_val_adj)
+                                ) ~ as.numeric(p_val_adj),
+                            id == names_y & is.na(as.numeric(p_val_adj)) ~ 1,
+                            TRUE ~ as.numeric(p_adj)
                         )
                     ) %>%
                     select(-p_val_adj)
@@ -503,9 +505,11 @@ DO.Dotplot <- function(sce_object,
                     ) %>%
                     mutate(
                         p_adj = case_when(
-                            id == names_y & !is.na(p_val_adj) ~ p_val_adj,
-                            id == names_y & is.na(p_val_adj) ~ 1,
-                            TRUE ~ p_adj
+                            id == names_y & !is.na(
+                                as.numeric(p_val_adj)
+                                ) ~ as.numeric(p_val_adj),
+                            id == names_y & is.na(as.numeric(p_val_adj)) ~ 1,
+                            TRUE ~ as.numeric(p_adj)
                         )
                     ) %>%
                     select(-p_val_adj)
