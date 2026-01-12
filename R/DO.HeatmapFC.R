@@ -220,7 +220,7 @@ DO.HeatmapFC <- function(
 
         colnames(df_pvals) <- features
         df_pvals[[group_by]] <- unique(sce_object[[group_by]])
-        df_pvals[[condition_key]] <- condition_key
+        df_pvals[[condition_key]] <- ident_1
 
         for (grp in unique(sce_object[[group_by]])) {
             Seu_obj_grp <- subset(Seu_obj, !!sym(group_by) == grp)
@@ -244,7 +244,7 @@ DO.HeatmapFC <- function(
                 # calculating statistics on the condition_key level
                 df_dge <- .suppressDeprecationWarnings(
                     FindMarkers(Seu_obj_grp,
-                        features = features,
+                        # features = features,
                         group.by = condition_key,
                         min.pct = 0,
                         test.use = test,
@@ -254,7 +254,14 @@ DO.HeatmapFC <- function(
                         ident.2 = ident_2
                     )
                 )
+
+                #apply alternative correction
+                df_dge$p_val_adj <- p.adjust(
+                  df_dge$p_val, method = correction_method
+                )
+                df_dge <- df_dge[rownames(df_dge) %in% features, ]
                 df_dge <- rownames_to_column(df_dge, var = "gene")
+
             } else {
                 df_dge <- data.frame()
             }
@@ -264,7 +271,8 @@ DO.HeatmapFC <- function(
                 gene <- df_dge$gene[i]
                 cluster <- grp
                 pval_adj <- df_dge$p_val_adj[i]
-                df_pvals[cluster, gene] <- pval_adj
+                df_pvals[df_pvals[[group_by]] == cluster, gene] <-
+                    pval_adj
             }
         }
     }
