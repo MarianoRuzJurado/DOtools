@@ -717,7 +717,7 @@ def heatmap_foldchange(
                     columns=["genes", condition_key],
                     values="value"
                 )
-                .sort_index()
+                .reindex(index=list(df.index))
             )
 
             if list(df.index)[0] in list(df_pvals.index):
