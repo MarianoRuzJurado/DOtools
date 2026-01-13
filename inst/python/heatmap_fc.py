@@ -457,7 +457,7 @@ def get_log2fc(
 
     df_mean = mean_expr(adata, group_by=group_by, features=features, out_format="wide", layer=layer)
 
-    logfoldchanges = pd.DataFrame([], index=features)
+    logfoldchanges = pd.DataFrame([], index=list(df_mean.index))
     for group in groups:
         # Speed up with numba
         foldchanges = _get_log2fc(group=df_mean[group].to_numpy(), ref=df_mean[reference].to_numpy())
@@ -846,6 +846,7 @@ def heatmap_foldchange(
         data=df_copy, cmap=palette, ax=main_ax, linewidths=linewidth, cbar=False, annot=annot_pvals, fmt="s",
         square=False, annot_kws=
         {"color": "black", "size": stats_x_size, "ha": "center", "va": "center", "fontfamily": 'DejaVu Sans Mono'},
+        vmax=vmax, vmin=vmin, center=vcenter,
         **kargs,
     )
     if isinstance(df.index, pd.MultiIndex):

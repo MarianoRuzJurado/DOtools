@@ -1,6 +1,22 @@
-# DOtools 0.99.5
+# DOtools 1.1.2
 
 All notable changes to DOtools will be documented in this file.
+
+---
+
+## [1.1.2] - 2026-01-13
+
+### Added
+* `DO.HeatmapFC`: Heat map function for foldchange visualisation, includes statistics about significance.
+* `DO.Barplot`: New barplot function with more testing methods.
+
+### Changed
+* Major adjustments to `DO.VlnPlot` and `DO.Barplot`. These functions now take multiple testing methods and correction methods.
+Will be applied also to `DO.BoxPlot`.
+* Major bug fixes for comparability with Seurat's newest version.
+
+### Removed 
+* `DO.BarplotWilcox`: Replaced by `DO.Barplot`
 
 ---
 
@@ -8,8 +24,6 @@ All notable changes to DOtools will be documented in this file.
 
 ### Changed
 * Major coding adjustments for preparing BioConductor release
-
----
 
 ---
 
@@ -22,8 +36,6 @@ All notable changes to DOtools will be documented in this file.
 ### Changed
 * Major adjustments across various functions for improved consistency.
 * Major adjustments across various examples.
-
----
 
 ---
 
