@@ -166,7 +166,7 @@ test_that("DO.BoxPlot works without statistical test", {
     sample.column = "orig.ident",
     group.by = "condition",
     ctrl.condition = "CTRL",
-    wilcox_test = FALSE  # Disable statistical test
+    test_use = "none"  # Disable statistical test
   )
 
   expect_s3_class(p, "ggplot")
@@ -263,7 +263,7 @@ test_that("DO.BoxPlot handles edge cases gracefully", {
     sample.column = "orig.ident",
     group.by = "condition",
     ctrl.condition = "CTRL",
-    ListTest = list()  # Empty list
+    ListTest = NULL  # Empty list
   )
 
   expect_s3_class(p, "ggplot")
@@ -318,7 +318,7 @@ test_that("DO.BoxPlot error handling for invalid inputs", {
       sample.column = "orig.ident",
       group.by = "condition"
     ),
-    "None of the requested variables were found: nonexistent_gene"
+    "Feature not found in SCE Object!"
   )
 })
 
@@ -375,7 +375,7 @@ test_that("DO.BoxPlot handles partial zero expression gracefully", {
     sample.column = "orig.ident",
     group.by = "condition",
     ctrl.condition = "CTRL",
-    wilcox_test = FALSE
+    test_use = "none"
   )
 
   expect_s3_class(p, "ggplot")

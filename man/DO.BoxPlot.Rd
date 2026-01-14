@@ -16,14 +16,16 @@ DO.BoxPlot(
   plot_sample = TRUE,
   vector_colors = c("#1f77b4", "#ea7e1eff", "royalblue4", "tomato2", "darkgoldenrod",
     "palegreen4", "maroon", "thistle3"),
-  wilcox_test = TRUE,
+  test_use = "wilcox",
+  correction_method = "fdr",
+  p_values = NULL,
   stat_pos_mod = 1.15,
   step_mod = 0,
-  hjust.wilcox = 0.5,
-  vjust.wilcox = 0.25,
-  size.wilcox = 3.33,
-  hjust.wilcox.2 = 0.5,
-  vjust.wilcox.2 = 0,
+  hjust_test = 0.5,
+  vjust_test = 0.25,
+  size_test = 3.33,
+  hjust_test_2 = 0.5,
+  vjust_test_2 = 0,
   sign_bar = 0.8,
   orderAxis = NULL
 )
@@ -50,8 +52,16 @@ always CTRL group against everything}
 
 \item{vector_colors}{get the colours for the plot}
 
-\item{wilcox_test}{If you want to have wilcoxon performed, boolean default
-TRUE}
+\item{test_use}{perform one of c(
+"wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+"poisson", "LR", "MAST", "DESeq2", "none"
+). default "wilcox"}
+
+\item{correction_method}{correction for p-value calculation. One of
+c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"}
+
+\item{p_values}{Manually providing p-values for plotting, be aware of
+group size and if necessary make your test return the same amount of values}
 
 \item{stat_pos_mod}{modificator for where the p-value is plotted increase
 for higher}
@@ -59,16 +69,16 @@ for higher}
 \item{step_mod}{value for defining the space between one test and the
 next one}
 
-\item{hjust.wilcox}{value for adjusting height of the text}
+\item{hjust_test}{value for adjusting height of the text}
 
-\item{vjust.wilcox}{value for vertical of text}
+\item{vjust_test}{value for vertical of text}
 
-\item{size.wilcox}{value for size of text of statistical test}
+\item{size_test}{value for size of text of statistical test}
 
-\item{hjust.wilcox.2}{value for adjusting height of the text, with
-group.by.2 specified}
+\item{hjust_test_2}{value for adjusting height of the text, with group.by.2
+specified}
 
-\item{vjust.wilcox.2}{value for vertical of text, with group.by.2 specified}
+\item{vjust_test_2}{value for vertical of text, with group.by.2 specified}
 
 \item{sign_bar}{adjusts the sign_bar with group.by.2 specified}
 

@@ -688,7 +688,7 @@ DO.Barplot(SCE_obj_NK,
     ctrl.condition = "healthy",
     Feature = "NKG7",
     test_use = "wilcox",
-    corection_method = "fdr",
+    correction_method = "fdr",
     x_label_rotation = 0
 )
 ```
@@ -698,12 +698,15 @@ set.seed(123)
 SCE_obj$rdm_sample <- sample(rep(c("A", "B", "C"),
     length.out = ncol(SCE_obj)
 ))
+
+SCE_obj$LogCounts <- log1p(SCE_obj$nCount_RNA) 
+
 DO.BoxPlot(SCE_obj,
     group.by = "rdm_sample",
     ctrl.condition = "A",
-    Feature = "nCount_RNA",
-    step_mod = 50,
-    stat_pos_mod = 1.05,
+    Feature = "LogCounts",
+    step_mod = 0.01,
+    stat_pos_mod = 1.001,
     plot_sample = FALSE
 )
 ```

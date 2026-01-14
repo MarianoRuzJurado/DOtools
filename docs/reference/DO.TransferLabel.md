@@ -1,0 +1,47 @@
+# DO.TransferLabel
+
+Transfers cell-type annotations from a re-annotated subset of a Seurat
+or SCE object back to the full Seurat or SCE object. This is useful when
+clusters have been refined or re-labeled in a subset and need to be
+reflected in the original object.
+
+## Usage
+
+``` r
+DO.TransferLabel(sce_object, Subset_obj, annotation_column, subset_annotation)
+```
+
+## Arguments
+
+- sce_object:
+
+  Seurat or SCE object with annotation in meta.data
+
+- Subset_obj:
+
+  subsetted Seurat or SCE object with re-annotated clusters
+
+- annotation_column:
+
+  column name in meta.data with annotation
+
+- subset_annotation:
+
+  column name in meta.data with annotation in the subsetted object
+
+## Value
+
+Seurat or SCE Object with transfered labels
+
+## Examples
+
+``` r
+sce_data <-
+    readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
+
+sce_data <- DO.TransferLabel(sce_data,
+    sce_data,
+    annotation_column = "annotation",
+    subset_annotation = "annotation"
+)
+```

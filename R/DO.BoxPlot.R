@@ -17,20 +17,26 @@
 #' @param ctrl.condition select condition to compare to
 #' @param outlier_removal Outlier calculation
 #' @param vector_colors get the colours for the plot
-#' @param wilcox_test If you want to have wilcoxon performed, boolean default
-#' TRUE
+#' @param test_use perform one of c(
+#' "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+#' "poisson", "LR", "MAST", "DESeq2", "none"
+#' ). default "wilcox"
+#' @param correction_method correction for p-value calculation. One of
+#' c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"
 #' @param stat_pos_mod modificator for where the p-value is plotted increase
 #' for higher
-#' @param hjust.wilcox value for adjusting height of the text
-#' @param vjust.wilcox value for vertical of text
-#' @param hjust.wilcox.2 value for adjusting height of the text, with
-#' group.by.2 specified
-#' @param vjust.wilcox.2 value for vertical of text, with group.by.2 specified
+#' @param hjust_test value for adjusting height of the text
+#' @param vjust_test value for vertical of text
+#' @param hjust_test_2 value for adjusting height of the text, with group.by.2
+#'  specified
+#' @param vjust_test_2 value for vertical of text, with group.by.2 specified
 #' @param sign_bar adjusts the sign_bar with group.by.2 specified
-#' @param size.wilcox value for size of text of statistical test
+#' @param size_test value for size of text of statistical test
 #' @param step_mod value for defining the space between one test and the
 #' next one
 #' @param orderAxis vector for xaxis sorting, alphabetically by default
+#' @param p_values Manually providing p-values for plotting, be aware of
+#' group size and if necessary make your test return the same amount of values
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -62,7 +68,8 @@
 #' )
 #'
 #' @export
-DO.BoxPlot <- function(sce_object,
+DO.BoxPlot <- function(
+    sce_object,
     Feature,
     sample.column = "orig.ident",
     ListTest = NULL,
@@ -81,20 +88,41 @@ DO.BoxPlot <- function(sce_object,
         "maroon",
         "thistle3"
     ),
-    wilcox_test = TRUE,
+    test_use = "wilcox",
+    correction_method = "fdr",
+    p_values = NULL,
     stat_pos_mod = 1.15,
     step_mod = 0,
-    hjust.wilcox = 0.5,
-    vjust.wilcox = 0.25,
-    size.wilcox = 3.33,
-    hjust.wilcox.2 = 0.5,
-    vjust.wilcox.2 = 0,
+    hjust_test = 0.5,
+    vjust_test = 0.25,
+    size_test = 3.33,
+    hjust_test_2 = 0.5,
+    vjust_test_2 = 0,
     sign_bar = 0.8,
-    orderAxis = NULL) {
+    orderAxis = NULL
+) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- as.Seurat(sce_object)
     }
+
+
+    if (!(Feature %in% rownames(sce_object)) &&
+        !(Feature %in% names(sce_object@meta.data))) {
+        stop("Feature not found in SCE Object!")
+    }
+
+    ## add test and correction methods
+    test <- match.arg(
+        test_use, c(
+            "wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+            "poisson", "LR", "MAST", "DESeq2", "none"
+        )
+    )
+    p_method <- match.arg(
+        correction_method, c("BH", "bonferroni", "holm", "BY", "fdr", "none")
+    )
+    ##
 
     # aggregate expression, pseudobulk to visualize the boxplot
     if (is.null(group.by.2)) {
@@ -126,11 +154,13 @@ DO.BoxPlot <- function(sce_object,
             pseudo_Seu@meta.data[[group.by.2]] <-
                 unique(sce_object@meta.data[[group.by.2]])
             pseudo_Seu@meta.data[[group.by]] <-
-                gsub(paste0(".*(", paste(unique(
-                    sce_object$condition
-                ), collapse = "|"), ").*"),
-                "\\1",
-                pseudo_Seu@meta.data[[group.by]])
+                gsub(
+                    paste0(".*(", paste(unique(
+                        sce_object$condition
+                    ), collapse = "|"), ").*"),
+                    "\\1",
+                    pseudo_Seu@meta.data[[group.by]]
+                )
         }
 
         pseudo_Seu$celltype.con <- paste(pseudo_Seu[[group.by]][, 1],
@@ -201,10 +231,11 @@ DO.BoxPlot <- function(sce_object,
         } else {
             # Compute mean for each orig.ident
             aggregated_meta <- sce_object@meta.data %>%
-                group_by(!!sym(group.by),
-    !!sym(sample.column),
-    !!sym(group.by.2)
-    ) %>%
+                group_by(
+                    !!sym(group.by),
+                    !!sym(sample.column),
+                    !!sym(group.by.2)
+                ) %>%
                 summarise(Feature = mean(!!sym(Feature), na.rm = TRUE))
 
             aggregated_meta$comb <- paste(aggregated_meta[[group.by]],
@@ -378,50 +409,192 @@ DO.BoxPlot <- function(sce_object,
         }
     }
 
-    # do statistix with rstatix + stats package
-    if (wilcox_test == TRUE & is.null(group.by.2)) {
-        stat.test <- df_melt %>%
-            dplyr::ungroup() %>%
-            rstatix::wilcox_test(value ~ group,
-                comparisons = ListTest,
-                p.adjust.method = "none"
-            ) %>%
-            rstatix::add_significance()
-        stat.test$p.adj <- stats::p.adjust(stat.test$p,
-            method = "bonferroni",
-            n = length(rownames(sce_object))
-        )
-        stat.test$p.adj <- ifelse(stat.test$p.adj == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p.adj)
-        )
-        stat.test$p <- ifelse(stat.test$p == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p)
-        )
+
+    ### new test, useable with all methods implemented in FindMarkers
+    ### and with multiple correction methods
+    ### does also take manual p-values as input
+    if (test_use != "none" & is.null(group.by.2)) {
+        stat.test <- data.frame()
+        for (grp in ListTest) {
+            # If feature is a gene
+            if (Feature %in% rownames(sce_object)) {
+                degs <- FindMarkers(sce_object,
+                    test.use = test_use,
+                    ident.1 = grp[2],
+                    ident.2 = grp[1],
+                    logfc.threshold = 0,
+                    min.pct = 0,
+                    min.diff.pct = -Inf,
+                    group.by = group.by
+                )
+                degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+                degs <- degs[rownames(degs) %in% Feature, ]
+            }
+
+            # If feature is a meta data column
+            if (!Feature %in% rownames(sce_object)) {
+                mat_Feature <- t(as.matrix(sce_object@meta.data[Feature]))
+                .suppressAllWarnings(
+                    sce_object[[Feature]] <- CreateAssayObject(
+                        data = mat_Feature
+                    )
+                )
+                degs <- FindMarkers(sce_object,
+                    assay = Feature,
+                    test.use = test_use,
+                    ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
+                    min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                )
+            }
+
+            group_dis <- grp[2]
+            group_ctrl <- grp[1]
+
+            test_df <- degs %>%
+                rownames_to_column(var = ".y.") %>%
+                mutate(
+                    group1 = group_dis,
+                    group2 = group_ctrl,
+                    n1 = sum(sce_object[[group.by]][, group.by] == group1),
+                    n2 = sum(sce_object[[group.by]][, group.by] == group2),
+                    statistic = NA_real_, # keep this column for consistency
+                    p = p_val,
+                    p.adj = p_val_adj
+                ) %>%
+                rstatix::add_significance() %>%
+                select(
+                    .y., group1, group2, n1, n2,
+                    statistic, p, p.adj, p.adj.signif
+                )
+
+            if (!is.null(p_values)) {
+                # Check for equal numbers of  p-values and comparisons
+                if (length(p_values) != length(ListTest)) {
+                    stop(sprintf(
+                        "Number of provided p-values: %s, does",
+                        "not match number of comparisons: %s",
+                        length(p_values), length(ListTest)
+                    ))
+                }
+                # Assign new p-values and add significance
+                test_df$p.adj <- p_values
+                test_df <- test_df %>% rstatix::add_significance()
+            }
+
+            # add lowest number to replace 0s and apply scientifc writing
+            test_df$p.adj <- ifelse(
+                test_df$p.adj == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p.adj)
+            )
+            test_df$p <- ifelse(
+                test_df$p == 0,
+                sprintf("%.2e", .Machine$double.xmin),
+                sprintf("%.2e", test_df$p)
+            )
+            stat.test <- rbind(stat.test, test_df)
+        }
     }
 
-    # do statistix with rstatix + stats package add second group
-    if (wilcox_test == TRUE & !is.null(group.by.2)) {
-        stat.test <- df_melt %>%
-            dplyr::group_by(!!sym(group.by.2)) %>%
-            rstatix::wilcox_test(value ~ group,
-                comparisons = ListTest,
-                p.adjust.method = "none"
-            ) %>%
-            rstatix::add_significance()
-        stat.test$p.adj <- stats::p.adjust(stat.test$p,
-            method = "bonferroni",
-            n = length(rownames(sce_object))
-        )
-        stat.test$p.adj <- ifelse(stat.test$p.adj == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p.adj)
-        )
-        stat.test$p <- ifelse(stat.test$p == 0,
-            sprintf("%.2e", .Machine$double.xmin),
-            sprintf("%.2e", stat.test$p)
-        )
+    ## for multiple group argument set
+    if (test_use != "none" & !is.null(group.by.2)) {
+        stat.test <- data.frame()
+
+        for (grp2 in sort(unique(df_melt[[group.by.2]]))) {
+            sce_object_sub <- subset(sce_object, !!sym(group.by.2) == grp2)
+
+            for (grp in ListTest) {
+                # If feature is a gene
+                if (Feature %in% rownames(sce_object)) {
+                    degs <- FindMarkers(sce_object_sub,
+                        test.use = test_use,
+                        ident.1 = grp[2],
+                        ident.2 = grp[1],
+                        logfc.threshold = 0,
+                        min.pct = 0,
+                        min.diff.pct = -Inf,
+                        group.by = group.by
+                    )
+                    degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
+                    degs <- degs[rownames(degs) %in% Feature, ]
+                }
+                # If feature is a meta data column
+                if (!Feature %in% rownames(sce_object)) {
+                    mat_Feature <- t(
+                        as.matrix(sce_object_sub@meta.data[Feature])
+                    )
+                    .suppressAllWarnings(
+                        sce_object_sub[[Feature]] <- CreateAssayObject(
+                            data = mat_Feature
+                        )
+                    )
+                    degs <- FindMarkers(sce_object_sub,
+                        assay = Feature,
+                        test.use = test_use,
+                        ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
+                        min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                    )
+                }
+                group_dis <- grp[2]
+                group_ctrl <- grp[1]
+
+                test_df <- degs %>%
+                    rownames_to_column(var = ".y.") %>%
+                    mutate(
+                        group1 = group_dis,
+                        group2 = group_ctrl,
+                        n1 = sum(
+                            sce_object[[group.by]][, group.by] == group1
+                        ),
+                        n2 = sum(
+                            sce_object[[group.by]][, group.by] == group2
+                        ),
+                        statistic = NA_real_, # for consistency
+                        p = p_val,
+                        p.adj = p_val_adj
+                    ) %>%
+                    rstatix::add_significance() %>%
+                    select(
+                        .y., group1, group2, n1, n2,
+                        statistic, p, p.adj, p.adj.signif
+                    )
+
+
+                if (!is.null(p_values)) {
+                    # Check for equal numbers of provided
+                    # p-values and comparisons
+                    if (length(p_values) != length(ListTest)) {
+                        stop(sprintf(
+                            "Number of provided p-values: %s, does",
+                            "not match number of comparisons: %s",
+                            length(p_values), length(ListTest)
+                        ))
+                    }
+                    # Assign new p-values and add significance
+                    test_df$p.adj <- p_values
+                    test_df <- test_df %>% rstatix::add_significance()
+                }
+
+                # replace 0s and apply scientific writing
+                test_df$p.adj <- ifelse(
+                    test_df$p.adj == 0,
+                    sprintf("%.2e", .Machine$double.xmin),
+                    sprintf("%.2e", test_df$p.adj)
+                )
+                test_df$p <- ifelse(
+                    test_df$p == 0,
+                    sprintf("%.2e", .Machine$double.xmin),
+                    sprintf("%.2e", test_df$p)
+                )
+
+                # Add information of group.by.2 to test df
+                test_df <- cbind(
+                    setNames(data.frame(grp2), group.by.2),
+                    test_df
+                )
+                stat.test <- rbind(stat.test, test_df)
+            }
+        }
     }
 
 
@@ -436,10 +609,10 @@ DO.BoxPlot <- function(sce_object,
                 ),
                 panel.grid.major = element_line(
                     colour = "grey90", linetype = "dotted"
-                    ),
+                ),
                 panel.grid.minor = element_line(
                     colour = "grey90", linetype = "dotted"
-                    ),
+                ),
                 axis.line = element_line(colour = "black"),
                 # facet_grid colors
                 strip.background = element_rect(
@@ -460,7 +633,7 @@ DO.BoxPlot <- function(sce_object,
             data_matrix <- pseudo_Seu[[Feature]]
             data_matrix <- stats::setNames(
                 data_matrix[[Feature]], rownames(data_matrix)
-                )
+            )
         }
 
         for (grp2 in unique(pseudo_Seu[[group.by.2]][, 1])) {
@@ -522,9 +695,11 @@ DO.BoxPlot <- function(sce_object,
 
     if (plot_sample == TRUE) {
         p <- p +
-            geom_point(size = 2,
-    alpha = 1,
-    position = position_dodge(width = 0.8))
+            geom_point(
+                size = 2,
+                alpha = 1,
+                position = position_dodge(width = 0.8)
+            )
     }
 
     p <- p +
@@ -586,8 +761,8 @@ DO.BoxPlot <- function(sce_object,
         )
 
     # p
-    # for only one group
-    if (wilcox_test == TRUE & is.null(group.by.2)) {
+    # for only one group.by argument
+    if (test_use != "none" & is.null(group.by.2)) {
         if (Feature %in% rownames(sce_object)) {
             p_label <- "p = {p.adj}"
         } else {
@@ -629,14 +804,14 @@ DO.BoxPlot <- function(sce_object,
             y.position = "y.position",
             # step.increase = 0.2,
             inherit.aes = FALSE,
-            size = size.wilcox,
+            size = size_test,
             angle = 0,
-            hjust = hjust.wilcox,
-            vjust = vjust.wilcox
+            hjust = hjust_test,
+            vjust = vjust_test
         )
     }
 
-    if (wilcox_test == TRUE & !is.null(group.by.2)) {
+    if (test_use != "none" & !is.null(group.by.2)) {
         if (Feature %in% rownames(sce_object)) {
             p_label <- "p = {p.adj}"
         } else {
@@ -720,10 +895,10 @@ DO.BoxPlot <- function(sce_object,
             # xend="xend",
             # step.increase = 0.2,
             inherit.aes = FALSE,
-            size = size.wilcox,
+            size = size_test,
             angle = 0,
-            hjust = hjust.wilcox.2,
-            vjust = vjust.wilcox.2,
+            hjust = hjust_test_2,
+            vjust = vjust_test_2,
             tip.length = 0.02,
             bracket.size = sign_bar
         )
