@@ -21,7 +21,7 @@ statistical differences."><script defer data-domain="pkgdown.r-lib.org,all.tidyv
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ statistical differences."><script defer data-domain="pkgdown.r-lib.org,all.tidyv
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Box Graph with wilcox test on single cell level</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/master/R/DO.BoxPlot.R" class="external-link"><code>R/DO.BoxPlot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.BoxPlot.R" class="external-link"><code>R/DO.BoxPlot.R</code></a></small>
       <div class="d-none name"><code>DO.BoxPlot.Rd</code></div>
     </div>
 
@@ -76,14 +76,16 @@ statistical differences.</p>
 <span>  plot_sample <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  vector_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#1f77b4"</span>, <span class="st">"#ea7e1eff"</span>, <span class="st">"royalblue4"</span>, <span class="st">"tomato2"</span>, <span class="st">"darkgoldenrod"</span>,</span>
 <span>    <span class="st">"palegreen4"</span>, <span class="st">"maroon"</span>, <span class="st">"thistle3"</span><span class="op">)</span>,</span>
-<span>  wilcox_test <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  test_use <span class="op">=</span> <span class="st">"wilcox"</span>,</span>
+<span>  correction_method <span class="op">=</span> <span class="st">"fdr"</span>,</span>
+<span>  p_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stat_pos_mod <span class="op">=</span> <span class="fl">1.15</span>,</span>
 <span>  step_mod <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  hjust.wilcox <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  vjust.wilcox <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  size.wilcox <span class="op">=</span> <span class="fl">3.33</span>,</span>
-<span>  hjust.wilcox.2 <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  vjust.wilcox.2 <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  hjust_test <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  vjust_test <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  size_test <span class="op">=</span> <span class="fl">3.33</span>,</span>
+<span>  hjust_test_2 <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  vjust_test_2 <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  sign_bar <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  orderAxis <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -134,9 +136,21 @@ always CTRL group against everything</p></dd>
 <dd><p>get the colours for the plot</p></dd>
 
 
-<dt id="arg-wilcox-test">wilcox_test<a class="anchor" aria-label="anchor" href="#arg-wilcox-test"></a></dt>
-<dd><p>If you want to have wilcoxon performed, boolean default
-TRUE</p></dd>
+<dt id="arg-test-use">test_use<a class="anchor" aria-label="anchor" href="#arg-test-use"></a></dt>
+<dd><p>perform one of c(
+"wilcox", "wilcox_limma", "bimod", "t", "negbinom",
+"poisson", "LR", "MAST", "DESeq2", "none"
+). default "wilcox"</p></dd>
+
+
+<dt id="arg-correction-method">correction_method<a class="anchor" aria-label="anchor" href="#arg-correction-method"></a></dt>
+<dd><p>correction for p-value calculation. One of
+c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"</p></dd>
+
+
+<dt id="arg-p-values">p_values<a class="anchor" aria-label="anchor" href="#arg-p-values"></a></dt>
+<dd><p>Manually providing p-values for plotting, be aware of
+group size and if necessary make your test return the same amount of values</p></dd>
 
 
 <dt id="arg-stat-pos-mod">stat_pos_mod<a class="anchor" aria-label="anchor" href="#arg-stat-pos-mod"></a></dt>
@@ -149,24 +163,24 @@ for higher</p></dd>
 next one</p></dd>
 
 
-<dt id="arg-hjust-wilcox">hjust.wilcox<a class="anchor" aria-label="anchor" href="#arg-hjust-wilcox"></a></dt>
+<dt id="arg-hjust-test">hjust_test<a class="anchor" aria-label="anchor" href="#arg-hjust-test"></a></dt>
 <dd><p>value for adjusting height of the text</p></dd>
 
 
-<dt id="arg-vjust-wilcox">vjust.wilcox<a class="anchor" aria-label="anchor" href="#arg-vjust-wilcox"></a></dt>
+<dt id="arg-vjust-test">vjust_test<a class="anchor" aria-label="anchor" href="#arg-vjust-test"></a></dt>
 <dd><p>value for vertical of text</p></dd>
 
 
-<dt id="arg-size-wilcox">size.wilcox<a class="anchor" aria-label="anchor" href="#arg-size-wilcox"></a></dt>
+<dt id="arg-size-test">size_test<a class="anchor" aria-label="anchor" href="#arg-size-test"></a></dt>
 <dd><p>value for size of text of statistical test</p></dd>
 
 
-<dt id="arg-hjust-wilcox-">hjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-hjust-wilcox-"></a></dt>
-<dd><p>value for adjusting height of the text, with
-group.by.2 specified</p></dd>
+<dt id="arg-hjust-test-">hjust_test_2<a class="anchor" aria-label="anchor" href="#arg-hjust-test-"></a></dt>
+<dd><p>value for adjusting height of the text, with group.by.2
+specified</p></dd>
 
 
-<dt id="arg-vjust-wilcox-">vjust.wilcox.2<a class="anchor" aria-label="anchor" href="#arg-vjust-wilcox-"></a></dt>
+<dt id="arg-vjust-test-">vjust_test_2<a class="anchor" aria-label="anchor" href="#arg-vjust-test-"></a></dt>
 <dd><p>value for vertical of text, with group.by.2 specified</p></dd>
 
 
@@ -223,7 +237,7 @@ group.by.2 specified</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
