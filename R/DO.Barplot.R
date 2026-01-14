@@ -31,6 +31,8 @@
 #' ). default "wilcox"
 #' @param correction_method correction for p-value calculation. One of
 #' c("BH", "bonferroni", "holm", "BY", "fdr", "none")
+#' @param p_values Manually providing p-values for plotting, be aware of
+#' group size and if necessary make your test return the same amount of values
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -230,17 +232,17 @@ DO.Barplot <- function(
 
             #If feature is a meta data column
             if (!Feature %in% rownames(sce_object)) {
-              mat_Feature <- t(as.matrix(sce_object@meta.data[Feature]))
-              .suppressAllWarnings(
-                  sce_object[[Feature]] <- CreateAssayObject(
-                    data = mat_Feature
-                  )
-              )
-              degs <- FindMarkers(sce_object,
-                assay = Feature,
-                test.use = test_use,
-                ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
-                min.pct = 0, min.diff.pct = -Inf, group.by = group.by)
+                mat_Feature <- t(as.matrix(sce_object@meta.data[Feature]))
+                .suppressAllWarnings(
+                    sce_object[[Feature]] <- CreateAssayObject(
+                        data = mat_Feature
+                    )
+                )
+                degs <- FindMarkers(sce_object,
+                    assay = Feature,
+                    test.use = test_use,
+                    ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
+                    min.pct = 0, min.diff.pct = -Inf, group.by = group.by)
             }
 
             group_dis <- grp[2]

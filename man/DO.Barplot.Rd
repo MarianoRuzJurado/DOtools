@@ -48,6 +48,9 @@ be found, default conditon}
 \item{correction_method}{correction for p-value calculation. One of
 c("BH", "bonferroni", "holm", "BY", "fdr", "none")}
 
+\item{p_values}{Manually providing p-values for plotting, be aware of
+group size and if necessary make your test return the same amount of values}
+
 \item{bar_colours}{colour vector}
 
 \item{stat_pos_mod}{Defines the distance to the graphs of the statistic}

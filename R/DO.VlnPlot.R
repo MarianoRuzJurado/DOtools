@@ -43,6 +43,8 @@
 #' @param geom_jitter_args_group_by2 controls the jittering of points if
 #' group.by.2 is specified
 #' @param y_title specify title on the y axis. default "log(nUMI)"
+#' @param p_values Manually providing p-values for plotting, be aware of
+#' group size and if necessary make your test return the same amount of values
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -299,7 +301,7 @@ DO.VlnPlot <- function(
     if (test_use != "none" & is.null(group.by.2)) {
         stat.test <- data.frame()
         for (grp in ListTest) {
-            #If feature is a gene
+            # If feature is a gene
             if (Feature %in% rownames(sce_object)) {
                 degs <- FindMarkers(sce_object,
                     test.use = test_use,
@@ -314,7 +316,7 @@ DO.VlnPlot <- function(
                 degs <- degs[rownames(degs) %in% Feature, ]
             }
 
-            #If feature is a meta data column
+            # If feature is a meta data column
             if (!Feature %in% rownames(sce_object)) {
                 mat_Feature <- t(as.matrix(sce_object@meta.data[Feature]))
                 .suppressAllWarnings(
@@ -326,7 +328,8 @@ DO.VlnPlot <- function(
                     assay = Feature,
                     test.use = test_use,
                     ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
-                    min.pct = 0, min.diff.pct = -Inf, group.by = group.by)
+                    min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                )
             }
 
             group_dis <- grp[2]
@@ -386,7 +389,7 @@ DO.VlnPlot <- function(
             sce_object_sub <- subset(sce_object, !!sym(group.by.2) == grp2)
 
             for (grp in ListTest) {
-                #If feature is a gene
+                # If feature is a gene
                 if (Feature %in% rownames(sce_object)) {
                     degs <- FindMarkers(sce_object_sub,
                         test.use = test_use,
@@ -400,7 +403,7 @@ DO.VlnPlot <- function(
                     degs$p_val_adj <- p.adjust(degs$p_val, method = p_method)
                     degs <- degs[rownames(degs) %in% Feature, ]
                 }
-                #If feature is a meta data column
+                # If feature is a meta data column
                 if (!Feature %in% rownames(sce_object)) {
                     mat_Feature <- t(
                         as.matrix(sce_object_sub@meta.data[Feature])
@@ -414,7 +417,8 @@ DO.VlnPlot <- function(
                         assay = Feature,
                         test.use = test_use,
                         ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
-                        min.pct = 0, min.diff.pct = -Inf, group.by = group.by)
+                        min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                    )
                 }
                 group_dis <- grp[2]
                 group_ctrl <- grp[1]
@@ -426,10 +430,10 @@ DO.VlnPlot <- function(
                         group2 = group_ctrl,
                         n1 = sum(
                             sce_object[[group.by]][, group.by] == group1
-                            ),
+                        ),
                         n2 = sum(
                             sce_object[[group.by]][, group.by] == group2
-                            ),
+                        ),
                         statistic = NA_real_, # for consistency
                         p = p_val,
                         p.adj = p_val_adj
@@ -439,6 +443,19 @@ DO.VlnPlot <- function(
                         .y., group1, group2, n1, n2,
                         statistic, p, p.adj, p.adj.signif
                     )
+                if (!is.null(p_values)) {
+                    # Check for equal numbers of  p-values and comparisons
+                    if (length(p_values) != length(ListTest)) {
+                        stop(sprintf(
+                            "Number of provided p-values: %s, does",
+                            "not match number of comparisons: %s",
+                            length(p_values), length(ListTest)
+                        ))
+                    }
+                    # Assign new p-values and add significance
+                    test_df$p.adj <- p_values
+                    test_df <- test_df %>% rstatix::add_significance()
+                }
 
                 # replace 0s and apply scientific writing
                 test_df$p.adj <- ifelse(
@@ -459,20 +476,6 @@ DO.VlnPlot <- function(
                 )
                 stat.test <- rbind(stat.test, test_df)
             }
-        }
-
-        if (!is.null(p_values)) {
-            # Check for equal numbers of provided p-values and comparisons
-            if (length(p_values) != length(ListTest)) {
-                stop(sprintf(
-                    "Number of provided p-values: %s, does",
-                    "not match number of comparisons: %s",
-                    length(p_values), length(ListTest)
-                ))
-            }
-            # Assign new p-values and add significance
-            test_df$p.adj <- p_values
-            test_df <- test_df %>% rstatix::add_significance()
         }
     }
     if (length(unique(vln_df[[group.by]])) > length(vector_colors)) {

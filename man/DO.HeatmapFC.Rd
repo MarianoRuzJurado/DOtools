@@ -110,6 +110,8 @@ tick labels.}
 
 \item{filename}{Name of the output file.}
 
+\item{showP}{Logical; whether to display the plot.}
+
 \item{add_stats}{Logical; whether to add statistical annotations.}
 
 \item{test}{Statistical test to use (currently "wilcox").}
@@ -131,8 +133,6 @@ tick labels.}
 \item{linewidth}{Line width of heatmap cell borders.}
 
 \item{color_axis_ratio}{Relative size of the color bar axis.}
-
-\item{show}{Logical; whether to display the plot.}
 }
 \value{
 Depending on \code{showP}, returns the plot if set to \code{TRUE} or a

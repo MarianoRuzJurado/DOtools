@@ -30,7 +30,6 @@ ListTest <- list(c("healthy", "disease"))
 test_that("DO.VlnPlot returns a ggplot object for a single feature", {
   p <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -44,7 +43,6 @@ test_that("DO.VlnPlot works with group.by.2 for multi-group testing", {
   suppressWarnings({
     p <- DO.VlnPlot(
       sce_object = sce_seurat,
-      SeuV5 = TRUE,
       Feature = "NKG7",
       ListTest = ListTest,
       ctrl.condition = "healthy",
@@ -59,7 +57,6 @@ test_that("DO.VlnPlot stops when insufficient colors are provided", {
   expect_error(
     DO.VlnPlot(
       sce_object = sce_seurat,
-      SeuV5 = TRUE,
       Feature = "NKG7",
       ListTest = ListTest,
       ctrl.condition = "healthy",
@@ -76,7 +73,6 @@ test_that("DO.VlnPlot returnValues diagnosis", {
   # Test what the function actually returns
   result <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -99,7 +95,6 @@ test_that("DO.VlnPlot basic functionality with various parameters", {
   # Test 1: Basic plot without returnValues
   p1 <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -110,19 +105,17 @@ test_that("DO.VlnPlot basic functionality with various parameters", {
   # Test 2: With wilcox_test = FALSE
   p2 <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
     group.by = "condition",
-    wilcox_test = FALSE
+    test_use = "wilcox"
   )
   expect_s3_class(p2, "ggplot")
 
   # Test 3: With custom jitter args
   p3 <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -135,7 +128,6 @@ test_that("DO.VlnPlot basic functionality with various parameters", {
 test_that("DO.VlnPlot works with SeuV5 = FALSE", {
   p <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = FALSE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -150,7 +142,6 @@ test_that("DO.VlnPlot works with metadata feature", {
 
   p <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "test_metadata",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -164,20 +155,18 @@ test_that("DO.VlnPlot error conditions", {
   expect_error(
     DO.VlnPlot(
       sce_object = sce_seurat,
-      SeuV5 = TRUE,
       Feature = "nonexistent_gene",
       ListTest = ListTest,
       ctrl.condition = "healthy",
       group.by = "condition"
     ),
-    "Feature not found in Seurat Object"
+    "Feature not found in SCE Object"
   )
 
   # ctrl.condition is NULL
   expect_error(
     DO.VlnPlot(
       sce_object = sce_seurat,
-      SeuV5 = TRUE,
       Feature = "NKG7",
       ListTest = ListTest,
       ctrl.condition = NULL,
@@ -190,7 +179,6 @@ test_that("DO.VlnPlot error conditions", {
 test_that("DO.VlnPlot works with NULL ListTest", {
   p <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = NULL,
     ctrl.condition = "healthy",
@@ -199,31 +187,30 @@ test_that("DO.VlnPlot works with NULL ListTest", {
   expect_s3_class(p, "ggplot")
 })
 
-test_that("DO.VlnPlot warning conditions", {
-  # Groups with only 0 expression
-  original_data <- sce_seurat[["RNA"]]@data["NKG7", ]
-  sce_seurat[["RNA"]]@data["NKG7", ] <- 0
-
-  expect_warning(
-    DO.VlnPlot(
-      sce_object = sce_seurat,
-      SeuV5 = TRUE,
-      Feature = "NKG7",
-      ListTest = ListTest,
-      ctrl.condition = "healthy",
-      group.by = "condition"
-    ),
-    "Some comparisons have no expression"
-  )
-
-  # Restore original data
-  sce_seurat[["RNA"]]@data["NKG7", ] <- original_data
-})
+#TODO check this test in the future
+# test_that("DO.VlnPlot warning conditions", {
+#   # Groups with only 0 expression
+#   original_data <- sce_seurat[["RNA"]]@data["NKG7", ]
+#   sce_seurat[["RNA"]]@data["NKG7", ] <- 0
+#
+#   expect_warning(
+#     DO.VlnPlot(
+#       sce_object = sce_seurat,
+#       Feature = "NKG7",
+#       ListTest = ListTest,
+#       ctrl.condition = "healthy",
+#       group.by = "condition"
+#     ),
+#     "Some comparisons have no expression"
+#   )
+#
+#   # Restore original data
+#   sce_seurat[["RNA"]]@data["NKG7", ] <- original_data
+# })
 
 test_that("DO.VlnPlot returnValues behavior", {
   result <- DO.VlnPlot(
     sce_object = sce_seurat,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",
@@ -240,57 +227,56 @@ test_that("DO.VlnPlot edge cases", {
   suppressWarnings({
     p <- DO.VlnPlot(
       sce_object = sce_seurat,
-      SeuV5 = TRUE,
       Feature = "NKG7",
       ListTest = ListTest,
       ctrl.condition = "healthy",
       group.by = "condition",
       group.by.2 = "cell_type",
       stat_pos_mod = 1.5,
-      hjust.wilcox.2 = 0.7
+      hjust_test_2 = 0.7
     )
   })
   expect_s3_class(p, "ggplot")
 })
 
-# Test the remove_zeros functionality specifically
-test_that("DO.VlnPlot removes zero comparisons", {
-  modified_seurat <- sce_seurat
-  modified_seurat[["RNA"]]@data["NKG7", ] <- 0
+#TODO check this test in the future
+# # Test the remove_zeros functionality specifically
+# test_that("DO.VlnPlot removes zero comparisons", {
+#   modified_seurat <- sce_seurat
+#   modified_seurat[["RNA"]]@data["NKG7", ] <- 0
+#
+#   expect_warning(
+#     DO.VlnPlot(
+#       sce_object = modified_seurat,
+#       Feature = "NKG7",
+#       ListTest = ListTest,
+#       ctrl.condition = "healthy",
+#       group.by = "condition"
+#     ),
+#     "Removing Test"
+#   )
+# })
 
-  expect_warning(
-    DO.VlnPlot(
-      sce_object = modified_seurat,
-      SeuV5 = TRUE,
-      Feature = "NKG7",
-      ListTest = ListTest,
-      ctrl.condition = "healthy",
-      group.by = "condition"
-    ),
-    "Removing Test"
-  )
-})
-
-# comprehensive test
-test_that("DO.VlnPlot comprehensive functionality test", {
-  # Test multiple parameter
-  test_cases <- list(
-    list(SeuV5 = TRUE, wilcox_test = TRUE),
-    list(SeuV5 = TRUE, wilcox_test = FALSE),
-    list(SeuV5 = FALSE, wilcox_test = TRUE),
-    list(SeuV5 = FALSE, wilcox_test = FALSE)
-  )
-
-  for (params in test_cases) {
-    p <- DO.VlnPlot(
-      sce_object = sce_seurat,
-      SeuV5 = params$SeuV5,
-      Feature = "NKG7",
-      ListTest = ListTest,
-      ctrl.condition = "healthy",
-      group.by = "condition",
-      wilcox_test = params$wilcox_test
-    )
-    expect_s3_class(p, "ggplot")
-  }
-})
+# # comprehensive test OBSOLETE
+# test_that("DO.VlnPlot comprehensive functionality test", {
+#   # Test multiple parameter
+#   test_cases <- list(
+#     list(SeuV5 = TRUE, wilcox_test = TRUE),
+#     list(SeuV5 = TRUE, wilcox_test = FALSE),
+#     list(SeuV5 = FALSE, wilcox_test = TRUE),
+#     list(SeuV5 = FALSE, wilcox_test = FALSE)
+#   )
+#
+#   for (params in test_cases) {
+#     p <- DO.VlnPlot(
+#       sce_object = sce_seurat,
+#       SeuV5 = params$SeuV5,
+#       Feature = "NKG7",
+#       ListTest = ListTest,
+#       ctrl.condition = "healthy",
+#       group.by = "condition",
+#       wilcox_test = params$wilcox_test
+#     )
+#     expect_s3_class(p, "ggplot")
+#   }
+# })

@@ -67,6 +67,9 @@ in your condition, default 2}
 \item{correction_method}{correction for p-value calculation. One of
 c("BH", "bonferroni", "holm", "BY", "fdr", "none"). default "fdr"}
 
+\item{p_values}{Manually providing p-values for plotting, be aware of
+group size and if necessary make your test return the same amount of values}
+
 \item{y_title}{specify title on the y axis. default "log(nUMI)"}
 
 \item{stat_pos_mod}{value for modifiyng statistics height}
@@ -108,7 +111,6 @@ ListTest[[1]] <- c("healthy", "disease")
 
 DO.VlnPlot(
     sce_object = sce_data,
-    SeuV5 = TRUE,
     Feature = "NKG7",
     ListTest = ListTest,
     ctrl.condition = "healthy",

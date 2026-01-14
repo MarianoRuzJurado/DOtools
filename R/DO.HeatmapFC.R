@@ -44,7 +44,7 @@
 #'
 #' @param path Optional path to save the output figure.
 #' @param filename Name of the output file.
-#' @param show Logical; whether to display the plot.
+#' @param showP Logical; whether to display the plot.
 #'
 #' @param add_stats Logical; whether to add statistical annotations.
 #' @param test Statistical test to use (currently "wilcox").
@@ -257,7 +257,7 @@ DO.HeatmapFC <- function(
 
                 #apply alternative correction
                 df_dge$p_val_adj <- p.adjust(
-                  df_dge$p_val, method = correction_method
+                    df_dge$p_val, method = correction_method
                 )
                 df_dge <- df_dge[rownames(df_dge) %in% features, ]
                 df_dge <- rownames_to_column(df_dge, var = "gene")
