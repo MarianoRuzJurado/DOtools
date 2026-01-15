@@ -140,7 +140,7 @@ DO.CellComposition(
     scanpro_plots = FALSE,
     n_reps = 5
 )
-#> 2026-01-14 13:24:17 - Bootstrapping method activated with 5 simulated replicates!
+#> 2026-01-14 16:45:12 - Bootstrapping method activated with 5 simulated replicates!
 #> .
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the

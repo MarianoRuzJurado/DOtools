@@ -82,9 +82,9 @@ sce_data <- DO.CellTypist(
     minCellsToRun = 5,
     SeuV5 = TRUE
 )
-#> 2026-01-14 13:24:23 - Running celltypist using model: Healthy_Adult_Heart.pkl
-#> 2026-01-14 13:24:23 - Saving celltypist results to temporary folder: /tmp/RtmpMrPwpw/file16f47a7ece2db5
-#> 2026-01-14 13:24:29 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl
-#> 2026-01-14 13:24:29 - Running Celltypist
-#> 2026-01-14 13:24:31 - Creating probality plot
+#> 2026-01-14 16:45:17 - Running celltypist using model: Healthy_Adult_Heart.pkl
+#> 2026-01-14 16:45:17 - Saving celltypist results to temporary folder: /tmp/Rtmpf8YkGo/file1859a0457aed59
+#> 2026-01-14 16:45:24 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl
+#> 2026-01-14 16:45:24 - Running Celltypist
+#> 2026-01-14 16:45:26 - Creating probality plot
 ```
