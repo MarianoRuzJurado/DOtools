@@ -18,15 +18,16 @@ install.packages("BiocManager")
 BiocManager::install("DOtools")
 ```
 
-We highly recommend having
-[conda](https://www.anaconda.com/docs/getting-started/miniconda/main)
-installed for python environments. Some functions in this package depend
-on Python packages or scripts. These functions use
+# **Requirements**
+
+Some functions in this package depend on Python packages or scripts.
+These functions use
 [basilisk](https://www.bioconductor.org/packages/release/bioc/html/basilisk.html)
 to create isolated environments, which are built using conda. As a
-result, a working conda installation is required.
-
-## **Python package**
+result, a working conda installation is required. The DoTools pipeline
+was tested on Linux and MacOS and an example dataset with ~65k cells can
+be processed with a machine with at least 16GBs of RAM memomy and 5
+CPUs. \## **Python package**
 
 If you prefer python over R for data analysis, we also provide a python
 version of the DOtools package. Please refer for the python version to:
@@ -106,6 +107,11 @@ tba
   : Remove Layers from Seurat or SCE Object by Pattern
 - [`DO.PyEnv()`](https://marianoruzjurado.github.io/DOtools/reference/DO.PyEnv.md)
   : DO.PyEnv
+
+## Benchmarking
+
+- [`DO.EvalIntegration()`](https://marianoruzjurado.github.io/DOtools/reference/DO.EvalIntegration.md)
+  : Do batch correction metrics for integration
 
 # Articles
 
