@@ -105,30 +105,30 @@ DGE_result <- DO.MultiDGE(sce_data,
 #> Names of identity class contain underscores ('_'), replacing with dashes ('-')
 #> This message is displayed once every 8 hours.
 #> Centering and scaling data matrix
-#> 2026-01-14 16:45:51 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-01-14 16:45:51 - Starting DGE single cell method analysis
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: Monocytes
-#> 2026-01-14 16:45:51 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: NK
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-14 16:45:51 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: B_cells
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: pDC
-#> 2026-01-14 16:45:51 - Finished DGE single cell method analysis
-#> 2026-01-14 16:45:51 - Starting DGE pseudo bulk method analysis
-#> 2026-01-14 16:45:51 - Comparing disease with healthy in: B_cells
-#> 2026-01-14 16:45:52 - Skipping B_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-14 16:45:52 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Comparing disease with healthy in: Monocytes
-#> 2026-01-14 16:45:52 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Comparing disease with healthy in: NK
-#> 2026-01-14 16:45:52 - Skipping NK since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Comparing disease with healthy in: pDC
-#> 2026-01-14 16:45:52 - Skipping pDC since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-14 16:45:52 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:45:52 - Finished DGE pseudo bulk method analysis
-#> 2026-01-14 16:45:52 - DGE pseudo bulk result is empty...
+#> 2026-01-21 13:40:07 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-01-21 13:40:07 - Starting DGE single cell method analysis
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: Monocytes
+#> 2026-01-21 13:40:07 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: NK
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-01-21 13:40:07 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: B_cells
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: pDC
+#> 2026-01-21 13:40:07 - Finished DGE single cell method analysis
+#> 2026-01-21 13:40:07 - Starting DGE pseudo bulk method analysis
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: B_cells
+#> 2026-01-21 13:40:07 - Skipping B_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 13:40:07 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: Monocytes
+#> 2026-01-21 13:40:07 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: NK
+#> 2026-01-21 13:40:07 - Skipping NK since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: pDC
+#> 2026-01-21 13:40:07 - Skipping pDC since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-01-21 13:40:07 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:07 - Finished DGE pseudo bulk method analysis
+#> 2026-01-21 13:40:07 - DGE pseudo bulk result is empty...
 ```

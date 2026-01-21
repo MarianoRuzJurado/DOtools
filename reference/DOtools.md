@@ -96,6 +96,9 @@ This package includes the following functions:
   A function for calculating DEGs on a single cell and speudo bulk
   level.
 
+- [`DO.EvalIntegration`](https://marianoruzjurado.github.io/DOtools/reference/DO.EvalIntegration.md):
+  A function for calculating sciB metrics on integration embeddings
+
 - `dot-Do.BarcodeRanks`: A function for estimating the number of
   expected cells and droplets.
 
@@ -125,5 +128,6 @@ Mariano Ruz Jurado, David Rodriguez Morales
 [`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md),[`DO.Heatmap`](https://marianoruzjurado.github.io/DOtools/reference/DO.Heatmap.md),[`DO.HeatmapFC`](https://marianoruzjurado.github.io/DOtools/reference/DO.HeatmapFC.md),
 [`DO.PyEnv`](https://marianoruzjurado.github.io/DOtools/reference/DO.PyEnv.md),
 [`DO.Correlation`](https://marianoruzjurado.github.io/DOtools/reference/DO.Correlation.md),
-[`DO.MultiDGE`](https://marianoruzjurado.github.io/DOtools/reference/DO.MultiDGE.md),[`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md),
+[`DO.MultiDGE`](https://marianoruzjurado.github.io/DOtools/reference/DO.MultiDGE.md),[`DO.EvalIntegration`](https://marianoruzjurado.github.io/DOtools/reference/DO.EvalIntegration.md),
+[`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md),
 `dot-Do.BarcodeRanks`, `dot-QC.Vlnplot`

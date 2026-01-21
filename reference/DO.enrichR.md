@@ -86,32 +86,32 @@ DGE_result <- DO.MultiDGE(sce_data,
     ident_ctrl = "healthy"
 )
 #> Centering and scaling data matrix
-#> 2026-01-14 16:46:04 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-01-14 16:46:04 - Starting DGE single cell method analysis
-#> 2026-01-14 16:46:04 - Comparing disease with healthy in: Monocytes
-#> 2026-01-14 16:46:04 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:04 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: NK
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-14 16:46:05 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: B_cells
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: pDC
-#> 2026-01-14 16:46:05 - Finished DGE single cell method analysis
-#> 2026-01-14 16:46:05 - Starting DGE pseudo bulk method analysis
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: B_cells
-#> 2026-01-14 16:46:05 - Skipping B_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-14 16:46:05 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: Monocytes
-#> 2026-01-14 16:46:05 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: NK
-#> 2026-01-14 16:46:05 - Skipping NK since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: pDC
-#> 2026-01-14 16:46:05 - Skipping pDC since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-14 16:46:05 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-14 16:46:05 - Finished DGE pseudo bulk method analysis
-#> 2026-01-14 16:46:05 - DGE pseudo bulk result is empty...
+#> 2026-01-21 13:40:20 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-01-21 13:40:20 - Starting DGE single cell method analysis
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: Monocytes
+#> 2026-01-21 13:40:20 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: NK
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-01-21 13:40:20 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: B_cells
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: pDC
+#> 2026-01-21 13:40:20 - Finished DGE single cell method analysis
+#> 2026-01-21 13:40:20 - Starting DGE pseudo bulk method analysis
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: B_cells
+#> 2026-01-21 13:40:20 - Skipping B_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 13:40:20 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: Monocytes
+#> 2026-01-21 13:40:20 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: NK
+#> 2026-01-21 13:40:20 - Skipping NK since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: pDC
+#> 2026-01-21 13:40:20 - Skipping pDC since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-01-21 13:40:20 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-01-21 13:40:20 - Finished DGE pseudo bulk method analysis
+#> 2026-01-21 13:40:20 - DGE pseudo bulk result is empty...
 
 DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells", ]
 
