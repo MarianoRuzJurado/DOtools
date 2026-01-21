@@ -18,7 +18,7 @@ install.packages("BiocManager")
 BiocManager::install("DOtools")
 ```
 
-# **Requirements**
+## **Requirements**
 
 Some functions in this package depend on Python packages or scripts.
 These functions use
@@ -27,7 +27,9 @@ to create isolated environments, which are built using conda. As a
 result, a working conda installation is required. The DoTools pipeline
 was tested on Linux and MacOS and an example dataset with ~65k cells can
 be processed with a machine with at least 16GBs of RAM memomy and 5
-CPUs. \## **Python package**
+CPUs.
+
+## **Python package**
 
 If you prefer python over R for data analysis, we also provide a python
 version of the DOtools package. Please refer for the python version to:
