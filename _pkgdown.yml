@@ -51,4 +51,7 @@ reference:
   - DO.Subset
   - DO.DietSCE
   - DO.PyEnv
-
+- title: Benchmarking
+  desc: ~
+  contents:
+  - DO.EvalIntegration

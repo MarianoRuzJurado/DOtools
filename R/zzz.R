@@ -10,7 +10,7 @@
             "split_bar_gsea", "useMyCol", "value", "variable", "xaxis",
             "pivot_longer", "heatmap_foldchange", "p.adjust", "group1", "group2"
             , ".y.", "n1","n2","statistic", "p.adj", "p.adj.signif",
-            "setNames"))
+            "setNames", "eval_integration"))
     }
     invisible()
 }

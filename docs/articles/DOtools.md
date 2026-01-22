@@ -25,7 +25,8 @@ different functions for processing and visualizing gene expression in
 scRNA/snRNA experiments:
 
 In this vignette we showcase how to use the functions with public
-available data.
+available data. We recommend using the build-in logging in R with
+[`sink()`](https://rdrr.io/r/base/sink.html).
 
 ### Libraries
 
@@ -33,6 +34,9 @@ available data.
 imported as:
 
 ``` r
+#logging with sink
+#sink(file = "output.log", append=TRUE, split = TRUE)
+
 library(DOtools)
 
 # Additional packages
@@ -227,15 +231,15 @@ SCE_obj <- DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-01-14 16:46:26 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-01-14 16:46:26 - Calculating highly variable genes
-#> 2026-01-14 16:46:27 - Scaling object
-#> 2026-01-14 16:46:27 - Running pca, saved in key: PCA
+#> 2026-01-21 15:41:52 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-01-21 15:41:53 - Calculating highly variable genes
+#> 2026-01-21 15:41:53 - Scaling object
+#> 2026-01-21 15:41:53 - Running pca, saved in key: PCA
 #> Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.
-#> 2026-01-14 16:46:28 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-01-14 16:46:32 - Running Nearest-neighbor graph construction
-#> 2026-01-14 16:46:33 - Running cluster detection
-#> 2026-01-14 16:46:34 - Creating UMAP
+#> 2026-01-21 15:41:54 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-01-21 15:41:58 - Running Nearest-neighbor graph construction
+#> 2026-01-21 15:41:58 - Running cluster detection
+#> 2026-01-21 15:41:59 - Creating UMAP
 ```
 
 ``` r
@@ -297,14 +301,14 @@ SCE_obj <- DO.CellTypist(SCE_obj,
     runCelltypistUpdate = TRUE,
     over_clustering = "leiden0.3"
 )
-#> 2026-01-14 16:46:41 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-01-14 16:46:41 - Saving celltypist results to temporary folder: /tmp/RtmpEK0K5U/file1860c1707c73ca
+#> 2026-01-21 15:42:06 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-01-21 15:42:06 - Saving celltypist results to temporary folder: /tmp/RtmpiDfizw/file1a06b26932b84b
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
 #> ℹ Install it from Bioconductor with `BiocManager::install("anndataR")`
 #> ℹ See more at <https://bioconductor.org/packages/anndataR/>
-#> 2026-01-14 16:46:57 - Creating probality plot
+#> 2026-01-21 15:42:21 - Creating probality plot
 #> 
 #> This message is displayed once per session.
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
@@ -469,7 +473,7 @@ DO.CellComposition(SCE_obj,
     transform_method = "arcsin",
     n_reps = 3
 )
-#> 2026-01-14 16:47:02 - Bootstrapping method activated with 3 simulated replicates!
+#> 2026-01-21 15:42:25 - Bootstrapping method activated with 3 simulated replicates!
 #> .
 #> Using orig.ident, condition as id variables
 #> Using condition as id variables
@@ -505,7 +509,7 @@ T_cells <- DO.Subset(SCE_obj,
         value = TRUE
     )
 )
-#> 2026-01-14 16:47:19 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-01-21 15:42:42 - Specified 'ident_name': expecting a categorical variable.
 
 T_cells <- DO.CellTypist(T_cells,
     modelName = "Healthy_COVID19_PBMC.pkl",
@@ -513,9 +517,9 @@ T_cells <- DO.CellTypist(T_cells,
     over_clustering = "annotation_recluster",
     SeuV5 = FALSE
 )
-#> 2026-01-14 16:47:19 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-01-14 16:47:19 - Saving celltypist results to temporary folder: /tmp/RtmpEK0K5U/file1860c132c9dc1b
-#> 2026-01-14 16:47:31 - Creating probality plot
+#> 2026-01-21 15:42:42 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-01-21 15:42:42 - Saving celltypist results to temporary folder: /tmp/RtmpiDfizw/file1a06b2657022b
+#> 2026-01-21 15:42:54 - Creating probality plot
 
 T_cells$annotation <- plyr::revalue(
     T_cells$annotation_recluster,
@@ -566,7 +570,7 @@ CD4T_cells <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "CD4_T_cells"
 )
-#> 2026-01-14 16:47:33 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-01-21 15:42:55 - Specified 'ident_name': expecting a categorical variable.
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
@@ -576,17 +580,17 @@ DGE_result <- DO.MultiDGE(CD4T_cells,
 #> Names of identity class contain underscores ('_'), replacing with dashes ('-')
 #> This message is displayed once every 8 hours.
 #> Centering and scaling data matrix
-#> 2026-01-14 16:47:33 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-01-14 16:47:33 - Starting DGE single cell method analysis
-#> 2026-01-14 16:47:33 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-14 16:47:33 - Finished DGE single cell method analysis
-#> 2026-01-14 16:47:33 - Starting DGE pseudo bulk method analysis
-#> 2026-01-14 16:47:33 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 15:42:56 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-01-21 15:42:56 - Starting DGE single cell method analysis
+#> 2026-01-21 15:42:56 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-01-21 15:42:56 - Finished DGE single cell method analysis
+#> 2026-01-21 15:42:56 - Starting DGE pseudo bulk method analysis
+#> 2026-01-21 15:42:56 - Comparing disease with healthy in: CD4_T_cells
 #> converting counts to integer mode
 #> gene-wise dispersion estimates
 #> mean-dispersion relationship
 #> final dispersion estimates
-#> 2026-01-14 16:47:35 - Finished DGE pseudo bulk method analysis
+#> 2026-01-21 15:42:57 - Finished DGE pseudo bulk method analysis
 
 head(DGE_result, 10) %>%
     kable(format = "html", table.attr = "style='width:100%;'") %>%
@@ -797,7 +801,7 @@ SCE_obj_sub <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = c("NK", "CD4_T_cells", "B_cells")
 )
-#> 2026-01-14 16:48:19 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-01-21 15:43:40 - Specified 'ident_name': expecting a categorical variable.
 
 DO.VlnPlot(SCE_obj_sub,
     Feature = "NKG7",
@@ -806,7 +810,7 @@ DO.VlnPlot(SCE_obj_sub,
     ctrl.condition = "healthy"
 )
 #> Using condition, orig.ident, annotation as id variables
-#> 2026-01-14 16:48:19 - ListTest empty, comparing every sample with each other
+#> 2026-01-21 15:43:40 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Violin-1.png)
@@ -816,7 +820,7 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "NK"
 )
-#> 2026-01-14 16:48:20 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-01-21 15:43:41 - Specified 'ident_name': expecting a categorical variable.
 
 DO.Barplot(SCE_obj_NK,
     group.by = "condition",
@@ -827,7 +831,7 @@ DO.Barplot(SCE_obj_NK,
     x_label_rotation = 0
 )
 #> Using condition, orig.ident as id variables
-#> 2026-01-14 16:48:20 - ListTest empty, comparing every sample with each other
+#> 2026-01-21 15:43:41 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Bar-1.png)
@@ -849,7 +853,7 @@ DO.BoxPlot(SCE_obj,
     plot_sample = FALSE
 )
 #> Using group, cluster as id variables
-#> 2026-01-14 16:48:21 - ListTest empty, comparing every sample with each other
+#> 2026-01-21 15:43:42 - ListTest empty, comparing every sample with each other
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -868,7 +872,7 @@ DO.BoxPlot(SCE_obj,
     #>  collate  en_US.UTF-8
     #>  ctype    en_US.UTF-8
     #>  tz       Europe/Berlin
-    #>  date     2026-01-14
+    #>  date     2026-01-21
     #>  pandoc   3.6.3 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/ (via rmarkdown)
     #>  quarto   1.7.32 @ /usr/lib/rstudio/resources/app/bin/quarto/bin/quarto
     #> 
@@ -910,7 +914,7 @@ DO.BoxPlot(SCE_obj,
     #>  digest                 0.6.39   2025-11-19 [2] CRAN (R 4.5.2)
     #>  dir.expiry             1.18.0   2025-10-29 [2] Bioconductor 3.22 (R 4.5.2)
     #>  dotCall64              1.2      2024-10-04 [2] CRAN (R 4.5.0)
-    #>  DOtools              * 1.1.2    2026-01-14 [1] Bioconductor
+    #>  DOtools              * 1.1.2    2026-01-21 [1] Bioconductor
     #>  dplyr                * 1.1.4    2023-11-17 [2] CRAN (R 4.5.0)
     #>  dqrng                  0.4.1    2024-05-28 [2] CRAN (R 4.5.0)
     #>  DropletUtils           1.30.0   2025-10-29 [2] Bioconductor 3.22 (R 4.5.2)
@@ -1016,7 +1020,7 @@ DO.BoxPlot(SCE_obj,
     #>  RANN                   2.6.2    2024-08-25 [2] CRAN (R 4.5.0)
     #>  RColorBrewer           1.1-3    2022-04-03 [2] CRAN (R 4.5.0)
     #>  Rcpp                   1.1.1    2026-01-10 [2] CRAN (R 4.5.2)
-    #>  RcppAnnoy              0.0.22   2024-01-23 [2] CRAN (R 4.5.0)
+    #>  RcppAnnoy              0.0.23   2026-01-12 [2] CRAN (R 4.5.2)
     #>  RcppHNSW               0.6.0    2024-02-04 [2] CRAN (R 4.5.0)
     #>  reshape2               1.4.5    2025-11-12 [2] CRAN (R 4.5.2)
     #>  reticulate             1.44.1   2025-11-14 [2] CRAN (R 4.5.2)
@@ -1093,7 +1097,7 @@ DO.BoxPlot(SCE_obj,
     #>  zip                    2.3.3    2025-05-13 [2] CRAN (R 4.5.0)
     #>  zoo                    1.8-15   2025-12-15 [2] CRAN (R 4.5.2)
     #> 
-    #>  [1] /tmp/RtmpnQer0B/temp_libpath16a75726085640
+    #>  [1] /tmp/RtmpHcXf7n/temp_libpath1849f0b43c598
     #>  [2] /home/mariano/R/x86_64-pc-linux-gnu-library/4.5
     #>  [3] /usr/local/lib/R/site-library
     #>  [4] /usr/lib/R/site-library

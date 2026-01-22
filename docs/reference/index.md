@@ -62,3 +62,8 @@
   : Remove Layers from Seurat or SCE Object by Pattern
 - [`DO.PyEnv()`](https://marianoruzjurado.github.io/DOtools/reference/DO.PyEnv.md)
   : DO.PyEnv
+
+## Benchmarking
+
+- [`DO.EvalIntegration()`](https://marianoruzjurado.github.io/DOtools/reference/DO.EvalIntegration.md)
+  : Do batch correction metrics for integration

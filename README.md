@@ -25,9 +25,10 @@ install.packages("BiocManager")
 BiocManager::install("DOtools")
 ```
 
-We highly recommend having [conda](https://www.anaconda.com/docs/getting-started/miniconda/main) installed for python environments.
+## <b> Requirements </b>
+
 Some functions in this package depend on Python packages or scripts. These functions use [basilisk](https://www.bioconductor.org/packages/release/bioc/html/basilisk.html) to create isolated environments, which are built using conda. 
-As a result, a working conda installation is required.
+As a result, a working conda installation is required. The DoTools pipeline was tested on Linux and MacOS and an example dataset with ~65k cells can be processed with a machine with at least 16GBs of RAM memomy and 5 CPUs.
 
 ## <b> Python package </b>
 

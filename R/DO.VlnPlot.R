@@ -158,11 +158,11 @@ DO.VlnPlot <- function(
 
 
     vln_df$group <- factor(
-        vln_df[[group.by]],
+        vln_df$condition,
         levels = c(
             as.character(ctrl.condition),
-            levels(factor(vln_df[[group.by]]))[
-                !(levels(factor(vln_df[[group.by]])) %in% ctrl.condition)
+            levels(factor(vln_df$condition))[
+                !(levels(factor(vln_df$condition)) %in% ctrl.condition)
             ]
         )
     )

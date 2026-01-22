@@ -59,13 +59,16 @@ BiocManager::install("MarianoRuzJurado/DOtools")
 for processing and visualizing gene expression in scRNA/snRNA experiments:
 
 In this vignette we showcase how to use the functions with public available 
-data.
+data. We recommend using the build-in logging in R with `sink()`.
 
 ## Libraries
 
 `r Biocpkg("DOtools")` can be imported as:
 
 ```{r load_library, message=FALSE}
+#logging with sink
+#sink(file = "output.log", append=TRUE, split = TRUE)
+
 library(DOtools)
 
 # Additional packages
