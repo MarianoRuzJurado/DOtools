@@ -41,7 +41,7 @@
 #' @param integration_key Character. Key name to save the integration result in
 #' @param npcs Numeric. Total Number of PCs to compute and store (50 by default)
 #' @param verbose Logical. Verbosity for all functions
-#'
+#' @param random_seed parameter for random state initialisation
 #'
 #' @return integrated sce/seurat object
 #'
@@ -84,7 +84,8 @@ DO.Integration <- function(sce_object,
     pca_key = "PCA",
     integration_key = "INTEGRATED.CCA",
     npcs = 50,
-    verbose = FALSE) {
+    verbose = FALSE,
+    random_seed = 42) {
     # Cover SCE and Seurat
     if (methods::is(sce_object, "SingleCellExperiment")) {
         SCE <- TRUE
@@ -136,7 +137,8 @@ DO.Integration <- function(sce_object,
         sce_object <- RunPCA(sce_object,
             verbose = verbose,
             reduction.name = pca_key,
-            npcs = npcs
+            npcs = npcs,
+            seed.use = random_seed
         )
     }
 

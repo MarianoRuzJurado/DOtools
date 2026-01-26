@@ -14,6 +14,7 @@
 #' @param algorithm Set one of the available algorithms found in FindSubCLuster
 #' function, default = 4: leiden
 #' @param graph.name A builded neirest neighbor graph
+#' @param random_seed parameter for random state initialisation
 #' @return a Seurat or SCE Object with new clustering named annotation_recluster
 #'
 #' @import Seurat
@@ -32,7 +33,10 @@ DO.FullRecluster <- function(sce_object,
     over_clustering = "seurat_clusters",
     res = 0.5,
     algorithm = 4,
-    graph.name = "RNA_snn") {
+    graph.name = "RNA_snn",
+    random_seed = 42) {
+
+    set.seed(random_seed)
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
         class_obj <- "SingleCellExperiment"

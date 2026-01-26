@@ -24,6 +24,8 @@
 #' @param log1p_nUMI If nUMIs should be log1p transformed
 #' @param y_limits set limits for y-axis
 #' @param returnPlot IF TRUE returns ggplot
+#' @param random_seed parameter for random state initialisation
+#'
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -69,7 +71,9 @@ DO.BarplotClustert <- function(sce_object,
     step_mod = 0.2,
     x_label_rotation = 45,
     y_limits = NULL,
-    log1p_nUMI = TRUE) {
+    log1p_nUMI = TRUE,
+    random_seed = 42
+    ) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
         sce_object <- as.Seurat(sce_object)
@@ -254,7 +258,7 @@ DO.BarplotClustert <- function(sce_object,
             aes(x = condition, y = Mean),
             size = 1,
             shape = 1,
-            position = "jitter"
+            position = position_jitter(seed = random_seed)
         ) +
         # ordering, control always first
         scale_x_discrete(limits = c(as.character(ctrl.condition), levels(factor(

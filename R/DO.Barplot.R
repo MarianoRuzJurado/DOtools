@@ -33,6 +33,7 @@
 #' c("BH", "bonferroni", "holm", "BY", "fdr", "none")
 #' @param p_values Manually providing p-values for plotting, be aware of
 #' group size and if necessary make your test return the same amount of values
+#' @param random_seed parameter for random state initialisation
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -78,7 +79,8 @@ DO.Barplot <- function(
     x_label_rotation = 45,
     plot_raw_pvalue = FALSE,
     y_limits = NULL,
-    log1p_nUMI = TRUE
+    log1p_nUMI = TRUE,
+    random_seed = 42
 ) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
@@ -340,7 +342,7 @@ DO.Barplot <- function(
             aes(x = condition, y = Mean),
             size = 1,
             shape = 1,
-            position = "jitter"
+            position = position_jitter(seed = random_seed)
         ) +
         # ordering, control always first
         scale_x_discrete(limits = c(as.character(ctrl.condition), levels(factor(

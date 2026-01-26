@@ -45,6 +45,7 @@
 #' @param y_title specify title on the y axis. default "log(nUMI)"
 #' @param p_values Manually providing p-values for plotting, be aware of
 #' group size and if necessary make your test return the same amount of values
+#' @param random_seed parameter for random state initialisation
 #'
 #' @import ggplot2
 #' @import ggpubr
@@ -103,7 +104,8 @@ DO.VlnPlot <- function(
     step_mod = 0,
     hjust_test_2 = 0.5,
     vjust_test_2 = 0,
-    sign_bar = 0.8
+    sign_bar = 0.8,
+    random_seed = 42
 ) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
@@ -485,6 +487,9 @@ DO.VlnPlot <- function(
             length(unique(vln_df[[group.by]]))
         ))
     }
+
+    #plotting with reproducibility
+    set.seed(random_seed)
 
     # normal violin
     if (is.null(group.by.2)) {

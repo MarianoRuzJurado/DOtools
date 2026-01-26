@@ -32,6 +32,7 @@
 #' @param cowlegend_width Changes the width on the plotting device for legend,
 #' useful for adjusting the legend position in combination with legend.pos.x
 #' and y
+#' @param random_seed parameter for random state initialisation
 #' @param ... Further arguments passed to scanpro plotting functions
 #'
 #' @return ggplot object or list
@@ -73,6 +74,7 @@ DO.CellComposition <- function(sce_object,
     legend.pos.y = 0,
     cowplot_width = 0.9,
     cowlegend_width = 0.9,
+    random_seed = 42,
     ...) {
     if (scanpro_plots == TRUE && is.null(outputFolder)) {
         .logger(paste0("scanpro_plots will be saved in: ", getwd(), "\n"))
@@ -125,7 +127,8 @@ DO.CellComposition <- function(sce_object,
     arg4,
     arg5,
     arg6,
-    arg7) {
+    arg7,
+    arg8) {
             AnnData_counts <- zellkonverter::SCE2AnnData(sce_object)
 
             sc <- reticulate::import("scanpro.scanpro")
@@ -140,14 +143,16 @@ DO.CellComposition <- function(sce_object,
                     clusters_col = cluster_column,
                     samples_col = sample_column,
                     conds_col = condition_column,
-                    transform = transform_method
+                    transform = transform_method,
+                    seed = random_seed
                 )
             } else {
                 out <- sc$scanpro(AnnData_counts,
                     clusters_col = cluster_column,
                     conds_col = condition_column,
                     transform = transform_method,
-                    n_reps = as.integer(n_reps)
+                    n_reps = as.integer(n_reps),
+                    seed = random_seed
                 )
             }
 
@@ -224,7 +229,8 @@ DO.CellComposition <- function(sce_object,
         arg4 = condition_column,
         arg5 = transform_method,
         arg6 = n_reps,
-        arg7 = ...
+        arg7 = random_seed,
+        arg8 = ...
     )
 
     # assign results df
