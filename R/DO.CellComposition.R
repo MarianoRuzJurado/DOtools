@@ -144,7 +144,7 @@ DO.CellComposition <- function(sce_object,
                     samples_col = sample_column,
                     conds_col = condition_column,
                     transform = transform_method,
-                    seed = random_seed
+                    seed = as.integer(random_seed)
                 )
             } else {
                 out <- sc$scanpro(AnnData_counts,
@@ -152,7 +152,7 @@ DO.CellComposition <- function(sce_object,
                     conds_col = condition_column,
                     transform = transform_method,
                     n_reps = as.integer(n_reps),
-                    seed = random_seed
+                    seed = as.integer(random_seed)
                 )
             }
 
