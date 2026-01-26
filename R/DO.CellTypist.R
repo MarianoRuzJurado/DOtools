@@ -15,9 +15,9 @@
 #' @param over_clustering Column in metadata in object with clustering
 #' assignments for cells, default seurat_clusters
 #' @param assay_normalized Assay with log1p normalized expressions
-#' @param returnProb will additionally return the probability matrix, return
-#' will give a list with the first element beeing the object and second prob
-#' matrix
+#' @param returnAll will additionally return the probability matrix, return
+#' will give a list with the first element being the object and second plot
+#' and third probability matrix
 #' @param SeuV5 Specify if the Seurat object is made with Seuratv5
 #'
 #' @importFrom basilisk basiliskRun
@@ -47,7 +47,7 @@ DO.CellTypist <- function(sce_object,
     runCelltypistUpdate = TRUE,
     over_clustering = "seurat_clusters",
     assay_normalized = "RNA",
-    returnProb = FALSE,
+    returnAll = FALSE,
     SeuV5 = TRUE) {
     # Make sure R Zellkonverter package is installed
     zk <- system.file(package = "zellkonverter")
@@ -332,10 +332,10 @@ DO.CellTypist <- function(sce_object,
     pmain <- pmain + guides.layer
     pmain
 
-    if (returnProb == TRUE) {
-        returnProb <- list(sce_object, probMatrix)
-        names(returnProb) <- c("SingleCellObject", "probMatrix")
-        return(returnProb)
+    if (returnAll == TRUE) {
+        returnAll <- list(sce_object, pmain, probMatrix)
+        names(returnAll) <- c("SingleCellObject","plot", "probMatrix")
+        return(returnAll)
     } else {
         return(sce_object)
     }

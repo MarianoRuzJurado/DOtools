@@ -49,7 +49,7 @@
 #' @param add_stats Logical; whether to add statistical annotations.
 #' @param test Statistical test to use (currently "wilcox").
 #' @param correction_method Multiple-testing correction method
-#' (currently "bonferroni").
+#' (currently "fdr").
 #' @param df_pvals Optional data frame containing precomputed p-values
 #' (groups x genes or genes x groups depending on axis orientation).
 #' @param stats_x_size Size of the statistical annotation symbol.
@@ -157,7 +157,7 @@ DO.HeatmapFC <- function(
     # Statistics
     add_stats = TRUE,
     test = c("wilcox"),
-    correction_method = c("bonferroni"),
+    correction_method = c("fdr"),
     df_pvals = NULL,
     stats_x_size = NULL,
     square_x_size = NULL,
