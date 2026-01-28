@@ -9,7 +9,8 @@ DO.FullRecluster(
   over_clustering = "seurat_clusters",
   res = 0.5,
   algorithm = 4,
-  graph.name = "RNA_snn"
+  graph.name = "RNA_snn",
+  random_seed = 42
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ assignments for cells, default seurat_clusters}
 function, default = 4: leiden}
 
 \item{graph.name}{A builded neirest neighbor graph}
+
+\item{random_seed}{parameter for random state initialisation}
 }
 \value{
 a Seurat or SCE Object with new clustering named annotation_recluster

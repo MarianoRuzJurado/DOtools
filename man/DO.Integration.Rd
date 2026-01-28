@@ -28,7 +28,8 @@ DO.Integration(
   pca_key = "PCA",
   integration_key = "INTEGRATED.CCA",
   npcs = 50,
-  verbose = FALSE
+  verbose = FALSE,
+  random_seed = 42
 )
 }
 \arguments{
@@ -91,6 +92,8 @@ is 10.}
 \item{npcs}{Numeric. Total Number of PCs to compute and store (50 by default)}
 
 \item{verbose}{Logical. Verbosity for all functions}
+
+\item{random_seed}{parameter for random state initialisation}
 }
 \value{
 integrated sce/seurat object

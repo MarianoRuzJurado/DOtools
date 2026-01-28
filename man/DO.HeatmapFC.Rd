@@ -35,7 +35,7 @@ DO.HeatmapFC(
   showP = TRUE,
   add_stats = TRUE,
   test = c("wilcox"),
-  correction_method = c("bonferroni"),
+  correction_method = c("fdr"),
   df_pvals = NULL,
   stats_x_size = NULL,
   square_x_size = NULL,
@@ -117,7 +117,7 @@ tick labels.}
 \item{test}{Statistical test to use (currently "wilcox").}
 
 \item{correction_method}{Multiple-testing correction method
-(currently "bonferroni").}
+(currently "fdr").}
 
 \item{df_pvals}{Optional data frame containing precomputed p-values
 (groups x genes or genes x groups depending on axis orientation).}

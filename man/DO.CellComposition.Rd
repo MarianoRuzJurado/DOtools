@@ -24,6 +24,7 @@ DO.CellComposition(
   legend.pos.y = 0,
   cowplot_width = 0.9,
   cowlegend_width = 0.9,
+  random_seed = 42,
   ...
 )
 }
@@ -73,6 +74,8 @@ be sued to factorize the segments}
 \item{cowlegend_width}{Changes the width on the plotting device for legend,
 useful for adjusting the legend position in combination with legend.pos.x
 and y}
+
+\item{random_seed}{parameter for random state initialisation}
 
 \item{...}{Further arguments passed to scanpro plotting functions}
 }

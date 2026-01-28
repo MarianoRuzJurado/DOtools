@@ -27,7 +27,8 @@ DO.VlnPlot(
   step_mod = 0,
   hjust_test_2 = 0.5,
   vjust_test_2 = 0,
-  sign_bar = 0.8
+  sign_bar = 0.8,
+  random_seed = 42
 )
 }
 \arguments{
@@ -89,6 +90,8 @@ specified}
 \item{vjust_test_2}{value for vertical of text, with group.by.2 specified}
 
 \item{sign_bar}{adjusts the sign_bar with group.by.2 specified}
+
+\item{random_seed}{parameter for random state initialisation}
 }
 \value{
 a ggplot or a list used data frames

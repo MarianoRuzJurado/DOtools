@@ -11,7 +11,7 @@ DO.CellTypist(
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",
   assay_normalized = "RNA",
-  returnProb = FALSE,
+  returnAll = FALSE,
   SeuV5 = TRUE
 )
 }
@@ -32,9 +32,9 @@ assignments for cells, default seurat_clusters}
 
 \item{assay_normalized}{Assay with log1p normalized expressions}
 
-\item{returnProb}{will additionally return the probability matrix, return
-will give a list with the first element beeing the object and second prob
-matrix}
+\item{returnAll}{will additionally return the probability matrix, return
+will give a list with the first element being the object and second plot
+and third probability matrix}
 
 \item{SeuV5}{Specify if the Seurat object is made with Seuratv5}
 }

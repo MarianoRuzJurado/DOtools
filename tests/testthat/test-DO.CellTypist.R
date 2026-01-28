@@ -39,7 +39,7 @@ test_that("DO.CellTypist handles too few cells", {
   expect_true(all(is.na(colData(result)$predicted_labels_celltypist)))
 })
 
-test_that("DO.CellTypist returns object and prob matrix when returnProb=TRUE", {
+test_that("DO.CellTypist returns object and prob matrix when returnAll=TRUE", {
 
   # Mock reading labels and probabilities
   mock_labels <- data.frame(
@@ -70,12 +70,12 @@ test_that("DO.CellTypist returns object and prob matrix when returnProb=TRUE", {
   result <- DO.CellTypist(
     sce_object = sce,
     minCellsToRun = 1,
-    returnProb = TRUE
+    returnAll = TRUE
   )
 
   # Check that result is a list
   expect_type(result, "list")
-  expect_named(result, c("SingleCellObject", "probMatrix"))
+  expect_named(result, c("SingleCellObject","plot", "probMatrix"))
 
   # Check SCE object inside list
   expect_s4_class(result$SingleCellObject, "SingleCellExperiment")
