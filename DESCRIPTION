@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Convenient functions to streamline your single cell data analysis workflow
-Version: 1.1.4
+Version: 1.1.5
 Authors@R: 
     c(
     person(given = "Mariano",

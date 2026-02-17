@@ -102,7 +102,7 @@
 #' # IO
 #' path = NULL,
 #' filename = "Heatmap.svg",
-#' show = FALSE,
+#' showP = FALSE,
 #'
 #' #   # Statistics
 #' add_stats = TRUE,
@@ -277,6 +277,7 @@ DO.HeatmapFC <- function(
         }
     }
     df_pvals_collector <- rbind(df_pvals_collector, df_pvals)
+    df_pvals <- NULL # set back to NULL for loop to continue
     }
     df_pvals_collector <- df_pvals_collector[,
         c(group_by, condition_key,
