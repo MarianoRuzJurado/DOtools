@@ -439,13 +439,51 @@ DO.BoxPlot <- function(
                         data = mat_Feature
                     )
                 )
-                degs <- FindMarkers(sce_object,
+                .suppressAllWarnings(
+                  degs <- FindMarkers(sce_object,
                     assay = Feature,
                     test.use = test_use,
                     ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
                     min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                    )
                 )
             }
+
+            if(nrow(degs) == 0){ # TODO ADD this to other functions
+            .logger(
+              paste0(
+                "No Feature detected, with FindMarkers!, Group = ",
+                grp[2], " vs ", grp[1]
+              )
+            )
+            .logger(paste0("Using instead ",test_use ," directly."))
+            if (!(test_use %in% c("wilcox", "t"))) {
+              stop("Selected test not supported, Please use wilcox or t")
+            }
+            #create the testing df
+            df <- data.frame(
+              sce_object@meta.data[[Feature]],
+              sce_object@meta.data[[group.by]]
+            )
+            colnames(df) <- c(Feature, group.by)
+            if (test_use == "wilcox") {
+              p_val <- wilcox.test(df[[Feature]] ~ df[[group.by]])$p.value
+            }
+            if (test_use == "t") {
+              p_val <- t.test(df[[Feature]] ~ df[[group.by]])$p.value
+            }
+            p_val_adj <- p.adjust(p_val, method = "BH") # just in case
+
+            degs <- data.frame(
+              p_val = p_val,
+              avg_log2FC = NA,
+              pct.1 = NA,
+              pct.2 = NA,
+              p_val_adj = p_val_adj,
+              row.names = Feature
+            )
+
+          }
 
             group_dis <- grp[2]
             group_ctrl <- grp[1]
@@ -528,13 +566,51 @@ DO.BoxPlot <- function(
                             data = mat_Feature
                         )
                     )
-                    degs <- FindMarkers(sce_object_sub,
+                    .suppressAllWarnings(
+                      degs <- FindMarkers(sce_object_sub,
                         assay = Feature,
                         test.use = test_use,
                         ident.1 = grp[2], ident.2 = grp[1], logfc.threshold = 0,
                         min.pct = 0, min.diff.pct = -Inf, group.by = group.by
+                      )
                     )
                 }
+                if(nrow(degs) == 0){ # TODO ADD this to other functions
+                .logger(
+                  paste0(
+                    "No Feature detected, with FindMarkers!, Cell Type = ",
+                    grp2
+                  )
+                )
+                .logger(paste0("Using instead ",test_use ," directly."))
+                if (!(test_use %in% c("wilcox", "t"))) {
+                  stop("Selected test not supported, Please use wilcox or t")
+                }
+                #create the testing df
+                df <- data.frame(
+                  sce_object_sub@meta.data[[Feature]],
+                  sce_object_sub@meta.data[[group.by]]
+                )
+                colnames(df) <- c(Feature, group.by)
+                if (test_use == "wilcox") {
+                  p_val <- wilcox.test(df[[Feature]] ~ df[[group.by]])$p.value
+                }
+                if (test_use == "t") {
+                  p_val <- t.test(df[[Feature]] ~ df[[group.by]])$p.value
+                }
+                p_val_adj <- p.adjust(p_val, method = "BH") # just in case
+
+                degs <- data.frame(
+                  p_val = p_val,
+                  avg_log2FC = NA,
+                  pct.1 = NA,
+                  pct.2 = NA,
+                  p_val_adj = p_val_adj,
+                  row.names = Feature
+                )
+
+              }
+
                 group_dis <- grp[2]
                 group_ctrl <- grp[1]
 
