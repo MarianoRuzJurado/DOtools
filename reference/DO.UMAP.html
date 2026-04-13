@@ -6,15 +6,15 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.UMAP — DO.UMAP"><meta name="description" content="Creates a polished UMAP plot using Seurat's DimPlot or
-FeaturePlot functions. In addition a density plot can be made in a nebulosa
-R package way. It allows customization of colors, labels, and other
-plot elements for better visualisation. The function handles both
+FeaturePlot functions. In addition a density plot can be made in a similar
+way to nebulosa R package. It allows customization of colors, labels,
+and other plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced
 presentation."><meta property="og:description" content="Creates a polished UMAP plot using Seurat's DimPlot or
-FeaturePlot functions. In addition a density plot can be made in a nebulosa
-R package way. It allows customization of colors, labels, and other
-plot elements for better visualisation. The function handles both
+FeaturePlot functions. In addition a density plot can be made in a similar
+way to nebulosa R package. It allows customization of colors, labels,
+and other plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced
 presentation."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script></head><body>
@@ -60,9 +60,9 @@ presentation."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" s
 
     <div class="ref-description section level2">
     <p>Creates a polished UMAP plot using Seurat's DimPlot or
-FeaturePlot functions. In addition a density plot can be made in a nebulosa
-R package way. It allows customization of colors, labels, and other
-plot elements for better visualisation. The function handles both
+FeaturePlot functions. In addition a density plot can be made in a similar
+way to nebulosa R package. It allows customization of colors, labels,
+and other plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced
 presentation.</p>
@@ -72,11 +72,11 @@ presentation.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DO.UMAP</span><span class="op">(</span></span>
 <span>  <span class="va">sce_object</span>,</span>
+<span>  features <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  FeaturePlot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  DensityPlot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  features <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reduction <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  group.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>  layer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  umap_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -98,6 +98,15 @@ presentation.</p>
 <dd><p>The seurat or SCE object</p></dd>
 
 
+<dt id="arg-features">features<a class="anchor" aria-label="anchor" href="#arg-features"></a></dt>
+<dd><p>features for Featureplot</p></dd>
+
+
+<dt id="arg-group-by">group.by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
+<dd><p>grouping of plot in DImplot and defines in featureplot the
+labels</p></dd>
+
+
 <dt id="arg-featureplot">FeaturePlot<a class="anchor" aria-label="anchor" href="#arg-featureplot"></a></dt>
 <dd><p>Is it going to be a FeaturePlot?</p></dd>
 
@@ -106,17 +115,8 @@ presentation.</p>
 <dd><p>Is it going to be a DensityPlot?</p></dd>
 
 
-<dt id="arg-features">features<a class="anchor" aria-label="anchor" href="#arg-features"></a></dt>
-<dd><p>features for Featureplot</p></dd>
-
-
 <dt id="arg-reduction">reduction<a class="anchor" aria-label="anchor" href="#arg-reduction"></a></dt>
 <dd><p>reduction to use</p></dd>
-
-
-<dt id="arg-group-by">group.by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
-<dd><p>grouping of plot in DImplot and defines in featureplot the
-labels</p></dd>
 
 
 <dt id="arg-dims">dims<a class="anchor" aria-label="anchor" href="#arg-dims"></a></dt>

@@ -1,9 +1,9 @@
 # DO.UMAP
 
 Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot
-functions. In addition a density plot can be made in a nebulosa R
-package way. It allows customization of colors, labels, and other plot
-elements for better visualisation. The function handles both
+functions. In addition a density plot can be made in a similar way to
+nebulosa R package. It allows customization of colors, labels, and other
+plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP
 plot. Ideal for refining UMAP outputs with added flexibility and
 enhanced presentation.
@@ -13,11 +13,11 @@ enhanced presentation.
 ``` r
 DO.UMAP(
   sce_object,
+  features = NULL,
+  group.by = "seurat_clusters",
   FeaturePlot = FALSE,
   DensityPlot = FALSE,
-  features = NULL,
   reduction = NULL,
-  group.by = "seurat_clusters",
   dims = c(1, 2),
   layer = NULL,
   umap_colors = NULL,
@@ -37,6 +37,14 @@ DO.UMAP(
 
   The seurat or SCE object
 
+- features:
+
+  features for Featureplot
+
+- group.by:
+
+  grouping of plot in DImplot and defines in featureplot the labels
+
 - FeaturePlot:
 
   Is it going to be a FeaturePlot?
@@ -45,17 +53,9 @@ DO.UMAP(
 
   Is it going to be a DensityPlot?
 
-- features:
-
-  features for Featureplot
-
 - reduction:
 
   reduction to use
-
-- group.by:
-
-  grouping of plot in DImplot and defines in featureplot the labels
 
 - dims:
 
