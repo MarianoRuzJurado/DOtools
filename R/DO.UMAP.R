@@ -57,11 +57,11 @@
 #' @export
 DO.UMAP <- function(
     sce_object,
+    features = NULL,
+    group.by = "seurat_clusters",
     FeaturePlot = FALSE,
     DensityPlot = FALSE,
-    features = NULL,
     reduction = NULL,
-    group.by = "seurat_clusters",
     dims = c(1, 2),
     layer = NULL,
     umap_colors = NULL,
@@ -79,7 +79,7 @@ DO.UMAP <- function(
     }
 
     # Dimplot
-    if (FeaturePlot == FALSE & DensityPlot == FALSE) {
+    if (isFALSE(FeaturePlot) && isFALSE(DensityPlot)) {
         if (is.null(umap_colors)) {
             umap_colors <- rep(
                 c(

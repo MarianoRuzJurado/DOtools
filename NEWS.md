@@ -1,6 +1,17 @@
-# DOtools 1.1.2
+# DOtools 1.1.8
 
 All notable changes to DOtools will be documented in this file.
+
+---
+
+## [1.1.8] - 2026-04-13
+
+### Added
+* Added citation from Bioinformatics Advances since it got published. 
+
+### Changed
+* `DO.UMAP`: Is now able to plot a DensityPlot for provided genes.
+
 
 ---
 

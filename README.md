@@ -42,4 +42,7 @@ Alternatively you can write an email: [ruzjurado\@med.uni-frankfurt.de](mailto:r
 
 ## <b> Citation </b>
 
-tba
+If you used DOtools for your work please cite our paper:
+
+"DoTools: a cross platform framework to streamline common single cell workflows"
+https://doi.org/10.1093/bioadv/vbag098

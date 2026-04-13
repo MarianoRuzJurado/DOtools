@@ -43,7 +43,7 @@ pypkg <- function(x) {
 project. To install the package, start R and enter:
 
 ```{r bioconductor_install, eval=FALSE}
-install.packages("BiocManager") # WORK iN PROGRESS
+install.packages("BiocManager")
 BiocManager::install("DOtools")
 ```
 

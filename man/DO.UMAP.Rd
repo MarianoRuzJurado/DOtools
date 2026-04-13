@@ -6,11 +6,11 @@
 \usage{
 DO.UMAP(
   sce_object,
+  features = NULL,
+  group.by = "seurat_clusters",
   FeaturePlot = FALSE,
   DensityPlot = FALSE,
-  features = NULL,
   reduction = NULL,
-  group.by = "seurat_clusters",
   dims = c(1, 2),
   layer = NULL,
   umap_colors = NULL,
@@ -26,16 +26,16 @@ DO.UMAP(
 \arguments{
 \item{sce_object}{The seurat or SCE object}
 
+\item{features}{features for Featureplot}
+
+\item{group.by}{grouping of plot in DImplot and defines in featureplot the
+labels}
+
 \item{FeaturePlot}{Is it going to be a FeaturePlot?}
 
 \item{DensityPlot}{Is it going to be a DensityPlot?}
 
-\item{features}{features for Featureplot}
-
 \item{reduction}{reduction to use}
-
-\item{group.by}{grouping of plot in DImplot and defines in featureplot the
-labels}
 
 \item{dims}{Dimensions to plot, must be a two-length numeric vector
 specifying x- and y-dimensions description}
@@ -65,9 +65,9 @@ Plot with Refined colors and axes
 }
 \description{
 Creates a polished UMAP plot using Seurat's DimPlot or
-FeaturePlot functions. In addition a density plot can be made in a nebulosa
-R package way. It allows customization of colors, labels, and other
-plot elements for better visualisation. The function handles both
+FeaturePlot functions. In addition a density plot can be made in a similar
+way to nebulosa R package. It allows customization of colors, labels,
+and other plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced
 presentation.
