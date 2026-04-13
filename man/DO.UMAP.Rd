@@ -7,26 +7,40 @@
 DO.UMAP(
   sce_object,
   FeaturePlot = FALSE,
+  DensityPlot = FALSE,
   features = NULL,
+  reduction = NULL,
   group.by = "seurat_clusters",
+  dims = c(1, 2),
+  layer = NULL,
   umap_colors = NULL,
   text_size = 14,
   label = TRUE,
   order = TRUE,
   plot.title = TRUE,
   legend.position = "none",
+  method = c("ks", "wkde"),
   ...
 )
 }
 \arguments{
 \item{sce_object}{The seurat or SCE object}
 
-\item{FeaturePlot}{Is it going to be a Dimplot or a FeaturePlot?}
+\item{FeaturePlot}{Is it going to be a FeaturePlot?}
+
+\item{DensityPlot}{Is it going to be a DensityPlot?}
 
 \item{features}{features for Featureplot}
 
+\item{reduction}{reduction to use}
+
 \item{group.by}{grouping of plot in DImplot and defines in featureplot the
 labels}
+
+\item{dims}{Dimensions to plot, must be a two-length numeric vector
+specifying x- and y-dimensions description}
+
+\item{layer}{Layer to use for DensityPlot, default data}
 
 \item{umap_colors}{what colors to use for UMAP, specify as vector}
 
@@ -41,15 +55,18 @@ expression.}
 
 \item{legend.position}{specify legend position}
 
-\item{...}{Further arguments passed to DimPlot or FeaturePlot function
-from Seurat}
+\item{method}{Kernel density estimation method, can be "ks" or "wkde"}
+
+\item{...}{Further arguments passed to DimPlot, FeaturePlot or DensityPlot
+functions}
 }
 \value{
 Plot with Refined colors and axes
 }
 \description{
 Creates a polished UMAP plot using Seurat's DimPlot or
-FeaturePlot functions. It allows customization of colors, labels, and other
+FeaturePlot functions. In addition a density plot can be made in a nebulosa
+R package way. It allows customization of colors, labels, and other
 plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP plot.
 Ideal for refining UMAP outputs with added flexibility and enhanced
@@ -68,6 +85,12 @@ DO.UMAP(
     sce_object = sce_data,
     FeaturePlot = TRUE,
     features = c("BAG2", "CD74")
+)
+
+DO.UMAP(
+    sce_object = sce_data,
+    DensityPlot = TRUE,
+    features = c("CD74")
 )
 
 }

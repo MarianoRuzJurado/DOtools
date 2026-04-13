@@ -180,7 +180,7 @@ group_legend_ncols = 1,
 # IO
 path = NULL,
 filename = "Heatmap.svg",
-show = FALSE,
+showP = FALSE,
 
 #   # Statistics
 add_stats = TRUE,
