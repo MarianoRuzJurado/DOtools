@@ -32,7 +32,8 @@ DO.Integration(
   pca_key = "PCA",
   integration_key = "INTEGRATED.CCA",
   npcs = 50,
-  verbose = FALSE
+  verbose = FALSE,
+  random_seed = 42
 )
 ```
 
@@ -142,6 +143,10 @@ DO.Integration(
 
   Logical. Verbosity for all functions
 
+- random_seed:
+
+  parameter for random state initialisation
+
 ## Value
 
 integrated sce/seurat object
@@ -164,15 +169,15 @@ DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-01-21 13:39:54 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-01-21 13:39:54 - Calculating highly variable genes
-#> 2026-01-21 13:39:54 - Scaling object
-#> 2026-01-21 13:39:55 - Running pca, saved in key: PCA
+#> 2026-04-13 11:02:47 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-04-13 11:02:47 - Calculating highly variable genes
+#> 2026-04-13 11:02:48 - Scaling object
+#> 2026-04-13 11:02:48 - Running pca, saved in key: PCA
 #> Splitting ‘counts’, ‘data’ layers. Not splitting ‘scale.data’. If you would like to split other layers, set in `layers` argument.
-#> 2026-01-21 13:39:56 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-01-21 13:39:59 - Running Nearest-neighbor graph construction
-#> 2026-01-21 13:40:00 - Running cluster detection
-#> 2026-01-21 13:40:01 - Creating UMAP
+#> 2026-04-13 11:02:49 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-04-13 11:02:52 - Running Nearest-neighbor graph construction
+#> 2026-04-13 11:02:54 - Running cluster detection
+#> 2026-04-13 11:02:55 - Creating UMAP
 #> class: SingleCellExperiment 
 #> dim: 800 2807 
 #> metadata(0):

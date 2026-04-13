@@ -16,7 +16,7 @@ DO.CellTypist(
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",
   assay_normalized = "RNA",
-  returnProb = FALSE,
+  returnAll = FALSE,
   SeuV5 = TRUE
 )
 ```
@@ -50,10 +50,11 @@ DO.CellTypist(
 
   Assay with log1p normalized expressions
 
-- returnProb:
+- returnAll:
 
   will additionally return the probability matrix, return will give a
-  list with the first element beeing the object and second prob matrix
+  list with the first element being the object and second plot and third
+  probability matrix
 
 - SeuV5:
 
@@ -82,9 +83,18 @@ sce_data <- DO.CellTypist(
     minCellsToRun = 5,
     SeuV5 = TRUE
 )
-#> 2026-01-21 13:39:35 - Running celltypist using model: Healthy_Adult_Heart.pkl
-#> 2026-01-21 13:39:35 - Saving celltypist results to temporary folder: /tmp/RtmpRjL6rB/file1924e015129443
-#> 2026-01-21 13:39:41 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl
-#> 2026-01-21 13:39:41 - Running Celltypist
-#> 2026-01-21 13:39:43 - Creating probality plot
+#> 2026-04-13 10:47:30 - Running celltypist using model: Healthy_Adult_Heart.pkl
+#> 2026-04-13 10:47:30 - Saving celltypist results to temporary folder: /tmp/RtmpEOFTWZ/file881028caeba4
+#> Using Python: /home/runner/.pyenv/versions/3.14.0/bin/python3.14
+#> Creating virtual environment '/home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3' ... 
+#> + /home/runner/.pyenv/versions/3.14.0/bin/python3.14 -m venv /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3
+#> Done!
+#> Installing packages: pip, wheel, setuptools
+#> + /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/bin/python -m pip install --upgrade pip wheel setuptools
+#> Installing packages: 'anndata==0.12.3', 'h5py==3.15.1', 'natsort==8.4.0', 'numpy==2.3.4', 'pandas==2.3.3', 'scipy==1.16.2'
+#> + /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/bin/python -m pip install --upgrade --no-user 'anndata==0.12.3' 'h5py==3.15.1' 'natsort==8.4.0' 'numpy==2.3.4' 'pandas==2.3.3' 'scipy==1.16.2'
+#> Virtual environment '/home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3' successfully created.
+#> 2026-04-13 11:02:29 - Downloading CellTypist model: Healthy_Adult_Heart.pkl
+#> 2026-04-13 11:02:30 - Running Celltypist
+#> 2026-04-13 11:02:33 - Creating probality plot
 ```

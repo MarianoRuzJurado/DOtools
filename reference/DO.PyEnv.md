@@ -27,8 +27,8 @@ None
 ``` r
 # Creates DOtools environment at ~/.venv/DOtools if it doesn't exist
 DO.PyEnv()
-#> 2026-01-21 13:40:08 - Using existing conda environment at: /home/mariano/.venv/DOtools
-#> 2026-01-21 13:40:08 - Python packages ready for DOtools!
+#> 2026-04-13 11:03:07 - Creating conda environment for DOtools
+#> 2026-04-13 11:04:47 - Python packages ready for DOtools!
 
 # Use an existing conda environment at a custom location
 # DO.PyEnv(conda_path = "~/miniconda3/envs/my_dotools_env")

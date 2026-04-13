@@ -23,7 +23,7 @@ generated plot."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org"
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ generated plot."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org"
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>SEM Graph with wilcox test on single cell level</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.Barplot.R" class="external-link"><code>R/DO.Barplot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/master/R/DO.Barplot.R" class="external-link"><code>R/DO.Barplot.R</code></a></small>
       <div class="d-none name"><code>DO.Barplot.Rd</code></div>
     </div>
 
@@ -83,7 +83,8 @@ generated plot.</p>
 <span>  x_label_rotation <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>  plot_raw_pvalue <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  y_limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  log1p_nUMI <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  log1p_nUMI <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  random_seed <span class="op">=</span> <span class="fl">42</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -164,6 +165,10 @@ multiple tests</p></dd>
 <dt id="arg-log-p-numi">log1p_nUMI<a class="anchor" aria-label="anchor" href="#arg-log-p-numi"></a></dt>
 <dd><p>If nUMIs should be log1p transformed</p></dd>
 
+
+<dt id="arg-random-seed">random_seed<a class="anchor" aria-label="anchor" href="#arg-random-seed"></a></dt>
+<dd><p>parameter for random state initialisation</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -192,6 +197,15 @@ multiple tests</p></dd>
 <span class="r-in"><span>    group.by <span class="op">=</span> <span class="st">"condition"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using condition, orig.ident as id variables</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> For a (much!) faster implementation of the Wilcoxon Rank Sum Test,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> (default method for FindMarkers) please install the presto package</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> install.packages('devtools')</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> devtools::install_github('immunogenomics/presto')</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> After installation of presto, Seurat will automatically use the more </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> efficient implementation (no further action necessary).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> This message will be shown once per session</span>
 <span class="r-plt img"><img src="DO.Barplot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

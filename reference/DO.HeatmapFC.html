@@ -19,7 +19,7 @@ can be performed."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.or
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ can be performed."><script defer data-domain="pkgdown.r-lib.org,all.tidyverse.or
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Heatmap of the mean expression of genes across a groups</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.HeatmapFC.R" class="external-link"><code>R/DO.HeatmapFC.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/master/R/DO.HeatmapFC.R" class="external-link"><code>R/DO.HeatmapFC.R</code></a></small>
       <div class="d-none name"><code>DO.HeatmapFC.Rd</code></div>
     </div>
 
@@ -92,7 +92,7 @@ can be performed.</p>
 <span>  showP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  add_stats <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wilcox"</span><span class="op">)</span>,</span>
-<span>  correction_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span><span class="op">)</span>,</span>
+<span>  correction_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fdr"</span><span class="op">)</span>,</span>
 <span>  df_pvals <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  stats_x_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  square_x_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -239,7 +239,7 @@ tick labels.</p></dd>
 
 <dt id="arg-correction-method">correction_method<a class="anchor" aria-label="anchor" href="#arg-correction-method"></a></dt>
 <dd><p>Multiple-testing correction method
-(currently "bonferroni").</p></dd>
+(currently "fdr").</p></dd>
 
 
 <dt id="arg-df-pvals">df_pvals<a class="anchor" aria-label="anchor" href="#arg-df-pvals"></a></dt>
@@ -318,7 +318,7 @@ dictionary with the axes.</p>
 <span class="r-in"><span><span class="co"># IO</span></span></span>
 <span class="r-in"><span>path <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
 <span class="r-in"><span>filename <span class="op">=</span> <span class="st">"Heatmap.svg"</span>,</span></span>
-<span class="r-in"><span>show <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>showP <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#   # Statistics</span></span></span>
 <span class="r-in"><span>add_stats <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
@@ -334,7 +334,7 @@ dictionary with the axes.</p>
 <span class="r-in"><span>linewidth <span class="op">=</span> <span class="fl">0.1</span>,</span></span>
 <span class="r-in"><span>color_axis_ratio <span class="op">=</span> <span class="fl">0.15</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:51 - reference is set to NULL, using: healthy</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:41 - reference is set to NULL, using: healthy</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -17,16 +17,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/MarianoRuzJurado/DOtools/blob/master/DESCRIPTION)
 
 Ruz Jurado M, Rodriguez Morales D, John D (2026). *DOtools: Convenient
 functions to streamline your single cell data analysis workflow*. R
-package version 1.1.2, <https://marianoruzjurado.github.io/DOtools/>.
+package version 1.1.8, <https://marianoruzjurado.github.io/DOtools/>.
 
     @Manual{,
       title = {DOtools: Convenient functions to streamline your single cell data analysis workflow},
       author = {Mariano {Ruz Jurado} and David {Rodriguez Morales} and David John},
       year = {2026},
-      note = {R package version 1.1.2},
+      note = {R package version 1.1.8},
       url = {https://marianoruzjurado.github.io/DOtools/},
     }

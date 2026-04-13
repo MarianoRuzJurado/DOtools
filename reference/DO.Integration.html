@@ -19,7 +19,7 @@ with multiple integration methods."><script defer data-domain="pkgdown.r-lib.org
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ with multiple integration methods."><script defer data-domain="pkgdown.r-lib.org
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO.Integration SCE object integration directly</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.Integration.R" class="external-link"><code>R/DO.Integration.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/master/R/DO.Integration.R" class="external-link"><code>R/DO.Integration.R</code></a></small>
       <div class="d-none name"><code>DO.Integration.Rd</code></div>
     </div>
 
@@ -85,7 +85,8 @@ with multiple integration methods.</p>
 <span>  pca_key <span class="op">=</span> <span class="st">"PCA"</span>,</span>
 <span>  integration_key <span class="op">=</span> <span class="st">"INTEGRATED.CCA"</span>,</span>
 <span>  npcs <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  random_seed <span class="op">=</span> <span class="fl">42</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -200,6 +201,10 @@ is 10.</p></dd>
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Logical. Verbosity for all functions</p></dd>
 
+
+<dt id="arg-random-seed">random_seed<a class="anchor" aria-label="anchor" href="#arg-random-seed"></a></dt>
+<dd><p>parameter for random state initialisation</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -223,15 +228,15 @@ is 10.</p></dd>
 <span class="r-in"><span>    pca <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:54 - Splitting object for integration with CCAIntegration by orig.ident</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:54 - Calculating highly variable genes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:54 - Scaling object</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:55 - Running pca, saved in key: PCA</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:47 - Splitting object for integration with CCAIntegration by orig.ident</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:47 - Calculating highly variable genes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:48 - Scaling object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:48 - Running pca, saved in key: PCA</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Splitting ‘counts’, ‘data’ layers. Not splitting ‘scale.data’. If you would like to split other layers, set in `layers` argument.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:56 - Running integration, saved in key: INTEGRATED.CCA</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:59 - Running Nearest-neighbor graph construction</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:40:00 - Running cluster detection</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:40:01 - Creating UMAP</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:49 - Running integration, saved in key: INTEGRATED.CCA</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:52 - Running Nearest-neighbor graph construction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:54 - Running cluster detection</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:55 - Creating UMAP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: SingleCellExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 800 2807 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metadata(0):</span>

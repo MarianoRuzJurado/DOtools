@@ -40,6 +40,6 @@ sce_data <-
     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 
 sce_data <- DO.DietSCE(sce_data, pattern = "data")
-#> 2026-01-21 13:39:45 - pattern:  data
-#> 2026-01-21 13:39:45 - Object has no layers, pattern does not need to be removed from layers.
+#> 2026-04-13 11:02:35 - pattern:  data
+#> 2026-04-13 11:02:35 - Object has no layers, pattern does not need to be removed from layers.
 ```

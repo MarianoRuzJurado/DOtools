@@ -34,7 +34,8 @@ DO.VlnPlot(
   step_mod = 0,
   hjust_test_2 = 0.5,
   vjust_test_2 = 0,
-  sign_bar = 0.8
+  sign_bar = 0.8,
+  random_seed = 42
 )
 ```
 
@@ -136,6 +137,10 @@ DO.VlnPlot(
 - sign_bar:
 
   adjusts the sign_bar with group.by.2 specified
+
+- random_seed:
+
+  parameter for random state initialisation
 
 ## Value
 

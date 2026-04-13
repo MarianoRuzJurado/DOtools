@@ -21,7 +21,7 @@ annotating cell types in single-cell RNA sequencing datasets."><script defer dat
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ annotating cell types in single-cell RNA sequencing datasets."><script defer dat
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DO Celltypist</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/HEAD/R/DO.CellTypist.R" class="external-link"><code>R/DO.CellTypist.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarianoRuzJurado/DOtools/blob/master/R/DO.CellTypist.R" class="external-link"><code>R/DO.CellTypist.R</code></a></small>
       <div class="d-none name"><code>DO.CellTypist.Rd</code></div>
     </div>
 
@@ -71,7 +71,7 @@ annotating cell types in single-cell RNA sequencing datasets.</p>
 <span>  runCelltypistUpdate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  over_clustering <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span>
 <span>  assay_normalized <span class="op">=</span> <span class="st">"RNA"</span>,</span>
-<span>  returnProb <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  returnAll <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  SeuV5 <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -108,10 +108,10 @@ assignments for cells, default seurat_clusters</p></dd>
 <dd><p>Assay with log1p normalized expressions</p></dd>
 
 
-<dt id="arg-returnprob">returnProb<a class="anchor" aria-label="anchor" href="#arg-returnprob"></a></dt>
+<dt id="arg-returnall">returnAll<a class="anchor" aria-label="anchor" href="#arg-returnall"></a></dt>
 <dd><p>will additionally return the probability matrix, return
-will give a list with the first element beeing the object and second prob
-matrix</p></dd>
+will give a list with the first element being the object and second plot
+and third probability matrix</p></dd>
 
 
 <dt id="arg-seuv-">SeuV5<a class="anchor" aria-label="anchor" href="#arg-seuv-"></a></dt>
@@ -141,11 +141,20 @@ matrix</p></dd>
 <span class="r-in"><span>    minCellsToRun <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>    SeuV5 <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:35 - Running celltypist using model: Healthy_Adult_Heart.pkl</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:35 - Saving celltypist results to temporary folder: /tmp/RtmpRjL6rB/file1924e015129443</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:41 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:41 - Running Celltypist</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-01-21 13:39:43 - Creating probality plot</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 10:47:30 - Running celltypist using model: Healthy_Adult_Heart.pkl</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 10:47:30 - Saving celltypist results to temporary folder: /tmp/RtmpEOFTWZ/file881028caeba4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Using Python: /home/runner/.pyenv/versions/3.14.0/bin/python3.14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Creating virtual environment '/home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3' ... </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + /home/runner/.pyenv/versions/3.14.0/bin/python3.14 -m venv /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Installing packages: pip, wheel, setuptools</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/bin/python -m pip install --upgrade pip wheel setuptools</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Installing packages: 'anndata==0.12.3', 'h5py==3.15.1', 'natsort==8.4.0', 'numpy==2.3.4', 'pandas==2.3.3', 'scipy==1.16.2'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> + /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/bin/python -m pip install --upgrade --no-user 'anndata==0.12.3' 'h5py==3.15.1' 'natsort==8.4.0' 'numpy==2.3.4' 'pandas==2.3.3' 'scipy==1.16.2'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Virtual environment '/home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3' successfully created.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:29 - Downloading CellTypist model: Healthy_Adult_Heart.pkl</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:30 - Running Celltypist</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-04-13 11:02:33 - Creating probality plot</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

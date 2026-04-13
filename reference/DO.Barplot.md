@@ -26,7 +26,8 @@ DO.Barplot(
   x_label_rotation = 45,
   plot_raw_pvalue = FALSE,
   y_limits = NULL,
-  log1p_nUMI = TRUE
+  log1p_nUMI = TRUE,
+  random_seed = 42
 )
 ```
 
@@ -103,6 +104,10 @@ DO.Barplot(
 
   If nUMIs should be log1p transformed
 
+- random_seed:
+
+  parameter for random state initialisation
+
 ## Value
 
 a ggplot or a list with plot and data frame
@@ -130,5 +135,14 @@ DO.Barplot(
     group.by = "condition"
 )
 #> Using condition, orig.ident as id variables
+#> For a (much!) faster implementation of the Wilcoxon Rank Sum Test,
+#> (default method for FindMarkers) please install the presto package
+#> --------------------------------------------
+#> install.packages('devtools')
+#> devtools::install_github('immunogenomics/presto')
+#> --------------------------------------------
+#> After installation of presto, Seurat will automatically use the more 
+#> efficient implementation (no further action necessary).
+#> This message will be shown once per session
 
 ```

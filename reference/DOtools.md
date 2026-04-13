@@ -105,6 +105,10 @@ This package includes the following functions:
 - `dot-QC.Vlnplot`: A function for estimating the number of expected
   cells and droplets.
 
+- `dot-run_kbet`: A self-contained call for running the kBET function.
+
+- `dot-kBet_fct`: A self-contained version of the kBET algorithm.
+
 ## Author
 
 Mariano Ruz Jurado, David Rodriguez Morales
@@ -130,4 +134,4 @@ Mariano Ruz Jurado, David Rodriguez Morales
 [`DO.Correlation`](https://marianoruzjurado.github.io/DOtools/reference/DO.Correlation.md),
 [`DO.MultiDGE`](https://marianoruzjurado.github.io/DOtools/reference/DO.MultiDGE.md),[`DO.EvalIntegration`](https://marianoruzjurado.github.io/DOtools/reference/DO.EvalIntegration.md),
 [`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md),
-`dot-Do.BarcodeRanks`, `dot-QC.Vlnplot`
+`dot-Do.BarcodeRanks`, `dot-QC.Vlnplot`, `dot-run_kbet`, `dot-kBet_fct`

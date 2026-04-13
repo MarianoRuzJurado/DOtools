@@ -43,4 +43,7 @@ email: <ruzjurado@med.uni-frankfurt.de>
 
 ## **Citation**
 
-tba
+If you used DOtools for your work please cite our paper:
+
+“DoTools: a cross platform framework to streamline common single cell
+workflows” <https://doi.org/10.1093/bioadv/vbag098>
