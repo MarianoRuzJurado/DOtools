@@ -1,4 +1,4 @@
-# DOtools 1.1.2
+# DOtools 1.1.8
 
 All notable changes to DOtools will be documented in this file.
 
