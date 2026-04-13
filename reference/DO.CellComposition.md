@@ -145,7 +145,7 @@ DO.CellComposition(
     scanpro_plots = FALSE,
     n_reps = 5
 )
-#> 2026-04-13 10:33:57 - Bootstrapping method activated with 5 simulated replicates!
+#> 2026-04-13 11:10:27 - Bootstrapping method activated with 5 simulated replicates!
 #> .
 #> Installing pyenv ...
 #> Done! pyenv has been installed to '/home/runner/.local/share/r-reticulate/pyenv/bin/pyenv'.
