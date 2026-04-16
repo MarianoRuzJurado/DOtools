@@ -231,15 +231,15 @@ SCE_obj <- DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-04-13 12:26:09 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-04-13 12:26:09 - Calculating highly variable genes
-#> 2026-04-13 12:26:09 - Scaling object
-#> 2026-04-13 12:26:09 - Running pca, saved in key: PCA
+#> 2026-04-16 10:22:10 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-04-16 10:22:10 - Calculating highly variable genes
+#> 2026-04-16 10:22:10 - Scaling object
+#> 2026-04-16 10:22:10 - Running pca, saved in key: PCA
 #> Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.
-#> 2026-04-13 12:26:11 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-04-13 12:26:15 - Running Nearest-neighbor graph construction
-#> 2026-04-13 12:26:16 - Running cluster detection
-#> 2026-04-13 12:26:16 - Creating UMAP
+#> 2026-04-16 10:22:11 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-04-16 10:22:16 - Running Nearest-neighbor graph construction
+#> 2026-04-16 10:22:16 - Running cluster detection
+#> 2026-04-16 10:22:17 - Creating UMAP
 ```
 
 ``` r
@@ -301,14 +301,14 @@ SCE_obj <- DO.CellTypist(SCE_obj,
     runCelltypistUpdate = TRUE,
     over_clustering = "leiden0.3"
 )
-#> 2026-04-13 12:26:25 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-04-13 12:26:25 - Saving celltypist results to temporary folder: /tmp/RtmpJkh4SG/fileb0941e2e77dd
+#> 2026-04-16 10:22:26 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-04-16 10:22:26 - Saving celltypist results to temporary folder: /tmp/Rtmp0Y8OxL/fileb1212d60ef61
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
 #> ℹ Install it from Bioconductor with `BiocManager::install("anndataR")`
 #> ℹ See more at <https://bioconductor.org/packages/anndataR/>
-#> 2026-04-13 12:26:43 - Creating probality plot
+#> 2026-04-16 10:22:45 - Creating probality plot
 #> 
 #> This message is displayed once per session.
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
@@ -482,7 +482,7 @@ DO.CellComposition(SCE_obj,
     transform_method = "arcsin",
     n_reps = 3
 )
-#> 2026-04-13 12:26:54 - Bootstrapping method activated with 3 simulated replicates!
+#> 2026-04-16 10:22:56 - Bootstrapping method activated with 3 simulated replicates!
 #> .
 #> Using orig.ident, condition as id variables
 #> Using condition as id variables
@@ -518,7 +518,7 @@ T_cells <- DO.Subset(SCE_obj,
         value = TRUE
     )
 )
-#> 2026-04-13 12:27:13 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-04-16 10:23:15 - Specified 'ident_name': expecting a categorical variable.
 
 T_cells <- DO.CellTypist(T_cells,
     modelName = "Healthy_COVID19_PBMC.pkl",
@@ -526,9 +526,9 @@ T_cells <- DO.CellTypist(T_cells,
     over_clustering = "annotation_recluster",
     SeuV5 = FALSE
 )
-#> 2026-04-13 12:27:13 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-04-13 12:27:13 - Saving celltypist results to temporary folder: /tmp/RtmpJkh4SG/fileb09427e9957c
-#> 2026-04-13 12:27:26 - Creating probality plot
+#> 2026-04-16 10:23:15 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-04-16 10:23:15 - Saving celltypist results to temporary folder: /tmp/Rtmp0Y8OxL/fileb121644690d7
+#> 2026-04-16 10:23:27 - Creating probality plot
 
 T_cells$annotation <- plyr::revalue(
     T_cells$annotation_recluster,
@@ -579,7 +579,7 @@ CD4T_cells <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "CD4_T_cells"
 )
-#> 2026-04-13 12:27:29 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-04-16 10:23:30 - Specified 'ident_name': expecting a categorical variable.
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
@@ -589,17 +589,17 @@ DGE_result <- DO.MultiDGE(CD4T_cells,
 #> Names of identity class contain underscores ('_'), replacing with dashes ('-')
 #> This message is displayed once every 8 hours.
 #> Centering and scaling data matrix
-#> 2026-04-13 12:27:29 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-04-13 12:27:29 - Starting DGE single cell method analysis
-#> 2026-04-13 12:27:29 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-04-13 12:27:31 - Finished DGE single cell method analysis
-#> 2026-04-13 12:27:31 - Starting DGE pseudo bulk method analysis
-#> 2026-04-13 12:27:31 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-04-16 10:23:30 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-04-16 10:23:30 - Starting DGE single cell method analysis
+#> 2026-04-16 10:23:30 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-04-16 10:23:32 - Finished DGE single cell method analysis
+#> 2026-04-16 10:23:32 - Starting DGE pseudo bulk method analysis
+#> 2026-04-16 10:23:32 - Comparing disease with healthy in: CD4_T_cells
 #> converting counts to integer mode
 #> gene-wise dispersion estimates
 #> mean-dispersion relationship
 #> final dispersion estimates
-#> 2026-04-13 12:27:32 - Finished DGE pseudo bulk method analysis
+#> 2026-04-16 10:23:33 - Finished DGE pseudo bulk method analysis
 
 head(DGE_result, 10) %>%
     kable(format = "html", table.attr = "style='width:100%;'") %>%
@@ -810,7 +810,7 @@ SCE_obj_sub <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = c("NK", "CD4_T_cells", "B_cells")
 )
-#> 2026-04-13 12:28:22 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-04-16 10:24:23 - Specified 'ident_name': expecting a categorical variable.
 
 DO.VlnPlot(SCE_obj_sub,
     Feature = "NKG7",
@@ -819,7 +819,7 @@ DO.VlnPlot(SCE_obj_sub,
     ctrl.condition = "healthy"
 )
 #> Using condition, orig.ident, annotation as id variables
-#> 2026-04-13 12:28:22 - ListTest empty, comparing every sample with each other
+#> 2026-04-16 10:24:23 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Violin-1.png)
@@ -829,7 +829,7 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "NK"
 )
-#> 2026-04-13 12:28:26 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-04-16 10:24:27 - Specified 'ident_name': expecting a categorical variable.
 
 DO.Barplot(SCE_obj_NK,
     group.by = "condition",
@@ -840,7 +840,7 @@ DO.Barplot(SCE_obj_NK,
     x_label_rotation = 0
 )
 #> Using condition, orig.ident as id variables
-#> 2026-04-13 12:28:26 - ListTest empty, comparing every sample with each other
+#> 2026-04-16 10:24:27 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Bar-1.png)
@@ -862,7 +862,7 @@ DO.BoxPlot(SCE_obj,
     plot_sample = FALSE
 )
 #> Using group, cluster as id variables
-#> 2026-04-13 12:28:27 - ListTest empty, comparing every sample with each other
+#> 2026-04-16 10:24:28 - ListTest empty, comparing every sample with each other
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -881,7 +881,7 @@ DO.BoxPlot(SCE_obj,
     #>  collate  C.UTF-8
     #>  ctype    C.UTF-8
     #>  tz       UTC
-    #>  date     2026-04-13
+    #>  date     2026-04-16
     #>  pandoc   3.1.11 @ /opt/hostedtoolcache/pandoc/3.1.11/x64/ (via rmarkdown)
     #>  quarto   NA
     #> 
@@ -923,7 +923,7 @@ DO.BoxPlot(SCE_obj,
     #>  digest                 0.6.39   2025-11-19 [1] RSPM
     #>  dir.expiry             1.18.0   2025-10-29 [1] Bioconduc~
     #>  dotCall64              1.2      2024-10-04 [1] RSPM
-    #>  DOtools              * 1.1.8    2026-04-13 [1] local
+    #>  DOtools              * 1.1.9    2026-04-16 [1] local
     #>  dplyr                * 1.2.1    2026-04-03 [1] RSPM
     #>  dqrng                  0.4.1    2024-05-28 [1] RSPM
     #>  DropletUtils           1.30.0   2025-10-29 [1] Bioconduc~
@@ -974,7 +974,7 @@ DO.BoxPlot(SCE_obj,
     #>  httr                   1.4.8    2026-02-13 [1] RSPM
     #>  ica                    1.0-3    2022-07-08 [1] RSPM
     #>  igraph                 2.2.3    2026-04-07 [1] RSPM
-    #>  insight                1.4.6    2026-02-04 [1] RSPM
+    #>  insight                1.5.0    2026-04-14 [1] RSPM
     #>  IRanges              * 2.44.0   2025-10-29 [1] Bioconduc~
     #>  irlba                  2.3.7    2026-01-30 [1] RSPM
     #>  jquerylib              0.1.4    2021-04-26 [1] RSPM
@@ -1052,7 +1052,7 @@ DO.BoxPlot(SCE_obj,
     #>  rsvg                   2.7.0    2025-09-08 [1] RSPM
     #>  Rtsne                  0.17     2023-12-07 [1] RSPM
     #>  S4Arrays               1.10.1   2025-12-01 [1] Bioconduc~
-    #>  S4Vectors            * 0.48.1   2026-04-05 [1] Bioconduc~
+    #>  S4Vectors            * 0.49.1-1 2026-04-05 [1] Bioconduc~
     #>  S7                     0.2.1    2025-11-14 [1] RSPM
     #>  sass                   0.4.10   2025-04-11 [1] RSPM
     #>  ScaledMatrix           1.18.0   2025-10-29 [1] Bioconduc~
@@ -1120,7 +1120,7 @@ DO.BoxPlot(SCE_obj,
     #>  python:         /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/bin/python
     #>  libpython:      /home/runner/.pyenv/versions/3.14.0/lib/libpython3.14.so
     #>  pythonhome:     /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3:/home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3
-    #>  version:        3.14.0 (main, Apr 13 2026, 12:19:00) [GCC 13.3.0]
+    #>  version:        3.14.0 (main, Apr 16 2026, 10:15:08) [GCC 13.3.0]
     #>  numpy:          /home/runner/.cache/R/basilisk/1.22.0/zellkonverter/1.20.1/zellkonverterAnnDataEnv-0.12.3/lib/python3.14/site-packages/numpy
     #>  numpy_version:  2.3.4
     #>  

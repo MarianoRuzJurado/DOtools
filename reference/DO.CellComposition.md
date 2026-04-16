@@ -145,19 +145,19 @@ DO.CellComposition(
     scanpro_plots = FALSE,
     n_reps = 5
 )
-#> 2026-04-13 11:53:48 - Bootstrapping method activated with 5 simulated replicates!
+#> 2026-04-16 09:50:07 - Bootstrapping method activated with 5 simulated replicates!
 #> .
 #> Installing pyenv ...
 #> Done! pyenv has been installed to '/home/runner/.local/share/r-reticulate/pyenv/bin/pyenv'.
 #> Using Python: /home/runner/.pyenv/versions/3.11.15/bin/python3.11
-#> Creating virtual environment '/home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.8/DOtools_env' ... 
-#> + /home/runner/.pyenv/versions/3.11.15/bin/python3.11 -m venv /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.8/DOtools_env
+#> Creating virtual environment '/home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.9/DOtools_env' ... 
+#> + /home/runner/.pyenv/versions/3.11.15/bin/python3.11 -m venv /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.9/DOtools_env
 #> Done!
 #> Installing packages: pip, wheel, setuptools
-#> + /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.8/DOtools_env/bin/python -m pip install --upgrade pip wheel setuptools
+#> + /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.9/DOtools_env/bin/python -m pip install --upgrade pip wheel setuptools
 #> Installing packages: 'scvi-tools==1.3.0', 'celltypist==1.6.3', 'scanpro==0.3.2', 'scipy==1.15.3', 'scib==1.1.7'
-#> + /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.8/DOtools_env/bin/python -m pip install --upgrade --no-user 'scvi-tools==1.3.0' 'celltypist==1.6.3' 'scanpro==0.3.2' 'scipy==1.15.3' 'scib==1.1.7'
-#> Virtual environment '/home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.8/DOtools_env' successfully created.
+#> + /home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.9/DOtools_env/bin/python -m pip install --upgrade --no-user 'scvi-tools==1.3.0' 'celltypist==1.6.3' 'scanpro==0.3.2' 'scipy==1.15.3' 'scib==1.1.7'
+#> Virtual environment '/home/runner/.cache/R/basilisk/1.22.0/DOtools/1.1.9/DOtools_env' successfully created.
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
