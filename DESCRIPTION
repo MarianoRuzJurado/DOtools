@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Convenient functions to streamline your single cell data analysis workflow
-Version: 1.1.8
+Version: 1.1.9
 Authors@R: 
     c(
     person(given = "Mariano",
@@ -40,6 +40,7 @@ Imports:
         ggpubr (>= 0.6.0),
         ggtext (>= 0.1.2),
         ggalluvial (>= 0.12.5),
+        ggrastr (>= 1.0.2),
         tidyverse (>= 2.0.0),
         reshape2 (>= 1.4.4),
         dplyr (>= 1.1.4),

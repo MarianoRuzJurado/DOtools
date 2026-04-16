@@ -19,6 +19,7 @@
   legend_title = "Density",
   pal = "Reds",
   raster = FALSE,
+  rev_colours_density = FALSE,
   ...
 )
 }

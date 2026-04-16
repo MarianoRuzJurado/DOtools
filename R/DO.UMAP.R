@@ -414,6 +414,7 @@ DO.UMAP <- function(
     legend_title = "Density",
     pal = "Reds",
     raster = FALSE,
+    rev_colours_density = FALSE,
     ...
 ) {
     # build grid with density -> has no 0 values since gaussian KDE
@@ -432,6 +433,10 @@ DO.UMAP <- function(
     }
 
     palette_colors <- rev(hcl.colors(256, palette = pal))
+
+    if (rev_colours_density == TRUE) {
+        palette_colors <- rev(palette_colors)
+    }
 
     # Keep only densities above a quantile threshold
     # (removes low-density clutter)
