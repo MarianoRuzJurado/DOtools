@@ -139,7 +139,7 @@ theme_box <- function() {
 }
 
 #' @keywords internal
-.glmGamPoi_test <- function(
+glmGamPoi_test <- function(
     sce_object,
     assay_normalized = "RNA",
     group_by = c("orig.ident","condition","annotation"),
@@ -177,7 +177,7 @@ theme_box <- function() {
   )
 
   #checking if some cell types are not present in all the conditions
-  tab <- table(sce_object_pb$annotation, sce_object_pb$condition)
+  tab <- table(sce_object_pb[[annotation_col]], sce_object_pb[[group_by]])
   bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
 
   if (length(bad_annotations) > 0) {
@@ -189,7 +189,7 @@ theme_box <- function() {
 
   #keep only valid ones
   keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
-  sce_object_pb <- sce_object_pb[, sce_object_pb$annotation %in% keep_annotations]
+  sce_object_pb <- sce_object_pb[, sce_object_pb[[annotation_col]] %in% keep_annotations]
 
   DOtools:::.logger("Fitting Gamma-Poisson model...")
   #fit Gamma-Poisson model
@@ -237,6 +237,7 @@ theme_box <- function() {
 
   return(de_collector)
 }
+
 
 
 
