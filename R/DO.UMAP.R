@@ -395,8 +395,8 @@ DO.UMAP <- function(
 #' @param ... Further scale arguments passed to scale_color_viridis_c
 #' @return A ggplot object
 #' @importFrom ggplot2 ggplot aes_string geom_point xlab ylab ggtitle labs
-#' guide_legend theme element_text element_line element_rect element_blank
-#' scale_color_viridis_c scale_color_gradientn
+#' @importFrom ggplot2 guide_legend theme element_text element_line element_rect
+#' @importFrom ggplot2 scale_color_viridis_c scale_color_gradientn element_blank
 #' @importFrom ggrastr rasterise
 #' @keywords internal
 .plot_density_ <- function(

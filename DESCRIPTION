@@ -1,6 +1,6 @@
 Package: DOtools
 Title: Convenient functions to streamline your single cell data analysis workflow
-Version: 1.1.9
+Version: 1.2.1
 Authors@R: 
     c(
     person(given = "Mariano",
@@ -30,7 +30,7 @@ License: MIT + file LICENSE
 BugReports: https://github.com/MarianoRuzJurado/DOtools/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+RoxygenNote: 8.0.0
 biocViews: SingleCell, RNASeq, Visualization, Clustering, Annotation, WorkflowStep, QualityControl, GeneExpression
 Depends: R (>= 4.5.0)
 Imports:
@@ -60,6 +60,7 @@ Imports:
         scDblFinder (>= 1.20.0),
         ggcorrplot (>= 0.1.4.1),
         DESeq2 (>= 1.48.1),
+        glmGamPoi (>= 1.24.0),
         enrichR (>= 3.4),
         cli (>= 3.6.5),
         curl(>= 6.3.0),

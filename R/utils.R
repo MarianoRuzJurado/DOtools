@@ -138,6 +138,107 @@ theme_box <- function() {
         )
 }
 
+#' @keywords internal
+.glmGamPoi_test <- function(
+    sce_object,
+    assay_normalized = "RNA",
+    group_by = c("orig.ident","condition","annotation"),
+    design_fit = NULL,
+    annotation_key = "annotation",
+    condition_key = "condition",
+    reference = "ctrl"
+){
+
+
+  # support for Seurat objects
+  if (methods::is(sce_object, "Seurat")) {
+    DefaultAssay(sce_object) <- assay_normalized
+    sce_object <- DOtools:::.suppressDeprecationWarnings(
+      Seurat::as.SingleCellExperiment(sce_object,
+        assay = assay_normalized
+      )
+    )
+  }
+
+  #Check if all supplied columns exist in metadata
+  if(length(setdiff(group_by, names(SummarizedExperiment::colData(sce_object)))) > 0){
+    stop("Not all group_by arguments are found in metadata!")
+  }
+
+  #catch for default design
+  if (is.null(design_fit)) {
+    design_fit <- ~ annotation + condition + condition:annotation - 1
+  }
+
+  #PB with specified columns
+  sce_object_pb <- glmGamPoi::pseudobulk(
+    sce_object,
+    group_by = glmGamPoi::vars(!!!rlang::syms(group_by))
+  )
+
+  #checking if some cell types are not present in all the conditions
+  tab <- table(sce_object_pb$annotation, sce_object_pb$condition)
+  bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
+
+  if (length(bad_annotations) > 0) {
+    .logger(paste0("Removing ", length(bad_annotations),
+      " annotation level(s) not present in all conditions: ",
+      paste(bad_annotations, collapse = ", "))
+    )
+  }
+
+  #keep only valid ones
+  keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
+  sce_object_pb <- sce_object_pb[, sce_object_pb$annotation %in% keep_annotations]
+
+  DOtools:::.logger("Fitting Gamma-Poisson model...")
+  #fit Gamma-Poisson model
+  fit <- glmGamPoi::glm_gp(
+    sce_object_pb, design = design_fit
+  )
+
+  comp <- setdiff(unique(sce_object[[condition_key]]), reference)
+
+  # loop over comparisons and cell types
+  de_collector <- data.frame()
+  for (grp in comp) {
+    if (!is.null(annotation_key)){
+      for (celltype in unique(sce_object[[annotation_key]])) {
+
+        #build the contrast string
+        contrast <- paste0(
+          "cond(", annotation_key, "='", celltype, "', ",
+          condition_key, "='", grp, "') - ",
+          "cond(", annotation_key, "='", celltype, "', ",
+          condition_key, "='", reference, "')"
+        )
+
+        de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+        de_res[["celltype"]] <- celltype
+        de_res[["condition"]] <- grp
+
+        de_collector <- rbind(de_collector, de_res)
+      }
+    } else{
+      #build the contrast string
+      contrast <- paste0(
+        "cond(", condition_key, "='", grp, "') - ",
+        "cond(", condition_key, "='", reference, "')"
+      )
+
+      de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+      de_res[["condition"]] <- grp
+
+      de_collector <- rbind(de_collector, de_res)
+
+    }
+
+  }
+
+  return(de_collector)
+}
+
+
 
 umap_colors <- c(
     "#1f77b4",

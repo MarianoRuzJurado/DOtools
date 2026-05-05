@@ -8,6 +8,7 @@ DO.MultiDGE(
   sce_object,
   assay = "RNA",
   method_sc = "wilcox",
+  method_pb = "DESeq2",
   group_by = "condition",
   annotation_col = "annotation",
   sample_col = "orig.ident",
@@ -16,6 +17,7 @@ DO.MultiDGE(
   logfc_threshold = 0,
   only_pos = FALSE,
   min_cells_group = 3,
+  design_fit_glm = NULL,
   ...
 )
 }
@@ -26,6 +28,9 @@ DO.MultiDGE(
 
 \item{method_sc}{method to use for single cell DEG analysis, see FindMarkers
 from Seurat for options, default "wilcox"}
+
+\item{method_pb}{method to use for pseudobulk DEG analysis, currently
+supports DESeq2 implemented in Seurat and glmGamPoi}
 
 \item{group_by}{Column in meta data containing groups used for testing,
 default "condition"}
@@ -50,6 +55,8 @@ is 0.}
 
 \item{min_cells_group}{Minimum number of cells in one of the groups,
 default 3}
+
+\item{design_fit_glm}{Design for fitting the glmGamPoi model}
 
 \item{...}{Additional arguments passed to FindMarkers function}
 }
