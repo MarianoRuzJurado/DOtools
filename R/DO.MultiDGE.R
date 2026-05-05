@@ -11,6 +11,8 @@
 #' @param assay Specified assay in Seurat or SCE object, default "RNA"
 #' @param method_sc method to use for single cell DEG analysis, see FindMarkers
 #' from Seurat for options, default "wilcox"
+#' @param method_pb method to use for pseudobulk DEG analysis, currently
+#' supports DESeq2 implemented in Seurat and glmGamPoi
 #' @param group_by Column in meta data containing groups used for testing,
 #' default "condition"
 #' @param annotation_col Column in meta data containing information of cell type
@@ -27,6 +29,7 @@
 #' @param only_pos Only return positive markers, default FALSE
 #' @param min_cells_group Minimum number of cells in one of the groups,
 #' default 3
+#' @param design_fit_glm Design for fitting the glmGamPoi model
 #' @param ... Additional arguments passed to FindMarkers function
 #'
 #' @import Seurat
@@ -52,6 +55,7 @@
 DO.MultiDGE <- function(sce_object,
     assay = "RNA",
     method_sc = "wilcox",
+    method_pb = "DESeq2",
     group_by = "condition",
     annotation_col = "annotation",
     sample_col = "orig.ident",
@@ -60,6 +64,7 @@ DO.MultiDGE <- function(sce_object,
     logfc_threshold = 0,
     only_pos = FALSE,
     min_cells_group = 3,
+    design_fit_glm = NULL,
     ...) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
@@ -133,146 +138,253 @@ DO.MultiDGE <- function(sce_object,
 
     Idents(sce_object_PB) <- PB_ident
 
-    .logger("Starting DGE single cell method analysis")
-    for (ident_con in unique(sce_object@meta.data[[group_by]])) {
+    if (method_sc != "none") {
+      .logger("Starting DGE single cell method analysis")
+      for (ident_con in unique(sce_object@meta.data[[group_by]])) {
         # .logger(ident_con)
         if (ident_con != ident_ctrl) { # skip the ctrl ident
-            for (celltype in unique(sce_object@meta.data[[annotation_col]])) {
-                .logger(
-                    paste0(
-                        "Comparing ",
-                        ident_con,
-                        " with ",
-                        ident_ctrl,
-                        " in: ",
-                        celltype
-                    )
-                )
+          for (celltype in unique(sce_object@meta.data[[annotation_col]])) {
+            .logger(
+              paste0(
+                "Comparing ",
+                ident_con,
+                " with ",
+                ident_ctrl,
+                " in: ",
+                celltype
+              )
+            )
 
-                Seu_celltype <- subset(sce_object,
-                    subset = !!sym(annotation_col) == celltype
-                )
-                # Check if there are groups with less than 3 cells
-                table_cells_sc <- table(Seu_celltype@meta.data[[group_by]])
+            Seu_celltype <- subset(sce_object,
+              subset = !!sym(annotation_col) == celltype
+            )
+            # Check if there are groups with less than 3 cells
+            table_cells_sc <- table(Seu_celltype@meta.data[[group_by]])
 
-                count_1_sc <- table_cells_sc[ident_con]
-                count_2_sc <- table_cells_sc[ident_ctrl]
+            count_1_sc <- table_cells_sc[ident_con]
+            count_2_sc <- table_cells_sc[ident_ctrl]
 
-                if (is.na(count_1_sc)) {
-                    count_1_sc <- 0
-                }
-
-                if (is.na(count_2_sc)) {
-                    count_2_sc <- 0
-                }
-
-                if (count_1_sc >= 3 && count_2_sc >= 3) {
-                    DEG_stats_sc <- .suppressDeprecationWarnings(
-                        FindMarkers(
-                            object = Seu_celltype,
-                            ident.1 = ident_con,
-                            ident.2 = ident_ctrl,
-                            min.pct = min_pct,
-                            logfc.threshold = logfc_threshold,
-                            assay = assay,
-                            only.pos = only_pos,
-                            test.use = method_sc,
-                            min.cells.group = min_cells_group,
-                            group.by = group_by,
-                            ...
-                        )
-                    )
-
-                    DEG_stats_sc <- rownames_to_column(DEG_stats_sc,
-                        var = "gene"
-                    )
-                    DEG_stats_sc[["condition"]] <- ident_con
-                    DEG_stats_sc[["celltype"]] <- celltype
-                    # DEG_stats_sc[["testmethod"]] <- method_sc
-                    DEG_stats_collector_sc <- rbind(
-                        DEG_stats_collector_sc,
-                        DEG_stats_sc
-                    )
-                } else {
-                    .logger(paste0(
-                        "Skipping ",
-                        celltype,
-                        " since one comparison has fewer than 3 cells!"
-                    ))
-                }
+            if (is.na(count_1_sc)) {
+              count_1_sc <- 0
             }
+
+            if (is.na(count_2_sc)) {
+              count_2_sc <- 0
+            }
+
+            if (count_1_sc >= 3 && count_2_sc >= 3) {
+              DEG_stats_sc <- .suppressDeprecationWarnings(
+                FindMarkers(
+                  object = Seu_celltype,
+                  ident.1 = ident_con,
+                  ident.2 = ident_ctrl,
+                  min.pct = min_pct,
+                  logfc.threshold = logfc_threshold,
+                  assay = assay,
+                  only.pos = only_pos,
+                  test.use = method_sc,
+                  min.cells.group = min_cells_group,
+                  group.by = group_by,
+                  ...
+                )
+              )
+              ###TODO Add the FDR correction
+              DEG_stats_sc <- rownames_to_column(DEG_stats_sc,
+                var = "gene"
+              )
+              DEG_stats_sc[["condition"]] <- ident_con
+              DEG_stats_sc[["celltype"]] <- celltype
+              # DEG_stats_sc[["testmethod"]] <- method_sc
+              DEG_stats_collector_sc <- rbind(
+                DEG_stats_collector_sc,
+                DEG_stats_sc
+              )
+            } else {
+              .logger(paste0(
+                "Skipping ",
+                celltype,
+                " since one comparison has fewer than 3 cells!"
+              ))
+            }
+          }
         }
+      }
+
+      .logger("Finished DGE single cell method analysis")
+    } else{
+      .logger("Skipping DGE single cell method analysis!")
     }
 
-    .logger("Finished DGE single cell method analysis")
-    .logger("Starting DGE pseudo bulk method analysis")
-
-    for (celltype in unique(sce_object_PB@meta.data[[annotation_col]])) {
+    if (method_pb == "DESeq2") {
+      .logger("Starting DGE pseudo bulk method analysis")
+      for (celltype in unique(sce_object_PB@meta.data[[annotation_col]])) {
         # .logger(celltype)
         # running find markers condition specific
         for (ident_con in unique(sce_object_PB@meta.data[[group_by]])) {
-            if (ident_con != ident_ctrl) {
-                .logger(
-                    paste0(
-                        "Comparing ", ident_con, " with ",
-                        ident_ctrl, " in: ", celltype
-                    )
-                )
-                ident_1 <- paste0(c(celltype, ident_con), collapse = "_")
-                ident_2 <- paste0(c(celltype, ident_ctrl), collapse = "_")
+          if (ident_con != ident_ctrl) {
+            .logger(
+              paste0(
+                "Comparing ", ident_con, " with ",
+                ident_ctrl, " in: ", celltype
+              )
+            )
+            ident_1 <- paste0(c(celltype, ident_con), collapse = "_")
+            ident_2 <- paste0(c(celltype, ident_ctrl), collapse = "_")
 
-                # Check if any of the groups have fewer than 3 cells
-                table_cells_pb <- table(Idents(sce_object_PB))
+            # Check if any of the groups have fewer than 3 cells
+            table_cells_pb <- table(Idents(sce_object_PB))
 
-                count_1_pb <- table_cells_pb[ident_1]
-                count_2_pb <- table_cells_pb[ident_2]
+            count_1_pb <- table_cells_pb[ident_1]
+            count_2_pb <- table_cells_pb[ident_2]
 
-                if (is.na(count_1_pb)) {
-                    count_1_pb <- 0
-                }
-
-                if (is.na(count_2_pb)) {
-                    count_2_pb <- 0
-                }
-
-
-                if (count_1_pb >= 3 && count_2_pb >= 3) {
-                    DEG_stats_pb <- .suppressDeprecationWarnings(
-                        FindMarkers(
-                            object = sce_object_PB,
-                            ident.1 = ident_1,
-                            ident.2 = ident_2,
-                            min.pct = min_pct,
-                            logfc.threshold = logfc_threshold,
-                            assay = assay,
-                            only.pos = only_pos,
-                            test.use = "DESeq2",
-                            min.cells.group = min_cells_group,
-                            group.by = PB_ident,
-                            ...
-                        )
-                    )
-
-                    DEG_stats_pb <- rownames_to_column(DEG_stats_pb,
-                        var = "gene"
-                    )
-                    DEG_stats_pb[["condition"]] <- ident_con
-                    DEG_stats_pb[["celltype"]] <- celltype
-                    # DEG_stats_pb[["testmethod"]] <- "DESeq2"
-                    DEG_stats_collector_pb <- rbind(
-                        DEG_stats_collector_pb,
-                        DEG_stats_pb
-                    )
-                } else {
-                    .logger(paste0(
-                        "Skipping ", celltype, " since one comparison has ",
-                        "fewer than 3 cells!"
-                    ))
-                }
+            if (is.na(count_1_pb)) {
+              count_1_pb <- 0
             }
+
+            if (is.na(count_2_pb)) {
+              count_2_pb <- 0
+            }
+
+
+            if (count_1_pb >= 3 && count_2_pb >= 3) {
+              DEG_stats_pb <- .suppressDeprecationWarnings(
+                FindMarkers(
+                  object = sce_object_PB,
+                  ident.1 = ident_1,
+                  ident.2 = ident_2,
+                  min.pct = min_pct,
+                  logfc.threshold = logfc_threshold,
+                  assay = assay,
+                  only.pos = only_pos,
+                  test.use = "DESeq2",
+                  min.cells.group = min_cells_group,
+                  group.by = PB_ident,
+                  ...
+                )
+              )
+
+              DEG_stats_pb <- rownames_to_column(DEG_stats_pb,
+                var = "gene"
+              )
+              DEG_stats_pb[["condition"]] <- ident_con
+              DEG_stats_pb[["celltype"]] <- celltype
+              # DEG_stats_pb[["testmethod"]] <- "DESeq2"
+              DEG_stats_collector_pb <- rbind(
+                DEG_stats_collector_pb,
+                DEG_stats_pb
+              )
+            } else {
+              .logger(paste0(
+                "Skipping ", celltype, " since one comparison has ",
+                "fewer than 3 cells!"
+              ))
+            }
+          }
         }
+      }
+      .logger("Finished DGE pseudo bulk method analysis")
     }
-    .logger("Finished DGE pseudo bulk method analysis")
+
+    if (method_pb == "glmGamPoi") {
+      .logger("Starting DGE pseudo bulk method analysis")
+      # support for Seurat objects
+      if (methods::is(sce_object, "Seurat")) {
+        DefaultAssay(sce_object) <- assay
+        sce_object <- .suppressDeprecationWarnings(
+          Seurat::as.SingleCellExperiment(sce_object,
+            assay = assay
+          )
+        )
+      }
+
+      # vector for grouping the single cell data for
+      group_meta <- c(group_by, sample_col, annotation_col)
+
+      #Check if all supplied columns exist in metadata
+      if(length(setdiff(group_meta, names(SummarizedExperiment::colData(sce_object)))) > 0){
+        stop("Not all group_by arguments are found in metadata!")
+      }
+
+      #catch for default design
+      if (is.null(design_fit)) {
+        design_fit <- ~ annotation + condition + condition:annotation - 1
+      }
+
+      #PB with specified columns
+      sce_object_pb <- glmGamPoi::pseudobulk(
+        sce_object,
+        group_by = glmGamPoi::vars(!!!rlang::syms(group_meta))
+      )
+
+      #checking if some cell types are not present in all the conditions
+      tab <- table(sce_object_pb$annotation, sce_object_pb$condition)
+      bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
+
+      if (length(bad_annotations) > 0) {
+        .logger(paste0("Removing ", length(bad_annotations),
+         " annotation level(s) not present in all conditions: ",
+            paste(bad_annotations, collapse = ", "))
+        )
+      }
+
+      #keep only valid ones
+      keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
+      sce_object_pb <- sce_object_pb[, sce_object_pb$annotation %in% keep_annotations]
+
+      .logger("Fitting Gamma-Poisson model...")
+      #fit Gamma-Poisson model
+      fit <- glmGamPoi::glm_gp(
+        sce_object_pb, design = design_fit
+      )
+
+      comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
+
+      # loop over comparisons and cell types
+      DEG_stats_collector_pb <- data.frame()
+      for (grp in comp) {
+        if (!is.null(annotation_col)){
+          for (celltype in keep_annotations) {
+
+            #build the contrast string
+            contrast <- paste0(
+              "cond(", annotation_col, "='", celltype, "', ",
+              group_by, "='", grp, "') - ",
+              "cond(", annotation_col, "='", celltype, "', ",
+              group_by, "='", ident_ctrl, "')"
+            )
+
+            de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+            de_res[["celltype"]] <- celltype
+            de_res[["condition"]] <- grp
+
+            DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+          }
+        } else{
+          #build the contrast string
+          contrast <- paste0(
+            "cond(", group_by, "='", grp, "') - ",
+            "cond(", group_by, "='", ident_ctrl, "')"
+          )
+
+          de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+          de_res[["condition"]] <- grp
+
+          DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+          colnames(DEG_stats_collector_pb) <- c(
+            "gene", "p_val", "p_val_adj", colnames(DEG_stats_collector_pb)[4:6],
+            "avg_log2FC", colnames(DEG_stats_collector_pb)[8:length(
+              colnames(DEG_stats_collector_pb)
+              )]
+          )
+        }
+
+      }
+      .logger("Finished DGE pseudo bulk method analysis")
+    }
+
+    if (method_pb == "none") {
+      .logger("Skipping DGE pseudo-bulk method analysis!")
+    }
 
     if (!length(DEG_stats_collector_pb) == 0) {
         # combine the two df
