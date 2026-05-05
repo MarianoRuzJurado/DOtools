@@ -306,8 +306,8 @@ DO.MultiDGE <- function(sce_object,
       }
 
       #catch for default design
-      if (is.null(design_fit)) {
-        design_fit <- ~ annotation + condition + condition:annotation - 1
+      if (is.null(design_fit_glm)) {
+        design_fit_glm <- ~ annotation + condition + condition:annotation - 1
       }
 
       #PB with specified columns
@@ -334,7 +334,7 @@ DO.MultiDGE <- function(sce_object,
       .logger("Fitting Gamma-Poisson model...")
       #fit Gamma-Poisson model
       fit <- glmGamPoi::glm_gp(
-        sce_object_pb, design = design_fit
+        sce_object_pb, design = design_fit_glm
       )
 
       comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
