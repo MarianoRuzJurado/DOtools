@@ -408,19 +408,15 @@ DO.MultiDGE <- function(sce_object,
           )
     } else {
         .logger("DGE pseudo bulk result is empty...")
-        df_pb <- data.frame(gene = NA, celltype = NA, condition = NA)
+      df_pb <- data.frame(
+        gene = NA,
+        celltype = NA,
+        condition = NA,
+        p_val = NA,
+        p_val_adj = NA,
+        avg_log2FC = NA
+      )
     }
-
-
-    #single cell
-    rename_map_sc <- rlang::set_names(
-        c("p_val", "p_val_adj", "avg_log2FC"),
-        paste0(c("p_val_SC_", "p_val_adj_SC_", "avg_log2FC_SC_"), method_sc)
-    )
-
-    df_sc <- DEG_stats_collector_sc %>%
-        rename(!!!rename_map_sc) # !!! to unquote the strings
-
 
     #pseudobulk
     rename_map_pb <- rlang::set_names(
@@ -431,13 +427,30 @@ DO.MultiDGE <- function(sce_object,
     df_pb <- df_pb %>%
       rename(!!!rename_map_pb) # !!! to unquote the strings
 
-    # Sorting
-    first_cols <- c("gene", "pct.1", "pct.2", "celltype", "condition")
+    # return the joined df or just the pb
+    if (method_sc != "none") {
+      #single cell
+      rename_map <- rlang::set_names(c("p_val", "p_val_adj", "avg_log2FC"), paste0(
+        c("p_val_SC_", "p_val_adj_SC_", "avg_log2FC_SC_"),
+        method_sc
+      ))
 
-    merged_df <- df_sc %>%
-        left_join(df_pb, by = c("gene", "celltype", "condition")) %>%
-        select(all_of(first_cols), everything()) %>%
-        select(all_of(first_cols), sort(setdiff(names(.), first_cols)))
+      df_sc <- DEG_stats_collector_sc %>%
+        rename(!!!rename_map) # !!! to unquote the strings
 
-    return(merged_df)
+      # Sorting
+      first_cols <- c("gene", "pct.1", "pct.2", "celltype", "condition")
+      if (method_pb != "none") {
+        merged_df <- df_sc %>%
+          left_join(df_pb, by = c("gene", "celltype", "condition")) %>%
+          select(all_of(first_cols), everything()) %>%
+          select(all_of(first_cols), sort(setdiff(names(.), first_cols)))
+      } else{
+        merged_df <- df_sc
+      }
+      return(merged_df)
+
+    } else{
+      return(df_pb)
+    }
 }
