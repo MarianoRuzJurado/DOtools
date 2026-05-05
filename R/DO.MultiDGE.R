@@ -375,14 +375,13 @@ DO.MultiDGE <- function(sce_object,
           de_res[["condition"]] <- grp
 
           DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
-          colnames(DEG_stats_collector_pb) <- c(
-            "gene", "p_val", "p_val_adj", colnames(DEG_stats_collector_pb)[4:6],
-            "avg_log2FC", colnames(DEG_stats_collector_pb)[8:length(
-              colnames(DEG_stats_collector_pb)
-              )]
-          )
         }
-
+        colnames(DEG_stats_collector_pb) <- c(
+          "gene", "p_val", "p_val_adj", colnames(DEG_stats_collector_pb)[4:6],
+          "avg_log2FC", colnames(DEG_stats_collector_pb)[8:length(
+            colnames(DEG_stats_collector_pb)
+          )]
+        )
       }
       .logger("Finished DGE pseudo bulk method analysis")
     }
@@ -394,32 +393,43 @@ DO.MultiDGE <- function(sce_object,
     if (!length(DEG_stats_collector_pb) == 0) {
         # combine the two df
         df_pb <- DEG_stats_collector_pb %>%
-            rename(
-                p_val_PB_DESeq2 = p_val,
-                p_val_adj_PB_DESeq2 = p_val_adj,
-                avg_log2FC_PB_DESeq2 = avg_log2FC
-            ) %>%
-            select(
-                gene,
-                celltype,
-                condition,
-                p_val_PB_DESeq2,
-                p_val_adj_PB_DESeq2,
-                avg_log2FC_PB_DESeq2
-            )
+          rename(
+            p_val = p_val,
+            p_val_adj = p_val_adj,
+            avg_log2FC = avg_log2FC
+          ) %>%
+          select(
+            gene,
+            celltype,
+            condition,
+            p_val,
+            p_val_adj,
+            avg_log2FC
+          )
     } else {
         .logger("DGE pseudo bulk result is empty...")
         df_pb <- data.frame(gene = NA, celltype = NA, condition = NA)
     }
 
 
-    rename_map <- rlang::set_names(
+    #single cell
+    rename_map_sc <- rlang::set_names(
         c("p_val", "p_val_adj", "avg_log2FC"),
         paste0(c("p_val_SC_", "p_val_adj_SC_", "avg_log2FC_SC_"), method_sc)
     )
 
     df_sc <- DEG_stats_collector_sc %>%
-        rename(!!!rename_map) # !!! to unquote the strings
+        rename(!!!rename_map_sc) # !!! to unquote the strings
+
+
+    #pseudobulk
+    rename_map_pb <- rlang::set_names(
+      c("p_val", "p_val_adj", "avg_log2FC"),
+      paste0(c("p_val_PB_", "p_val_adj_PB_", "avg_log2FC_PB_"), method_pb)
+    )
+
+    df_pb <- df_pb %>%
+      rename(!!!rename_map_pb) # !!! to unquote the strings
 
     # Sorting
     first_cols <- c("gene", "pct.1", "pct.2", "celltype", "condition")
