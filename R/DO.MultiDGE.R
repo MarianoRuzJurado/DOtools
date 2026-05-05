@@ -317,7 +317,7 @@ DO.MultiDGE <- function(sce_object,
       )
 
       #checking if some cell types are not present in all the conditions
-      tab <- table(sce_object_pb$annotation, sce_object_pb$condition)
+      tab <- table(sce_object_pb[[annotation_col]], sce_object_pb[[group_by]])
       bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
 
       if (length(bad_annotations) > 0) {
@@ -329,7 +329,7 @@ DO.MultiDGE <- function(sce_object,
 
       #keep only valid ones
       keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
-      sce_object_pb <- sce_object_pb[, sce_object_pb$annotation %in% keep_annotations]
+      sce_object_pb <- sce_object_pb[, sce_object_pb[[annotation_col]] %in% keep_annotations]
 
       .logger("Fitting Gamma-Poisson model...")
       #fit Gamma-Poisson model
