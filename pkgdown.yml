@@ -1,9 +1,9 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   DOtools: DOtools.html
-last_built: 2026-04-16T09:49Z
+last_built: 2026-05-06T11:48Z
 urls:
   reference: https://marianoruzjurado.github.io/DOtools/reference
   article: https://marianoruzjurado.github.io/DOtools/articles

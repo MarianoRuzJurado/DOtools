@@ -14,6 +14,7 @@ DOtools is currently available through Bioconductor. To install the
 package, start R and run:
 
 ``` r
+
 install.packages("BiocManager")
 BiocManager::install("DOtools")
 ```
@@ -45,5 +46,8 @@ email: <ruzjurado@med.uni-frankfurt.de>
 
 If you used DOtools for your work please cite our paper:
 
-“DoTools: a cross platform framework to streamline common single cell
-workflows” <https://doi.org/10.1093/bioadv/vbag098>
+Ruz Jurado, Mariano, David Rodriguez Morales, Lukas Zanders, Elijah
+Genetzakis, Stefanie Dimmeler, and David John. 2026. “DoTools: A Cross
+Platform Framework to Streamline Common Single Cell Workflows.”
+Bioinformatics Advances: vbag098.
+<https://doi.org/10.1093/bioadv/vbag098>
