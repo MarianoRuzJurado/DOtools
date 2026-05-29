@@ -79,8 +79,7 @@ DO.MultiDGE <- function(sce_object,
 
     if (!ident_ctrl %in% sce_object@meta.data[[group_by]]) {
         stop(sprintf(
-            "%s was not found in meta data under the specified ",
-            "group_by column: %s",
+            "%s was not found in meta data under the specified group_by column: %s",
             ident_ctrl,
             group_by
         ))
