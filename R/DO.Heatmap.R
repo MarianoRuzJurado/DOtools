@@ -38,8 +38,8 @@
 #' @param axs matplotlib axis
 #' @param figsize figure size
 #' @param linewidth line width for the border of cells
-#' @param ticks_fontdict font properties for the x and y ticks
-#' (e.g.,  'weight' and 'size')
+#' @param ticks_fontdict must be a list with names, font properties for the
+#' x and y ticks (e.g.,  'weight' and 'size')
 #' @param xticks_rotation rotation of the x-ticks
 #' @param yticks_rotation rotations of the y-ticks
 #' @param vmin minimum value

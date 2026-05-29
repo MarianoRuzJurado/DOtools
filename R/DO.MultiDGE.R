@@ -16,7 +16,7 @@
 #' @param group_by Column in meta data containing groups used for testing,
 #' default "condition"
 #' @param annotation_col Column in meta data containing information of cell type
-#'  annotation
+#'  annotation, set to NULL for all cell type analysis
 #' @param sample_col Column in meta data containing information of sample
 #' annotation, default "orig.ident"
 #' @param ident_ctrl Name of the condition in group_by to test against as ctrl,
@@ -100,8 +100,13 @@ DO.MultiDGE <- function(sce_object,
         )
     )
     # internally AggregateExpression uses interaction() this replaces _ with -
-    original_annots <- unique(sce_object@meta.data[[annotation_col]])
-    pb_annots <- unique(sce_object_PB@meta.data[[annotation_col]])
+    if (!is.null(annotation_col)) {
+      original_annots <- unique(sce_object@meta.data[[annotation_col]])
+      pb_annots <- unique(sce_object_PB@meta.data[[annotation_col]])
+    } else {
+      original_annots <- unique(sce_object@meta.data[[group_by]])
+      pb_annots <- unique(sce_object_PB@meta.data[[group_by]])
+    }
 
     # are all pseudo-bulk annotations in the original set
     if (!all(pb_annots %in% original_annots)) {
@@ -134,16 +139,25 @@ DO.MultiDGE <- function(sce_object,
         ))
     }
 
-    PB_ident <- paste(annotation_col, group_by, sep = "_")
-    sce_object_PB@meta.data[[PB_ident]] <- paste(
-        sce_object_PB@meta.data[[annotation_col]],
+
+    if (!is.null(annotation_col)) {
+      PB_ident <- paste(annotation_col, group_by, sep = "_")
+      sce_object_PB@meta.data[[PB_ident]] <- paste(
+          sce_object_PB@meta.data[[annotation_col]],
+          sce_object_PB@meta.data[[group_by]],
+          sep = "_"
+      )
+    } else {
+      PB_ident <- paste(group_by, sep = "_")
+      sce_object_PB@meta.data[[PB_ident]] <- paste(
         sce_object_PB@meta.data[[group_by]],
         sep = "_"
-    )
+      )
+    }
 
     Idents(sce_object_PB) <- PB_ident
-
-    if (method_sc != "none") {
+    #sc approach, covering the case of annotation_col NULL
+    if (method_sc != "none" & !is.null(annotation_col)) {
       .logger("Starting DGE single cell method analysis")
       for (ident_con in unique(sce_object@meta.data[[group_by]])) {
         # .logger(ident_con)
@@ -214,13 +228,76 @@ DO.MultiDGE <- function(sce_object,
           }
         }
       }
-
       .logger("Finished DGE single cell method analysis")
+    } else if (method_sc != "none" & is.null(annotation_col)) {
+        .logger("Starting DGE single cell method analysis")
+        for (ident_con in unique(sce_object@meta.data[[group_by]])) {
+        # .logger(ident_con)
+        if (ident_con != ident_ctrl) { # skip the ctrl ident
+            .logger(
+              paste0(
+                "Comparing ",
+                ident_con,
+                " with ",
+                ident_ctrl
+              )
+            )
+
+            # Check if there are groups with less than 3 cells
+            table_cells_sc <- table(sce_object@meta.data[[group_by]])
+
+            count_1_sc <- table_cells_sc[ident_con]
+            count_2_sc <- table_cells_sc[ident_ctrl]
+
+            if (is.na(count_1_sc)) {
+              count_1_sc <- 0
+            }
+
+            if (is.na(count_2_sc)) {
+              count_2_sc <- 0
+            }
+
+            if (count_1_sc >= 3 && count_2_sc >= 3) {
+              DEG_stats_sc <- .suppressDeprecationWarnings(
+                FindMarkers(
+                  object = sce_object,
+                  ident.1 = ident_con,
+                  ident.2 = ident_ctrl,
+                  min.pct = min_pct,
+                  logfc.threshold = logfc_threshold,
+                  assay = assay,
+                  only.pos = only_pos,
+                  test.use = method_sc,
+                  min.cells.group = min_cells_group,
+                  group.by = group_by,
+                  ...
+                )
+              )
+              ###TODO Add the FDR correction
+              DEG_stats_sc <- rownames_to_column(DEG_stats_sc,
+                var = "gene"
+              )
+              DEG_stats_sc[["condition"]] <- ident_con
+              DEG_stats_collector_sc <- rbind(
+                DEG_stats_collector_sc,
+                DEG_stats_sc
+              )
+            } else {
+              .logger(paste0(
+                "Skipping ",
+                ident_con,
+                " since one comparison has fewer than 3 cells!"
+              ))
+            }
+          }
+        }
+        .logger("Finished DGE single cell method analysis")
     } else{
       .logger("Skipping DGE single cell method analysis!")
     }
 
-    if (method_pb == "DESeq2") {
+    #pb approach with DESeq2, covering the case of annotation_col NULL
+    if (method_pb == "DESeq2" & !is.null(annotation_col)) {
       .logger("Starting DGE pseudo bulk method analysis")
       for (celltype in unique(sce_object_PB@meta.data[[annotation_col]])) {
         # .logger(celltype)
@@ -288,8 +365,72 @@ DO.MultiDGE <- function(sce_object,
         }
       }
       .logger("Finished DGE pseudo bulk method analysis")
+    } else if (method_pb == "DESeq2" & is.null(annotation_col)) {
+      .logger("Starting DGE pseudo bulk method analysis")
+        for (ident_con in unique(sce_object_PB@meta.data[[group_by]])) {
+          if (ident_con != ident_ctrl) {
+            .logger(
+              paste0(
+                "Comparing ", ident_con, " with ",
+                ident_ctrl
+              )
+            )
+            ident_1 <- paste0(ident_con, collapse = "_")
+            ident_2 <- paste0(ident_ctrl, collapse = "_")
+
+            # Check if any of the groups have fewer than 3 cells
+            table_cells_pb <- table(Idents(sce_object_PB))
+
+            count_1_pb <- table_cells_pb[ident_1]
+            count_2_pb <- table_cells_pb[ident_2]
+
+            if (is.na(count_1_pb)) {
+              count_1_pb <- 0
+            }
+
+            if (is.na(count_2_pb)) {
+              count_2_pb <- 0
+            }
+
+
+            if (count_1_pb >= 3 && count_2_pb >= 3) {
+              DEG_stats_pb <- .suppressDeprecationWarnings(
+                FindMarkers(
+                  object = sce_object_PB,
+                  ident.1 = ident_1,
+                  ident.2 = ident_2,
+                  min.pct = min_pct,
+                  logfc.threshold = logfc_threshold,
+                  assay = assay,
+                  only.pos = only_pos,
+                  test.use = "DESeq2",
+                  min.cells.group = min_cells_group,
+                  group.by = PB_ident
+                )
+              )
+
+              DEG_stats_pb <- rownames_to_column(DEG_stats_pb,
+                var = "gene"
+              )
+              DEG_stats_pb[["condition"]] <- ident_con
+              # DEG_stats_pb[["testmethod"]] <- "DESeq2"
+              DEG_stats_collector_pb <- rbind(
+                DEG_stats_collector_pb,
+                DEG_stats_pb
+              )
+            } else {
+              .logger(paste0(
+                "Skipping ", ident_1, " since one comparison has ",
+                "fewer than 3 cells!"
+              ))
+            }
+          }
+      }
+      .logger("Finished DGE pseudo bulk method analysis")
+    } else {
     }
 
+    #pb approach with glmGamPoi, covering the case of annotation_col NULL
     if (method_pb == "glmGamPoi") {
       .logger("Starting DGE pseudo bulk method analysis")
       # support for Seurat objects
@@ -311,8 +452,10 @@ DO.MultiDGE <- function(sce_object,
       }
 
       #catch for default design
-      if (is.null(design_fit_glm)) {
+      if (is.null(design_fit_glm) & !is.null(annotation_col)) {
         design_fit_glm <- ~ annotation + condition + condition:annotation - 1
+      } else if (is.null(design_fit_glm) & is.null(annotation_col)) {
+        design_fit_glm <- ~ condition
       }
 
       #PB with specified columns
@@ -321,20 +464,38 @@ DO.MultiDGE <- function(sce_object,
         group_by = glmGamPoi::vars(!!!rlang::syms(group_meta))
       )
 
-      #checking if some cell types are not present in all the conditions
-      tab <- table(sce_object_pb[[annotation_col]], sce_object_pb[[group_by]])
-      bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
 
-      if (length(bad_annotations) > 0) {
-        .logger(paste0("Removing ", length(bad_annotations),
-         " annotation level(s) not present in all conditions: ",
+      if (!is.null(annotation_col)) {
+        #checking if some cell types are not present in all the conditions
+        tab <- table(sce_object_pb[[annotation_col]], sce_object_pb[[group_by]])
+        bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
+
+        if (length(bad_annotations) > 0) {
+          .logger(paste0("Removing ", length(bad_annotations),
+            " annotation level(s) not present in all conditions: ",
             paste(bad_annotations, collapse = ", "))
-        )
-      }
+          )
+        }
 
-      #keep only valid ones
-      keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
-      sce_object_pb <- sce_object_pb[, sce_object_pb[[annotation_col]] %in% keep_annotations]
+        #keep only valid ones
+        keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
+        sce_object_pb <- sce_object_pb[, sce_object_pb[[annotation_col]] %in% keep_annotations]
+
+      } else{
+        tab <- table(sce_object_pb[[group_by]])
+        bad_annotations <- names(which(tab == 0))
+
+        if (length(bad_annotations) > 0) {
+          .logger(paste0("Removing ", length(bad_annotations),
+            " annotation level(s) not present in all conditions: ",
+            paste(bad_annotations, collapse = ", "))
+          )
+        }
+
+        #keep only valid ones
+        keep_annotations <- names(which(tab > 0))
+        sce_object_pb <- sce_object_pb[, sce_object_pb[[group_by]] %in% keep_annotations]
+      }
 
       .logger("Fitting Gamma-Poisson model...")
       #fit Gamma-Poisson model
@@ -390,7 +551,9 @@ DO.MultiDGE <- function(sce_object,
       .logger("Skipping DGE pseudo-bulk method analysis!")
     }
 
-    if (!length(DEG_stats_collector_pb) == 0) {
+
+    #for annotian provided
+    if (!length(DEG_stats_collector_pb) == 0 & !is.null(annotation_col)) {
         # combine the two df
         df_pb <- DEG_stats_collector_pb %>%
           rename(
@@ -411,6 +574,33 @@ DO.MultiDGE <- function(sce_object,
       df_pb <- data.frame(
         gene = NA,
         celltype = NA,
+        condition = NA,
+        p_val = NA,
+        p_val_adj = NA,
+        avg_log2FC = NA
+      )
+    }
+
+    #for no annotation column
+    if (!length(DEG_stats_collector_pb) == 0 & is.null(annotation_col)) {
+      # combine the two df
+      df_pb <- DEG_stats_collector_pb %>%
+        rename(
+          p_val = p_val,
+          p_val_adj = p_val_adj,
+          avg_log2FC = avg_log2FC
+        ) %>%
+        select(
+          gene,
+          condition,
+          p_val,
+          p_val_adj,
+          avg_log2FC
+        )
+    } else {
+      .logger("DGE pseudo bulk result is empty...")
+      df_pb <- data.frame(
+        gene = NA,
         condition = NA,
         p_val = NA,
         p_val_adj = NA,
