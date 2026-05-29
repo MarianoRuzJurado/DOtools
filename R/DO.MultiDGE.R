@@ -79,8 +79,7 @@ DO.MultiDGE <- function(sce_object,
 
     if (!ident_ctrl %in% sce_object@meta.data[[group_by]]) {
         stop(sprintf(
-            "%s was not found in meta data under the specified ",
-            "group_by column: %s",
+            "%s was not found in meta data under the specified group_by column: %s",
             ident_ctrl,
             group_by
         ))
@@ -569,7 +568,7 @@ DO.MultiDGE <- function(sce_object,
             p_val_adj,
             avg_log2FC
           )
-    } else {
+    } else if (length(DEG_stats_collector_pb) == 0 & !is.null(annotation_col)){
         .logger("DGE pseudo bulk result is empty...")
       df_pb <- data.frame(
         gene = NA,
@@ -597,7 +596,7 @@ DO.MultiDGE <- function(sce_object,
           p_val_adj,
           avg_log2FC
         )
-    } else {
+    } else if (length(DEG_stats_collector_pb) == 0 & is.null(annotation_col)) {
       .logger("DGE pseudo bulk result is empty...")
       df_pb <- data.frame(
         gene = NA,
