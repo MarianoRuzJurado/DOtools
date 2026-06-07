@@ -627,17 +627,33 @@ DO.MultiDGE <- function(sce_object,
       df_sc <- DEG_stats_collector_sc %>%
         rename(!!!rename_map) # !!! to unquote the strings
 
-      # Sorting
-      first_cols <- c("gene", "pct.1", "pct.2", "celltype", "condition")
-      if (method_pb != "none") {
-        merged_df <- df_sc %>%
-          left_join(df_pb, by = c("gene", "celltype", "condition")) %>%
-          select(all_of(first_cols), everything()) %>%
-          select(all_of(first_cols), sort(setdiff(names(.), first_cols)))
-      } else{
-        merged_df <- df_sc
+      if (!is.null(annotation_col)) {
+        # Sorting
+        first_cols <- c("gene", "pct.1", "pct.2", "celltype", "condition")
+        if (method_pb != "none") {
+          merged_df <- df_sc %>%
+            left_join(df_pb, by = c("gene", "celltype", "condition")) %>%
+            select(all_of(first_cols), everything()) %>%
+            select(all_of(first_cols), sort(setdiff(names(.), first_cols)))
+        } else{
+          merged_df <- df_sc
+        }
+        return(merged_df)
       }
-      return(merged_df)
+
+      if (is.null(annotation_col)) {
+        # Sorting
+        first_cols <- c("gene", "pct.1", "pct.2", "condition")
+        if (method_pb != "none") {
+          merged_df <- df_sc %>%
+            left_join(df_pb, by = c("gene", "condition")) %>%
+            select(all_of(first_cols), everything()) %>%
+            select(all_of(first_cols), sort(setdiff(names(.), first_cols)))
+        } else{
+          merged_df <- df_sc
+        }
+        return(merged_df)
+      }
 
     } else{
       return(df_pb)
