@@ -10,9 +10,9 @@
 #' @param sce_object The seurat or SCE object
 #' @param assay Specified assay in Seurat or SCE object, default "RNA"
 #' @param method_sc method to use for single cell DEG analysis, see FindMarkers
-#' from Seurat for options, default "wilcox"
+#' from Seurat for options, default "wilcox", set "none" for skip
 #' @param method_pb method to use for pseudobulk DEG analysis, currently
-#' supports DESeq2 implemented in Seurat and glmGamPoi
+#' supports DESeq2 implemented in Seurat and glmGamPoi, set "none" for skip
 #' @param group_by Column in meta data containing groups used for testing,
 #' default "condition"
 #' @param annotation_col Column in meta data containing information of cell type
@@ -426,53 +426,49 @@ DO.MultiDGE <- function(sce_object,
           }
       }
       .logger("Finished DGE pseudo bulk method analysis")
-    } else {
     }
 
-    #pb approach with glmGamPoi, covering the case of annotation_col NULL
     if (method_pb == "glmGamPoi") {
       .logger("Starting DGE pseudo bulk method analysis")
+
       # support for Seurat objects
       if (methods::is(sce_object, "Seurat")) {
         DefaultAssay(sce_object) <- assay
-        sce_object <- .suppressDeprecationWarnings(
-          Seurat::as.SingleCellExperiment(sce_object,
-            assay = assay
-          )
-        )
+        sce_object <- .suppressDeprecationWarnings(Seurat::as.SingleCellExperiment(sce_object, assay = assay))
       }
 
       # vector for grouping the single cell data for
       group_meta <- c(group_by, sample_col, annotation_col)
 
       #Check if all supplied columns exist in metadata
-      if(length(setdiff(group_meta, names(SummarizedExperiment::colData(sce_object)))) > 0){
+      if (length(setdiff(group_meta, names(
+        SummarizedExperiment::colData(sce_object)
+      ))) > 0) {
         stop("Not all group_by arguments are found in metadata!")
       }
 
       #catch for default design
-      if (is.null(design_fit_glm) & !is.null(annotation_col)) {
-        design_fit_glm <- ~ annotation + condition + condition:annotation - 1
-      } else if (is.null(design_fit_glm) & is.null(annotation_col)) {
+      if (is.null(design_fit_glm)) {
         design_fit_glm <- ~ condition
       }
 
       #PB with specified columns
-      sce_object_pb <- glmGamPoi::pseudobulk(
-        sce_object,
-        group_by = glmGamPoi::vars(!!!rlang::syms(group_meta))
-      )
+      sce_object_pb <- glmGamPoi::pseudobulk(sce_object, group_by = glmGamPoi::vars(!!!rlang::syms(group_meta)))
 
-
+      #clean up of groups which are not present for a pseudobulk DEG analysis
       if (!is.null(annotation_col)) {
         #checking if some cell types are not present in all the conditions
         tab <- table(sce_object_pb[[annotation_col]], sce_object_pb[[group_by]])
         bad_annotations <- rownames(tab)[rowSums(tab > 0) < ncol(tab)]
 
         if (length(bad_annotations) > 0) {
-          .logger(paste0("Removing ", length(bad_annotations),
-            " annotation level(s) not present in all conditions: ",
-            paste(bad_annotations, collapse = ", "))
+          .logger(
+            paste0(
+              "Removing ",
+              length(bad_annotations),
+              " annotation level(s) not present in all conditions: ",
+              paste(bad_annotations, collapse = ", ")
+            )
           )
         }
 
@@ -485,9 +481,13 @@ DO.MultiDGE <- function(sce_object,
         bad_annotations <- names(which(tab == 0))
 
         if (length(bad_annotations) > 0) {
-          .logger(paste0("Removing ", length(bad_annotations),
-            " annotation level(s) not present in all conditions: ",
-            paste(bad_annotations, collapse = ", "))
+          .logger(
+            paste0(
+              "Removing ",
+              length(bad_annotations),
+              " annotation level(s) not present in all conditions: ",
+              paste(bad_annotations, collapse = ", ")
+            )
           )
         }
 
@@ -496,60 +496,111 @@ DO.MultiDGE <- function(sce_object,
         sce_object_pb <- sce_object_pb[, sce_object_pb[[group_by]] %in% keep_annotations]
       }
 
-      .logger("Fitting Gamma-Poisson model...")
-      #fit Gamma-Poisson model
-      fit <- glmGamPoi::glm_gp(
-        sce_object_pb, design = design_fit_glm
-      )
 
-      comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
+      #cell type specific glmGamPoi analysis
+      if (!is.null(annotation_col)) {
+        #subset by cell type
+        for (celltype in unique(sce_object_pb[[annotation_col]])) {
+          sce_object_pb_sub <-
+            sce_object_pb[, sce_object_pb[[annotation_col]] == celltype]
+          #for each condition
+          for (ident_con in unique(sce_object_pb_sub[[group_by]])) {
+            if (ident_con != ident_ctrl) {
+              .logger(paste0(
+                "Comparing ",
+                ident_con,
+                " with ",
+                ident_ctrl,
+                " in: ",
+                celltype
+              ))
 
-      # loop over comparisons and cell types
-      DEG_stats_collector_pb <- data.frame()
-      for (grp in comp) {
-        if (!is.null(annotation_col)){
-          for (celltype in keep_annotations) {
+              .logger("Fitting Gamma-Poisson model...")
+              #fit Gamma-Poisson model
+              fit <- glmGamPoi::glm_gp(sce_object_pb_sub, design = design_fit_glm)
+              comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
+              # loop over comparisons and cell types
+              DEG_stats_collector_pb <- data.frame()
+              for (grp in comp) {
+                for (celltype in keep_annotations) {
+                  #build the contrast string
+                  contrast <- paste0(
+                    "cond(",
+                    group_by,
+                    "='",
+                    grp,
+                    "') - ",
+                    "cond(",
+                    group_by,
+                    "='",
+                    ident_ctrl,
+                    "')"
+                  )
 
-            #build the contrast string
-            contrast <- paste0(
-              "cond(", annotation_col, "='", celltype, "', ",
-              group_by, "='", grp, "') - ",
-              "cond(", annotation_col, "='", celltype, "', ",
-              group_by, "='", ident_ctrl, "')"
-            )
+                  de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+                  de_res[["celltype"]] <- celltype
+                  de_res[["condition"]] <- grp
 
-            de_res <- glmGamPoi::test_de(fit, contrast = contrast)
-            de_res[["celltype"]] <- celltype
-            de_res[["condition"]] <- grp
-
-            DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+                  DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+                }
+                colnames(DEG_stats_collector_pb) <- c(
+                  "gene",
+                  "p_val",
+                  "p_val_adj",
+                  colnames(DEG_stats_collector_pb)[4:6],
+                  "avg_log2FC",
+                  colnames(DEG_stats_collector_pb)[8:length(colnames(DEG_stats_collector_pb))]
+                )
+              }
+              .logger("Finished DGE pseudo bulk method analysis")
+            }
           }
-        } else{
-          #build the contrast string
-          contrast <- paste0(
-            "cond(", group_by, "='", grp, "') - ",
-            "cond(", group_by, "='", ident_ctrl, "')"
-          )
-
-          de_res <- glmGamPoi::test_de(fit, contrast = contrast)
-          de_res[["condition"]] <- grp
-
-          DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
         }
-        colnames(DEG_stats_collector_pb) <- c(
-          "gene", "p_val", "p_val_adj", colnames(DEG_stats_collector_pb)[4:6],
-          "avg_log2FC", colnames(DEG_stats_collector_pb)[8:length(
-            colnames(DEG_stats_collector_pb)
-          )]
-        )
-      }
-      .logger("Finished DGE pseudo bulk method analysis")
-    }
+      } else{
+        for (ident_con in unique(sce_object_pb_sub[[group_by]])) {
+          if (ident_con != ident_ctrl) {
+            .logger(paste0("Comparing ", ident_con, " with ", ident_ctrl))
 
+            .logger("Fitting Gamma-Poisson model...")
+            #fit Gamma-Poisson model
+            fit <- glmGamPoi::glm_gp(sce_object_pb_sub, design = design_fit_glm)
+            comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
+            # loop over comparisons and cell types
+            DEG_stats_collector_pb <- data.frame()
+            for (grp in comp) {
+              #build the contrast string
+              contrast <- paste0("cond(",
+                group_by,
+                "='",
+                grp,
+                "') - ",
+                "cond(",
+                group_by,
+                "='",
+                ident_ctrl,
+                "')")
+
+              de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+              de_res[["condition"]] <- grp
+
+              DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+            }
+            colnames(DEG_stats_collector_pb) <- c(
+              "gene",
+              "p_val",
+              "p_val_adj",
+              colnames(DEG_stats_collector_pb)[4:6],
+              "avg_log2FC",
+              colnames(DEG_stats_collector_pb)[8:length(colnames(DEG_stats_collector_pb))]
+            )
+          }
+          .logger("Finished DGE pseudo bulk method analysis")
+        }
+      }
+    }
     if (method_pb == "none") {
       .logger("Skipping DGE pseudo-bulk method analysis!")
     }
-
 
     #for annotian provided
     if (!length(DEG_stats_collector_pb) == 0 & !is.null(annotation_col)) {
