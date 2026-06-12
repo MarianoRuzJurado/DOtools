@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.Integration SCE object integration directly — DO.Integration"><meta name="description" content="Integrates single-cell RNA-seq data directly from
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DO.Integration SCE object integration directly — DO.Integration"><meta name="description" content="Integrates single-cell RNA-seq data directly from
 SingleCellExperiment or Seurat objects. Supports detection of variable genes
 , scaling, PCA, neighbor graph construction, clustering, and UMAP embedding,
 with multiple integration methods."><meta property="og:description" content="Integrates single-cell RNA-seq data directly from
@@ -19,7 +19,7 @@ with multiple integration methods."><script defer data-domain="pkgdown.r-lib.org
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -228,15 +228,15 @@ is 10.</p></dd>
 <span class="r-in"><span>    pca <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    integration_method <span class="op">=</span> <span class="st">"CCAIntegration"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:00 - Splitting object for integration with CCAIntegration by orig.ident</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:00 - Calculating highly variable genes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:00 - Scaling object</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:01 - Running pca, saved in key: PCA</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:29 - Splitting object for integration with CCAIntegration by orig.ident</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:29 - Calculating highly variable genes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:29 - Scaling object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:29 - Running pca, saved in key: PCA</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Splitting ‘counts’, ‘data’ layers. Not splitting ‘scale.data’. If you would like to split other layers, set in `layers` argument.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:02 - Running integration, saved in key: INTEGRATED.CCA</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:06 - Running Nearest-neighbor graph construction</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:07 - Running cluster detection</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-05-06 12:18:08 - Creating UMAP</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:31 - Running integration, saved in key: INTEGRATED.CCA</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:35 - Running Nearest-neighbor graph construction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:36 - Running cluster detection</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-06-12 10:51:37 - Creating UMAP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: SingleCellExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 800 2807 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metadata(0):</span>

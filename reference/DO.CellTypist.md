@@ -83,8 +83,8 @@ sce_data <- DO.CellTypist(
     minCellsToRun = 5,
     SeuV5 = TRUE
 )
-#> 2026-05-06 12:02:43 - Running celltypist using model: Healthy_Adult_Heart.pkl
-#> 2026-05-06 12:02:43 - Saving celltypist results to temporary folder: /tmp/Rtmph2u3PN/file571d361809af
+#> 2026-06-12 10:35:41 - Running celltypist using model: Healthy_Adult_Heart.pkl
+#> 2026-06-12 10:35:41 - Saving celltypist results to temporary folder: /tmp/RtmpkHN1Vs/file57ed6e23eb26
 #> Using Python: /home/runner/.pyenv/versions/3.14.0/bin/python3.14
 #> Creating virtual environment '/home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3' ... 
 #> + /home/runner/.pyenv/versions/3.14.0/bin/python3.14 -m venv /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3
@@ -94,7 +94,7 @@ sce_data <- DO.CellTypist(
 #> Installing packages: 'anndata==0.12.3', 'h5py==3.15.1', 'natsort==8.4.0', 'numpy==2.3.4', 'pandas==2.3.3', 'scipy==1.16.2'
 #> + /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/bin/python -m pip install --upgrade --no-user 'anndata==0.12.3' 'h5py==3.15.1' 'natsort==8.4.0' 'numpy==2.3.4' 'pandas==2.3.3' 'scipy==1.16.2'
 #> Virtual environment '/home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3' successfully created.
-#> 2026-05-06 12:17:41 - Downloading CellTypist model: Healthy_Adult_Heart.pkl
-#> 2026-05-06 12:17:43 - Running Celltypist
-#> 2026-05-06 12:17:45 - Creating probality plot
+#> 2026-06-12 10:51:09 - Downloading CellTypist model: Healthy_Adult_Heart.pkl
+#> 2026-06-12 10:51:11 - Running Celltypist
+#> 2026-06-12 10:51:14 - Creating probality plot
 ```

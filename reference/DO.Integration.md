@@ -169,15 +169,15 @@ DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-05-06 12:18:00 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-05-06 12:18:00 - Calculating highly variable genes
-#> 2026-05-06 12:18:00 - Scaling object
-#> 2026-05-06 12:18:01 - Running pca, saved in key: PCA
+#> 2026-06-12 10:51:29 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-06-12 10:51:29 - Calculating highly variable genes
+#> 2026-06-12 10:51:29 - Scaling object
+#> 2026-06-12 10:51:29 - Running pca, saved in key: PCA
 #> Splitting ‘counts’, ‘data’ layers. Not splitting ‘scale.data’. If you would like to split other layers, set in `layers` argument.
-#> 2026-05-06 12:18:02 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-05-06 12:18:06 - Running Nearest-neighbor graph construction
-#> 2026-05-06 12:18:07 - Running cluster detection
-#> 2026-05-06 12:18:08 - Creating UMAP
+#> 2026-06-12 10:51:31 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-06-12 10:51:35 - Running Nearest-neighbor graph construction
+#> 2026-06-12 10:51:36 - Running cluster detection
+#> 2026-06-12 10:51:37 - Creating UMAP
 #> class: SingleCellExperiment 
 #> dim: 800 2807 
 #> metadata(0):
