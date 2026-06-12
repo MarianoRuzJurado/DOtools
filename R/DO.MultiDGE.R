@@ -557,13 +557,13 @@ DO.MultiDGE <- function(sce_object,
           }
         }
       } else{
-        for (ident_con in unique(sce_object_pb_sub[[group_by]])) {
+        for (ident_con in unique(sce_object_pb[[group_by]])) {
           if (ident_con != ident_ctrl) {
             .logger(paste0("Comparing ", ident_con, " with ", ident_ctrl))
 
             .logger("Fitting Gamma-Poisson model...")
             #fit Gamma-Poisson model
-            fit <- glmGamPoi::glm_gp(sce_object_pb_sub, design = design_fit_glm)
+            fit <- glmGamPoi::glm_gp(sce_object_pb, design = design_fit_glm)
             comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
             # loop over comparisons and cell types
             DEG_stats_collector_pb <- data.frame()
