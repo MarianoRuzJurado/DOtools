@@ -108,8 +108,8 @@ and y-axis}
 
 \item{linewidth}{line width for the border of cells}
 
-\item{ticks_fontdict}{font properties for the x and y ticks
-(e.g.,  'weight' and 'size')}
+\item{ticks_fontdict}{must be a list with names, font properties for the
+x and y ticks (e.g.,  'weight' and 'size')}
 
 \item{xticks_rotation}{rotation of the x-ticks}
 

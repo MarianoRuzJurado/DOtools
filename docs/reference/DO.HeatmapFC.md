@@ -39,7 +39,7 @@ DO.HeatmapFC(
   showP = TRUE,
   add_stats = TRUE,
   test = c("wilcox"),
-  correction_method = c("bonferroni"),
+  correction_method = c("fdr"),
   df_pvals = NULL,
   stats_x_size = NULL,
   square_x_size = NULL,
@@ -180,7 +180,7 @@ DO.HeatmapFC(
 
 - correction_method:
 
-  Multiple-testing correction method (currently "bonferroni").
+  Multiple-testing correction method (currently "fdr").
 
 - df_pvals:
 
@@ -258,7 +258,7 @@ group_legend_ncols = 1,
 # IO
 path = NULL,
 filename = "Heatmap.svg",
-show = FALSE,
+showP = FALSE,
 
 #   # Statistics
 add_stats = TRUE,
@@ -274,5 +274,5 @@ log2fc_cutoff = 0.0,
 linewidth = 0.1,
 color_axis_ratio = 0.15
 )
-#> 2026-01-21 15:41:01 - reference is set to NULL, using: healthy
+#> 2026-06-12 11:27:44 - reference is set to NULL, using: healthy
 ```

@@ -350,6 +350,7 @@ p1 <- DO.Dotplot(
     segWidth = 0.3,
     lwd = 3
 )
+p1
 
 # manual set of markers
 annotation_Markers <- data.frame(
@@ -384,10 +385,21 @@ p2 <- DO.Dotplot(
     segWidth = 0.3,
     lwd = 3
 )
+p2
 
+```
+
+```{r Manual annotation2, fig.width=7, fig.height=7}
 # Visualise marker expression in UMAP
 DO.UMAP(SCE_obj,
     FeaturePlot = TRUE,
+    features = "NKG7",
+    group.by = "leiden0.3",
+    legend.position = "right"
+)
+
+DO.UMAP(SCE_obj,
+    DensityPlot = TRUE,
     features = "NKG7",
     group.by = "leiden0.3",
     legend.position = "right"
@@ -488,8 +500,8 @@ across conditions, we can perform gene ontology analysis. We'll start by
 identifying differentially expressed genes, focusing here on T cells. For 
 differential gene expression analysis, we introduced a new function, which 
 combines DGE analysis using a single cell approach, e.g. the popular Wilcoxon 
-test and a pseudobulk testing using DESeq2. We can then observe the results in 
-a combined dataframe.
+or MAST test and a pseudobulk testing using DESeq2 or glmGamPoi.
+We can then observe the results in a combined dataframe.
 
 
 ```{r GO analysis, warning=FALSE}
@@ -506,7 +518,8 @@ CD4T_cells <- DO.Subset(SCE_obj,
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
-    method_sc = "wilcox",
+    method_sc = "wilcox", #MAST or any test supported by FindMarker function
+    method_pb = "DESeq2", # or glmGamPoi
     ident_ctrl = "healthy"
 )
 
@@ -614,7 +627,8 @@ DO.Heatmap(SCE_obj,
     xticks_rotation = 45,
     path = path_file,
     stats_x_size = 20,
-    showP = FALSE
+    showP = FALSE,
+    figsize = c(8,9)
 )
 
 Heatmap_plot <- list.files(
@@ -648,8 +662,10 @@ DO.HeatmapFC(SCE_obj,
     condition_key = "condition",
     xticks_rotation = 45,
     path = path_file,
-    stats_x_size = 20,
-    showP = FALSE
+    stats_x_size = 30,
+    showP = FALSE,
+    ticks_fontproperties = list(size = 14),
+    figsize = c(8,7)
 )
 
 Heatmap_plot2 <- list.files(

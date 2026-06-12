@@ -17,12 +17,14 @@ CellRanger.
 ### Libraries
 
 ``` r
+
 library(DOtools)
 ```
 
 ### Ambient removal
 
 ``` r
+
 base <- DOtools:::.example_10x()
 dir.create(file.path(base, "/cellbender"))
 

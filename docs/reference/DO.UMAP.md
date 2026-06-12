@@ -1,8 +1,9 @@
 # DO.UMAP
 
 Creates a polished UMAP plot using Seurat's DimPlot or FeaturePlot
-functions. It allows customization of colors, labels, and other plot
-elements for better visualisation. The function handles both
+functions. In addition a density plot can be made in a similar way to
+nebulosa R package. It allows customization of colors, labels, and other
+plot elements for better visualisation. The function handles both
 cluster-based visualisations and gene-based visualisations in a UMAP
 plot. Ideal for refining UMAP outputs with added flexibility and
 enhanced presentation.
@@ -12,15 +13,20 @@ enhanced presentation.
 ``` r
 DO.UMAP(
   sce_object,
-  FeaturePlot = FALSE,
   features = NULL,
   group.by = "seurat_clusters",
+  FeaturePlot = FALSE,
+  DensityPlot = FALSE,
+  reduction = NULL,
+  dims = c(1, 2),
+  layer = NULL,
   umap_colors = NULL,
   text_size = 14,
   label = TRUE,
   order = TRUE,
   plot.title = TRUE,
   legend.position = "none",
+  method = c("ks", "wkde"),
   ...
 )
 ```
@@ -31,10 +37,6 @@ DO.UMAP(
 
   The seurat or SCE object
 
-- FeaturePlot:
-
-  Is it going to be a Dimplot or a FeaturePlot?
-
 - features:
 
   features for Featureplot
@@ -42,6 +44,27 @@ DO.UMAP(
 - group.by:
 
   grouping of plot in DImplot and defines in featureplot the labels
+
+- FeaturePlot:
+
+  Is it going to be a FeaturePlot?
+
+- DensityPlot:
+
+  Is it going to be a DensityPlot?
+
+- reduction:
+
+  reduction to use
+
+- dims:
+
+  Dimensions to plot, must be a two-length numeric vector specifying x-
+  and y-dimensions description
+
+- layer:
+
+  Layer to use for DensityPlot, default data
 
 - umap_colors:
 
@@ -67,10 +90,14 @@ DO.UMAP(
 
   specify legend position
 
+- method:
+
+  Kernel density estimation method, can be "ks" or "wkde"
+
 - ...:
 
-  Further arguments passed to DimPlot or FeaturePlot function from
-  Seurat
+  Further arguments passed to DimPlot, FeaturePlot or DensityPlot
+  functions
 
 ## Value
 
@@ -98,5 +125,14 @@ DO.UMAP(
     features = c("BAG2", "CD74")
 )
 #> Warning: The following requested variables were not found: BAG2
+
+
+DO.UMAP(
+    sce_object = sce_data,
+    DensityPlot = TRUE,
+    features = c("CD74")
+)
+#> Warning: Removed 11400 rows containing non-finite outside the scale range
+#> (`stat_contour_filled()`).
 
 ```

@@ -164,7 +164,8 @@ DO.Heatmap(
 
 - ticks_fontdict:
 
-  font properties for the x and y ticks (e.g., 'weight' and 'size')
+  must be a list with names, font properties for the x and y ticks
+  (e.g., 'weight' and 'size')
 
 - xticks_rotation:
 

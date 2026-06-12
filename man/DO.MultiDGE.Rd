@@ -27,16 +27,16 @@ DO.MultiDGE(
 \item{assay}{Specified assay in Seurat or SCE object, default "RNA"}
 
 \item{method_sc}{method to use for single cell DEG analysis, see FindMarkers
-from Seurat for options, default "wilcox"}
+from Seurat for options, default "wilcox", set "none" for skip}
 
 \item{method_pb}{method to use for pseudobulk DEG analysis, currently
-supports DESeq2 implemented in Seurat and glmGamPoi}
+supports DESeq2 implemented in Seurat and glmGamPoi, set "none" for skip}
 
 \item{group_by}{Column in meta data containing groups used for testing,
 default "condition"}
 
 \item{annotation_col}{Column in meta data containing information of cell type
-annotation}
+annotation, set to NULL for all cell type analysis}
 
 \item{sample_col}{Column in meta data containing information of sample
 annotation, default "orig.ident"}

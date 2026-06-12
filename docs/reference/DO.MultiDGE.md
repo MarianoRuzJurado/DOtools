@@ -14,6 +14,7 @@ DO.MultiDGE(
   sce_object,
   assay = "RNA",
   method_sc = "wilcox",
+  method_pb = "DESeq2",
   group_by = "condition",
   annotation_col = "annotation",
   sample_col = "orig.ident",
@@ -22,6 +23,7 @@ DO.MultiDGE(
   logfc_threshold = 0,
   only_pos = FALSE,
   min_cells_group = 3,
+  design_fit_glm = NULL,
   ...
 )
 ```
@@ -39,7 +41,12 @@ DO.MultiDGE(
 - method_sc:
 
   method to use for single cell DEG analysis, see FindMarkers from
-  Seurat for options, default "wilcox"
+  Seurat for options, default "wilcox", set "none" for skip
+
+- method_pb:
+
+  method to use for pseudobulk DEG analysis, currently supports DESeq2
+  implemented in Seurat and glmGamPoi, set "none" for skip
 
 - group_by:
 
@@ -48,7 +55,8 @@ DO.MultiDGE(
 
 - annotation_col:
 
-  Column in meta data containing information of cell type annotation
+  Column in meta data containing information of cell type annotation,
+  set to NULL for all cell type analysis
 
 - sample_col:
 
@@ -78,6 +86,10 @@ DO.MultiDGE(
 
   Minimum number of cells in one of the groups, default 3
 
+- design_fit_glm:
+
+  Design for fitting the glmGamPoi model
+
 - ...:
 
   Additional arguments passed to FindMarkers function
@@ -94,6 +106,7 @@ Mariano Ruz Jurado
 ## Examples
 
 ``` r
+
 sce_data <-
     readRDS(system.file("extdata", "sce_data.rds", package = "DOtools"))
 DGE_result <- DO.MultiDGE(sce_data,
@@ -105,30 +118,30 @@ DGE_result <- DO.MultiDGE(sce_data,
 #> Names of identity class contain underscores ('_'), replacing with dashes ('-')
 #> This message is displayed once every 8 hours.
 #> Centering and scaling data matrix
-#> 2026-01-21 15:41:18 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-01-21 15:41:18 - Starting DGE single cell method analysis
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: Monocytes
-#> 2026-01-21 15:41:18 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: NK
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-21 15:41:18 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: B_cells
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: pDC
-#> 2026-01-21 15:41:18 - Finished DGE single cell method analysis
-#> 2026-01-21 15:41:18 - Starting DGE pseudo bulk method analysis
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: B_cells
-#> 2026-01-21 15:41:18 - Skipping B_cells since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-01-21 15:41:18 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: Monocytes
-#> 2026-01-21 15:41:18 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: NK
-#> 2026-01-21 15:41:18 - Skipping NK since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: pDC
-#> 2026-01-21 15:41:18 - Skipping pDC since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-01-21 15:41:18 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-01-21 15:41:18 - Finished DGE pseudo bulk method analysis
-#> 2026-01-21 15:41:18 - DGE pseudo bulk result is empty...
+#> 2026-06-12 11:28:01 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-06-12 11:28:01 - Starting DGE single cell method analysis
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: Monocytes
+#> 2026-06-12 11:28:01 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: NK
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-06-12 11:28:01 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: B_cells
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: pDC
+#> 2026-06-12 11:28:01 - Finished DGE single cell method analysis
+#> 2026-06-12 11:28:01 - Starting DGE pseudo bulk method analysis
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: B_cells
+#> 2026-06-12 11:28:01 - Skipping B_cells since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-06-12 11:28:01 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: Monocytes
+#> 2026-06-12 11:28:01 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: NK
+#> 2026-06-12 11:28:01 - Skipping NK since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: pDC
+#> 2026-06-12 11:28:01 - Skipping pDC since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-06-12 11:28:01 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-06-12 11:28:01 - Finished DGE pseudo bulk method analysis
+#> 2026-06-12 11:28:01 - DGE pseudo bulk result is empty...
 ```

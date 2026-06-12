@@ -18,6 +18,7 @@ For example, we can visualise the expression of a gene across celltypes
 and conditions:
 
 ``` r
+
 DO.Dotplot(sce_object = sce_object,
            group.by.x = "condition",
            group.by.y = "annotation",
@@ -50,6 +51,7 @@ expression.
 
 ``` r
 
+
 DO.UMAP(sce_object = sce_object,
         group.by = "annotation",
         split.by = "condition",
@@ -66,6 +68,7 @@ As shown in the tutorial, we can also test for significant changes in
 cell population.
 
 ``` r
+
 
 DO.CellComposition(sce_object = sce_object,
                    assay_normalized = "RNA",
@@ -94,6 +97,7 @@ continuous metadata information across condition with violinplots,
 barplots and boxplots. Additionally, we can test for significance.
 
 ``` r
+
 sce_object_sub <- DO.Subset(sce_object, ident = "annotation", ident_name = c("NK", "CD4_T_cells", "B_cells"))
 #> 2025-07-26 09:24:27 - Specified 'ident_name': expecting a categorical variable.
 p <- DO.VlnPlot(sce_object_sub,
@@ -108,6 +112,7 @@ p <- DO.VlnPlot(sce_object_sub,
 ![](adfct_files/figure-html/Violin-1.png)
 
 ``` r
+
 sce_object_NK <- DO.Subset(sce_object, ident = "annotation", ident_name = "NK")
 #> 2025-07-26 09:24:29 - Specified 'ident_name': expecting a categorical variable.
 DO.BarplotWilcox(sce_object_NK,
@@ -122,6 +127,7 @@ DO.BarplotWilcox(sce_object_NK,
 ![](adfct_files/figure-html/Bar-1.png)
 
 ``` r
+
 set.seed(123)
 sce_object$rdm_sample <- sample(rep(c("A", "B", "C"), length.out = ncol(sce_object)))
 DO.BoxPlot(sce_object,
@@ -140,6 +146,7 @@ DO.BoxPlot(sce_object,
 ![](adfct_files/figure-html/Box-1.png)
 
 ``` r
+
 path_file <- tempfile("dotools_plots_")
 dir.create(path_file, recursive = TRUE, showWarnings = FALSE)
 DO.Heatmap(sce_object,

@@ -53,5 +53,5 @@ reference:
   - DO.PyEnv
 - title: Benchmarking
   desc: ~
-  contents:
-  - DO.EvalIntegration
+  contents: DO.EvalIntegration
+

@@ -29,6 +29,7 @@ DO.CellComposition(
   legend.pos.y = 0,
   cowplot_width = 0.9,
   cowlegend_width = 0.9,
+  random_seed = 42,
   ...
 )
 ```
@@ -115,6 +116,10 @@ DO.CellComposition(
   Changes the width on the plotting device for legend, useful for
   adjusting the legend position in combination with legend.pos.x and y
 
+- random_seed:
+
+  parameter for random state initialisation
+
 - ...:
 
   Further arguments passed to scanpro plotting functions
@@ -140,7 +145,7 @@ DO.CellComposition(
     scanpro_plots = FALSE,
     n_reps = 5
 )
-#> 2026-01-21 15:40:40 - Bootstrapping method activated with 5 simulated replicates!
+#> 2026-06-12 11:27:22 - Bootstrapping method activated with 5 simulated replicates!
 #> .
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the

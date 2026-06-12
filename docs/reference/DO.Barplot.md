@@ -26,7 +26,8 @@ DO.Barplot(
   x_label_rotation = 45,
   plot_raw_pvalue = FALSE,
   y_limits = NULL,
-  log1p_nUMI = TRUE
+  log1p_nUMI = TRUE,
+  random_seed = 42
 )
 ```
 
@@ -102,6 +103,10 @@ DO.Barplot(
 - log1p_nUMI:
 
   If nUMIs should be log1p transformed
+
+- random_seed:
+
+  parameter for random state initialisation
 
 ## Value
 

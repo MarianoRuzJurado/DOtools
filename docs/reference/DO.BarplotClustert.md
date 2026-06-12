@@ -22,7 +22,8 @@ DO.BarplotClustert(
   step_mod = 0.2,
   x_label_rotation = 45,
   y_limits = NULL,
-  log1p_nUMI = TRUE
+  log1p_nUMI = TRUE,
+  random_seed = 42
 )
 ```
 
@@ -83,6 +84,10 @@ DO.BarplotClustert(
 - log1p_nUMI:
 
   If nUMIs should be log1p transformed
+
+- random_seed:
+
+  parameter for random state initialisation
 
 ## Value
 

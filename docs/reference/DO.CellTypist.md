@@ -16,7 +16,7 @@ DO.CellTypist(
   runCelltypistUpdate = TRUE,
   over_clustering = "seurat_clusters",
   assay_normalized = "RNA",
-  returnProb = FALSE,
+  returnAll = FALSE,
   SeuV5 = TRUE
 )
 ```
@@ -50,10 +50,11 @@ DO.CellTypist(
 
   Assay with log1p normalized expressions
 
-- returnProb:
+- returnAll:
 
   will additionally return the probability matrix, return will give a
-  list with the first element beeing the object and second prob matrix
+  list with the first element being the object and second plot and third
+  probability matrix
 
 - SeuV5:
 
@@ -82,9 +83,9 @@ sce_data <- DO.CellTypist(
     minCellsToRun = 5,
     SeuV5 = TRUE
 )
-#> 2026-01-21 15:40:46 - Running celltypist using model: Healthy_Adult_Heart.pkl
-#> 2026-01-21 15:40:46 - Saving celltypist results to temporary folder: /tmp/RtmpxiJJhQ/file19ffb43a8f7d35
-#> 2026-01-21 15:40:52 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl
-#> 2026-01-21 15:40:52 - Running Celltypist
-#> 2026-01-21 15:40:54 - Creating probality plot
+#> 2026-06-12 11:27:28 - Running celltypist using model: Healthy_Adult_Heart.pkl
+#> 2026-06-12 11:27:28 - Saving celltypist results to temporary folder: /tmp/RtmpZ2fTOl/file326a065b0cef50
+#> 2026-06-12 11:27:34 - Model already present: /home/mariano/.celltypist/data/models/Healthy_Adult_Heart.pkl
+#> 2026-06-12 11:27:34 - Running Celltypist
+#> 2026-06-12 11:27:37 - Creating probality plot
 ```
