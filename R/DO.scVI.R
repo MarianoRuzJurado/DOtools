@@ -19,7 +19,7 @@
 #' @param dispersion dispersion mode for scVI.
 #' @param gene_likelihood gene likelihood.
 #' @param get_model return the trained model.
-#'
+#' @param model_save_path if get_model then specifiy the path to a directory
 #'
 #' @import Seurat
 #' @import zellkonverter
@@ -48,7 +48,8 @@ DO.scVI <- function(sce_object,
     n_layers = 3,
     dispersion = "gene-batch",
     gene_likelihood = "zinb",
-    get_model = FALSE) {
+    get_model = FALSE,
+    model_save_path = NULL) {
     # support for Seurat objects
     if (methods::is(sce_object, "Seurat")) {
         class_obj <- "Seurat"
@@ -99,7 +100,8 @@ DO.scVI <- function(sce_object,
         n_layers = as.integer(n_layers),
         dispersion = dispersion,
         gene_likelihood = gene_likelihood,
-        get_model = get_model
+        get_model = get_model,
+        model_save_path = model_save_path
     )
 
     # basilisk implementation
@@ -111,7 +113,7 @@ DO.scVI <- function(sce_object,
 
             reticulate::source_python(path_py)
 
-            run_scvi(
+            res <- run_scvi(
                 adata = anndata_object,
                 batch_key = args$batch_key,
                 layer_counts = args$layer_counts,
@@ -125,6 +127,12 @@ DO.scVI <- function(sce_object,
                 gene_likelihood = args$gene_likelihood,
                 get_model = args$get_model
             )
+
+            if (args$get_model) {
+                res$save(args$model_save_path,
+                    overwrite = TRUE,
+                    save_anndata = TRUE)
+            }
 
             return(anndata_object$obsm[["X_scVI"]])
         }, args = args
