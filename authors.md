@@ -21,12 +21,12 @@ Source:
 
 Ruz Jurado M, Rodriguez Morales D, John D (2026). *DOtools: Convenient
 functions to streamline your single cell data analysis workflow*. R
-package version 1.3.2, <https://marianoruzjurado.github.io/DOtools/>.
+package version 1.3.3, <https://marianoruzjurado.github.io/DOtools/>.
 
     @Manual{,
       title = {DOtools: Convenient functions to streamline your single cell data analysis workflow},
       author = {Mariano {Ruz Jurado} and David {Rodriguez Morales} and David John},
       year = {2026},
-      note = {R package version 1.3.2},
+      note = {R package version 1.3.3},
       url = {https://marianoruzjurado.github.io/DOtools/},
     }

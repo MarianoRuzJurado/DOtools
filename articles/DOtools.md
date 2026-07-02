@@ -240,15 +240,15 @@ SCE_obj <- DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-06-12 10:54:37 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-06-12 10:54:37 - Calculating highly variable genes
-#> 2026-06-12 10:54:37 - Scaling object
-#> 2026-06-12 10:54:37 - Running pca, saved in key: PCA
+#> 2026-07-02 13:13:41 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-07-02 13:13:41 - Calculating highly variable genes
+#> 2026-07-02 13:13:41 - Scaling object
+#> 2026-07-02 13:13:41 - Running pca, saved in key: PCA
 #> Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.
-#> 2026-06-12 10:54:38 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-06-12 10:54:43 - Running Nearest-neighbor graph construction
-#> 2026-06-12 10:54:44 - Running cluster detection
-#> 2026-06-12 10:54:44 - Creating UMAP
+#> 2026-07-02 13:13:43 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-07-02 13:13:48 - Running Nearest-neighbor graph construction
+#> 2026-07-02 13:13:49 - Running cluster detection
+#> 2026-07-02 13:13:49 - Creating UMAP
 ```
 
 ``` r
@@ -314,14 +314,14 @@ SCE_obj <- DO.CellTypist(SCE_obj,
     runCelltypistUpdate = TRUE,
     over_clustering = "leiden0.3"
 )
-#> 2026-06-12 10:54:53 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-06-12 10:54:53 - Saving celltypist results to temporary folder: /tmp/RtmpwHWUug/fileea18925e1f4
+#> 2026-07-02 13:13:58 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-02 13:13:58 - Saving celltypist results to temporary folder: /tmp/RtmpisydGb/file1033e3da50ff1
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
 #> ℹ Install it from Bioconductor with `BiocManager::install("anndataR")`
 #> ℹ See more at <https://bioconductor.org/packages/anndataR/>
-#> 2026-06-12 10:55:11 - Creating probality plot
+#> 2026-07-02 13:14:21 - Creating probality plot
 #> 
 #> This message is displayed once per session.
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
@@ -534,7 +534,7 @@ DO.CellComposition(SCE_obj,
     transform_method = "arcsin",
     n_reps = 3
 )
-#> 2026-06-12 10:55:26 - Bootstrapping method activated with 3 simulated replicates!
+#> 2026-07-02 13:14:36 - Bootstrapping method activated with 3 simulated replicates!
 #> .
 #> Using orig.ident, condition as id variables
 #> Using condition as id variables
@@ -572,7 +572,7 @@ T_cells <- DO.Subset(SCE_obj,
         value = TRUE
     )
 )
-#> 2026-06-12 10:55:45 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-02 13:14:55 - Specified 'ident_name': expecting a categorical variable.
 
 T_cells <- DO.CellTypist(T_cells,
     modelName = "Healthy_COVID19_PBMC.pkl",
@@ -580,9 +580,9 @@ T_cells <- DO.CellTypist(T_cells,
     over_clustering = "annotation_recluster",
     SeuV5 = FALSE
 )
-#> 2026-06-12 10:55:45 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-06-12 10:55:45 - Saving celltypist results to temporary folder: /tmp/RtmpwHWUug/fileea187936c7f0
-#> 2026-06-12 10:55:58 - Creating probality plot
+#> 2026-07-02 13:14:55 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-02 13:14:55 - Saving celltypist results to temporary folder: /tmp/RtmpisydGb/file1033e75e99f5a
+#> 2026-07-02 13:15:08 - Creating probality plot
 
 T_cells$annotation <- plyr::revalue(
     T_cells$annotation_recluster,
@@ -636,7 +636,7 @@ CD4T_cells <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "CD4_T_cells"
 )
-#> 2026-06-12 10:56:00 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-02 13:15:09 - Specified 'ident_name': expecting a categorical variable.
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
@@ -646,13 +646,13 @@ DGE_result <- DO.MultiDGE(CD4T_cells,
 )
 #> The following grouping variables have 1 value and will be ignored: annotation
 #> Centering and scaling data matrix
-#> 2026-06-12 10:56:00 - Annotation names are consistent between original and pseudo-bulk objects.
-#> 2026-06-12 10:56:00 - Starting DGE single cell method analysis
-#> 2026-06-12 10:56:00 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-06-12 10:56:02 - Finished DGE single cell method analysis
-#> 2026-06-12 10:56:02 - Starting DGE pseudo bulk method analysis
-#> 2026-06-12 10:56:02 - Finished DGE pseudo bulk method analysis
-#> 2026-06-12 10:56:02 - DGE pseudo bulk result is empty...
+#> 2026-07-02 13:15:10 - Annotation names are consistent between original and pseudo-bulk objects.
+#> 2026-07-02 13:15:10 - Starting DGE single cell method analysis
+#> 2026-07-02 13:15:10 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-07-02 13:15:11 - Finished DGE single cell method analysis
+#> 2026-07-02 13:15:11 - Starting DGE pseudo bulk method analysis
+#> 2026-07-02 13:15:11 - Finished DGE pseudo bulk method analysis
+#> 2026-07-02 13:15:11 - DGE pseudo bulk result is empty...
 
 head(DGE_result, 10) %>%
     kable(format = "html", table.attr = "style='width:100%;'") %>%
@@ -872,7 +872,7 @@ SCE_obj_sub <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = c("NK", "CD4_T_cells", "B_cells")
 )
-#> 2026-06-12 10:56:54 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-02 13:16:08 - Specified 'ident_name': expecting a categorical variable.
 
 DO.VlnPlot(SCE_obj_sub,
     Feature = "NKG7",
@@ -881,7 +881,7 @@ DO.VlnPlot(SCE_obj_sub,
     ctrl.condition = "healthy"
 )
 #> Using condition, orig.ident, annotation as id variables
-#> 2026-06-12 10:56:54 - ListTest empty, comparing every sample with each other
+#> 2026-07-02 13:16:08 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Violin-1.png)
@@ -892,7 +892,7 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "NK"
 )
-#> 2026-06-12 10:56:57 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-02 13:16:12 - Specified 'ident_name': expecting a categorical variable.
 
 DO.Barplot(SCE_obj_NK,
     group.by = "condition",
@@ -903,7 +903,7 @@ DO.Barplot(SCE_obj_NK,
     x_label_rotation = 0
 )
 #> Using condition, orig.ident as id variables
-#> 2026-06-12 10:56:58 - ListTest empty, comparing every sample with each other
+#> 2026-07-02 13:16:12 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Bar-1.png)
@@ -926,7 +926,7 @@ DO.BoxPlot(SCE_obj,
     plot_sample = FALSE
 )
 #> Using group, cluster as id variables
-#> 2026-06-12 10:56:59 - ListTest empty, comparing every sample with each other
+#> 2026-07-02 13:16:13 - ListTest empty, comparing every sample with each other
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -937,7 +937,7 @@ DO.BoxPlot(SCE_obj,
 
     #> ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────
     #>  setting  value
-    #>  version  R version 4.6.0 (2026-04-24)
+    #>  version  R version 4.6.1 (2026-06-24)
     #>  os       Ubuntu 24.04.4 LTS
     #>  system   x86_64, linux-gnu
     #>  ui       X11
@@ -945,7 +945,7 @@ DO.BoxPlot(SCE_obj,
     #>  collate  C.UTF-8
     #>  ctype    C.UTF-8
     #>  tz       UTC
-    #>  date     2026-06-12
+    #>  date     2026-07-02
     #>  pandoc   3.8.3 @ /opt/hostedtoolcache/pandoc/3.8.3/x64/ (via rmarkdown)
     #>  quarto   NA
     #> 
@@ -965,15 +965,15 @@ DO.BoxPlot(SCE_obj,
     #>  BiocSingular           1.28.0    2026-04-28 [1] Bioconduc~
     #>  BiocStyle            * 2.40.0    2026-04-28 [1] Bioconduc~
     #>  bluster                1.22.0    2026-04-28 [1] Bioconduc~
-    #>  bookdown               0.46      2025-12-05 [1] RSPM
+    #>  bookdown               0.47      2026-06-16 [1] RSPM
     #>  broom                  1.0.13    2026-05-14 [1] RSPM
     #>  bslib                  0.11.0    2026-05-16 [1] RSPM
     #>  cachem                 1.1.0     2024-05-16 [1] RSPM
     #>  car                    3.1-5     2026-02-03 [1] RSPM
     #>  carData                3.0-6     2026-01-30 [1] RSPM
     #>  cli                    3.6.6     2026-04-09 [1] RSPM
-    #>  cluster                2.1.8.2   2026-02-05 [3] CRAN (R 4.6.0)
-    #>  codetools              0.2-20    2024-03-31 [3] CRAN (R 4.6.0)
+    #>  cluster                2.1.8.2   2026-02-05 [3] CRAN (R 4.6.1)
+    #>  codetools              0.2-20    2024-03-31 [3] CRAN (R 4.6.1)
     #>  colorspace             2.1-2     2025-09-22 [1] RSPM
     #>  cowplot                1.2.0     2025-07-07 [1] RSPM
     #>  crayon                 1.5.3     2024-06-20 [1] RSPM
@@ -987,7 +987,7 @@ DO.BoxPlot(SCE_obj,
     #>  digest                 0.6.39    2025-11-19 [1] RSPM
     #>  dir.expiry             1.20.0    2026-04-28 [1] Bioconduc~
     #>  dotCall64              1.2       2024-10-04 [1] RSPM
-    #>  DOtools              * 1.3.2     2026-06-12 [1] local
+    #>  DOtools              * 1.3.3     2026-07-02 [1] local
     #>  dplyr                * 1.2.1     2026-04-03 [1] RSPM
     #>  dqrng                  0.4.1     2024-05-28 [1] RSPM
     #>  DropletUtils           1.32.0    2026-04-28 [1] Bioconduc~
@@ -1026,7 +1026,7 @@ DO.BoxPlot(SCE_obj,
     #>  globals                0.19.1    2026-03-13 [1] RSPM
     #>  glue                   1.8.1     2026-04-17 [1] RSPM
     #>  goftest                1.2-3     2021-10-07 [1] RSPM
-    #>  gridExtra              2.3       2017-09-09 [1] RSPM
+    #>  gridExtra              2.3.1     2026-06-25 [1] RSPM
     #>  gridtext               0.1.6     2026-02-19 [1] RSPM
     #>  gtable                 0.3.6     2024-10-25 [1] RSPM
     #>  h5mread                1.4.0     2026-04-28 [1] Bioconduc~
@@ -1037,44 +1037,44 @@ DO.BoxPlot(SCE_obj,
     #>  httpuv                 1.6.17    2026-03-18 [1] RSPM
     #>  httr                   1.4.8     2026-02-13 [1] RSPM
     #>  ica                    1.0-3     2022-07-08 [1] RSPM
-    #>  igraph                 2.3.2     2026-05-29 [1] RSPM
-    #>  insight                1.5.1     2026-05-21 [1] RSPM
+    #>  igraph                 2.3.3     2026-06-26 [1] RSPM
+    #>  insight                1.5.2     2026-06-28 [1] RSPM
     #>  IRanges              * 2.46.0    2026-04-28 [1] Bioconduc~
     #>  irlba                  2.3.7     2026-01-30 [1] RSPM
     #>  isoband                0.3.0     2025-12-07 [1] RSPM
     #>  jquerylib              0.1.4     2021-04-26 [1] RSPM
     #>  jsonlite               2.0.0     2025-03-27 [1] RSPM
     #>  kableExtra           * 1.4.0     2024-01-24 [1] RSPM
-    #>  KernSmooth             2.23-26   2025-01-01 [3] CRAN (R 4.6.0)
+    #>  KernSmooth             2.23-26   2025-01-01 [3] CRAN (R 4.6.1)
     #>  knitr                  1.51      2025-12-20 [1] RSPM
     #>  ks                     1.15.2    2026-05-09 [1] RSPM
     #>  labeling               0.4.3     2023-08-29 [1] RSPM
     #>  later                  1.4.8     2026-03-05 [1] RSPM
-    #>  lattice                0.22-9    2026-02-09 [3] CRAN (R 4.6.0)
+    #>  lattice                0.22-9    2026-02-09 [3] CRAN (R 4.6.1)
     #>  lazyeval               0.2.3     2026-04-04 [1] RSPM
     #>  leidenbase             0.1.37    2026-05-19 [1] RSPM
     #>  lifecycle              1.0.5     2026-01-08 [1] RSPM
     #>  limma                  3.68.4    2026-05-31 [1] Bioconduc~
-    #>  listenv                0.10.1    2026-03-10 [1] RSPM
+    #>  listenv                1.0.0     2026-06-22 [1] RSPM
     #>  lmtest                 0.9-40    2022-03-21 [1] RSPM
     #>  locfit                 1.5-9.12  2025-03-05 [1] RSPM
     #>  magick                 2.9.1     2026-02-28 [1] RSPM
     #>  magrittr               2.0.5     2026-04-04 [1] RSPM
-    #>  MASS                   7.3-65    2025-02-28 [3] CRAN (R 4.6.0)
-    #>  Matrix                 1.7-5     2026-03-21 [3] CRAN (R 4.6.0)
+    #>  MASS                   7.3-65    2025-02-28 [3] CRAN (R 4.6.1)
+    #>  Matrix                 1.7-5     2026-03-21 [3] CRAN (R 4.6.1)
     #>  MatrixGenerics       * 1.24.0    2026-04-28 [1] Bioconduc~
     #>  matrixStats          * 1.5.0     2025-01-07 [1] RSPM
     #>  mclust                 6.1.2     2025-10-31 [1] RSPM
     #>  metapod                1.20.0    2026-04-28 [1] Bioconduc~
-    #>  mgcv                   1.9-4     2025-11-07 [3] CRAN (R 4.6.0)
+    #>  mgcv                   1.9-4     2025-11-07 [3] CRAN (R 4.6.1)
     #>  mime                   0.13      2025-03-17 [1] RSPM
     #>  miniUI                 0.1.2     2025-04-17 [1] RSPM
     #>  mvtnorm                1.4-1     2026-06-06 [1] RSPM
     #>  mycor                  0.1.1     2018-04-10 [1] RSPM
-    #>  nlme                   3.1-169   2026-03-27 [3] CRAN (R 4.6.0)
+    #>  nlme                   3.1-169   2026-03-27 [3] CRAN (R 4.6.1)
     #>  openxlsx               4.2.8.1   2025-10-31 [1] RSPM
     #>  otel                   0.2.0     2025-08-29 [1] RSPM
-    #>  parallelly             1.47.0    2026-04-17 [1] RSPM
+    #>  parallelly             1.48.0    2026-06-29 [1] RSPM
     #>  patchwork              1.3.2     2025-08-25 [1] RSPM
     #>  pbapply                1.7-4     2025-07-20 [1] RSPM
     #>  pillar                 1.11.1    2025-09-17 [1] RSPM
@@ -1130,9 +1130,9 @@ DO.BoxPlot(SCE_obj,
     #>  scuttle              * 1.22.0    2026-04-28 [1] Bioconduc~
     #>  Seqinfo              * 1.2.0     2026-04-28 [1] Bioconduc~
     #>  sessioninfo            1.2.4     2026-06-04 [1] RSPM
-    #>  Seurat               * 5.5.0     2026-04-22 [1] RSPM
+    #>  Seurat               * 5.5.1     2026-06-26 [1] RSPM
     #>  SeuratObject         * 5.4.0     2026-04-11 [1] RSPM
-    #>  shiny                  1.13.0    2026-02-20 [1] RSPM
+    #>  shiny                  1.14.0    2026-06-21 [1] RSPM
     #>  SingleCellExperiment * 1.34.0    2026-04-28 [1] Bioconduc~
     #>  sjlabelled             1.2.0     2022-04-10 [1] RSPM
     #>  sjmisc                 2.8.11    2025-07-30 [1] RSPM
@@ -1151,7 +1151,7 @@ DO.BoxPlot(SCE_obj,
     #>  stringi                1.8.7     2025-03-27 [1] RSPM
     #>  stringr                1.6.0     2025-11-04 [1] RSPM
     #>  SummarizedExperiment * 1.42.0    2026-04-28 [1] Bioconduc~
-    #>  survival               3.8-6     2026-01-16 [3] CRAN (R 4.6.0)
+    #>  survival               3.8-6     2026-01-16 [3] CRAN (R 4.6.1)
     #>  svglite                2.2.2     2025-10-21 [1] RSPM
     #>  systemfonts            1.3.2     2026-03-05 [1] RSPM
     #>  tensor                 1.5.1     2025-06-17 [1] RSPM
@@ -1165,10 +1165,10 @@ DO.BoxPlot(SCE_obj,
     #>  vipor                  0.4.7     2023-12-18 [1] RSPM
     #>  viridis                0.6.5     2024-01-29 [1] RSPM
     #>  viridisLite            0.4.3     2026-02-04 [1] RSPM
-    #>  withr                  3.0.2     2024-10-28 [1] RSPM
+    #>  withr                  3.0.3     2026-06-19 [1] RSPM
     #>  WriteXLS               6.8.0     2025-05-22 [1] RSPM
-    #>  xfun                   0.58      2026-06-01 [1] RSPM
-    #>  xml2                   1.5.2     2026-01-17 [1] RSPM
+    #>  xfun                   0.59      2026-06-19 [1] RSPM
+    #>  xml2                   1.6.0     2026-06-22 [1] RSPM
     #>  xtable                 1.8-8     2026-02-22 [1] RSPM
     #>  XVector                0.52.0    2026-04-28 [1] Bioconduc~
     #>  yaml                   2.3.12    2025-12-10 [1] RSPM
@@ -1177,15 +1177,15 @@ DO.BoxPlot(SCE_obj,
     #>  zoo                    1.8-15    2025-12-15 [1] RSPM
     #> 
     #>  [1] /home/runner/work/_temp/Library
-    #>  [2] /opt/R/4.6.0/lib/R/site-library
-    #>  [3] /opt/R/4.6.0/lib/R/library
+    #>  [2] /opt/R/4.6.1/lib/R/site-library
+    #>  [3] /opt/R/4.6.1/lib/R/library
     #>  * ── Packages attached to the search path.
     #> 
     #> ─ Python configuration ───────────────────────────────────────────────────────────────────────────────────────────────
     #>  python:         /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/bin/python
     #>  libpython:      /home/runner/.pyenv/versions/3.14.0/lib/libpython3.14.so
     #>  pythonhome:     /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3:/home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3
-    #>  version:        3.14.0 (main, Jun 12 2026, 10:47:15) [GCC 13.3.0]
+    #>  version:        3.14.0 (main, Jul  2 2026, 13:06:18) [GCC 13.3.0]
     #>  numpy:          /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/lib/python3.14/site-packages/numpy
     #>  numpy_version:  2.3.4
     #>  
