@@ -7,7 +7,8 @@ DOtoolsEnv <- basilisk::BasiliskEnvironment(
         "celltypist==1.6.3",
         "scanpro==0.3.2",
         "scipy==1.15.3",
-        "scib==1.1.7"
+        "scib==1.1.7",
+        "rich==13.7.1"
     )
 )
 
