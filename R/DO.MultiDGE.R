@@ -506,6 +506,8 @@ DO.MultiDGE <- function(sce_object,
       #cell type specific glmGamPoi analysis
       if (!is.null(annotation_col)) {
         #subset by cell type
+        # loop over comparisons and cell types
+        DEG_stats_collector_pb <- data.frame()
         for (celltype in unique(sce_object_pb[[annotation_col]])) {
           sce_object_pb_sub <-
             sce_object_pb[, sce_object_pb[[annotation_col]] == celltype]
@@ -545,15 +547,16 @@ DO.MultiDGE <- function(sce_object,
                 de_res[["celltype"]] <- celltype
                 de_res[["condition"]] <- grp
 
-                DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
-                colnames(DEG_stats_collector_pb) <- c(
+                colnames(de_res) <- c(
                     "gene",
                     "p_val",
                     "p_val_adj",
-                    colnames(DEG_stats_collector_pb)[4:6],
+                    colnames(de_res)[4:6],
                     "avg_log2FC",
-                    colnames(DEG_stats_collector_pb)[8:length(colnames(DEG_stats_collector_pb))]
+                    colnames(de_res)[8:length(colnames(de_res))]
                 )
+                DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
+
               }
               .logger("Finished DGE pseudo bulk method analysis")
             }
