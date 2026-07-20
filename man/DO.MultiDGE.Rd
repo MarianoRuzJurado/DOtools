@@ -18,6 +18,7 @@ DO.MultiDGE(
   only_pos = FALSE,
   min_cells_group = 3,
   design_fit_glm = NULL,
+  group_glm = NULL,
   ...
 )
 }
@@ -57,6 +58,8 @@ is 0.}
 default 3}
 
 \item{design_fit_glm}{Design for fitting the glmGamPoi model}
+
+\item{group_glm}{grouping vector for glmGamPoi, can have covariates defined}
 
 \item{...}{Additional arguments passed to FindMarkers function}
 }

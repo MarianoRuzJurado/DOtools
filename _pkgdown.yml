@@ -23,6 +23,7 @@ reference:
   - DO.Import
   - DO.Integration
   - DO.scVI
+  - DO.scANVI
   - DO.Correlation
 - title: Downstream processing
   desc: ~

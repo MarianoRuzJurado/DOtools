@@ -118,7 +118,8 @@ DO.Import <- function(pathways,
             error = function(x) {
                 warning(
                     "Matrix not produced by Cellranger. ",
-                    "Trying CellBender read..."
+                    "Trying CellBender read... make sure package hdf5r is ",
+                    "installed."
                 )
                 tryCatch(
                     {

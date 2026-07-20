@@ -16,7 +16,8 @@ DO.scVI(
   n_layers = 3,
   dispersion = "gene-batch",
   gene_likelihood = "zinb",
-  get_model = FALSE
+  get_model = FALSE,
+  model_save_path = NULL
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ covariates for scVI inference.}
 \item{gene_likelihood}{gene likelihood.}
 
 \item{get_model}{return the trained model.}
+
+\item{model_save_path}{if get_model then specifiy the path to a directory}
 }
 \value{
 Seurat or SCE Object with dimensionality reduction from scVI

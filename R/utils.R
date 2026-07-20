@@ -153,7 +153,7 @@ glmGamPoi_test <- function(
   # support for Seurat objects
   if (methods::is(sce_object, "Seurat")) {
     DefaultAssay(sce_object) <- assay_normalized
-    sce_object <- DOtools:::.suppressDeprecationWarnings(
+    sce_object <- .suppressDeprecationWarnings(
       Seurat::as.SingleCellExperiment(sce_object,
         assay = assay_normalized
       )
@@ -191,7 +191,7 @@ glmGamPoi_test <- function(
   keep_annotations <- rownames(tab)[rowSums(tab > 0) == ncol(tab)]
   sce_object_pb <- sce_object_pb[, sce_object_pb[[annotation_col]] %in% keep_annotations]
 
-  DOtools:::.logger("Fitting Gamma-Poisson model...")
+  .logger("Fitting Gamma-Poisson model...")
   #fit Gamma-Poisson model
   fit <- glmGamPoi::glm_gp(
     sce_object_pb, design = design_fit

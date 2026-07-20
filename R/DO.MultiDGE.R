@@ -30,6 +30,7 @@
 #' @param min_cells_group Minimum number of cells in one of the groups,
 #' default 3
 #' @param design_fit_glm Design for fitting the glmGamPoi model
+#' @param group_glm grouping vector for glmGamPoi, can have covariates defined
 #' @param ... Additional arguments passed to FindMarkers function
 #'
 #' @import Seurat
@@ -65,6 +66,7 @@ DO.MultiDGE <- function(sce_object,
     only_pos = FALSE,
     min_cells_group = 3,
     design_fit_glm = NULL,
+    group_glm = NULL,
     ...) {
     # support for single cell experiment objects
     if (methods::is(sce_object, "SingleCellExperiment")) {
@@ -438,7 +440,11 @@ DO.MultiDGE <- function(sce_object,
       }
 
       # vector for grouping the single cell data for
-      group_meta <- c(group_by, sample_col, annotation_col)
+      if (is.null(group_glm)) {
+        group_meta <- c(group_by, sample_col, annotation_col)
+      } else{
+        group_meta <- group_glm
+      }
 
       #Check if all supplied columns exist in metadata
       if (length(setdiff(group_meta, names(
@@ -522,34 +528,31 @@ DO.MultiDGE <- function(sce_object,
               # loop over comparisons and cell types
               DEG_stats_collector_pb <- data.frame()
               for (grp in comp) {
-                for (celltype in keep_annotations) {
                   #build the contrast string
-                  contrast <- paste0(
-                    "cond(",
-                    group_by,
-                    "='",
-                    grp,
-                    "') - ",
-                    "cond(",
-                    group_by,
-                    "='",
-                    ident_ctrl,
-                    "')"
+                  contrast <- paste0("cond(",
+                      group_by,
+                      "='",
+                      grp,
+                      "') - ",
+                      "cond(",
+                      group_by,
+                      "='",
+                      ident_ctrl,
+                      "')"
                   )
 
-                  de_res <- glmGamPoi::test_de(fit, contrast = contrast)
-                  de_res[["celltype"]] <- celltype
-                  de_res[["condition"]] <- grp
+                de_res <- glmGamPoi::test_de(fit, contrast = contrast)
+                de_res[["celltype"]] <- celltype
+                de_res[["condition"]] <- grp
 
-                  DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
-                }
+                DEG_stats_collector_pb <- rbind(DEG_stats_collector_pb, de_res)
                 colnames(DEG_stats_collector_pb) <- c(
-                  "gene",
-                  "p_val",
-                  "p_val_adj",
-                  colnames(DEG_stats_collector_pb)[4:6],
-                  "avg_log2FC",
-                  colnames(DEG_stats_collector_pb)[8:length(colnames(DEG_stats_collector_pb))]
+                    "gene",
+                    "p_val",
+                    "p_val_adj",
+                    colnames(DEG_stats_collector_pb)[4:6],
+                    "avg_log2FC",
+                    colnames(DEG_stats_collector_pb)[8:length(colnames(DEG_stats_collector_pb))]
                 )
               }
               .logger("Finished DGE pseudo bulk method analysis")
