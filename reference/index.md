@@ -15,6 +15,8 @@
   : DO.Integration SCE object integration directly
 - [`DO.scVI()`](https://marianoruzjurado.github.io/DOtools/reference/DO.scVI.md)
   : DO.scVI
+- [`DO.scANVI()`](https://marianoruzjurado.github.io/DOtools/reference/DO.scANVI.md)
+  : DO.scANVI
 - [`DO.Correlation()`](https://marianoruzjurado.github.io/DOtools/reference/DO.Correlation.md)
   : DO Correlation Plot for visualizing similarity between categories
 

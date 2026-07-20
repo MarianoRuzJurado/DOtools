@@ -128,11 +128,6 @@ DO.Correlation(
     lab = TRUE,
     lab_col = "white"
 )
-#> Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-#> ℹ Please use tidy evaluation idioms with `aes()`.
-#> ℹ See also `vignette("ggplot2-in-packages")` for more information.
-#> ℹ The deprecated feature was likely used in the ggcorrplot package.
-#>   Please report the issue at <https://github.com/kassambara/ggcorrplot/issues>.
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 

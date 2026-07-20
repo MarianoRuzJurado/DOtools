@@ -21,7 +21,7 @@ statistics from both methods per condition and cell type."><script defer data-do
 
     <a class="navbar-brand me-2" href="../index.html">DOtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,6 +78,7 @@ statistics from both methods per condition and cell type.</p>
 <span>  only_pos <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  min_cells_group <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  design_fit_glm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_glm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -148,6 +149,10 @@ default 3</p></dd>
 <dd><p>Design for fitting the glmGamPoi model</p></dd>
 
 
+<dt id="arg-group-glm">group_glm<a class="anchor" aria-label="anchor" href="#arg-group-glm"></a></dt>
+<dd><p>grouping vector for glmGamPoi, can have covariates defined</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to FindMarkers function</p></dd>
 
@@ -176,32 +181,32 @@ and the Pseudobulk DGE approach.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Names of identity class contain underscores ('_'), replacing with dashes ('-')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once every 8 hours.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:49 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:49 - Starting DGE single cell method analysis</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:49 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:49 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:49 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:51 - Comparing disease with healthy in: NK</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:52 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:52 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:52 - Comparing disease with healthy in: B_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: pDC</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Finished DGE single cell method analysis</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Starting DGE pseudo bulk method analysis</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: B_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: CD4_T_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: Monocytes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: NK</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping NK since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: pDC</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping pDC since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Comparing disease with healthy in: CD8_T_cells</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - Finished DGE pseudo bulk method analysis</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-02 13:10:53 - DGE pseudo bulk result is empty...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:24 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:24 - Starting DGE single cell method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:24 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:24 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:24 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:26 - Comparing disease with healthy in: NK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:26 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:26 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:26 - Comparing disease with healthy in: B_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: pDC</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Finished DGE single cell method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Starting DGE pseudo bulk method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: B_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping B_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: CD4_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: Monocytes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping Monocytes since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: NK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping NK since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: pDC</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping pDC since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Comparing disease with healthy in: CD8_T_cells</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - Finished DGE pseudo bulk method analysis</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2026-07-20 10:10:27 - DGE pseudo bulk result is empty...</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -214,7 +219,7 @@ and the Pseudobulk DGE approach.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

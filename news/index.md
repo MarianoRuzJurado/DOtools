@@ -1,8 +1,29 @@
 # Changelog
 
-## DOtools 1.1.8
+## DOtools 1.3.4
 
 All notable changes to DOtools will be documented in this file.
+
+------------------------------------------------------------------------
+
+### \[1.3.4\] - 2026-07-20
+
+#### Added
+
+- Added `DO.scANVI` function for label transfer and training from a
+  previous scVI Integration run
+
+#### Changed
+
+- `DO.MultiDGE`: Applies now also glmGamPoi testing if specified.
+  Covariate can be specified, in addition the single cell or pseudo-bul
+  test can be skipped.
+- `DO.Import`: Now correctly specifies that package hdf5r is needed to
+  load .h5 files.
+- `DO.scVI`: Now correctly saves the model in the specified path.
+- `basilis.R`: Changes to the python environment to maintain stable
+  python software.
+- Major bug fixes for higher compatibility with ggplot2 and Seurat
 
 ------------------------------------------------------------------------
 

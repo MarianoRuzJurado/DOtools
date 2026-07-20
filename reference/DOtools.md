@@ -73,6 +73,10 @@ This package includes the following functions:
 - [`DO.scVI`](https://marianoruzjurado.github.io/DOtools/reference/DO.scVI.md):
   A function for running the scVI Integration implemented in scvi-tools.
 
+- [`DO.scANVI`](https://marianoruzjurado.github.io/DOtools/reference/DO.scANVI.md):
+  A function for running the scANVI Integration and label transfer
+  implemented in scvi-tools.
+
 - [`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md):
   A function for transfering annotation from a subseted object to the
   original seurat and SCE object.
@@ -129,6 +133,7 @@ Mariano Ruz Jurado, David Rodriguez Morales
 [`DO.CellBender`](https://marianoruzjurado.github.io/DOtools/reference/DO.CellBender.md),
 [`DO.SplitBarGSEA`](https://marianoruzjurado.github.io/DOtools/reference/DO.SplitBarGSEA.md),
 [`DO.scVI`](https://marianoruzjurado.github.io/DOtools/reference/DO.scVI.md),
+[`DO.scANVI`](https://marianoruzjurado.github.io/DOtools/reference/DO.scANVI.md),
 [`DO.TransferLabel`](https://marianoruzjurado.github.io/DOtools/reference/DO.TransferLabel.md),[`DO.Heatmap`](https://marianoruzjurado.github.io/DOtools/reference/DO.Heatmap.md),[`DO.HeatmapFC`](https://marianoruzjurado.github.io/DOtools/reference/DO.HeatmapFC.md),
 [`DO.PyEnv`](https://marianoruzjurado.github.io/DOtools/reference/DO.PyEnv.md),
 [`DO.Correlation`](https://marianoruzjurado.github.io/DOtools/reference/DO.Correlation.md),

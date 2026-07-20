@@ -206,14 +206,6 @@ SCE_obj <- readRDS(
 )
 
 DO.Correlation(SCE_obj)
-#> Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-#> ℹ Please use tidy evaluation idioms with `aes()`.
-#> ℹ See also `vignette("ggplot2-in-packages")` for more information.
-#> ℹ The deprecated feature was likely used in the ggcorrplot package.
-#>   Please report the issue at <https://github.com/kassambara/ggcorrplot/issues>.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -240,15 +232,15 @@ SCE_obj <- DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-07-02 13:13:41 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-07-02 13:13:41 - Calculating highly variable genes
-#> 2026-07-02 13:13:41 - Scaling object
-#> 2026-07-02 13:13:41 - Running pca, saved in key: PCA
+#> 2026-07-20 10:13:15 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-07-20 10:13:15 - Calculating highly variable genes
+#> 2026-07-20 10:13:15 - Scaling object
+#> 2026-07-20 10:13:15 - Running pca, saved in key: PCA
 #> Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.
-#> 2026-07-02 13:13:43 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-07-02 13:13:48 - Running Nearest-neighbor graph construction
-#> 2026-07-02 13:13:49 - Running cluster detection
-#> 2026-07-02 13:13:49 - Creating UMAP
+#> 2026-07-20 10:13:18 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-07-20 10:13:21 - Running Nearest-neighbor graph construction
+#> 2026-07-20 10:13:21 - Running cluster detection
+#> 2026-07-20 10:13:22 - Creating UMAP
 ```
 
 ``` r
@@ -314,14 +306,14 @@ SCE_obj <- DO.CellTypist(SCE_obj,
     runCelltypistUpdate = TRUE,
     over_clustering = "leiden0.3"
 )
-#> 2026-07-02 13:13:58 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-07-02 13:13:58 - Saving celltypist results to temporary folder: /tmp/RtmpisydGb/file1033e3da50ff1
+#> 2026-07-20 10:13:30 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-20 10:13:30 - Saving celltypist results to temporary folder: /tmp/RtmprnUaSC/file1024c18e1f5d
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
 #> ℹ Install it from Bioconductor with `BiocManager::install("anndataR")`
 #> ℹ See more at <https://bioconductor.org/packages/anndataR/>
-#> 2026-07-02 13:14:21 - Creating probality plot
+#> 2026-07-20 10:13:53 - Creating probality plot
 #> 
 #> This message is displayed once per session.
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
@@ -534,7 +526,7 @@ DO.CellComposition(SCE_obj,
     transform_method = "arcsin",
     n_reps = 3
 )
-#> 2026-07-02 13:14:36 - Bootstrapping method activated with 3 simulated replicates!
+#> 2026-07-20 10:14:07 - Bootstrapping method activated with 3 simulated replicates!
 #> .
 #> Using orig.ident, condition as id variables
 #> Using condition as id variables
@@ -556,7 +548,6 @@ SCE_obj <- DO.FullRecluster(SCE_obj, over_clustering = "annotation")
 #> Computing nearest neighbor graph
 #> Computing SNN
 #> 1 singletons identified. 2 final clusters.
-#> 1 singletons identified. 3 final clusters.
 #> 
 DO.UMAP(SCE_obj, group.by = "annotation_recluster")
 ```
@@ -572,7 +563,7 @@ T_cells <- DO.Subset(SCE_obj,
         value = TRUE
     )
 )
-#> 2026-07-02 13:14:55 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-20 10:14:23 - Specified 'ident_name': expecting a categorical variable.
 
 T_cells <- DO.CellTypist(T_cells,
     modelName = "Healthy_COVID19_PBMC.pkl",
@@ -580,9 +571,9 @@ T_cells <- DO.CellTypist(T_cells,
     over_clustering = "annotation_recluster",
     SeuV5 = FALSE
 )
-#> 2026-07-02 13:14:55 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-07-02 13:14:55 - Saving celltypist results to temporary folder: /tmp/RtmpisydGb/file1033e75e99f5a
-#> 2026-07-02 13:15:08 - Creating probality plot
+#> 2026-07-20 10:14:23 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-20 10:14:23 - Saving celltypist results to temporary folder: /tmp/RtmprnUaSC/file1024c20cf5b07
+#> 2026-07-20 10:14:34 - Creating probality plot
 
 T_cells$annotation <- plyr::revalue(
     T_cells$annotation_recluster,
@@ -636,7 +627,7 @@ CD4T_cells <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "CD4_T_cells"
 )
-#> 2026-07-02 13:15:09 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-20 10:14:35 - Specified 'ident_name': expecting a categorical variable.
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
@@ -646,13 +637,13 @@ DGE_result <- DO.MultiDGE(CD4T_cells,
 )
 #> The following grouping variables have 1 value and will be ignored: annotation
 #> Centering and scaling data matrix
-#> 2026-07-02 13:15:10 - Annotation names are consistent between original and pseudo-bulk objects.
-#> 2026-07-02 13:15:10 - Starting DGE single cell method analysis
-#> 2026-07-02 13:15:10 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-07-02 13:15:11 - Finished DGE single cell method analysis
-#> 2026-07-02 13:15:11 - Starting DGE pseudo bulk method analysis
-#> 2026-07-02 13:15:11 - Finished DGE pseudo bulk method analysis
-#> 2026-07-02 13:15:11 - DGE pseudo bulk result is empty...
+#> 2026-07-20 10:14:36 - Annotation names are consistent between original and pseudo-bulk objects.
+#> 2026-07-20 10:14:36 - Starting DGE single cell method analysis
+#> 2026-07-20 10:14:36 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-07-20 10:14:37 - Finished DGE single cell method analysis
+#> 2026-07-20 10:14:37 - Starting DGE pseudo bulk method analysis
+#> 2026-07-20 10:14:37 - Finished DGE pseudo bulk method analysis
+#> 2026-07-20 10:14:37 - DGE pseudo bulk result is empty...
 
 head(DGE_result, 10) %>%
     kable(format = "html", table.attr = "style='width:100%;'") %>%
@@ -666,16 +657,16 @@ head(DGE_result, 10) %>%
 
 | gene | pct.1 | pct.2 | celltype | condition | avg_log2FC_PB_DESeq2 | avg_log2FC_SC_wilcox | p_val_adj_PB_DESeq2 | p_val_adj_SC_wilcox | p_val_PB_DESeq2 | p_val_SC_wilcox |
 |:---|---:|---:|:---|:---|:---|---:|:---|---:|:---|---:|
-| RGS1 | 0.823 | 0.056 | CD4_T_cells | disease | NA | 5.985999 | NA | 0 | NA | 0 |
-| SRGN | 0.977 | 0.489 | CD4_T_cells | disease | NA | 4.036209 | NA | 0 | NA | 0 |
-| ZFP36 | 0.935 | 0.418 | CD4_T_cells | disease | NA | 3.690157 | NA | 0 | NA | 0 |
-| FOS | 0.962 | 0.587 | CD4_T_cells | disease | NA | 3.234824 | NA | 0 | NA | 0 |
-| RGCC | 0.862 | 0.321 | CD4_T_cells | disease | NA | 3.416695 | NA | 0 | NA | 0 |
-| ACTB | 0.977 | 0.998 | CD4_T_cells | disease | NA | -1.930151 | NA | 0 | NA | 0 |
-| NR4A2 | 0.565 | 0.072 | CD4_T_cells | disease | NA | 3.896930 | NA | 0 | NA | 0 |
-| KLF6 | 0.904 | 0.426 | CD4_T_cells | disease | NA | 2.707374 | NA | 0 | NA | 0 |
-| AREG | 0.446 | 0.031 | CD4_T_cells | disease | NA | 4.782775 | NA | 0 | NA | 0 |
-| ATF3 | 0.323 | 0.002 | CD4_T_cells | disease | NA | 8.336005 | NA | 0 | NA | 0 |
+| RGS1 | 0.842 | 0.056 | CD4_T_cells | disease | NA | 6.151546 | NA | 0 | NA | 0 |
+| SRGN | 0.982 | 0.489 | CD4_T_cells | disease | NA | 4.102434 | NA | 0 | NA | 0 |
+| ZFP36 | 0.919 | 0.418 | CD4_T_cells | disease | NA | 3.593822 | NA | 0 | NA | 0 |
+| FOS | 0.946 | 0.587 | CD4_T_cells | disease | NA | 3.072799 | NA | 0 | NA | 0 |
+| RGCC | 0.842 | 0.321 | CD4_T_cells | disease | NA | 3.276652 | NA | 0 | NA | 0 |
+| KLF6 | 0.910 | 0.426 | CD4_T_cells | disease | NA | 2.720788 | NA | 0 | NA | 0 |
+| ACTB | 0.979 | 0.998 | CD4_T_cells | disease | NA | -1.771189 | NA | 0 | NA | 0 |
+| DUSP1 | 0.949 | 0.592 | CD4_T_cells | disease | NA | 2.264606 | NA | 0 | NA | 0 |
+| FTH1 | 0.997 | 0.989 | CD4_T_cells | disease | NA | 2.134547 | NA | 0 | NA | 0 |
+| LMNA | 0.501 | 0.052 | CD4_T_cells | disease | NA | 4.574473 | NA | 0 | NA | 0 |
 
 After inspecting the DGE analysis, we continue with `DO.enrichR`
 function, which uses the enrichR API to run gene set enrichment. It
@@ -717,11 +708,11 @@ head(result_GO, 5) %>%
 
 | Term | Overlap | P.value | Adjusted.P.value | Old.P.value | Old.Adjusted.P.value | Odds.Ratio | Combined.Score | Genes | Database | State |
 |:---|:---|---:|---:|---:|---:|---:|---:|:---|:---|:---|
-| Regulation Of Apoptotic Process (<GO:0042981>) | 23/705 | 0 | 2.0e-07 | 0 | 0 | 6.105060 | 138.78136 | TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;IGFBP3;PLAUR;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A | GO_Biological_Process_2023 | enriched |
-| Regulation Of Transcription By RNA Polymerase II (<GO:0006357>) | 37/2028 | 0 | 2.2e-06 | 0 | 0 | 3.611687 | 70.82183 | CEBPB;CITED2;RORA;PRDM1;TNF;ZFP36;NAMPT;RBBP8;NLRP3;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;ETV3;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A | GO_Biological_Process_2023 | enriched |
-| Positive Regulation Of Programmed Cell Death (<GO:0043068>) | 13/245 | 0 | 3.3e-06 | 0 | 0 | 9.486735 | 178.39945 | TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
-| Response To Glucocorticoid (<GO:0051384>) | 6/26 | 0 | 4.8e-06 | 0 | 0 | 48.417073 | 878.20166 | ZFP36;BCL2L11;ANXA1;TNF;ZFP36L2;ZFP36L1 | GO_Biological_Process_2023 | enriched |
-| Positive Regulation Of Apoptotic Process (<GO:0043065>) | 13/270 | 0 | 6.3e-06 | 0 | 0 | 8.552999 | 150.93612 | TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
+| Positive Regulation Of Cytokine Production (<GO:0001819>) | 16/320 | 0 | 4.70e-06 | 0 | 0 | 7.563467 | 148.28842 | EGR1;CEBPB;ANXA1;F2R;RORA;ISG15;SLC7A5;RGCC;IFNG;IRF4;NLRP3;CCR7;TIGIT;HSPA1B;HLA-DPA1;HSPA1A | GO_Biological_Process_2023 | enriched |
+| Response To Fibroblast Growth Factor (<GO:0071774>) | 6/20 | 0 | 4.80e-06 | 0 | 0 | 58.221135 | 1100.36008 | NR4A1;ZFP36;EGR3;ZFP36L2;IER2;ZFP36L1 | GO_Biological_Process_2023 | enriched |
+| Regulation Of Transcription By RNA Polymerase II (<GO:0006357>) | 40/2028 | 0 | 5.60e-06 | 0 | 0 | 3.208537 | 58.82634 | CEBPB;CITED2;HMGB2;RORA;PRDM1;IKZF2;ZFP36;TRPS1;NAMPT;RBBP8;NLRP3;IER2;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IFNG;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A | GO_Biological_Process_2023 | enriched |
+| Regulation Of Apoptotic Process (<GO:0042981>) | 22/705 | 0 | 7.40e-06 | 0 | 0 | 4.748620 | 84.40179 | TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;PLAUR;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;CTLA4;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A | GO_Biological_Process_2023 | enriched |
+| Positive Regulation Of Programmed Cell Death (<GO:0043068>) | 13/245 | 0 | 1.53e-05 | 0 | 0 | 7.907715 | 133.03669 | TOP2A;JUN;GADD45B;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;IFNG;PMAIP1;CTLA4;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
 
 The top significant results can then be visualized in a bar plot.
 
@@ -872,7 +863,7 @@ SCE_obj_sub <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = c("NK", "CD4_T_cells", "B_cells")
 )
-#> 2026-07-02 13:16:08 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-20 10:15:22 - Specified 'ident_name': expecting a categorical variable.
 
 DO.VlnPlot(SCE_obj_sub,
     Feature = "NKG7",
@@ -881,7 +872,7 @@ DO.VlnPlot(SCE_obj_sub,
     ctrl.condition = "healthy"
 )
 #> Using condition, orig.ident, annotation as id variables
-#> 2026-07-02 13:16:08 - ListTest empty, comparing every sample with each other
+#> 2026-07-20 10:15:23 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Violin-1.png)
@@ -892,7 +883,7 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "NK"
 )
-#> 2026-07-02 13:16:12 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-20 10:15:26 - Specified 'ident_name': expecting a categorical variable.
 
 DO.Barplot(SCE_obj_NK,
     group.by = "condition",
@@ -903,7 +894,7 @@ DO.Barplot(SCE_obj_NK,
     x_label_rotation = 0
 )
 #> Using condition, orig.ident as id variables
-#> 2026-07-02 13:16:12 - ListTest empty, comparing every sample with each other
+#> 2026-07-20 10:15:26 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Bar-1.png)
@@ -926,7 +917,7 @@ DO.BoxPlot(SCE_obj,
     plot_sample = FALSE
 )
 #> Using group, cluster as id variables
-#> 2026-07-02 13:16:13 - ListTest empty, comparing every sample with each other
+#> 2026-07-20 10:15:28 - ListTest empty, comparing every sample with each other
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -945,236 +936,236 @@ DO.BoxPlot(SCE_obj,
     #>  collate  C.UTF-8
     #>  ctype    C.UTF-8
     #>  tz       UTC
-    #>  date     2026-07-02
+    #>  date     2026-07-20
     #>  pandoc   3.8.3 @ /opt/hostedtoolcache/pandoc/3.8.3/x64/ (via rmarkdown)
     #>  quarto   NA
     #> 
     #> ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
-    #>  package              * version   date (UTC) lib source
-    #>  abind                  1.4-8     2024-09-12 [1] RSPM
-    #>  assertthat             0.2.1     2019-03-21 [1] RSPM
-    #>  backports              1.5.1     2026-04-03 [1] RSPM
-    #>  basilisk               1.24.0    2026-04-28 [1] Bioconduc~
-    #>  beachmat               2.28.0    2026-04-28 [1] Bioconduc~
-    #>  beeswarm               0.4.0     2021-06-01 [1] RSPM
-    #>  Biobase              * 2.72.0    2026-04-28 [1] Bioconduc~
-    #>  BiocGenerics         * 0.58.1    2026-05-14 [1] Bioconduc~
-    #>  BiocManager            1.30.27   2025-11-14 [1] RSPM
-    #>  BiocNeighbors          2.6.0     2026-04-28 [1] Bioconduc~
-    #>  BiocParallel           1.46.0    2026-04-29 [1] Bioconduc~
-    #>  BiocSingular           1.28.0    2026-04-28 [1] Bioconduc~
-    #>  BiocStyle            * 2.40.0    2026-04-28 [1] Bioconduc~
-    #>  bluster                1.22.0    2026-04-28 [1] Bioconduc~
-    #>  bookdown               0.47      2026-06-16 [1] RSPM
-    #>  broom                  1.0.13    2026-05-14 [1] RSPM
-    #>  bslib                  0.11.0    2026-05-16 [1] RSPM
-    #>  cachem                 1.1.0     2024-05-16 [1] RSPM
-    #>  car                    3.1-5     2026-02-03 [1] RSPM
-    #>  carData                3.0-6     2026-01-30 [1] RSPM
-    #>  cli                    3.6.6     2026-04-09 [1] RSPM
-    #>  cluster                2.1.8.2   2026-02-05 [3] CRAN (R 4.6.1)
-    #>  codetools              0.2-20    2024-03-31 [3] CRAN (R 4.6.1)
-    #>  colorspace             2.1-2     2025-09-22 [1] RSPM
-    #>  cowplot                1.2.0     2025-07-07 [1] RSPM
-    #>  crayon                 1.5.3     2024-06-20 [1] RSPM
-    #>  curl                   7.1.0     2026-04-22 [1] RSPM
-    #>  data.table             1.18.4    2026-05-06 [1] RSPM
-    #>  DelayedArray           0.38.2    2026-05-26 [1] Bioconduc~
-    #>  DelayedMatrixStats     1.34.0    2026-04-28 [1] Bioconduc~
-    #>  deldir                 2.0-4     2024-02-28 [1] RSPM
-    #>  desc                   1.4.3     2023-12-10 [1] RSPM
-    #>  DESeq2                 1.52.0    2026-04-28 [1] Bioconduc~
-    #>  digest                 0.6.39    2025-11-19 [1] RSPM
-    #>  dir.expiry             1.20.0    2026-04-28 [1] Bioconduc~
-    #>  dotCall64              1.2       2024-10-04 [1] RSPM
-    #>  DOtools              * 1.3.3     2026-07-02 [1] local
-    #>  dplyr                * 1.2.1     2026-04-03 [1] RSPM
-    #>  dqrng                  0.4.1     2024-05-28 [1] RSPM
-    #>  DropletUtils           1.32.0    2026-04-28 [1] Bioconduc~
-    #>  edgeR                  4.10.1    2026-05-24 [1] Bioconduc~
-    #>  enrichR              * 3.4       2025-02-02 [1] RSPM
-    #>  evaluate               1.0.5     2025-08-27 [1] RSPM
-    #>  farver                 2.1.2     2024-05-13 [1] RSPM
-    #>  fastDummies            1.7.6     2026-04-22 [1] RSPM
-    #>  fastmap                1.2.0     2024-05-15 [1] RSPM
-    #>  filelock               1.0.3     2023-12-11 [1] RSPM
-    #>  fitdistrplus           1.2-6     2026-01-24 [1] RSPM
-    #>  FNN                    1.1.4.1   2024-09-22 [1] RSPM
-    #>  fontBitstreamVera      0.1.1     2017-02-01 [1] RSPM
-    #>  fontLiberation         0.1.0     2016-10-15 [1] RSPM
-    #>  fontquiver             0.2.1     2017-02-01 [1] RSPM
-    #>  forcats                1.0.1     2025-09-25 [1] RSPM
-    #>  Formula                1.2-5     2023-02-24 [1] RSPM
-    #>  fs                     2.1.0     2026-04-18 [1] RSPM
-    #>  future               * 1.70.0    2026-03-14 [1] RSPM
-    #>  future.apply           1.20.2    2026-02-20 [1] RSPM
-    #>  gdtools                0.5.1     2026-05-25 [1] RSPM
-    #>  generics             * 0.1.4     2025-05-09 [1] RSPM
-    #>  GenomicRanges        * 1.64.0    2026-04-28 [1] Bioconduc~
-    #>  ggalluvial             0.12.6    2026-02-22 [1] RSPM
-    #>  ggbeeswarm             0.7.3     2025-11-29 [1] RSPM
-    #>  ggcorrplot             0.1.4.1   2023-09-05 [1] RSPM
-    #>  ggiraph                0.9.6     2026-02-21 [1] RSPM
-    #>  ggiraphExtra           0.3.0     2020-10-06 [1] RSPM
-    #>  ggplot2              * 4.0.3     2026-04-22 [1] RSPM
-    #>  ggpubr                 0.6.3     2026-02-24 [1] RSPM
-    #>  ggrastr                1.0.2     2023-06-01 [1] RSPM
-    #>  ggrepel                0.9.8     2026-03-17 [1] RSPM
-    #>  ggridges               0.5.7     2025-08-27 [1] RSPM
-    #>  ggsignif               0.6.4     2022-10-13 [1] RSPM
-    #>  ggtext                 0.1.2     2022-09-16 [1] RSPM
-    #>  globals                0.19.1    2026-03-13 [1] RSPM
-    #>  glue                   1.8.1     2026-04-17 [1] RSPM
-    #>  goftest                1.2-3     2021-10-07 [1] RSPM
-    #>  gridExtra              2.3.1     2026-06-25 [1] RSPM
-    #>  gridtext               0.1.6     2026-02-19 [1] RSPM
-    #>  gtable                 0.3.6     2024-10-25 [1] RSPM
-    #>  h5mread                1.4.0     2026-04-28 [1] Bioconduc~
-    #>  HDF5Array              1.40.0    2026-04-28 [1] Bioconduc~
-    #>  hms                    1.1.4     2025-10-17 [1] RSPM
-    #>  htmltools              0.5.9     2025-12-04 [1] RSPM
-    #>  htmlwidgets            1.6.4     2023-12-06 [1] RSPM
-    #>  httpuv                 1.6.17    2026-03-18 [1] RSPM
-    #>  httr                   1.4.8     2026-02-13 [1] RSPM
-    #>  ica                    1.0-3     2022-07-08 [1] RSPM
-    #>  igraph                 2.3.3     2026-06-26 [1] RSPM
-    #>  insight                1.5.2     2026-06-28 [1] RSPM
-    #>  IRanges              * 2.46.0    2026-04-28 [1] Bioconduc~
-    #>  irlba                  2.3.7     2026-01-30 [1] RSPM
-    #>  isoband                0.3.0     2025-12-07 [1] RSPM
-    #>  jquerylib              0.1.4     2021-04-26 [1] RSPM
-    #>  jsonlite               2.0.0     2025-03-27 [1] RSPM
-    #>  kableExtra           * 1.4.0     2024-01-24 [1] RSPM
-    #>  KernSmooth             2.23-26   2025-01-01 [3] CRAN (R 4.6.1)
-    #>  knitr                  1.51      2025-12-20 [1] RSPM
-    #>  ks                     1.15.2    2026-05-09 [1] RSPM
-    #>  labeling               0.4.3     2023-08-29 [1] RSPM
-    #>  later                  1.4.8     2026-03-05 [1] RSPM
-    #>  lattice                0.22-9    2026-02-09 [3] CRAN (R 4.6.1)
-    #>  lazyeval               0.2.3     2026-04-04 [1] RSPM
-    #>  leidenbase             0.1.37    2026-05-19 [1] RSPM
-    #>  lifecycle              1.0.5     2026-01-08 [1] RSPM
-    #>  limma                  3.68.4    2026-05-31 [1] Bioconduc~
-    #>  listenv                1.0.0     2026-06-22 [1] RSPM
-    #>  lmtest                 0.9-40    2022-03-21 [1] RSPM
-    #>  locfit                 1.5-9.12  2025-03-05 [1] RSPM
-    #>  magick                 2.9.1     2026-02-28 [1] RSPM
-    #>  magrittr               2.0.5     2026-04-04 [1] RSPM
-    #>  MASS                   7.3-65    2025-02-28 [3] CRAN (R 4.6.1)
-    #>  Matrix                 1.7-5     2026-03-21 [3] CRAN (R 4.6.1)
-    #>  MatrixGenerics       * 1.24.0    2026-04-28 [1] Bioconduc~
-    #>  matrixStats          * 1.5.0     2025-01-07 [1] RSPM
-    #>  mclust                 6.1.2     2025-10-31 [1] RSPM
-    #>  metapod                1.20.0    2026-04-28 [1] Bioconduc~
-    #>  mgcv                   1.9-4     2025-11-07 [3] CRAN (R 4.6.1)
-    #>  mime                   0.13      2025-03-17 [1] RSPM
-    #>  miniUI                 0.1.2     2025-04-17 [1] RSPM
-    #>  mvtnorm                1.4-1     2026-06-06 [1] RSPM
-    #>  mycor                  0.1.1     2018-04-10 [1] RSPM
-    #>  nlme                   3.1-169   2026-03-27 [3] CRAN (R 4.6.1)
-    #>  openxlsx               4.2.8.1   2025-10-31 [1] RSPM
-    #>  otel                   0.2.0     2025-08-29 [1] RSPM
-    #>  parallelly             1.48.0    2026-06-29 [1] RSPM
-    #>  patchwork              1.3.2     2025-08-25 [1] RSPM
-    #>  pbapply                1.7-4     2025-07-20 [1] RSPM
-    #>  pillar                 1.11.1    2025-09-17 [1] RSPM
-    #>  pkgconfig              2.0.3     2019-09-22 [1] RSPM
-    #>  pkgdown                2.2.0     2025-11-06 [1] RSPM
-    #>  plotly                 4.12.0    2026-01-24 [1] RSPM
-    #>  plyr                 * 1.8.9     2023-10-02 [1] RSPM
-    #>  png                    0.1-9     2026-03-15 [1] RSPM
-    #>  polyclip               1.10-7    2024-07-23 [1] RSPM
-    #>  ppcor                  1.1       2015-12-03 [1] RSPM
-    #>  pracma                 2.4.6     2025-10-22 [1] RSPM
-    #>  prettyunits            1.2.0     2023-09-24 [1] RSPM
-    #>  progress               1.2.3     2023-12-06 [1] RSPM
-    #>  progressr              0.19.0    2026-03-31 [1] RSPM
-    #>  promises               1.5.0     2025-11-01 [1] RSPM
-    #>  purrr                  1.2.2     2026-04-10 [1] RSPM
-    #>  R.methodsS3            1.8.2     2022-06-13 [1] RSPM
-    #>  R.oo                   1.27.1    2025-05-02 [1] RSPM
-    #>  R.utils                2.13.0    2025-02-24 [1] RSPM
-    #>  R6                     2.6.1     2025-02-15 [1] RSPM
-    #>  ragg                   1.5.2     2026-03-23 [1] RSPM
-    #>  RANN                   2.6.2     2024-08-25 [1] RSPM
-    #>  RColorBrewer           1.1-3     2022-04-03 [1] RSPM
-    #>  Rcpp                   1.1.1-1.1 2026-04-24 [1] RSPM
-    #>  RcppAnnoy              0.0.23    2026-01-12 [1] RSPM
-    #>  RcppHNSW               0.7.0     2026-05-26 [1] RSPM
-    #>  reshape2               1.4.5     2025-11-12 [1] RSPM
-    #>  reticulate             1.46.0    2026-04-09 [1] RSPM
-    #>  rhdf5                  2.56.0    2026-04-28 [1] Bioconduc~
-    #>  rhdf5filters           1.24.0    2026-04-28 [1] Bioconduc~
-    #>  Rhdf5lib               2.0.0     2026-04-28 [1] Bioconduc~
-    #>  rjson                  0.2.23    2024-09-16 [1] RSPM
-    #>  rlang                  1.2.0     2026-04-06 [1] RSPM
-    #>  rmarkdown              2.31      2026-03-26 [1] RSPM
-    #>  ROCR                   1.0-12    2026-01-23 [1] RSPM
-    #>  RSpectra               0.16-2    2024-07-18 [1] RSPM
-    #>  rstatix                0.7.3     2025-10-18 [1] RSPM
-    #>  rstudioapi             0.19.0    2026-06-11 [1] RSPM
-    #>  rsvd                   1.0.5     2021-04-16 [1] RSPM
-    #>  rsvg                   2.7.0     2025-09-08 [1] RSPM
-    #>  Rtsne                  0.17      2023-12-07 [1] RSPM
-    #>  S4Arrays               1.12.0    2026-04-28 [1] Bioconduc~
-    #>  S4Vectors            * 0.50.1    2026-05-13 [1] Bioconduc~
-    #>  S7                     0.2.2     2026-04-22 [1] RSPM
-    #>  sass                   0.4.10    2025-04-11 [1] RSPM
-    #>  ScaledMatrix           1.20.0    2026-04-28 [1] Bioconduc~
-    #>  scales                 1.4.0     2025-04-24 [1] RSPM
-    #>  scater               * 1.40.1    2026-05-20 [1] Bioconduc~
-    #>  scattermore            1.2       2023-06-12 [1] RSPM
-    #>  SCpubr                 3.0.1     2026-01-09 [1] RSPM
-    #>  scran                * 1.40.0    2026-04-28 [1] Bioconduc~
-    #>  sctransform            0.4.3     2026-01-10 [1] RSPM
-    #>  scuttle              * 1.22.0    2026-04-28 [1] Bioconduc~
-    #>  Seqinfo              * 1.2.0     2026-04-28 [1] Bioconduc~
-    #>  sessioninfo            1.2.4     2026-06-04 [1] RSPM
-    #>  Seurat               * 5.5.1     2026-06-26 [1] RSPM
-    #>  SeuratObject         * 5.4.0     2026-04-11 [1] RSPM
-    #>  shiny                  1.14.0    2026-06-21 [1] RSPM
-    #>  SingleCellExperiment * 1.34.0    2026-04-28 [1] Bioconduc~
-    #>  sjlabelled             1.2.0     2022-04-10 [1] RSPM
-    #>  sjmisc                 2.8.11    2025-07-30 [1] RSPM
-    #>  sp                   * 2.2-1     2026-02-13 [1] RSPM
-    #>  spam                   2.11-4    2026-05-29 [1] RSPM
-    #>  SparseArray            1.12.2    2026-05-01 [1] Bioconduc~
-    #>  sparseMatrixStats      1.24.0    2026-04-28 [1] Bioconduc~
-    #>  spatstat.data          3.1-9     2025-10-18 [1] RSPM
-    #>  spatstat.explore       3.8-1     2026-05-24 [1] RSPM
-    #>  spatstat.geom          3.8-1     2026-05-23 [1] RSPM
-    #>  spatstat.random        3.5-0     2026-05-24 [1] RSPM
-    #>  spatstat.sparse        3.2-0     2026-05-21 [1] RSPM
-    #>  spatstat.univar        3.2-0     2026-05-18 [1] RSPM
-    #>  spatstat.utils         3.2-3     2026-05-10 [1] RSPM
-    #>  statmod                1.5.2     2026-05-17 [1] RSPM
-    #>  stringi                1.8.7     2025-03-27 [1] RSPM
-    #>  stringr                1.6.0     2025-11-04 [1] RSPM
-    #>  SummarizedExperiment * 1.42.0    2026-04-28 [1] Bioconduc~
-    #>  survival               3.8-6     2026-01-16 [3] CRAN (R 4.6.1)
-    #>  svglite                2.2.2     2025-10-21 [1] RSPM
-    #>  systemfonts            1.3.2     2026-03-05 [1] RSPM
-    #>  tensor                 1.5.1     2025-06-17 [1] RSPM
-    #>  textshaping            1.0.5     2026-03-06 [1] RSPM
-    #>  tibble               * 3.3.1     2026-01-11 [1] RSPM
-    #>  tidyr                  1.3.2     2025-12-19 [1] RSPM
-    #>  tidyselect             1.2.1     2024-03-11 [1] RSPM
-    #>  tidyverse              2.0.0     2023-02-22 [1] RSPM
-    #>  uwot                   0.2.4     2025-11-10 [1] RSPM
-    #>  vctrs                  0.7.3     2026-04-11 [1] RSPM
-    #>  vipor                  0.4.7     2023-12-18 [1] RSPM
-    #>  viridis                0.6.5     2024-01-29 [1] RSPM
-    #>  viridisLite            0.4.3     2026-02-04 [1] RSPM
-    #>  withr                  3.0.3     2026-06-19 [1] RSPM
-    #>  WriteXLS               6.8.0     2025-05-22 [1] RSPM
-    #>  xfun                   0.59      2026-06-19 [1] RSPM
-    #>  xml2                   1.6.0     2026-06-22 [1] RSPM
-    #>  xtable                 1.8-8     2026-02-22 [1] RSPM
-    #>  XVector                0.52.0    2026-04-28 [1] Bioconduc~
-    #>  yaml                   2.3.12    2025-12-10 [1] RSPM
-    #>  zellkonverter          1.22.0    2026-04-29 [1] Bioconduc~
-    #>  zip                    3.0.0     2026-06-10 [1] RSPM
-    #>  zoo                    1.8-15    2025-12-15 [1] RSPM
+    #>  package              * version  date (UTC) lib source
+    #>  abind                  1.4-8    2024-09-12 [1] RSPM
+    #>  assertthat             0.2.1    2019-03-21 [1] RSPM
+    #>  backports              1.5.1    2026-04-03 [1] RSPM
+    #>  basilisk               1.24.0   2026-04-28 [1] Bioconduc~
+    #>  beachmat               2.28.0   2026-04-28 [1] Bioconduc~
+    #>  beeswarm               0.4.0    2021-06-01 [1] RSPM
+    #>  Biobase              * 2.72.0   2026-04-28 [1] Bioconduc~
+    #>  BiocGenerics         * 0.58.1   2026-05-14 [1] Bioconduc~
+    #>  BiocManager            1.30.27  2025-11-14 [1] RSPM
+    #>  BiocNeighbors          2.6.0    2026-04-28 [1] Bioconduc~
+    #>  BiocParallel           1.46.0   2026-04-29 [1] Bioconduc~
+    #>  BiocSingular           1.28.0   2026-04-28 [1] Bioconduc~
+    #>  BiocStyle            * 2.40.0   2026-04-28 [1] Bioconduc~
+    #>  bluster                1.22.0   2026-04-28 [1] Bioconduc~
+    #>  bookdown               0.47     2026-06-16 [1] RSPM
+    #>  broom                  1.0.13   2026-05-14 [1] RSPM
+    #>  bslib                  0.11.0   2026-05-16 [1] RSPM
+    #>  cachem                 1.1.0    2024-05-16 [1] RSPM
+    #>  car                    3.1-5    2026-02-03 [1] RSPM
+    #>  carData                3.0-6    2026-01-30 [1] RSPM
+    #>  cli                    3.6.6    2026-04-09 [1] RSPM
+    #>  cluster                2.1.8.2  2026-02-05 [3] CRAN (R 4.6.1)
+    #>  codetools              0.2-20   2024-03-31 [3] CRAN (R 4.6.1)
+    #>  colorspace             2.1-3    2026-07-12 [1] RSPM
+    #>  cowplot                1.2.0    2025-07-07 [1] RSPM
+    #>  crayon                 1.5.3    2024-06-20 [1] RSPM
+    #>  curl                   7.1.0    2026-04-22 [1] RSPM
+    #>  data.table             1.18.4   2026-05-06 [1] RSPM
+    #>  DelayedArray           0.38.2   2026-05-26 [1] Bioconduc~
+    #>  DelayedMatrixStats     1.34.0   2026-04-28 [1] Bioconduc~
+    #>  deldir                 2.0-4    2024-02-28 [1] RSPM
+    #>  desc                   1.4.3    2023-12-10 [1] RSPM
+    #>  DESeq2                 1.52.0   2026-04-28 [1] Bioconduc~
+    #>  digest                 0.6.39   2025-11-19 [1] RSPM
+    #>  dir.expiry             1.20.0   2026-04-28 [1] Bioconduc~
+    #>  dotCall64              1.2      2024-10-04 [1] RSPM
+    #>  DOtools              * 1.3.4    2026-07-20 [1] local
+    #>  dplyr                * 1.2.1    2026-04-03 [1] RSPM
+    #>  dqrng                  0.4.1    2024-05-28 [1] RSPM
+    #>  DropletUtils           1.32.0   2026-04-28 [1] Bioconduc~
+    #>  edgeR                  4.10.1   2026-05-24 [1] Bioconduc~
+    #>  enrichR              * 3.4      2025-02-02 [1] RSPM
+    #>  evaluate               1.0.5    2025-08-27 [1] RSPM
+    #>  farver                 2.1.2    2024-05-13 [1] RSPM
+    #>  fastDummies            1.7.6    2026-04-22 [1] RSPM
+    #>  fastmap                1.2.0    2024-05-15 [1] RSPM
+    #>  filelock               1.0.3    2023-12-11 [1] RSPM
+    #>  fitdistrplus           1.2-6    2026-01-24 [1] RSPM
+    #>  FNN                    1.1.4.1  2024-09-22 [1] RSPM
+    #>  fontBitstreamVera      0.1.1    2017-02-01 [1] RSPM
+    #>  fontLiberation         0.1.0    2016-10-15 [1] RSPM
+    #>  fontquiver             0.2.1    2017-02-01 [1] RSPM
+    #>  forcats                1.0.1    2025-09-25 [1] RSPM
+    #>  Formula                1.2-5    2023-02-24 [1] RSPM
+    #>  fs                     2.1.0    2026-04-18 [1] RSPM
+    #>  future               * 1.70.0   2026-03-14 [1] RSPM
+    #>  future.apply           1.20.2   2026-02-20 [1] RSPM
+    #>  gdtools                0.5.1    2026-05-25 [1] RSPM
+    #>  generics             * 0.1.4    2025-05-09 [1] RSPM
+    #>  GenomicRanges        * 1.64.0   2026-04-28 [1] Bioconduc~
+    #>  ggalluvial             0.12.6   2026-02-22 [1] RSPM
+    #>  ggbeeswarm             0.7.3    2025-11-29 [1] RSPM
+    #>  ggcorrplot             0.2.0    2026-07-08 [1] RSPM
+    #>  ggiraph                0.9.6    2026-02-21 [1] RSPM
+    #>  ggiraphExtra           0.3.0    2020-10-06 [1] RSPM
+    #>  ggplot2              * 4.0.3    2026-04-22 [1] RSPM
+    #>  ggpubr                 1.0.0    2026-07-06 [1] RSPM
+    #>  ggrastr                1.0.2    2023-06-01 [1] RSPM
+    #>  ggrepel                0.9.8    2026-03-17 [1] RSPM
+    #>  ggridges               0.5.7    2025-08-27 [1] RSPM
+    #>  ggsignif               0.6.4    2022-10-13 [1] RSPM
+    #>  ggtext                 0.1.2    2022-09-16 [1] RSPM
+    #>  globals                0.19.1   2026-03-13 [1] RSPM
+    #>  glue                   1.8.1    2026-04-17 [1] RSPM
+    #>  goftest                1.2-3    2021-10-07 [1] RSPM
+    #>  gridExtra              2.3.1    2026-06-25 [1] RSPM
+    #>  gridtext               0.1.6    2026-02-19 [1] RSPM
+    #>  gtable                 0.3.6    2024-10-25 [1] RSPM
+    #>  h5mread                1.4.0    2026-04-28 [1] Bioconduc~
+    #>  HDF5Array              1.40.0   2026-04-28 [1] Bioconduc~
+    #>  hms                    1.1.4    2025-10-17 [1] RSPM
+    #>  htmltools              0.5.9    2025-12-04 [1] RSPM
+    #>  htmlwidgets            1.6.4    2023-12-06 [1] RSPM
+    #>  httpuv                 1.6.17   2026-03-18 [1] RSPM
+    #>  httr                   1.4.8    2026-02-13 [1] RSPM
+    #>  ica                    1.0-3    2022-07-08 [1] RSPM
+    #>  igraph                 2.3.3    2026-06-26 [1] RSPM
+    #>  insight                1.5.2    2026-06-28 [1] RSPM
+    #>  IRanges              * 2.46.0   2026-04-28 [1] Bioconduc~
+    #>  irlba                  2.3.7    2026-01-30 [1] RSPM
+    #>  isoband                0.3.0    2025-12-07 [1] RSPM
+    #>  jquerylib              0.1.4    2021-04-26 [1] RSPM
+    #>  jsonlite               2.0.0    2025-03-27 [1] RSPM
+    #>  kableExtra           * 1.4.1    2026-07-08 [1] RSPM
+    #>  KernSmooth             2.23-26  2025-01-01 [3] CRAN (R 4.6.1)
+    #>  knitr                  1.51     2025-12-20 [1] RSPM
+    #>  ks                     1.15.2   2026-05-09 [1] RSPM
+    #>  labeling               0.4.3    2023-08-29 [1] RSPM
+    #>  later                  1.4.8    2026-03-05 [1] RSPM
+    #>  lattice                0.22-9   2026-02-09 [3] CRAN (R 4.6.1)
+    #>  lazyeval               0.2.3    2026-04-04 [1] RSPM
+    #>  leidenbase             0.1.37   2026-05-19 [1] RSPM
+    #>  lifecycle              1.0.5    2026-01-08 [1] RSPM
+    #>  limma                  3.68.4   2026-05-31 [1] Bioconduc~
+    #>  listenv                1.0.0    2026-06-22 [1] RSPM
+    #>  lmtest                 0.9-40   2022-03-21 [1] RSPM
+    #>  locfit                 1.5-9.12 2025-03-05 [1] RSPM
+    #>  magick                 2.9.1    2026-02-28 [1] RSPM
+    #>  magrittr               2.0.5    2026-04-04 [1] RSPM
+    #>  MASS                   7.3-65   2025-02-28 [3] CRAN (R 4.6.1)
+    #>  Matrix                 1.7-5    2026-03-21 [3] CRAN (R 4.6.1)
+    #>  MatrixGenerics       * 1.24.0   2026-04-28 [1] Bioconduc~
+    #>  matrixStats          * 1.5.0    2025-01-07 [1] RSPM
+    #>  mclust                 6.1.3    2026-07-05 [1] RSPM
+    #>  metapod                1.20.0   2026-04-28 [1] Bioconduc~
+    #>  mgcv                   1.9-4    2025-11-07 [3] CRAN (R 4.6.1)
+    #>  mime                   0.13     2025-03-17 [1] RSPM
+    #>  miniUI                 0.1.2    2025-04-17 [1] RSPM
+    #>  mvtnorm                1.4-2    2026-07-12 [1] RSPM
+    #>  mycor                  0.1.1    2018-04-10 [1] RSPM
+    #>  nlme                   3.1-169  2026-03-27 [3] CRAN (R 4.6.1)
+    #>  openxlsx               4.2.8.1  2025-10-31 [1] RSPM
+    #>  otel                   0.2.0    2025-08-29 [1] RSPM
+    #>  parallelly             1.48.0   2026-06-29 [1] RSPM
+    #>  patchwork              1.3.2    2025-08-25 [1] RSPM
+    #>  pbapply                1.7-4    2025-07-20 [1] RSPM
+    #>  pillar                 1.11.1   2025-09-17 [1] RSPM
+    #>  pkgconfig              2.0.3    2019-09-22 [1] RSPM
+    #>  pkgdown                2.2.1    2026-07-07 [1] RSPM
+    #>  plotly                 4.12.0   2026-01-24 [1] RSPM
+    #>  plyr                 * 1.8.9    2023-10-02 [1] RSPM
+    #>  png                    0.1-9    2026-03-15 [1] RSPM
+    #>  polyclip               1.10-7   2024-07-23 [1] RSPM
+    #>  ppcor                  1.1      2015-12-03 [1] RSPM
+    #>  pracma                 2.4.6    2025-10-22 [1] RSPM
+    #>  prettyunits            1.2.0    2023-09-24 [1] RSPM
+    #>  progress               1.2.3    2023-12-06 [1] RSPM
+    #>  progressr              1.0.0    2026-07-04 [1] RSPM
+    #>  promises               1.5.0    2025-11-01 [1] RSPM
+    #>  purrr                  1.2.2    2026-04-10 [1] RSPM
+    #>  R.methodsS3            1.8.2    2022-06-13 [1] RSPM
+    #>  R.oo                   1.27.1   2025-05-02 [1] RSPM
+    #>  R.utils                2.13.0   2025-02-24 [1] RSPM
+    #>  R6                     2.6.1    2025-02-15 [1] RSPM
+    #>  ragg                   1.5.2    2026-03-23 [1] RSPM
+    #>  RANN                   2.6.2    2024-08-25 [1] RSPM
+    #>  RColorBrewer           1.1-3    2022-04-03 [1] RSPM
+    #>  Rcpp                   1.1.2    2026-07-05 [1] RSPM
+    #>  RcppAnnoy              0.0.23   2026-01-12 [1] RSPM
+    #>  RcppHNSW               0.7.0    2026-05-26 [1] RSPM
+    #>  reshape2               1.4.5    2025-11-12 [1] RSPM
+    #>  reticulate             1.46.0   2026-04-09 [1] RSPM
+    #>  rhdf5                  2.56.0   2026-04-28 [1] Bioconduc~
+    #>  rhdf5filters           1.24.0   2026-04-28 [1] Bioconduc~
+    #>  Rhdf5lib               2.0.0    2026-04-28 [1] Bioconduc~
+    #>  rjson                  0.2.23   2024-09-16 [1] RSPM
+    #>  rlang                  1.3.0    2026-07-05 [1] RSPM
+    #>  rmarkdown              2.31     2026-03-26 [1] RSPM
+    #>  ROCR                   1.0-12   2026-01-23 [1] RSPM
+    #>  RSpectra               0.16-2   2024-07-18 [1] RSPM
+    #>  rstatix                1.0.0    2026-07-03 [1] RSPM
+    #>  rstudioapi             0.19.0   2026-06-11 [1] RSPM
+    #>  rsvd                   1.0.5    2021-04-16 [1] RSPM
+    #>  rsvg                   2.7.0    2025-09-08 [1] RSPM
+    #>  Rtsne                  0.17     2023-12-07 [1] RSPM
+    #>  S4Arrays               1.12.0   2026-04-28 [1] Bioconduc~
+    #>  S4Vectors            * 0.50.1   2026-05-13 [1] Bioconduc~
+    #>  S7                     0.2.2    2026-04-22 [1] RSPM
+    #>  sass                   0.4.10   2025-04-11 [1] RSPM
+    #>  ScaledMatrix           1.20.0   2026-04-28 [1] Bioconduc~
+    #>  scales                 1.4.0    2025-04-24 [1] RSPM
+    #>  scater               * 1.40.2   2026-07-02 [1] Bioconduc~
+    #>  scattermore            1.2      2023-06-12 [1] RSPM
+    #>  SCpubr                 3.0.1    2026-01-09 [1] RSPM
+    #>  scran                * 1.40.0   2026-04-28 [1] Bioconduc~
+    #>  sctransform            0.4.3    2026-01-10 [1] RSPM
+    #>  scuttle              * 1.22.0   2026-04-28 [1] Bioconduc~
+    #>  Seqinfo              * 1.2.0    2026-04-28 [1] Bioconduc~
+    #>  sessioninfo            1.2.4    2026-06-04 [1] RSPM
+    #>  Seurat               * 5.5.1    2026-06-26 [1] RSPM
+    #>  SeuratObject         * 5.4.0    2026-04-11 [1] RSPM
+    #>  shiny                  1.14.0   2026-06-21 [1] RSPM
+    #>  SingleCellExperiment * 1.34.0   2026-04-28 [1] Bioconduc~
+    #>  sjlabelled             1.2.0    2022-04-10 [1] RSPM
+    #>  sjmisc                 2.8.11   2025-07-30 [1] RSPM
+    #>  sp                   * 2.2-1    2026-02-13 [1] RSPM
+    #>  spam                   2.11-4   2026-05-29 [1] RSPM
+    #>  SparseArray            1.12.2   2026-05-01 [1] Bioconduc~
+    #>  sparseMatrixStats      1.24.0   2026-04-28 [1] Bioconduc~
+    #>  spatstat.data          3.1-9    2025-10-18 [1] RSPM
+    #>  spatstat.explore       3.8-1    2026-05-24 [1] RSPM
+    #>  spatstat.geom          3.8-1    2026-05-23 [1] RSPM
+    #>  spatstat.random        3.5-0    2026-05-24 [1] RSPM
+    #>  spatstat.sparse        3.2-0    2026-05-21 [1] RSPM
+    #>  spatstat.univar        3.2-0    2026-05-18 [1] RSPM
+    #>  spatstat.utils         3.2-4    2026-07-16 [1] RSPM
+    #>  statmod                1.5.2    2026-05-17 [1] RSPM
+    #>  stringi                1.8.7    2025-03-27 [1] RSPM
+    #>  stringr                1.6.0    2025-11-04 [1] RSPM
+    #>  SummarizedExperiment * 1.42.0   2026-04-28 [1] Bioconduc~
+    #>  survival               3.8-6    2026-01-16 [3] CRAN (R 4.6.1)
+    #>  svglite                2.2.2    2025-10-21 [1] RSPM
+    #>  systemfonts            1.3.2    2026-03-05 [1] RSPM
+    #>  tensor                 1.5.1    2025-06-17 [1] RSPM
+    #>  textshaping            1.0.5    2026-03-06 [1] RSPM
+    #>  tibble               * 3.3.1    2026-01-11 [1] RSPM
+    #>  tidyr                  1.3.2    2025-12-19 [1] RSPM
+    #>  tidyselect             1.2.1    2024-03-11 [1] RSPM
+    #>  tidyverse              2.0.0    2023-02-22 [1] RSPM
+    #>  uwot                   0.2.4    2025-11-10 [1] RSPM
+    #>  vctrs                  0.7.3    2026-04-11 [1] RSPM
+    #>  vipor                  0.4.7    2023-12-18 [1] RSPM
+    #>  viridis                0.6.5    2024-01-29 [1] RSPM
+    #>  viridisLite            0.4.3    2026-02-04 [1] RSPM
+    #>  withr                  3.0.3    2026-06-19 [1] RSPM
+    #>  WriteXLS               6.8.0    2025-05-22 [1] RSPM
+    #>  xfun                   0.60     2026-07-09 [1] RSPM
+    #>  xml2                   1.6.0    2026-06-22 [1] RSPM
+    #>  xtable                 1.8-8    2026-02-22 [1] RSPM
+    #>  XVector                0.52.0   2026-04-28 [1] Bioconduc~
+    #>  yaml                   2.3.12   2025-12-10 [1] RSPM
+    #>  zellkonverter          1.22.0   2026-04-29 [1] Bioconduc~
+    #>  zip                    3.0.1    2026-07-13 [1] RSPM
+    #>  zoo                    1.8-15   2025-12-15 [1] RSPM
     #> 
     #>  [1] /home/runner/work/_temp/Library
     #>  [2] /opt/R/4.6.1/lib/R/site-library
@@ -1185,7 +1176,7 @@ DO.BoxPlot(SCE_obj,
     #>  python:         /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/bin/python
     #>  libpython:      /home/runner/.pyenv/versions/3.14.0/lib/libpython3.14.so
     #>  pythonhome:     /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3:/home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3
-    #>  version:        3.14.0 (main, Jul  2 2026, 13:06:18) [GCC 13.3.0]
+    #>  version:        3.14.0 (main, Jul 20 2026, 10:06:37) [GCC 13.3.0]
     #>  numpy:          /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/lib/python3.14/site-packages/numpy
     #>  numpy_version:  2.3.4
     #>  
