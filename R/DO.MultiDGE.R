@@ -527,8 +527,6 @@ DO.MultiDGE <- function(sce_object,
               #fit Gamma-Poisson model
               fit <- glmGamPoi::glm_gp(sce_object_pb_sub, design = design_fit_glm)
               comp <- setdiff(unique(sce_object[[group_by]]), ident_ctrl)
-              # loop over comparisons and cell types
-              DEG_stats_collector_pb <- data.frame()
               for (grp in comp) {
                   #build the contrast string
                   contrast <- paste0("cond(",
