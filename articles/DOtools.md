@@ -41,6 +41,10 @@ imported as:
 #sink(file = "output.log", append=TRUE, split = TRUE)
 
 library(DOtools)
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
+#> Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
+#> 'DelayedArray::makeNindexFromArrayViewport' when loading 'HDF5Array'
 
 # Additional packages
 library(SummarizedExperiment)
@@ -232,15 +236,15 @@ SCE_obj <- DO.Integration(
     pca = TRUE,
     integration_method = "CCAIntegration"
 )
-#> 2026-07-20 10:13:15 - Splitting object for integration with CCAIntegration by orig.ident
-#> 2026-07-20 10:13:15 - Calculating highly variable genes
-#> 2026-07-20 10:13:15 - Scaling object
-#> 2026-07-20 10:13:15 - Running pca, saved in key: PCA
+#> 2026-07-23 09:24:29 - Splitting object for integration with CCAIntegration by orig.ident
+#> 2026-07-23 09:24:30 - Calculating highly variable genes
+#> 2026-07-23 09:24:30 - Scaling object
+#> 2026-07-23 09:24:30 - Running pca, saved in key: PCA
 #> Splitting 'counts', 'data' layers. Not splitting 'scale.data'. If you would like to split other layers, set in `layers` argument.
-#> 2026-07-20 10:13:18 - Running integration, saved in key: INTEGRATED.CCA
-#> 2026-07-20 10:13:21 - Running Nearest-neighbor graph construction
-#> 2026-07-20 10:13:21 - Running cluster detection
-#> 2026-07-20 10:13:22 - Creating UMAP
+#> 2026-07-23 09:24:32 - Running integration, saved in key: INTEGRATED.CCA
+#> 2026-07-23 09:24:51 - Running Nearest-neighbor graph construction
+#> 2026-07-23 09:24:54 - Running cluster detection
+#> 2026-07-23 09:24:55 - Creating UMAP
 ```
 
 ``` r
@@ -306,14 +310,14 @@ SCE_obj <- DO.CellTypist(SCE_obj,
     runCelltypistUpdate = TRUE,
     over_clustering = "leiden0.3"
 )
-#> 2026-07-20 10:13:30 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-07-20 10:13:30 - Saving celltypist results to temporary folder: /tmp/RtmprnUaSC/file1024c18e1f5d
+#> 2026-07-23 09:25:05 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-23 09:25:05 - Saving celltypist results to temporary folder: /tmp/RtmpRPpFjK/fileb0286bcce9f1
 #> For native R and reading and writing of H5AD files, an R <AnnData> object, and
 #> conversion to <SingleCellExperiment> or <Seurat> objects, check out the
 #> anndataR package:
 #> ℹ Install it from Bioconductor with `BiocManager::install("anndataR")`
 #> ℹ See more at <https://bioconductor.org/packages/anndataR/>
-#> 2026-07-20 10:13:53 - Creating probality plot
+#> 2026-07-23 09:25:27 - Creating probality plot
 #> 
 #> This message is displayed once per session.
 DO.UMAP(SCE_obj, group.by = "autoAnnot", legend.position = "right")
@@ -526,7 +530,7 @@ DO.CellComposition(SCE_obj,
     transform_method = "arcsin",
     n_reps = 3
 )
-#> 2026-07-20 10:14:07 - Bootstrapping method activated with 3 simulated replicates!
+#> 2026-07-23 09:25:42 - Bootstrapping method activated with 3 simulated replicates!
 #> .
 #> Using orig.ident, condition as id variables
 #> Using condition as id variables
@@ -548,6 +552,7 @@ SCE_obj <- DO.FullRecluster(SCE_obj, over_clustering = "annotation")
 #> Computing nearest neighbor graph
 #> Computing SNN
 #> 1 singletons identified. 2 final clusters.
+#> 1 singletons identified. 3 final clusters.
 #> 
 DO.UMAP(SCE_obj, group.by = "annotation_recluster")
 ```
@@ -563,7 +568,7 @@ T_cells <- DO.Subset(SCE_obj,
         value = TRUE
     )
 )
-#> 2026-07-20 10:14:23 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-23 09:26:08 - Specified 'ident_name': expecting a categorical variable.
 
 T_cells <- DO.CellTypist(T_cells,
     modelName = "Healthy_COVID19_PBMC.pkl",
@@ -571,9 +576,9 @@ T_cells <- DO.CellTypist(T_cells,
     over_clustering = "annotation_recluster",
     SeuV5 = FALSE
 )
-#> 2026-07-20 10:14:23 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
-#> 2026-07-20 10:14:23 - Saving celltypist results to temporary folder: /tmp/RtmprnUaSC/file1024c20cf5b07
-#> 2026-07-20 10:14:34 - Creating probality plot
+#> 2026-07-23 09:26:08 - Running celltypist using model: Healthy_COVID19_PBMC.pkl
+#> 2026-07-23 09:26:08 - Saving celltypist results to temporary folder: /tmp/RtmpRPpFjK/fileb02874fa772b
+#> 2026-07-23 09:26:24 - Creating probality plot
 
 T_cells$annotation <- plyr::revalue(
     T_cells$annotation_recluster,
@@ -627,7 +632,7 @@ CD4T_cells <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "CD4_T_cells"
 )
-#> 2026-07-20 10:14:35 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-23 09:26:27 - Specified 'ident_name': expecting a categorical variable.
 
 DGE_result <- DO.MultiDGE(CD4T_cells,
     sample_col = "orig.ident2",
@@ -637,13 +642,14 @@ DGE_result <- DO.MultiDGE(CD4T_cells,
 )
 #> The following grouping variables have 1 value and will be ignored: annotation
 #> Centering and scaling data matrix
-#> 2026-07-20 10:14:36 - Annotation names are consistent between original and pseudo-bulk objects.
-#> 2026-07-20 10:14:36 - Starting DGE single cell method analysis
-#> 2026-07-20 10:14:36 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-07-20 10:14:37 - Finished DGE single cell method analysis
-#> 2026-07-20 10:14:37 - Starting DGE pseudo bulk method analysis
-#> 2026-07-20 10:14:37 - Finished DGE pseudo bulk method analysis
-#> 2026-07-20 10:14:37 - DGE pseudo bulk result is empty...
+#> 2026-07-23 09:26:27 - Annotation names are consistent between original and pseudo-bulk objects.
+#> 2026-07-23 09:26:27 - Starting DGE single cell method analysis
+#> 2026-07-23 09:26:27 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-07-23 09:26:27 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-23 09:26:29 - Finished DGE single cell method analysis
+#> 2026-07-23 09:26:29 - Starting DGE pseudo bulk method analysis
+#> 2026-07-23 09:26:29 - Finished DGE pseudo bulk method analysis
+#> 2026-07-23 09:26:29 - DGE pseudo bulk result is empty...
 
 head(DGE_result, 10) %>%
     kable(format = "html", table.attr = "style='width:100%;'") %>%
@@ -657,16 +663,16 @@ head(DGE_result, 10) %>%
 
 | gene | pct.1 | pct.2 | celltype | condition | avg_log2FC_PB_DESeq2 | avg_log2FC_SC_wilcox | p_val_adj_PB_DESeq2 | p_val_adj_SC_wilcox | p_val_PB_DESeq2 | p_val_SC_wilcox |
 |:---|---:|---:|:---|:---|:---|---:|:---|---:|:---|---:|
-| RGS1 | 0.842 | 0.056 | CD4_T_cells | disease | NA | 6.151546 | NA | 0 | NA | 0 |
-| SRGN | 0.982 | 0.489 | CD4_T_cells | disease | NA | 4.102434 | NA | 0 | NA | 0 |
-| ZFP36 | 0.919 | 0.418 | CD4_T_cells | disease | NA | 3.593822 | NA | 0 | NA | 0 |
-| FOS | 0.946 | 0.587 | CD4_T_cells | disease | NA | 3.072799 | NA | 0 | NA | 0 |
-| RGCC | 0.842 | 0.321 | CD4_T_cells | disease | NA | 3.276652 | NA | 0 | NA | 0 |
-| KLF6 | 0.910 | 0.426 | CD4_T_cells | disease | NA | 2.720788 | NA | 0 | NA | 0 |
-| ACTB | 0.979 | 0.998 | CD4_T_cells | disease | NA | -1.771189 | NA | 0 | NA | 0 |
-| DUSP1 | 0.949 | 0.592 | CD4_T_cells | disease | NA | 2.264606 | NA | 0 | NA | 0 |
-| FTH1 | 0.997 | 0.989 | CD4_T_cells | disease | NA | 2.134547 | NA | 0 | NA | 0 |
-| LMNA | 0.501 | 0.052 | CD4_T_cells | disease | NA | 4.574473 | NA | 0 | NA | 0 |
+| RGS1 | 0.823 | 0.056 | CD4_T_cells | disease | NA | 5.985999 | NA | 0 | NA | 0 |
+| SRGN | 0.977 | 0.489 | CD4_T_cells | disease | NA | 4.036209 | NA | 0 | NA | 0 |
+| ZFP36 | 0.935 | 0.418 | CD4_T_cells | disease | NA | 3.690157 | NA | 0 | NA | 0 |
+| FOS | 0.962 | 0.587 | CD4_T_cells | disease | NA | 3.234824 | NA | 0 | NA | 0 |
+| RGCC | 0.862 | 0.321 | CD4_T_cells | disease | NA | 3.416695 | NA | 0 | NA | 0 |
+| ACTB | 0.977 | 0.998 | CD4_T_cells | disease | NA | -1.930151 | NA | 0 | NA | 0 |
+| NR4A2 | 0.565 | 0.072 | CD4_T_cells | disease | NA | 3.896930 | NA | 0 | NA | 0 |
+| KLF6 | 0.904 | 0.426 | CD4_T_cells | disease | NA | 2.707374 | NA | 0 | NA | 0 |
+| AREG | 0.446 | 0.031 | CD4_T_cells | disease | NA | 4.782775 | NA | 0 | NA | 0 |
+| ATF3 | 0.323 | 0.002 | CD4_T_cells | disease | NA | 8.336005 | NA | 0 | NA | 0 |
 
 After inspecting the DGE analysis, we continue with `DO.enrichR`
 function, which uses the enrichR API to run gene set enrichment. It
@@ -708,11 +714,11 @@ head(result_GO, 5) %>%
 
 | Term | Overlap | P.value | Adjusted.P.value | Old.P.value | Old.Adjusted.P.value | Odds.Ratio | Combined.Score | Genes | Database | State |
 |:---|:---|---:|---:|---:|---:|---:|---:|:---|:---|:---|
-| Positive Regulation Of Cytokine Production (<GO:0001819>) | 16/320 | 0 | 4.70e-06 | 0 | 0 | 7.563467 | 148.28842 | EGR1;CEBPB;ANXA1;F2R;RORA;ISG15;SLC7A5;RGCC;IFNG;IRF4;NLRP3;CCR7;TIGIT;HSPA1B;HLA-DPA1;HSPA1A | GO_Biological_Process_2023 | enriched |
-| Response To Fibroblast Growth Factor (<GO:0071774>) | 6/20 | 0 | 4.80e-06 | 0 | 0 | 58.221135 | 1100.36008 | NR4A1;ZFP36;EGR3;ZFP36L2;IER2;ZFP36L1 | GO_Biological_Process_2023 | enriched |
-| Regulation Of Transcription By RNA Polymerase II (<GO:0006357>) | 40/2028 | 0 | 5.60e-06 | 0 | 0 | 3.208537 | 58.82634 | CEBPB;CITED2;HMGB2;RORA;PRDM1;IKZF2;ZFP36;TRPS1;NAMPT;RBBP8;NLRP3;IER2;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IFNG;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A | GO_Biological_Process_2023 | enriched |
-| Regulation Of Apoptotic Process (<GO:0042981>) | 22/705 | 0 | 7.40e-06 | 0 | 0 | 4.748620 | 84.40179 | TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;PLAUR;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;CTLA4;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A | GO_Biological_Process_2023 | enriched |
-| Positive Regulation Of Programmed Cell Death (<GO:0043068>) | 13/245 | 0 | 1.53e-05 | 0 | 0 | 7.907715 | 133.03669 | TOP2A;JUN;GADD45B;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;IFNG;PMAIP1;CTLA4;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
+| Regulation Of Apoptotic Process (<GO:0042981>) | 23/705 | 0 | 2.0e-07 | 0 | 0 | 6.105060 | 138.78136 | TOP2A;EGR1;JUN;EGR3;ANXA1;GADD45B;HSPA5;CITED2;IGFBP3;PLAUR;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PIM3;SGK1;PHLDA1;HSPA1B;MCL1;HSPA1A | GO_Biological_Process_2023 | enriched |
+| Regulation Of Transcription By RNA Polymerase II (<GO:0006357>) | 37/2028 | 0 | 2.2e-06 | 0 | 0 | 3.611687 | 70.82183 | CEBPB;CITED2;RORA;PRDM1;TNF;ZFP36;NAMPT;RBBP8;NLRP3;HES4;KDM6B;KLF10;EGR1;JUN;EGR3;TET2;IRF2BP2;FOS;ETV3;SAP30;FOSL2;NR4A2;NFKBIA;NR4A1;KLF6;MAF;RGCC;NR4A3;BCL6;IRF4;ID2;ID1;REL;ID3;FOSB;ATF3;HSPA1A | GO_Biological_Process_2023 | enriched |
+| Positive Regulation Of Programmed Cell Death (<GO:0043068>) | 13/245 | 0 | 3.3e-06 | 0 | 0 | 9.486735 | 178.39945 | TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
+| Response To Glucocorticoid (<GO:0051384>) | 6/26 | 0 | 4.8e-06 | 0 | 0 | 48.417073 | 878.20166 | ZFP36;BCL2L11;ANXA1;TNF;ZFP36L2;ZFP36L1 | GO_Biological_Process_2023 | enriched |
+| Positive Regulation Of Apoptotic Process (<GO:0043065>) | 13/270 | 0 | 6.3e-06 | 0 | 0 | 8.552999 | 150.93612 | TOP2A;JUN;GADD45B;IGFBP3;TNF;DUSP6;GADD45G;RHOB;BCL2L11;BCL6;PMAIP1;PHLDA1;MCL1 | GO_Biological_Process_2023 | enriched |
 
 The top significant results can then be visualized in a bar plot.
 
@@ -863,7 +869,7 @@ SCE_obj_sub <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = c("NK", "CD4_T_cells", "B_cells")
 )
-#> 2026-07-20 10:15:22 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-23 09:27:29 - Specified 'ident_name': expecting a categorical variable.
 
 DO.VlnPlot(SCE_obj_sub,
     Feature = "NKG7",
@@ -872,7 +878,7 @@ DO.VlnPlot(SCE_obj_sub,
     ctrl.condition = "healthy"
 )
 #> Using condition, orig.ident, annotation as id variables
-#> 2026-07-20 10:15:23 - ListTest empty, comparing every sample with each other
+#> 2026-07-23 09:27:29 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Violin-1.png)
@@ -883,7 +889,7 @@ SCE_obj_NK <- DO.Subset(SCE_obj,
     ident = "annotation",
     ident_name = "NK"
 )
-#> 2026-07-20 10:15:26 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-07-23 09:27:33 - Specified 'ident_name': expecting a categorical variable.
 
 DO.Barplot(SCE_obj_NK,
     group.by = "condition",
@@ -894,7 +900,7 @@ DO.Barplot(SCE_obj_NK,
     x_label_rotation = 0
 )
 #> Using condition, orig.ident as id variables
-#> 2026-07-20 10:15:26 - ListTest empty, comparing every sample with each other
+#> 2026-07-23 09:27:33 - ListTest empty, comparing every sample with each other
 ```
 
 ![](DOtools_files/figure-html/Bar-1.png)
@@ -917,7 +923,7 @@ DO.BoxPlot(SCE_obj,
     plot_sample = FALSE
 )
 #> Using group, cluster as id variables
-#> 2026-07-20 10:15:28 - ListTest empty, comparing every sample with each other
+#> 2026-07-23 09:27:34 - ListTest empty, comparing every sample with each other
 #> Scale for fill is already present.
 #> Adding another scale for fill, which will replace the existing scale.
 ```
@@ -936,7 +942,7 @@ DO.BoxPlot(SCE_obj,
     #>  collate  C.UTF-8
     #>  ctype    C.UTF-8
     #>  tz       UTC
-    #>  date     2026-07-20
+    #>  date     2026-07-23
     #>  pandoc   3.8.3 @ /opt/hostedtoolcache/pandoc/3.8.3/x64/ (via rmarkdown)
     #>  quarto   NA
     #> 
@@ -978,7 +984,7 @@ DO.BoxPlot(SCE_obj,
     #>  digest                 0.6.39   2025-11-19 [1] RSPM
     #>  dir.expiry             1.20.0   2026-04-28 [1] Bioconduc~
     #>  dotCall64              1.2      2024-10-04 [1] RSPM
-    #>  DOtools              * 1.3.4    2026-07-20 [1] local
+    #>  DOtools              * 1.3.5    2026-07-23 [1] local
     #>  dplyr                * 1.2.1    2026-04-03 [1] RSPM
     #>  dqrng                  0.4.1    2024-05-28 [1] RSPM
     #>  DropletUtils           1.32.0   2026-04-28 [1] Bioconduc~
@@ -997,7 +1003,7 @@ DO.BoxPlot(SCE_obj,
     #>  forcats                1.0.1    2025-09-25 [1] RSPM
     #>  Formula                1.2-5    2023-02-24 [1] RSPM
     #>  fs                     2.1.0    2026-04-18 [1] RSPM
-    #>  future               * 1.70.0   2026-03-14 [1] RSPM
+    #>  future               * 1.75.0   2026-07-20 [1] RSPM
     #>  future.apply           1.20.2   2026-02-20 [1] RSPM
     #>  gdtools                0.5.1    2026-05-25 [1] RSPM
     #>  generics             * 0.1.4    2025-05-09 [1] RSPM
@@ -1127,7 +1133,7 @@ DO.BoxPlot(SCE_obj,
     #>  SingleCellExperiment * 1.34.0   2026-04-28 [1] Bioconduc~
     #>  sjlabelled             1.2.0    2022-04-10 [1] RSPM
     #>  sjmisc                 2.8.11   2025-07-30 [1] RSPM
-    #>  sp                   * 2.2-1    2026-02-13 [1] RSPM
+    #>  sp                   * 2.2-3    2026-07-19 [1] RSPM
     #>  spam                   2.11-4   2026-05-29 [1] RSPM
     #>  SparseArray            1.12.2   2026-05-01 [1] Bioconduc~
     #>  sparseMatrixStats      1.24.0   2026-04-28 [1] Bioconduc~
@@ -1176,7 +1182,7 @@ DO.BoxPlot(SCE_obj,
     #>  python:         /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/bin/python
     #>  libpython:      /home/runner/.pyenv/versions/3.14.0/lib/libpython3.14.so
     #>  pythonhome:     /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3:/home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3
-    #>  version:        3.14.0 (main, Jul 20 2026, 10:06:37) [GCC 13.3.0]
+    #>  version:        3.14.0 (main, Jul 23 2026, 09:16:27) [GCC 13.3.0]
     #>  numpy:          /home/runner/.cache/R/basilisk/1.24.0/zellkonverter/1.22.0/zellkonverterAnnDataEnv-0.12.3/lib/python3.14/site-packages/numpy
     #>  numpy_version:  2.3.4
     #>  
