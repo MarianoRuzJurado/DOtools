@@ -175,9 +175,15 @@ DO.MultiDGE <- function(sce_object,
               )
             )
 
-            Seu_celltype <- subset(sce_object,
-              subset = !!sym(annotation_col) == celltype
+            Seu_celltype <- DO.Subset(
+              sce_object,
+              ident = annotation_col,
+              ident_name = celltype
             )
+            # The native Seurat subset caused major problems in subsetting!!!
+            # Seu_celltype <- subset(sce_object,
+            #                        subset = !!sym(annotation_col) ==
+            #                            celltype)
             # Check if there are groups with less than 3 cells
             table_cells_sc <- table(Seu_celltype@meta.data[[group_by]])
 
