@@ -145,13 +145,13 @@ DO.CellComposition(
     scanpro_plots = FALSE,
     n_reps = 5
 )
-#> 2026-07-23 08:51:26 - Bootstrapping method activated with 5 simulated replicates!
+#> 2026-08-26 08:56:48 - Bootstrapping method activated with 5 simulated replicates!
 #> .
 #> Installing pyenv ...
 #> Done! pyenv has been installed to '/home/runner/.local/share/r-reticulate/pyenv/bin/pyenv'.
-#> Using Python: /home/runner/.pyenv/versions/3.11.15/bin/python3.11
+#> Using Python: /home/runner/.pyenv/versions/3.11.16/bin/python3.11
 #> Creating virtual environment '/home/runner/.cache/R/basilisk/1.24.0/DOtools/1.3.5/DOtools_env' ... 
-#> + /home/runner/.pyenv/versions/3.11.15/bin/python3.11 -m venv /home/runner/.cache/R/basilisk/1.24.0/DOtools/1.3.5/DOtools_env
+#> + /home/runner/.pyenv/versions/3.11.16/bin/python3.11 -m venv /home/runner/.cache/R/basilisk/1.24.0/DOtools/1.3.5/DOtools_env
 #> Done!
 #> Installing packages: pip, wheel, setuptools
 #> + /home/runner/.cache/R/basilisk/1.24.0/DOtools/1.3.5/DOtools_env/bin/python -m pip install --upgrade pip wheel setuptools

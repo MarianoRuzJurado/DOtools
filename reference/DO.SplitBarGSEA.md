@@ -151,38 +151,38 @@ DGE_result <- DO.MultiDGE(sce_data,
     ident_ctrl = "healthy"
 )
 #> Centering and scaling data matrix
-#> 2026-07-23 09:23:39 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
-#> 2026-07-23 09:23:39 - Starting DGE single cell method analysis
-#> 2026-07-23 09:23:39 - Comparing disease with healthy in: Monocytes
-#> 2026-07-23 09:23:39 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:39 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:39 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-07-23 09:23:39 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:41 - Comparing disease with healthy in: NK
-#> 2026-07-23 09:23:42 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:42 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-07-23 09:23:42 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:43 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:43 - Comparing disease with healthy in: B_cells
-#> 2026-07-23 09:23:43 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: pDC
-#> 2026-07-23 09:23:44 - Specified 'ident_name': expecting a categorical variable.
-#> 2026-07-23 09:23:44 - Finished DGE single cell method analysis
-#> 2026-07-23 09:23:44 - Starting DGE pseudo bulk method analysis
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: B_cells
-#> 2026-07-23 09:23:44 - Skipping B_cells since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: CD4_T_cells
-#> 2026-07-23 09:23:44 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: Monocytes
-#> 2026-07-23 09:23:44 - Skipping Monocytes since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: NK
-#> 2026-07-23 09:23:44 - Skipping NK since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: pDC
-#> 2026-07-23 09:23:44 - Skipping pDC since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Comparing disease with healthy in: CD8_T_cells
-#> 2026-07-23 09:23:44 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
-#> 2026-07-23 09:23:44 - Finished DGE pseudo bulk method analysis
-#> 2026-07-23 09:23:44 - DGE pseudo bulk result is empty...
+#> 2026-08-26 09:27:52 - Corrected annotation names in pseudo-bulk object by replacing '-' with '_'.
+#> 2026-08-26 09:27:52 - Starting DGE single cell method analysis
+#> 2026-08-26 09:27:52 - Comparing disease with healthy in: Monocytes
+#> 2026-08-26 09:27:52 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:53 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:53 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-08-26 09:27:53 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:55 - Comparing disease with healthy in: NK
+#> 2026-08-26 09:27:55 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:56 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-08-26 09:27:56 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:56 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:56 - Comparing disease with healthy in: B_cells
+#> 2026-08-26 09:27:56 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:57 - Comparing disease with healthy in: pDC
+#> 2026-08-26 09:27:58 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 09:27:58 - Finished DGE single cell method analysis
+#> 2026-08-26 09:27:58 - Starting DGE pseudo bulk method analysis
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: B_cells
+#> 2026-08-26 09:27:58 - Skipping B_cells since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: CD4_T_cells
+#> 2026-08-26 09:27:58 - Skipping CD4_T_cells since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: Monocytes
+#> 2026-08-26 09:27:58 - Skipping Monocytes since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: NK
+#> 2026-08-26 09:27:58 - Skipping NK since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: pDC
+#> 2026-08-26 09:27:58 - Skipping pDC since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Comparing disease with healthy in: CD8_T_cells
+#> 2026-08-26 09:27:58 - Skipping CD8_T_cells since one comparison has fewer than 3 cells!
+#> 2026-08-26 09:27:58 - Finished DGE pseudo bulk method analysis
+#> 2026-08-26 09:27:58 - DGE pseudo bulk result is empty...
 DGE_result <- DGE_result[DGE_result$celltype == "CD4_T_cells", ]
 
 result_GO <- DO.enrichR(
