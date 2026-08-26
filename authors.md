@@ -17,7 +17,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/MarianoRuzJurado/DOtools/blob/v.1.3.5/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/MarianoRuzJurado/DOtools/blob/master/DESCRIPTION)
 
 Ruz Jurado M, Rodriguez Morales D, John D (2026). *DOtools: Convenient
 functions to streamline your single cell data analysis workflow*. R

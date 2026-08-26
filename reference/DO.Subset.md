@@ -63,5 +63,5 @@ sce_data_sub <- DO.Subset(
     ident = "condition",
     ident_name = "healthy"
 )
-#> 2026-08-26 09:28:06 - Specified 'ident_name': expecting a categorical variable.
+#> 2026-08-26 10:04:07 - Specified 'ident_name': expecting a categorical variable.
 ```

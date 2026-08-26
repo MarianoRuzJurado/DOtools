@@ -21,7 +21,7 @@ All notable changes to DOtools will be documented in this file.
 - `DO.Import`: Now correctly specifies that package hdf5r is needed to
   load .h5 files.
 - `DO.scVI`: Now correctly saves the model in the specified path.
-- `basilis.R`: Changes to the python environment to maintain stable
+- `basilisk.R`: Changes to the python environment to maintain stable
   python software.
 - Major bug fixes for higher compatibility with ggplot2 and Seurat
 
